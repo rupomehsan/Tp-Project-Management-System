@@ -15,9 +15,14 @@ use App\Modules\Management\UserManagement\User\Seeder\Seeder as UserSeeder;
 use App\Modules\Management\SettingManagement\WebsiteSettings\Seeder\Seeder as WebsiteSettingsSeeder;
 
 /**
- * Suppliyer seeder management.
+ * project seeder management.
  */
-use App\Modules\Management\BlogCategory\Seeder\Seeder as BlogCategorySeeder;
+
+use App\Modules\Management\ProjectManagement\ProjectGroup\Seeder\Seeder as ProjectGroupSeeder;
+use App\Modules\Management\ProjectManagement\Project\Seeder\Seeder as ProjectSeeder;
+
+
+// use App\Modules\Management\BlogCategory\Seeder\Seeder as BlogCategorySeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -34,8 +39,10 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             WebsiteSettingsSeeder::class,
             /**
-             * Suppliyer seeder management.
+             * Project seeder management.
              */
+             ProjectGroupSeeder::class,
+             ProjectSeeder::class,
 
 
         ]);

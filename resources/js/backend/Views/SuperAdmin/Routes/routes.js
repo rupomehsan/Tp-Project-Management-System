@@ -7,6 +7,11 @@ import SettingsRoutes from "../Management/Settings/setup/routes.js";
 //routes
 
 import UserRoutes from '../Management/UserManagement/User/setup/routes.js';
+// Projectg Management
+import ProjectGroup from '../Management/ProjectManagement/ProjectGroup/setup/routes.js';
+import Project from '../Management/ProjectManagement/Project/setup/routes.js';
+
+
 import BlogCategroy from '../Management/BasicTestModule/BlogCategory/setup/routes.js';
 
 
@@ -23,6 +28,10 @@ const routes = {
         },
         //management routes
         UserRoutes,
+        // project Management
+        ProjectGroup,
+        Project,
+
         BlogCategroy,
         //settings
         SettingsRoutes,

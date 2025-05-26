@@ -25,6 +25,14 @@ class Seeder extends SeederClass
         self::$model::create([
             'name' => "admin",
             'serial_no' => 2,
+        ]); 
+        self::$model::create([
+            'name' => "project_manager",
+            'serial_no' => 3,
+        ]);
+         self::$model::create([
+            'name' => "employee",
+            'serial_no' => 4,
         ]);
     }
 }

@@ -56,7 +56,23 @@
         ]"
       />
 
-      
+      <!-- Project Management -->
+       <side-bar-drop-down-menus
+        :icon="`fa fa-plus`"
+        :menu_title="`Project Management`"
+        :menus="[
+          {
+            route_name: `AllProjectGroup`,
+            title: `Project Group`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllProject`,
+            title: `Projects`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+        ]"
+      />
 
       <!-- Management end -->
     </ul>
