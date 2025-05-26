@@ -1,19 +1,21 @@
 <?php
 
 namespace App\Modules\Management\SettingManagement\WebsiteSettings\Controller;
-use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\GetAllData;
-use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\DestroyData;
-use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\GetSingleData;
-use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\StoreData;
-use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\UpdateData;
-use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\SoftDelete;
-use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\RestoreData;
-use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\ImportData;
-use App\Modules\Management\SettingManagement\WebsiteSettings\Validations\BulkActionsValidation;
-use App\Modules\Management\SettingManagement\WebsiteSettings\Validations\DataStoreValidation;
-use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\BulkActions;
-use App\Http\Controllers\Controller as ControllersController;
 
+use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\StoreData;
+use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\GetAllData;
+use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\ImportData;
+use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\SoftDelete;
+use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\UpdateData;
+use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\BulkActions;
+use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\DestroyData;
+use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\RestoreData;
+use App\Modules\Management\SettingManagement\WebsiteSettings\Actions\GetSingleData;
+
+use App\Modules\Management\SettingManagement\WebsiteSettings\Validations\DataStoreValidation;
+use App\Modules\Management\SettingManagement\WebsiteSettings\Validations\BulkActionsValidation;
+
+use App\Http\Controllers\Controller as ControllersController;
 
 class Controller extends ControllersController
 {
@@ -41,6 +43,8 @@ class Controller extends ControllersController
         $data = UpdateData::execute($request, $slug);
         return $data;
     }
+
+    
 
     public function softDelete()
     {

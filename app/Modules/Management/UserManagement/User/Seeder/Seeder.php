@@ -20,18 +20,32 @@ class Seeder extends SeederClass
         self::$model::truncate();
 
         self::$model::create([
-            'name' => "super admin",
-            'email' => "superadmin@gmail.com",
+            'name' => "Md Ehsan",
+            'email' => "ehsan@gmail.com",
             'password' => Hash::make('@12345678'),
             'image' => 'avatar.png',
-            'role_id' => 1,
+            'role_id' => 3,
         ]);
         self::$model::create([
-            'name' => "admin",
-            'email' => "admin@gmail.com",
+            'name' => "Md Mumin",
+            'email' => "mumin@gmail.com",
             'password' => Hash::make('@12345678'),
             'image' => 'avatar.png',
-            'role_id' => 2,
+            'role_id' => 4,
+        ]);
+        self::$model::create([
+            'name' => "Md Nazmul",
+            'email' => "nazmul@gmail.com",
+            'password' => Hash::make('@12345678'),
+            'image' => 'avatar.png',
+            'role_id' => 4,
+        ]);
+        self::$model::create([
+            'name' => "Md Abir",
+            'email' => "abir@gmail.com",
+            'password' => Hash::make('@12345678'),
+            'image' => 'avatar.png',
+            'role_id' => 4,
         ]);
     }
 }

@@ -56,13 +56,14 @@
         ]"
       />
 
+    <!-- task Management -->
       <side-bar-drop-down-menus
         :icon="`fa fa-plus`"
-        :menu_title="`Blog Management`"
+        :menu_title="`Task Management`"
         :menus="[
           {
-            route_name: `AllBlogCategory`,
-            title: `Blog Category`,
+            route_name: `AllTask`,
+            title: `Task`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
         ]"
