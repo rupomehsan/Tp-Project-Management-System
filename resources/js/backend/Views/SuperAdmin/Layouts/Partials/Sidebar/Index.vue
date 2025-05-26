@@ -56,17 +56,7 @@
         ]"
       />
 
-      <side-bar-drop-down-menus
-        :icon="`fa fa-plus`"
-        :menu_title="`Blog Management`"
-        :menus="[
-          {
-            route_name: `AllBlogCategory`,
-            title: `Blog Category`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-        ]"
-      />
+      
 
       <!-- Management end -->
     </ul>
