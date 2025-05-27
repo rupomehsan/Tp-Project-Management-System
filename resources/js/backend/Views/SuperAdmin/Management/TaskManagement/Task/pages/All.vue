@@ -170,11 +170,21 @@
                     </td>
                     <td>{{ index + 1 }}</td>
                     <td>{{ item?.project_id ?? "N/A " }}</td>
-                    <td>{{ item?.title ? item.title.substring(0, 10) + '...' : 'N/A' }}</td>
-                    <td>{{ item?.description ? item.description.substring(0, 20) + '...' : 'N/A' }}</td>
-                    <td :class="item.system_loss === 1 ? 'btn btn-success btn-sm mt-1 mb-1' : 'btn btn-danger btn-sm mt-1 mb-1'">
-                      {{ item.system_loss === 1 ? 'Yes' : 'No' }}
+                    <td>
+                      {{
+                        item?.title
+                          ? item.title.substring(0, 10) + "..."
+                          : "N/A"
+                      }}
                     </td>
+                    <td
+                      v-html="
+                        item?.description
+                          ? item.description.substring(0, 20) + '...'
+                          : 'N/A'
+                      "
+                    ></td>
+                    <td>{{ item?.system_loss ?? "N/A " }}</td>
                     <td>{{ item?.user?.name ?? "N/A " }}</td>
                     <td>{{ item?.start_date ?? "N/A " }}</td>
                     <td>{{ item?.due_date ?? "N/A " }}</td>
@@ -588,12 +598,11 @@ export default {
     },
 
     restore_data: async function (item) {
-      
       let con = await window.s_confirm("Restore");
       if (con) {
         this.set_item(item);
         console.log(this.item);
-        
+
         this.set_only_latest_data(true);
         let response = await this.restore();
         if (response.data.status === "success") {
@@ -708,7 +717,7 @@ export default {
       this.only_latest_data = false;
     }, 500),
   },
-  
+
   computed: {
     ...mapWritableState(data_store, [
       "all",
@@ -726,7 +735,7 @@ export default {
       "end_date",
       "search_key",
       "page",
-      "item"
+      "item",
     ]),
 
     isAllSelected() {

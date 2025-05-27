@@ -33,19 +33,13 @@
                   <tr>
                     <th>Description</th>
                     <th class="text-center">:</th>
-                    <th>{{ item?.description }}</th>
+                    <td v-html="item && item.description ? item.description : 'N/A'"></td>
                   </tr>
                   <tr>
                     <th>System Loss</th>
                     <th class="text-center">:</th>
-                    <td
-                      :class="
-                        item?.system_loss === 1
-                          ? 'btn btn-success btn-sm mt-1 mb-1 ml-2'
-                          : 'btn btn-danger btn-sm mt-1 mb-1 ml-2'
-                      "
-                    >
-                      {{ item.system_loss === 1 ? "Yes" : "No" }}
+                    <td>
+                      {{ item.system_loss  ?? "N/A" }}
                     </td>
                   </tr>
                   <tr>
