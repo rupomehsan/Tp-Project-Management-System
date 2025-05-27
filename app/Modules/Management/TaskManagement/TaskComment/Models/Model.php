@@ -52,7 +52,7 @@ class Model extends EloquentModel
 
     public function user()
     {
-        return $this->belongsTo(self::$userModel, 'assigned_to', 'id');
+        return $this->belongsTo(self::$userModel, 'user_id', 'id');
     }
     public function task()
     {

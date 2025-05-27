@@ -17,7 +17,7 @@ class Model extends EloquentModel
     protected $table   = "tasks_files";
     protected $guarded = [];
 
-    public static $taskModel = \App\Modules\Management\TaskManagement\TaskComment\Models\Model::class;
+    public static $taskModel = \App\Modules\Management\TaskManagement\Task\Models\Model::class;
 
     protected static function booted()
     {
