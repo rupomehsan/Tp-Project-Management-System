@@ -27,8 +27,7 @@ class GetAllData
             if (request()->has('search') && request()->input('search')) {
                 $searchKey = request()->input('search');
                 $data = $data->where(function ($q) use ($searchKey) {
-                    $q->where('title', 'like', '%' . $searchKey . '%')               
-                      ->orWhere('description', 'like', '%' . $searchKey . '%');                 
+                    $q->where('file_name', 'like', '%' . $searchKey . '%');                 
 
                 });
             }

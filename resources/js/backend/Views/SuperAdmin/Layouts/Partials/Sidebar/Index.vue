@@ -71,7 +71,11 @@
             title: `Task Comment`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
-          
+          {
+            route_name: `AllTaskFile`,
+            title: `Task File`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
         ]"
       />
 

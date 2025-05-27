@@ -10,7 +10,7 @@ import UserRoutes from '../Management/UserManagement/User/setup/routes.js';
 // import TaskManagementRoutes from '../Management/TaskManagement/Task/setup/routes.js';
 import TaskRoutes from '../Management/TaskManagement/Task/setup/routes.js';
 import TaskCommentRoutes from '../Management/TaskManagement/TaskComment/setup/routes.js';
-// import TaskFileRoutes from '../Management/TaskManagement/TaskFile/setup/routes.js';
+import TaskFileRoutes from '../Management/TaskManagement/TaskFile/setup/routes.js';
 
 
 
@@ -29,7 +29,7 @@ const routes = {
         // TaskManagementRoutes,
         TaskRoutes,
         TaskCommentRoutes,
-        // TaskFileRoutes,
+        TaskFileRoutes,
         //settings
         SettingsRoutes,
     ],
