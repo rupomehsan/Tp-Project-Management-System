@@ -55,15 +55,15 @@
                       />
                     </th>
                     <th class="w-10">ID</th>
-                    <th>Project Name</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>System Los</th>
-                    <th>Assigned To</th>
-                    <th>Stard Data</th>
-                    <th>Due Data</th>
-                    <th>Priority</th>
-                    <th>Task Status</th>
+                    <th class="text-center">Project Name</th>
+                    <th class="text-center">Title</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">System Loss</th>
+                    <th class="text-center">Assigned To</th>
+                    <th class="text-center">Stard Data</th>
+                    <th class="text-center">Due Data</th>
+                    <th class="text-center">Priority</th>
+                    <th class="text-center">Task Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -170,8 +170,8 @@
                     </td>
                     <td>{{ index + 1 }}</td>
                     <td>{{ item?.project_id ?? "N/A " }}</td>
-                    <td>{{ item?.title ?? "N/A " }}</td>
-                    <td>{{ item?.description ?? "N/A " }}</td>
+                    <td>{{ item?.title ? item.title.substring(0, 10) + '...' : 'N/A' }}</td>
+                    <td>{{ item?.description ? item.description.substring(0, 20) + '...' : 'N/A' }}</td>
                     <td :class="item.system_loss === 1 ? 'btn btn-success btn-sm mt-1 mb-1' : 'btn btn-danger btn-sm mt-1 mb-1'">
                       {{ item.system_loss === 1 ? 'Yes' : 'No' }}
                     </td>

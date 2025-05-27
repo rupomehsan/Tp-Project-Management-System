@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Modules\Management\TaskManagement\Task\Validations;
+namespace App\Modules\Management\TaskManagement\TaskComment\Validations;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-class DataStoreValidation extends FormRequest
+class BulkActionsValidation extends FormRequest
 {
     /**
      * Determine if the  is authorized to make this request.
@@ -42,18 +42,15 @@ class DataStoreValidation extends FormRequest
     public function rules(): array
     {
         return [
-            'project_id' => 'required | sometimes',
-            'title' => 'required | sometimes',
-            'description' => 'required | sometimes',
-            'system_loss' => 'required | sometimes',
-            'assigned_to' => 'required | sometimes',
-            'start_date' => 'required | sometimes',
-            'due_date' => 'required | sometimes',
-            'task_status' => 'required | sometimes',
-            'status' => ['sometimes', Rule::in(['active', 'inactive'])],
+            'action' => 'required|sometimes|in:active,inactive,soft_delete,restore,destroy',
+            'ids' => [
+                'array',
+                function ($attribute, $value, $fail) {
+                    if (empty($value)) {
+                        $fail('The ' . $attribute . ' must contain at least one item.');
+                    }
+                },
+            ],
         ];
-
-
-        
     }
 }

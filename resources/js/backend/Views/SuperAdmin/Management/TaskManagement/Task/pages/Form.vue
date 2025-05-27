@@ -49,7 +49,7 @@
                 </div>
                 <div class="mb-3">
                   <label for="description" class="form-label">Description</label>
-                  <textarea name="description" id="description" v-model="form_fields.description" class="form-control" rows="7"></textarea>
+                  <text-editor :name="'description'" />
                 </div>
 
                 <div class="mb-3">
@@ -84,8 +84,8 @@
                 </div>
 
                 <div class="mb-3">
-                  <label for="due_date" class="form-label">Task Status</label>
-                   <select name="task_status" v-model="form_fields.task_status" class="form-control" id="status">
+                  <label for="task_status" class="form-label">Task Status</label>
+                   <select name="task_status" v-model="form_fields.task_status" class="form-control" id="task_status">
                     <option>Select a Status</option>
                     <option>Pending</option>
                     <option>In Progress</option>
@@ -118,9 +118,12 @@ import { mapActions, mapState } from "pinia";
 import { store } from "../store";
 import setup from "../setup";
 import form_fields from "../setup/form_fields";
+import textEditor from "../../../../../../GlobalComponents/FormComponents/TextEditor.vue";
 import axios from "axios";
 
 export default {
+  components: { textEditor },
+
   data: () => ({
     setup,
     form_fields,
@@ -165,13 +168,13 @@ export default {
       if (this.item) {
             this.form_fields.project_id = this.item.project_id
             this.form_fields.title = this.item.title
-            this.form_fields.description = this.item.description
             this.form_fields.system_loss = this.item.system_loss
             this.form_fields.assigned_to = this.item.assigned_to
             this.form_fields.start_date = this.item.start_date
             this.form_fields.due_date = this.item.due_date
             this.form_fields.priority = this.item.priority
             this.form_fields.task_status = this.item.task_status
+            this.$('#description').summernote("code", this.item.description);
 
         }
     },
@@ -179,6 +182,7 @@ export default {
     submitHandler: async function ($event) {
       this.set_only_latest_data(true);
       if (this.param_id) {
+        this.setSummerEditor();
         let response = await this.update($event);
         await this.get_all();
         if ([200, 201].includes(response.status)) {
@@ -189,6 +193,7 @@ export default {
         }
       } else {
         let response = await this.create($event);
+        this.setSummerEditor();
         await this.get_all();
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data Successfully Created");
@@ -197,6 +202,15 @@ export default {
           });
         }
       }
+    },
+
+    setSummerEditor() {
+      var markupStr = $("#description").summernote("code");
+      var target = document.createElement("input");
+      target.setAttribute("name", "description");
+      target.value = markupStr;
+      
+      document.getElementById("description").appendChild(target);
     },
 
    get_all_user: async function() {
@@ -210,7 +224,7 @@ export default {
   }
 
 
-  },
+},
 
   computed: {
     ...mapState(store, {

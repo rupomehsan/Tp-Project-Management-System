@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Management\TaskManagement\Task\Validations;
+namespace App\Modules\Management\TaskManagement\TaskComment\Validations;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -42,14 +42,9 @@ class DataStoreValidation extends FormRequest
     public function rules(): array
     {
         return [
-            'project_id' => 'required | sometimes',
-            'title' => 'required | sometimes',
-            'description' => 'required | sometimes',
-            'system_loss' => 'required | sometimes',
-            'assigned_to' => 'required | sometimes',
-            'start_date' => 'required | sometimes',
-            'due_date' => 'required | sometimes',
-            'task_status' => 'required | sometimes',
+            'task_id' => 'required | sometimes',
+            'user_id' => 'required | sometimes',
+            'comment' => 'required | sometimes',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];
 
