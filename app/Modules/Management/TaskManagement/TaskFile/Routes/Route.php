@@ -1,10 +1,10 @@
 <?php
 
-use App\Modules\Management\TaskManagement\TaskComment\Controller\Controller;
+use App\Modules\Management\TaskManagement\TaskFile\Controller\Controller;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
-    Route::prefix('tasks-comments')->group(function () {
+    Route::prefix('tasks-files')->group(function () {
         Route::get('', [Controller::class, 'index']);
         Route::get('{slug}', [Controller::class, 'show']);
         Route::post('store', [Controller::class, 'store']);

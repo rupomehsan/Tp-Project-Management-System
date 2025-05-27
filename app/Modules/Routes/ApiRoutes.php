@@ -23,3 +23,4 @@ include_once base_path("app/Modules/Management/UserManagement/User/Routes/Route.
 /// TaskManagement for Task
 include_once base_path("app/Modules/Management/TaskManagement/Task/Routes/Route.php");
 include_once base_path("app/Modules/Management/TaskManagement/TaskComment/Routes/Route.php");
+include_once base_path("app/Modules/Management/TaskManagement/TaskFile/Routes/Route.php");

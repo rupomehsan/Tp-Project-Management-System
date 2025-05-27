@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Modules\Management\TaskManagement\TaskComment\Controller;
+namespace App\Modules\Management\TaskManagement\TaskFile\Controller;
 
 use App\Http\Controllers\Controller as ControllersController;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\StoreData;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\GetAllData;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\ImportData;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\SoftDelete;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\UpdateData;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\BulkActions;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\DestroyData;
+use App\Modules\Management\TaskManagement\TaskFile\Actions\StoreData;
+use App\Modules\Management\TaskManagement\TaskFile\Actions\GetAllData;
+use App\Modules\Management\TaskManagement\TaskFile\Actions\ImportData;
+use App\Modules\Management\TaskManagement\TaskFile\Actions\SoftDelete;
+use App\Modules\Management\TaskManagement\TaskFile\Actions\UpdateData;
+use App\Modules\Management\TaskManagement\TaskFile\Actions\BulkActions;
+use App\Modules\Management\TaskManagement\TaskFile\Actions\DestroyData;
 
-use App\Modules\Management\TaskManagement\TaskComment\Actions\RestoreData;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\UpdateStatus;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\GetSingleData;
+use App\Modules\Management\TaskManagement\TaskFile\Actions\RestoreData;
+use App\Modules\Management\TaskManagement\TaskFile\Actions\UpdateStatus;
+use App\Modules\Management\TaskManagement\TaskFile\Actions\GetSingleData;
 
-use App\Modules\Management\TaskManagement\TaskComment\Validations\DataStoreValidation;
-use App\Modules\Management\TaskManagement\TaskComment\Validations\BulkActionsValidation;
+use App\Modules\Management\TaskManagement\TaskFile\Validations\DataStoreValidation;
+use App\Modules\Management\TaskManagement\TaskFile\Validations\BulkActionsValidation;
 
 
 class Controller extends ControllersController
@@ -52,6 +52,7 @@ class Controller extends ControllersController
      public function updateStatus()
     {
         $data = UpdateStatus::execute();
+        // dd($data);
         return $data;
     }
 
