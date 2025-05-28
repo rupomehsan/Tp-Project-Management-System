@@ -63,19 +63,18 @@
                     id="title"
                   />
                 </div>
-                <div class="mb-3">
-                  <label for="description" class="form-label"
-                    >Description</label
-                  >
-                  <text-editor :name="'description'" />
-                  <!-- <text-editor :name="'description'" /> -->
-                </div>
 
                 <div class="mb-3">
                   <label for="system_loss" class="form-label"
                     >System Loss</label
                   >
-                  <input type="number" name="system_loss" v-model="form_fields.system_loss" class="form-control" id="system_loss">
+                  <input
+                    type="number"
+                    name="system_loss"
+                    v-model="form_fields.system_loss"
+                    class="form-control"
+                    id="system_loss"
+                  />
                 </div>
 
                 <div class="mb-3">
@@ -155,6 +154,13 @@
                 </div>
               </div>
             </div>
+
+            <div class="col-md-12">
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <text-editor :name="'description'" />
+              </div>
+            </div>
           </div>
         </div>
         <div class="card-footer">
@@ -194,6 +200,7 @@ export default {
       priority: "",
       task_status: "",
     },
+    all_users: [],
   }),
 
   created: async function () {
@@ -237,7 +244,6 @@ export default {
       if (this.param_id) {
         this.setSummerEditor();
         let response = await this.update($event);
-        await this.get_all();
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data successfully updated");
           this.$router.push({
@@ -248,7 +254,6 @@ export default {
         this.setSummerEditor();
         let response = await this.create($event);
 
-        await this.get_all();
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data Successfully Created");
           this.$router.push({

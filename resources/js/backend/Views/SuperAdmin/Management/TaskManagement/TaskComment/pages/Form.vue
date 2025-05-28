@@ -31,49 +31,54 @@
         </div>
         <div class="card-body card_body_fixed_height">
           <div class="row">
-
             <div class="col-md-12">
               <div class="col-md-6 pull-left">
-                  <div class="mb-3">
-                    <label for="task_id" class="form-label">Task Name</label>
-                    <select name="task_id" v-model="form_fields.task_id" class="form-control" id="task_id">
-                      <option v-for="task in all_task" :key="task.id" :value="task.id">
-                        {{ task.title }}
-                      </option>
-                    </select>
-                  </div>
-                
+                <div class="mb-3">
+                  <label for="task_id" class="form-label">Task Name</label>
+                  <select name="task_id" v-model="form_fields.task_id" class="form-control" id="task_id">
+                    <option>Select Task Name</option>
+                    <option
+                      v-for="task in all_task"
+                      :key="task.id"
+                      :value="task.id"
+                    >
+                      {{ task?.title ?? "N/A" }}
+                    </option>
+                  </select>
+                </div>
               </div>
-  
-                
-              <div class="col-md-6 pull-right">
 
+              <div class="col-md-6 pull-right">
                 <div class="mb-3">
                   <label for="user_id" class="form-label">User Name</label>
                   <select name="user_id" v-model="form_fields.user_id" class="form-control" id="user_id">
-                      <option v-for="user in all_users" :key="user.id" :value="user.id">
-                        {{ user.name }}
-                      </option>
-                    </select>
+                    <option>Select User Name</option>
+                    <option
+                      v-for="user in all_user"
+                      :key="user.id"
+                      :value="user.id"
+                    >
+                      {{ user?.name ?? "N/A" }}
+                    </option>
+                  </select>
                 </div>
-
               </div>
-              <div class="mb-3">
-                  <label for="comment" class="form-label">Comment</label>
-                  <text-editor :name="'comment'" />
-                </div>
             </div>
+          </div>
 
+          <div class="row">
+            <div class="col-md-12">
+              <div class="mb-3">
+                <label for="comment" class="form-label">Comment</label>
+                <text-editor :name="'comment'" />
+              </div>
+            </div>
           </div>
         </div>
         <div class="card-footer">
           <button type="submit" class="btn btn-light btn-square px-5">
             <i class="icon-lock"></i>
-            {{
-              param_id
-                ? `Update`
-                : `Submit`
-            }}
+            Submit
           </button>
         </div>
       </div>
@@ -91,29 +96,26 @@ import axios from "axios";
 
 export default {
   components: { textEditor },
-
   data: () => ({
     setup,
     form_fields,
     param_id: null,
-    form_fields: {
-        task_id: '',
-        user_id: '',
-        comment: '',
-    }
-    
+    from_fields: {
+      task_id: null,
+      user_id: null,
+    },
+    all_task: [],
+    all_user: [],
   }),
-
   created: async function () {
-    await this.get_all_user();
-    await this.get_all_task();
-    
+    this.get_all_task();
+    this.get_all_user();
+
     let id = (this.param_id = this.$route.params.id);
     if (id) {
       this.set_fields(id);
     }
   },
-
   methods: {
     ...mapActions(store, {
       create: "create",
@@ -125,14 +127,12 @@ export default {
 
     set_fields: async function (id) {
       this.param_id = id;
-      
       await this.details(id);
       if (this.item) {
-            this.form_fields.task_id = this.item.task_id
-            this.form_fields.user_id = this.item.user_id
-            this.$('#comment').summernote("code", this.item.comment);
-
-        }
+        this.form_fields.task_id = this.item.task_id;
+        this.form_fields.user_id = this.item.user_id;
+        $("#comment").summernote("code", this.item.comment);
+      }
     },
 
     submitHandler: async function ($event) {
@@ -140,7 +140,6 @@ export default {
       if (this.param_id) {
         this.setSummerEditor();
         let response = await this.update($event);
-        await this.get_all();
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data successfully updated");
           this.$router.push({
@@ -148,9 +147,8 @@ export default {
           });
         }
       } else {
-        let response = await this.create($event);
         this.setSummerEditor();
-        await this.get_all();
+        let response = await this.create($event);
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data Successfully Created");
           this.$router.push({
@@ -168,30 +166,25 @@ export default {
       document.getElementById("comment").appendChild(target);
     },
 
-   get_all_user: async function() {
-    try {
-      let response = await axios.get('users');
-      this.all_users = response.data.data.data;
+    get_all_task: async function () {
+      try {
+        let response = await axios.get("tasks");
+        this.all_task = response.data.data.data;
       } catch (error) {
-        console.error('Failed to fetch users:', error);
-        this.all_users = []; 
+        console.error("Failed to fetch tasks:", error);
+        this.all_task = [];
       }
-
     },
-   get_all_task: async function() {
-    try {
-      let response = await axios.get('tasks');
-      this.all_task = response.data.data.data;
-      
-    } catch (error) {
-      console.error('Failed to fetch users:', error);
-      this.all_task = []; 
-    }
-
+    get_all_user: async function () {
+      try {
+        let response = await axios.get("users");
+        this.all_user = response.data.data.data;
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+        this.all_user = [];
+      }
+    },
   },
-
-
-},
 
   computed: {
     ...mapState(store, {

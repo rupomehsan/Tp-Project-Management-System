@@ -1,7 +1,7 @@
 import app_config from "../../../../../../Config/app_config";
 import setup_type from "./setup_type";
 
-const prefix: string = "Task Management";
+const prefix: string = "Task Comment";
 
 const setup: setup_type = {
   prefix,
@@ -11,8 +11,9 @@ const setup: setup_type = {
   api_version: app_config.api_version,
   api_end_point: "tasks-comments",
 
+  
   store_prefix: "taskscomments",
-  route_prefix: "TasksComment",
+  route_prefix: "TaskComment",
   route_path: "taskscomments",
 
   select_fields: [

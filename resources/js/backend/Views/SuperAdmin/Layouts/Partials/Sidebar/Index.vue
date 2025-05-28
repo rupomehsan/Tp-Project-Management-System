@@ -66,8 +66,9 @@
             title: `Task`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
+          
           {
-            route_name: `AllTasksComment`,
+            route_name: `AllTaskComment`,
             title: `Task Comment`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },

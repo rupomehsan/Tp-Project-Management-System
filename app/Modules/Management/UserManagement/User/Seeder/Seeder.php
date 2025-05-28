@@ -18,6 +18,22 @@ class Seeder extends SeederClass
     {
         $faker = Faker::create();
         self::$model::truncate();
+        
+          self::$model::create([
+            'name' => "super admin",
+            'email' => "superadmin@gmail.com",
+            'password' => Hash::make('@12345678'),
+            'image' => 'avatar.png',
+            'role_id' => 1,
+        ]);
+
+        self::$model::create([
+            'name' => "admin",
+            'email' => "admin@gmail.com",
+            'password' => Hash::make('@12345678'),
+            'image' => 'avatar.png',
+            'role_id' => 2,
+        ]);
 
         self::$model::create([
             'name' => "Md Ehsan",
@@ -38,14 +54,14 @@ class Seeder extends SeederClass
             'email' => "nazmul@gmail.com",
             'password' => Hash::make('@12345678'),
             'image' => 'avatar.png',
-            'role_id' => 4,
+            'role_id' => 5,
         ]);
         self::$model::create([
             'name' => "Md Abir",
             'email' => "abir@gmail.com",
             'password' => Hash::make('@12345678'),
             'image' => 'avatar.png',
-            'role_id' => 4,
+            'role_id' => 6
         ]);
     }
 }

@@ -55,9 +55,9 @@
                       />
                     </th>
                     <th class="w-10">ID</th>
-                    <th class="text-center">Task Name</th>
-                    <th class="text-center">User Name</th>
-                    <th class="text-center">Comment</th>
+                    <th>Task Name</th>
+                    <th>User Name</th>
+                    <th>Comment</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -163,9 +163,9 @@
                       />
                     </td>
                     <td>{{ index + 1 }}</td>
-                    <td>{{ item?.task?.title ?? "N/A " }}</td>
-                    <td>{{ item?.user?.name ?? "N/A " }}</td>
-                    <td>{{ item?.comment ? item.comment.substring(0, 10) + '...' : 'N/A' }}</td>
+                    <td>{{ item?.task?.title ?? "N/A"}}</td>
+                    <td>{{ item?.user?.name ?? "N/A"}}</td>                    
+                    <td v-html="item?.comment ? item.comment.substring(0, 20) + '...' : 'N/A'"></td>                   
                   </tr>
                 </tbody>
               </table>
@@ -507,7 +507,6 @@ export default {
   created: async function () {
     await this.get_all();
   },
-
   methods: {
     export_all_csv,
     export_selected_csv,
@@ -555,7 +554,6 @@ export default {
         }
       }
     },
-
     softDelete: async function (item) {
       let con = await window.s_confirm("Are you sure want to delete ?");
       if (con) {
@@ -572,14 +570,10 @@ export default {
         }
       }
     },
-
     restore_data: async function (item) {
-      
       let con = await window.s_confirm("Restore");
       if (con) {
         this.set_item(item);
-        console.log(this.item);
-        
         this.set_only_latest_data(true);
         let response = await this.restore();
         if (response.data.status === "success") {
@@ -694,7 +688,6 @@ export default {
       this.only_latest_data = false;
     }, 500),
   },
-  
   computed: {
     ...mapWritableState(data_store, [
       "all",
@@ -712,9 +705,7 @@ export default {
       "end_date",
       "search_key",
       "page",
-      "item"
     ]),
-
     isAllSelected() {
       return (
         this.all?.data?.length > 0 &&

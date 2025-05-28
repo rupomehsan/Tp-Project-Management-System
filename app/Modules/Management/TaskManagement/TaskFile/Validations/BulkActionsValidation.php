@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Management\TaskManagement\TaskComment\Validations;
+namespace App\Modules\Management\TaskManagement\TaskFile\Validations;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;

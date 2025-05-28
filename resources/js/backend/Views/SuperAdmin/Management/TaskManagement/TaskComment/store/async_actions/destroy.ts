@@ -3,8 +3,8 @@ import setup from "../../setup";
 import { mapState } from "pinia";
 import { store } from "..";
 
-async function execute() {
-    let state = mapState(store, ['item']);
+async function execute(){
+    let state = mapState(store,['item']);
 
     let url = `${setup.api_host}/${setup.api_version}/${setup.api_end_point}/destroy/${state.item().slug}`;
 
@@ -14,6 +14,7 @@ async function execute() {
     } catch (error) {
         return error.response;
     }
+
 }
 
 export default execute;

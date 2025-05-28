@@ -23,17 +23,19 @@
                   <tr>
                     <th>Task Name</th>
                     <th class="text-center">:</th>
-                    <th>{{ item?.task?.title }}</th>
+                    <th>{{ item?.task?.title ?? "N/A" }}</th>
                   </tr>
                   <tr>
                     <th>User Name</th>
                     <th class="text-center">:</th>
-                    <th>{{ item?.user?.name }}</th>
+                    <th>{{ item?.user?.name ?? "N/A" }}</th>
                   </tr>
+               
                   <tr>
-                    <th>Comment</th>
+                    <th>Commment</th>
                     <th class="text-center">:</th>
-                    <th>{{ item?.comment }}</th>
+                    <td v-html="item && item.comment ? item.comment : 'N/A' "></td>
+
                   </tr>
                 </tbody>
               </table>

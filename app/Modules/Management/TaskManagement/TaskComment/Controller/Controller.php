@@ -1,23 +1,19 @@
 <?php
-
 namespace App\Modules\Management\TaskManagement\TaskComment\Controller;
 
 use App\Http\Controllers\Controller as ControllersController;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\StoreData;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\GetAllData;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\ImportData;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\SoftDelete;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\UpdateData;
 use App\Modules\Management\TaskManagement\TaskComment\Actions\BulkActions;
 use App\Modules\Management\TaskManagement\TaskComment\Actions\DestroyData;
-
-use App\Modules\Management\TaskManagement\TaskComment\Actions\RestoreData;
-use App\Modules\Management\TaskManagement\TaskComment\Actions\UpdateStatus;
+use App\Modules\Management\TaskManagement\TaskComment\Actions\GetAllData;
 use App\Modules\Management\TaskManagement\TaskComment\Actions\GetSingleData;
-
-use App\Modules\Management\TaskManagement\TaskComment\Validations\DataStoreValidation;
+use App\Modules\Management\TaskManagement\TaskComment\Actions\ImportData;
+use App\Modules\Management\TaskManagement\TaskComment\Actions\RestoreData;
+use App\Modules\Management\TaskManagement\TaskComment\Actions\SoftDelete;
+use App\Modules\Management\TaskManagement\TaskComment\Actions\StoreData;
+use App\Modules\Management\TaskManagement\TaskComment\Actions\UpdateData;
+use App\Modules\Management\TaskManagement\TaskComment\Actions\UpdateStatus;
 use App\Modules\Management\TaskManagement\TaskComment\Validations\BulkActionsValidation;
-
+use App\Modules\Management\TaskManagement\TaskComment\Validations\DataStoreValidation;
 
 class Controller extends ControllersController
 {
@@ -32,7 +28,8 @@ class Controller extends ControllersController
 
     public function store(DataStoreValidation $request)
     {
-        
+
+        // dd($request->all());
         $data = StoreData::execute($request);
         return $data;
     }
@@ -49,7 +46,7 @@ class Controller extends ControllersController
         return $data;
     }
 
-     public function updateStatus()
+    public function updateStatus()
     {
         $data = UpdateStatus::execute();
         return $data;

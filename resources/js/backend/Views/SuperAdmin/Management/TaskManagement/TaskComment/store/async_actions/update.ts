@@ -3,9 +3,8 @@ import setup from "../../setup";
 import { mapState } from "pinia";
 import { store } from "..";
 
-async function execute(event) {
-
-    let state = mapState(store, ['item']);
+async function execute(event){
+    let state = mapState(store,['item']);
     let form = event.target;
     let form_data = new FormData(form);
     form_data.append('id', state.item().id);
