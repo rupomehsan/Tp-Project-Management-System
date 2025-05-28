@@ -148,7 +148,9 @@ export default {
         this.form_fields.task_id = this.item.task_id;
         this.form_fields.file_name = this.item.file_name;
         this.form_fields.file_path = this.item.file_path;
-        this.form_fields.uploaded_at = this.item.uploaded_at;
+        this.form_fields.uploaded_at = this.item.uploaded_at
+          ? new Date(this.item.uploaded_at).toISOString().split('T')[0]
+          : "";
       }
     },
 

@@ -38,7 +38,8 @@
                   <tr>
                     <th>Uploaded Time</th>
                     <th class="text-center">:</th>
-                    <th>{{ item?.uploaded_at }}</th>
+                    <td>{{ item?.uploaded_at ? item.uploaded_at.slice(0, 10) : 'N/A' }}</td>
+
                   </tr>
                 </tbody>
               </table>

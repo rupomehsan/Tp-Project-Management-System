@@ -167,7 +167,7 @@
                     <td>{{ item?.task?.title ?? "N/A " }}</td>
                     <td>{{ item?.file_name ?? "N/A " }}</td>
                     <td>{{ item?.file_path ?? 'N/A' }}</td>
-                    <td>{{ item?.uploaded_at ?? 'N/A' }}</td>
+                    <td>{{ item?.uploaded_at ? item.uploaded_at.slice(0, 10) : 'N/A' }}</td>
                   </tr>
                 </tbody>
               </table>
