@@ -175,16 +175,7 @@ export default {
       }
     },
 
-    //  get_all_user: async function() {
-    //   try {
-    //     let response = await axios.get('users');
-    //     this.all_users = response.data.data.data;
-    //     } catch (error) {
-    //       console.error('Failed to fetch users:', error);
-    //       this.all_users = [];
-    //     }
-
-    //   },
+    
     get_all_task: async function () {
       try {
         let response = await axios.get("tasks");
