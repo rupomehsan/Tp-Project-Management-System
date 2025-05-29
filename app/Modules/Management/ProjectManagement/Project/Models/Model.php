@@ -13,8 +13,7 @@ class Model extends EloquentModel
 
 
     public static $userModel = \App\Modules\Management\UserManagement\User\Models\Model::class;
-
-    public static $monthlyMealRatesModel = \App\Modules\Management\ProjectManagement\ProjectGroup\Models\Model::class;
+    public static $projectGroupIdsModel = \App\Modules\Management\ProjectManagement\ProjectGroup\Models\Model::class;
 
     protected static function booted()
     {
@@ -53,6 +52,6 @@ class Model extends EloquentModel
 
     public function projectGroupId()
     {
-        return $this->belongsTo(self::$monthlyMealRatesModel, 'project_group_id', 'id');
+        return $this->belongsTo(self::$projectGroupIdsModel, 'project_group_id', 'id');
     }
 }

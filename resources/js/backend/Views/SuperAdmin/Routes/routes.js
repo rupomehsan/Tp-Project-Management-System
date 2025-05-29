@@ -7,9 +7,13 @@ import SettingsRoutes from "../Management/Settings/setup/routes.js";
 //routes
 
 import UserRoutes from '../Management/UserManagement/User/setup/routes.js';
-// Projectg Management
+// Project Management
 import ProjectGroup from '../Management/ProjectManagement/ProjectGroup/setup/routes.js';
 import Project from '../Management/ProjectManagement/Project/setup/routes.js';
+// Task Management
+import Tasks from '../Management/TasksManagement/Tasks/setup/routes.js';
+// Team Management
+import Team from '../Management/TeamManagement/Team/setup/routes.js';
 
 
 import BlogCategroy from '../Management/BasicTestModule/BlogCategory/setup/routes.js';
@@ -31,6 +35,10 @@ const routes = {
         // project Management
         ProjectGroup,
         Project,
+        // Tasks Management
+        Tasks,
+        // Team Management
+        Team,
 
         BlogCategroy,
         //settings

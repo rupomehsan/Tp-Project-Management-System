@@ -28,6 +28,7 @@ class Controller extends ControllersController
     public function store(DataStoreValidation $request)
     {
         $data = StoreData::execute($request);
+        // dd($data);
         return $data;
     }
 

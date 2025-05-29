@@ -26,21 +26,19 @@ include_once base_path("app/Modules/Management/UserManagement/Role/Routes/Route.
 |--------------------------------------------------------------------------
 | Project Management Module
 |--------------------------------------------------------------------------
-
-
 */
 include_once base_path("app/Modules/Management/ProjectManagement/ProjectGroup/Routes/Route.php");
 include_once base_path("app/Modules/Management/ProjectManagement/Project/Routes/Route.php");
+/*
+|--------------------------------------------------------------------------
+| Task Management Module
+|--------------------------------------------------------------------------
+*/
+include_once base_path("app/Modules/Management/TasksManagement/Tasks/Routes/Route.php");
 
-
-
-
-
-include_once base_path("app/Modules/Management/Blog/Routes/Route.php");
-
-
-include_once base_path("app/Modules/Management/TestModule/TestOne/Routes/Route.php");
-include_once base_path("app/Modules/Management/TestModule/TestTwo/Routes/Route.php");
-include_once base_path("app/Modules/Management/Blog/Routes/Route.php");
-include_once base_path("app/Modules/Management/test/Routes/Route.php");
-include_once base_path("app/Modules/Management/TestOneThree/Routes/Route.php");
+/*
+|--------------------------------------------------------------------------
+| Team Management Module
+|--------------------------------------------------------------------------
+*/
+include_once base_path("app/Modules/Management/TeamManagement/Team/Routes/Route.php");

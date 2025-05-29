@@ -21,6 +21,19 @@ use App\Modules\Management\SettingManagement\WebsiteSettings\Seeder\Seeder as We
 use App\Modules\Management\ProjectManagement\ProjectGroup\Seeder\Seeder as ProjectGroupSeeder;
 use App\Modules\Management\ProjectManagement\Project\Seeder\Seeder as ProjectSeeder;
 
+/**
+ * Task seeder management.
+ */
+
+use App\Modules\Management\TasksManagement\Tasks\Seeder\Seeder as TaskSeeder;
+
+
+/**
+ * Team seeder management.
+ */
+
+use App\Modules\Management\TeamManagement\Team\Seeder\Seeder as TeamSeeder;
+
 
 // use App\Modules\Management\BlogCategory\Seeder\Seeder as BlogCategorySeeder;
 
@@ -41,9 +54,16 @@ class DatabaseSeeder extends Seeder
             /**
              * Project seeder management.
              */
-             ProjectGroupSeeder::class,
-             ProjectSeeder::class,
-
+            ProjectGroupSeeder::class,
+            ProjectSeeder::class,
+            /**
+             * Task seeder management.
+             */
+            TaskSeeder::class,
+            /**
+             * Team seeder management.
+             */
+            TeamSeeder::class,
 
         ]);
     }

@@ -42,7 +42,7 @@
                   </select>
                 </div>
               </div>
-              
+
               <div class="form-group">
                 <label for="">Name</label>
                 <div class="mt-1 mb-3">
@@ -96,15 +96,41 @@
                   </select>
                 </div>
               </div>
+              <div class="form-group">
+                <label for="project_link">Project Link</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="url"
+                    class="form-control form-control-square mb-2"
+                    name="project_link"
+                    id="project_link"
+                    v-model="form_fields.project_link"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="project_progress">Project Progress (%)</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="number"
+                    class="form-control form-control-square mb-2"
+                    name="project_progress"
+                    id="project_progress"
+                    v-model="form_fields.project_progress"
+                    min="0"
+                    max="100"
+                  />
+                </div>
+              </div>
             </div>
 
             <div class="col-md-6">
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label for="">User Id</label>
                 <div class="mt-1 mb-3">
                   <select
-                    v-model="form_fields.project_group_id"
-                    class="form-control"
+                    v-model="form_fields.user_id"
+                    class="form-control form-control-square mb-2"
                     name="user_id"
                     id="user_id"
                   >
@@ -117,6 +143,33 @@
                       {{ item.name }}
                     </option>
                   </select>
+                </div>
+              </div> -->
+              
+              <div class="form-group">
+                <label for="project_document">Project Document</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="file"
+                    class="form-control form-control-square mb-2"
+                    name="project_document"
+                    id="project_document"
+                    @change="handleFileUpload($event, 'project_document')"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="project_agrement_file"
+                  >Project Agrement File</label
+                >
+                <div class="mt-1 mb-3">
+                  <input
+                    type="file"
+                    class="form-control form-control-square mb-2"
+                    name="project_agrement_file"
+                    id="project_agrement_file"
+                    @change="handleFileUpload($event, 'project_agrement_file')"
+                  />
                 </div>
               </div>
               <div class="form-group">
@@ -157,11 +210,16 @@ export default {
     param_id: null,
     form_fields: {
       project_group_id: "",
+      user_id: [],
       name: "",
       description: "",
       start_date: "",
       end_date: "",
       project_status: "",
+      project_link: "",
+      project_progress: "",
+      project_agrement_file: null,
+      project_document: null,
     },
     userProjectGroup: [],
     userData: [],
@@ -213,7 +271,9 @@ export default {
         $("#description").summernote("code", this.item.description);
       }
     },
-
+    handleFileUpload(event, field) {
+      this.form_fields[field] = event.target.files[0];
+    },
     submitHandler: async function ($event) {
       // this.set_only_latest_data(true);
       if (this.param_id) {

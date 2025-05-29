@@ -74,6 +74,31 @@
         ]"
       />
 
+      <!-- Team Management -->
+       <side-bar-drop-down-menus
+        :icon="`fa fa-plus`"
+        :menu_title="`Team Management`"
+        :menus="[
+          {
+            route_name: `AllTeam`,
+            title: `Team`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+        ]"
+      />
+      <!-- Task Management -->
+       <side-bar-drop-down-menus
+        :icon="`fa fa-plus`"
+        :menu_title="`Task Management`"
+        :menus="[
+          {
+            route_name: `AllTasks`,
+            title: `Tasks`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+        ]"
+      />
+
       <!-- Management end -->
     </ul>
   </div>

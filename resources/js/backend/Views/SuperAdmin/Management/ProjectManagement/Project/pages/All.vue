@@ -60,6 +60,10 @@
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Project Status</th>
+                    <th>project_link</th>
+                    <th>project_agrement_file</th>
+                    <th>project_document</th>
+                    <th>project_progress</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -170,6 +174,10 @@
                     <td>{{ item.start_date }}</td>
                     <td>{{ item.end_date }}</td>
                     <td>{{ item.project_status }}</td>
+                    <td>{{ item.project_link }}</td>
+                    <td>{{ item.project_agrement_file }}</td>
+                    <td>{{ item.project_document }}</td>
+                    <td>{{ item.project_progress }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />
