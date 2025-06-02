@@ -20,6 +20,11 @@ use App\Modules\Management\SettingManagement\WebsiteSettings\Seeder\Seeder as We
 
 use App\Modules\Management\ProjectManagement\ProjectGroup\Seeder\Seeder as ProjectGroupSeeder;
 use App\Modules\Management\ProjectManagement\Project\Seeder\Seeder as ProjectSeeder;
+/**
+ * Todo seeder management.
+ */
+use App\Modules\Management\TodoManagement\Category\Seeder\Seeder as CategorySeeder;
+use App\Modules\Management\TodoManagement\AddTodo\Seeder\Seeder as AddTodoSeeder;
 
 /**
  * Task seeder management.
@@ -56,6 +61,11 @@ class DatabaseSeeder extends Seeder
              */
             ProjectGroupSeeder::class,
             ProjectSeeder::class,
+            /**
+             * Todo seeder management.
+             */
+            CategorySeeder::class,
+            AddTodoSeeder::class,
             /**
              * Task seeder management.
              */

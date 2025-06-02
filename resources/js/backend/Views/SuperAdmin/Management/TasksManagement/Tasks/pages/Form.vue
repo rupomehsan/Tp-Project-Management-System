@@ -56,30 +56,8 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="start_date">Start Date</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    type="date"
-                    class="form-control form-control-square mb-2"
-                    name="start_date"
-                    id="start_date"
-                    v-model="form_fields.start_date"
-                  />
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="end_date">End Date</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    type="date"
-                    class="form-control form-control-square mb-2"
-                    name="end_date"
-                    id="end_date"
-                    v-model="form_fields.end_date"
-                  />
-                </div>
-              </div>
+            
+             
               <div class="form-group">
                 <label for="">Project status</label>
                 <div class="mt-1 mb-3">
@@ -99,6 +77,7 @@
             </div>
 
             <div class="col-md-6">
+              
               <div class="form-group">
                 <label for="">User Id</label>
                 <div class="mt-1 mb-3">
@@ -119,7 +98,35 @@
                   </select>
                 </div>
               </div>
-              <div class="form-group">
+                <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="datetime-local"
+                    class="form-control form-control-square mb-2"
+                    name="start_date"
+                    id="start_date"
+                    v-model="form_fields.start_date"
+                  />
+                </div>
+              </div>
+               <div class="form-group">
+                <label for="end_date">End Date</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="datetime-local"
+                    class="form-control form-control-square mb-2"
+                    name="end_date"
+                    id="end_date"
+                    v-model="form_fields.end_date"
+                  />
+                </div>
+              </div>
+             
+            </div>
+
+            <div class="col-md-12">
+               <div class="form-group">
                 <label for="">description</label>
                 <div class="mt-1 mb-3">
                   <text-editor :name="'description'" />

@@ -10,6 +10,10 @@ import UserRoutes from '../Management/UserManagement/User/setup/routes.js';
 // Project Management
 import ProjectGroup from '../Management/ProjectManagement/ProjectGroup/setup/routes.js';
 import Project from '../Management/ProjectManagement/Project/setup/routes.js';
+// Todo Management
+import TodoCategory from '../Management/TodoManagement/Category/setup/routes.js';
+import AddTodo from '../Management/TodoManagement/AddTodo/setup/routes.js';
+
 // Task Management
 import Tasks from '../Management/TasksManagement/Tasks/setup/routes.js';
 // Team Management
@@ -35,6 +39,9 @@ const routes = {
         // project Management
         ProjectGroup,
         Project,
+        // Todo Management
+        TodoCategory,
+        AddTodo,
         // Tasks Management
         Tasks,
         // Team Management

@@ -31,6 +31,13 @@ include_once base_path("app/Modules/Management/ProjectManagement/ProjectGroup/Ro
 include_once base_path("app/Modules/Management/ProjectManagement/Project/Routes/Route.php");
 /*
 |--------------------------------------------------------------------------
+| Todo Management Module
+|--------------------------------------------------------------------------
+*/
+include_once base_path("app/Modules/Management/TodoManagement/category/Routes/Route.php");
+include_once base_path("app/Modules/Management/TodoManagement/AddTodo/Routes/Route.php");
+/*
+|--------------------------------------------------------------------------
 | Task Management Module
 |--------------------------------------------------------------------------
 */

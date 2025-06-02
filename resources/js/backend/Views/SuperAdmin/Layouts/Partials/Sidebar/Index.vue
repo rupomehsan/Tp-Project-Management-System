@@ -57,7 +57,7 @@
       />
 
       <!-- Project Management -->
-       <side-bar-drop-down-menus
+      <side-bar-drop-down-menus
         :icon="`fa fa-plus`"
         :menu_title="`Project Management`"
         :menus="[
@@ -73,9 +73,25 @@
           },
         ]"
       />
-
+      <!-- Todo Management -->
+      <side-bar-drop-down-menus
+        :icon="`fa fa-plus`"
+        :menu_title="`Todo Management`"
+        :menus="[
+          {
+            route_name: `AllCategory`,
+            title: `Category`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllAddTodo`,
+            title: `Add Todo`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+        ]"
+      />
       <!-- Team Management -->
-       <side-bar-drop-down-menus
+      <side-bar-drop-down-menus
         :icon="`fa fa-plus`"
         :menu_title="`Team Management`"
         :menus="[
@@ -87,7 +103,7 @@
         ]"
       />
       <!-- Task Management -->
-       <side-bar-drop-down-menus
+      <side-bar-drop-down-menus
         :icon="`fa fa-plus`"
         :menu_title="`Task Management`"
         :menus="[

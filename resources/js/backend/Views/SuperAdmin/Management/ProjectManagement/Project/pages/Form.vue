@@ -22,6 +22,18 @@
         <div class="card-body card_body_fixed_height">
           <div class="row">
             <div class="col-md-6">
+               <div class="form-group">
+                <label for="">Name</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    class="form-control form-control-square mb-2"
+                    type="text"
+                    name="name"
+                    id="name"
+                    v-model="form_fields.name"
+                  />
+                </div>
+              </div>
               <div class="form-group">
                 <label for="">Project group Id</label>
                 <div class="mt-1 mb-3">
@@ -43,18 +55,7 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="">Name</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    class="form-control form-control-square mb-2"
-                    type="text"
-                    name="name"
-                    id="name"
-                    v-model="form_fields.name"
-                  />
-                </div>
-              </div>
+             
 
               <div class="form-group">
                 <label for="start_date">Start Date</label>
@@ -68,34 +69,8 @@
                   />
                 </div>
               </div>
-              <div class="form-group">
-                <label for="end_date">End Date</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    type="date"
-                    class="form-control form-control-square mb-2"
-                    name="end_date"
-                    id="end_date"
-                    v-model="form_fields.end_date"
-                  />
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="">Project status</label>
-                <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.project_status"
-                    class="form-control form-control-square mb-2"
-                    name="project_status"
-                    id="project_status"
-                  >
-                    <option value="Not Started">Not Started</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                    <option value="On Hold">On Hold</option>
-                  </select>
-                </div>
-              </div>
+             
+            
               <div class="form-group">
                 <label for="project_link">Project Link</label>
                 <div class="mt-1 mb-3">
@@ -172,7 +147,40 @@
                   />
                 </div>
               </div>
-              <div class="form-group">
+
+               <div class="form-group">
+                <label for="end_date">End Date</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="date"
+                    class="form-control form-control-square mb-2"
+                    name="end_date"
+                    id="end_date"
+                    v-model="form_fields.end_date"
+                  />
+                </div>
+              </div>
+
+                <div class="form-group">
+                <label for="">Project status</label>
+                <div class="mt-1 mb-3">
+                  <select
+                    v-model="form_fields.project_status"
+                    class="form-control form-control-square mb-2"
+                    name="project_status"
+                    id="project_status"
+                  >
+                    <option value="Not Started">Not Started</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="On Hold">On Hold</option>
+                  </select>
+                </div>
+              </div>
+            
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
                 <label for="">description</label>
                 <div class="mt-1 mb-3">
                   <text-editor :name="'description'" />
