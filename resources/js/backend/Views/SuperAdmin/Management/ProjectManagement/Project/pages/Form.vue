@@ -36,6 +36,7 @@
               </div>
               <div class="form-group">
                 <label for="">Project group Id</label>
+                 
                 <div class="mt-1 mb-3">
                   <select
                     v-model="form_fields.project_group_id"
@@ -73,6 +74,7 @@
             
               <div class="form-group">
                 <label for="project_link">Project Link</label>
+              
                 <div class="mt-1 mb-3">
                   <input
                     type="url"
@@ -123,6 +125,11 @@
               
               <div class="form-group">
                 <label for="project_document">Project Document</label>
+                 <span >
+                  <a class="btn btn-info btn-sm mx-2" :href="form_fields.project_document" target="_blank">
+                     Click here
+                  </a>
+                </span>
                 <div class="mt-1 mb-3">
                   <input
                     type="file"
@@ -137,6 +144,11 @@
                 <label for="project_agrement_file"
                   >Project Agrement File</label
                 >
+                 <span >
+                  <a class="btn btn-info btn-sm mx-2" :href="form_fields.project_agrement_file" target="_blank">
+                     Click here
+                  </a>
+                </span>
                 <div class="mt-1 mb-3">
                   <input
                     type="file"
@@ -276,6 +288,10 @@ export default {
         this.form_fields.start_date = this.item.start_date;
         this.form_fields.end_date = this.item.end_date;
         this.form_fields.project_status = this.item.project_status;
+        this.form_fields.project_link = this.item.project_link;
+        this.form_fields.project_progress = this.item.project_progress;
+        this.form_fields.project_agrement_file = this.item.project_agrement_file;
+        this.form_fields.project_document = this.item.project_document;
         $("#description").summernote("code", this.item.description);
       }
     },
