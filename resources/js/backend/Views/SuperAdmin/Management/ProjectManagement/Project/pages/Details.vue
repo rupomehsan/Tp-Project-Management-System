@@ -53,7 +53,7 @@
                   <tr>
                     <th>Project Link</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.project_link }}</th>
+                    <th> <a class="btn btn-info" target="_blank" :href="item.project_link">Click here</a> </th>
                   </tr>
                   <tr>
                     <th>Project progress</th>
@@ -63,7 +63,7 @@
                   <tr>
                     <th>Project agrement File</th>
                     <th class="text-center">:</th>
-                    <th><span >
+                    <th><span v-if="item.project_agrement_file" >
                   <a class="btn btn-info btn-sm mx-2" :href="item.project_agrement_file" target="_blank">
                      Click here
                   </a>
@@ -72,7 +72,7 @@
                   <tr>
                     <th>Project Document</th>
                     <th class="text-center">:</th>
-                    <th><span >
+                    <th><span v-if="item.project_document" >
                   <a class="btn btn-info btn-sm mx-2" :href="item.project_document" target="_blank">
                      Click here
                   </a>
