@@ -51,7 +51,7 @@ class Model extends EloquentModel
         return $this->belongsTo(self::$userModel, 'assigned_to', 'id');
     }
 
-    public function project()
+    public function projectId()
     {
         return $this->belongsTo(self::$monthlyMealRatesModel, 'project_id','id');
     }

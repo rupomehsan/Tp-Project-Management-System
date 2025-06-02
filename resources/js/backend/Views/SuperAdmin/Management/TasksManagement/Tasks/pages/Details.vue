@@ -21,14 +21,14 @@
               <table class="table quick_modal_table table-bordered">
                 <tbody>
                   <tr>
-                    <th>Name</th>
+                    <th>Project Name</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.project_group_id?.name }}</th>
+                    <th>{{ item.project_id?.name }}</th>
                   </tr>
                   <tr>
-                    <th>Name</th>
+                    <th>title</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.name }}</th>
+                    <th>{{ item.title }}</th>
                   </tr>
                   <tr>
                     <th>Description</th>
@@ -36,19 +36,34 @@
                     <th>{{ item.description }}</th>
                   </tr>
                   <tr>
-                    <th>tart Date</th>
+                    <th>System Loss</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.start_date }}</th>
+                    <td>{{ item.system_loss }}%</td>
+                  </tr>
+                  <tr>
+                    <th>Assigned To</th>
+                    <th class="text-center">:</th>
+                    <td>{{ item.user?.name || "Not Assigned" }}</td>
+                  </tr>
+                  <tr>
+                    <th>Start Date</th>
+                    <th class="text-center">:</th>
+                    <td>{{ formatDateTime(item.start_date) }}</td>
                   </tr>
                   <tr>
                     <th>End Date</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.end_date }}</th>
+                    <td>{{ formatDateTime(item.end_date) }}</td>
                   </tr>
                   <tr>
-                    <th>Project Status</th>
+                    <th>Task Status</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.project_status }}</th>
+                    <td>{{ item.task_status }}</td>
+                  </tr>
+                  <tr>
+                    <th>Priority</th>
+                    <th class="text-center">:</th>
+                    <td class="text-capitalize">{{ item.priority }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -111,6 +126,19 @@ export default {
     get_data: async function (slug) {
       this.item = {};
       await this.details(slug);
+    },
+    formatDateTime(dateTime) {
+      if (!dateTime) return "";
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      };
+      return new Date(dateTime).toLocaleString("en-US", options);
     },
   },
   computed: {

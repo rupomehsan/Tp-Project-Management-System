@@ -23,15 +23,15 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="">Project group Id</label>
+                <label for="">Project Id</label>
                 <div class="mt-1 mb-3">
                   <select
-                    v-model="form_fields.project_group_id"
+                    v-model="form_fields.project_id"
                     class="form-control"
-                    name="project_group_id"
-                    id="project_group_id"
+                    name="project_id"
+                    id="project_id"
                   >
-                    <option value="">Selet-- Project group Id</option>
+                    <option value="">Selet-- Project Id</option>
                     <option
                       v-for="item in userProjectGroup?.data"
                       :key="item.id"
@@ -42,50 +42,16 @@
                   </select>
                 </div>
               </div>
-              
-              <div class="form-group">
-                <label for="">Name</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    class="form-control form-control-square mb-2"
-                    type="text"
-                    name="name"
-                    id="name"
-                    v-model="form_fields.name"
-                  />
-                </div>
-              </div>
-
-            
-             
-              <div class="form-group">
-                <label for="">Project status</label>
-                <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.project_status"
-                    class="form-control form-control-square mb-2"
-                    name="project_status"
-                    id="project_status"
-                  >
-                    <option value="Not Started">Not Started</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                    <option value="On Hold">On Hold</option>
-                  </select>
-                </div>
-              </div>
             </div>
-
             <div class="col-md-6">
-              
               <div class="form-group">
-                <label for="">User Id</label>
+                <label for="">assigned_to</label>
                 <div class="mt-1 mb-3">
                   <select
-                    v-model="form_fields.project_group_id"
+                    v-model="form_fields.assigned_to"
                     class="form-control"
-                    name="user_id"
-                    id="user_id"
+                    name="assigned_to"
+                    id="assigned_to"
                   >
                     <option value="">Selet-- User Id</option>
                     <option
@@ -98,7 +64,59 @@
                   </select>
                 </div>
               </div>
-                <div class="form-group">
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">Title</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    class="form-control form-control-square mb-2"
+                    type="text"
+                    name="title"
+                    id="title"
+                    v-model="form_fields.title"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">Task status</label>
+                <div class="mt-1 mb-3">
+                  <select
+                    v-model="form_fields.task_status"
+                    class="form-control form-control-square mb-2"
+                    name="task_status"
+                    id="task_status"
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">Priority</label>
+                <div class="mt-1 mb-3">
+                  <select
+                    v-model="form_fields.priority"
+                    class="form-control form-control-square mb-2"
+                    name="priority"
+                    id="priority"
+                  >
+                    <option value="low">Low</option>
+                    <option value="normal">Normal</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
                 <label for="start_date">Start Date</label>
                 <div class="mt-1 mb-3">
                   <input
@@ -110,7 +128,9 @@
                   />
                 </div>
               </div>
-               <div class="form-group">
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
                 <label for="end_date">End Date</label>
                 <div class="mt-1 mb-3">
                   <input
@@ -122,11 +142,10 @@
                   />
                 </div>
               </div>
-             
             </div>
 
             <div class="col-md-12">
-               <div class="form-group">
+              <div class="form-group">
                 <label for="">description</label>
                 <div class="mt-1 mb-3">
                   <text-editor :name="'description'" />
@@ -163,12 +182,14 @@ export default {
     setup,
     param_id: null,
     form_fields: {
-      project_group_id: "",
-      name: "",
+      project_id: "",
+      assigned_to: "",
+      title: "",
       description: "",
       start_date: "",
       end_date: "",
-      project_status: "",
+      task_status: "",
+      priority: "",
     },
     userProjectGroup: [],
     userData: [],
@@ -212,11 +233,13 @@ export default {
       this.param_id = id;
       await this.details(id);
       if (this.item) {
-        this.form_fields.project_group_id = this.item.project_group_id?.id;
-        this.form_fields.name = this.item.name;
+        this.form_fields.project_id = this.item.project_id?.id;
+        this.form_fields.assigned_to = this.item.assigned_to;
+        this.form_fields.title = this.item.title;
         this.form_fields.start_date = this.item.start_date;
         this.form_fields.end_date = this.item.end_date;
-        this.form_fields.project_status = this.item.project_status;
+        this.form_fields.task_status = this.item.task_status;
+        this.form_fields.priority = this.item.priority;
         $("#description").summernote("code", this.item.description);
       }
     },

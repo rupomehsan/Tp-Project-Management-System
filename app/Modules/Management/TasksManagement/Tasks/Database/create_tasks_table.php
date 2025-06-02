@@ -19,8 +19,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('system_loss')->default(0);
             $table->unsignedBigInteger('assigned_to')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('due_date')->nullable();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
             $table->enum('task_status', ['Pending', 'In Progress', 'Completed'])->default('Pending');
             $table->enum('priority', ['low', 'normal', 'high', 'urgent'])->default('low');
             $table->bigInteger('creator')->unsigned()->nullable();

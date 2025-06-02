@@ -56,19 +56,27 @@
                     <th>{{ item.project_link }}</th>
                   </tr>
                   <tr>
+                    <th>Project progress</th>
+                    <th class="text-center">:</th>
+                    <th>{{ item.project_progress }}</th>
+                  </tr>
+                  <tr>
                     <th>Project agrement File</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.project_agrement_file }}</th>
+                    <th><span >
+                  <a class="btn btn-info btn-sm mx-2" :href="item.project_agrement_file" target="_blank">
+                     Click here
+                  </a>
+                </span></th>
                   </tr>
                   <tr>
                     <th>Project Document</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.project_document }}</th>
-                  </tr>
-                  <tr>
-                    <th>Project progress</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.project_progress }}</th>
+                    <th><span >
+                  <a class="btn btn-info btn-sm mx-2" :href="item.project_document" target="_blank">
+                     Click here
+                  </a>
+                </span></th>
                   </tr>
                 </tbody>
               </table>

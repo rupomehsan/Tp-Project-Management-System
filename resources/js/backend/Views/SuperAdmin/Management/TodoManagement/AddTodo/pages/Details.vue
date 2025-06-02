@@ -23,33 +23,15 @@
                   <tr>
                     <th>Name</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.project_group_id?.name }}</th>
+                    <th>{{ item.category_id?.name }}</th>
                   </tr>
-                  <tr>
-                    <th>Name</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.name }}</th>
-                  </tr>
+                 
                   <tr>
                     <th>Description</th>
                     <th class="text-center">:</th>
                     <th>{{ item.description }}</th>
                   </tr>
-                  <tr>
-                    <th>tart Date</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.start_date }}</th>
-                  </tr>
-                  <tr>
-                    <th>End Date</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.end_date }}</th>
-                  </tr>
-                  <tr>
-                    <th>Project Status</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.project_status }}</th>
-                  </tr>
+                  
                 </tbody>
               </table>
             </div>

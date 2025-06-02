@@ -57,11 +57,10 @@
                     <th class="w-10">ID</th>
                     <th>Project</th>
                     <th>Title</th>
-                    <th>Description</th>
                     <th>System Loss</th>
                     <th>Assigned To</th>
                     <th>Start Date</th>
-                    <th>Due Date</th>
+                    <th>End Date</th>
                     <th>Task Status</th>
                     <th>Priority</th>
                   </tr>
@@ -169,13 +168,12 @@
                       />
                     </td>
                     <td>{{ index + 1 }}</td>
-                    <td>{{ item.project?.name }}</td>
+                    <td>{{ item.project_id?.name }}</td>
                     <td>{{ item.title }}</td>
-                    <td>{{ item.description }}</td>
                     <td>{{ item.system_loss }}</td>
                     <td>{{ item.user?.name }}</td>
-                    <td>{{ item.start_date }}</td>
-                    <td>{{ item.due_date }}</td>
+                    <td>{{ formatDateTime(item.start_date) }}</td>
+                    <td>{{ formatDateTime(item.end_date) }}</td>
                     <td>{{ item.task_status }}</td>
                     <td>{{ item.priority }}</td>
 
@@ -544,6 +542,20 @@ export default {
       "set_status",
       "set_paginate",
     ]),
+
+    formatDateTime(dateTime) {
+      if (!dateTime) return "";
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      };
+      return new Date(dateTime).toLocaleString("en-US", options);
+    },
 
     active_row(event) {
       const targetRow = event.target.closest(".table_rows");
