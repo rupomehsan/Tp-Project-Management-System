@@ -34,6 +34,8 @@
                   />
                 </div>
               </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-group">
                 <label for="">User Id</label>
                 <div class="mt-1 mb-3">
@@ -55,8 +57,7 @@
                 </div>
               </div>
             </div>
-
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="form-group">
                 <label for="">description</label>
                 <div class="mt-1 mb-3">
@@ -89,7 +90,7 @@ export default {
     form_fields: {
       name: "",
       description: "",
-    },    
+    },
     userData: [],
   }),
   created: async function () {
@@ -109,7 +110,6 @@ export default {
       set_only_latest_data: "set_only_latest_data",
     }),
 
-   
     async get_user_data() {
       try {
         let res = await axios.get("/users");

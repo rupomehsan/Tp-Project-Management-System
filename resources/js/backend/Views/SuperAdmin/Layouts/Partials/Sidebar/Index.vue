@@ -73,6 +73,18 @@
           },
         ]"
       />
+       <!-- Task Management -->
+      <side-bar-drop-down-menus
+        :icon="`fa fa-plus`"
+        :menu_title="`Task Management`"
+        :menus="[
+          {
+            route_name: `AllTasks`,
+            title: `Tasks`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+        ]"
+      />
       <!-- Todo Management -->
       <side-bar-drop-down-menus
         :icon="`fa fa-plus`"
@@ -102,18 +114,7 @@
           },
         ]"
       />
-      <!-- Task Management -->
-      <side-bar-drop-down-menus
-        :icon="`fa fa-plus`"
-        :menu_title="`Task Management`"
-        :menus="[
-          {
-            route_name: `AllTasks`,
-            title: `Tasks`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
-        ]"
-      />
+     
 
       <!-- Management end -->
     </ul>
