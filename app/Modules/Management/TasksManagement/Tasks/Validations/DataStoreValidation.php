@@ -48,7 +48,7 @@ class DataStoreValidation extends FormRequest
             'system_loss' => 'required | sometimes',
             'assigned_to' => 'required | sometimes',
             'start_date' => 'required | sometimes',
-            'due_date' => 'required | sometimes',
+            'end_date' => 'required | sometimes',
             'task_status'  => ['sometimes', Rule::in(['Pending', 'In Progress', 'Completed'])],
             'priority'     => ['sometimes', Rule::in(['low', 'normal', 'high', 'urgent'])],
 

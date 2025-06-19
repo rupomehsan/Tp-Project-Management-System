@@ -19,7 +19,9 @@ class GetAllData
             $fields = request()->input('fields') ?? '*';
             $start_date = request()->input('start_date');
             $end_date = request()->input('end_date');
-            $with = ['user','projectId'];
+            $task_status = request()->input('task_status');
+            $priority = request()->input('priority');
+            $with = ['user', 'projectId'];
             $condition = [];
 
             $data = self::$model::query();
@@ -39,6 +41,12 @@ class GetAllData
                 } elseif ($end_date == $start_date) {
                     $data->whereDate('created_at', $start_date);
                 }
+            }
+            if ($task_status !== null && $task_status !== '') {
+                $data->where('task_status', $task_status);
+            }
+            if ($priority !== null && $priority !== '') {
+                $data->where('priority', $priority);
             }
 
             if ($status == 'trased') {

@@ -3,6 +3,7 @@ import All from "../pages/All.vue";
 import Form from "../pages/Form.vue";
 import Details from "../pages/Details.vue";
 import Layout from "../pages/Layout.vue";
+import Tasks from "../pages/Tasks.vue";
 
 let route_prefix = setup.route_prefix;
 let route_path = setup.route_path;
@@ -25,6 +26,11 @@ const routes = {
             path: "details/:id",
             name: "Details" + route_prefix,
             component: Details,
+        },
+         {
+            path: "Tasks/:id",
+            name: "Tasks" + route_prefix,
+            component: Tasks,
         },
         {
             path: "edit/:id",

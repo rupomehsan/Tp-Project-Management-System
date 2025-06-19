@@ -37,6 +37,82 @@
             <div
               class="table-responsive table_responsive card_body_fixed_height"
             >
+              <div class="d-flex justify-content-between mb-3">
+                <!-- Task Status Filter -->
+                <div
+                  class="mb-3 d-flex align-items-center flex-wrap"
+                  style="gap: 0.5rem"
+                >
+                  <span class="font-weight-bold mr-2">Status</span>
+                  <button
+                    class="btn btn-outline-secondary btn-sm"
+                    :class="{ active: !taskStatusFilterValue }"
+                    @click="cleartaskStatusFilter"
+                  >
+                    All
+                  </button>
+                  <button
+                    class="btn btn-outline-danger btn-sm"
+                    :class="{ active: taskStatusFilterValue === 'Pending' }"
+                    @click="taskStatusFilter('Pending')"
+                  >
+                    Pending
+                  </button>
+                  <button
+                    class="btn btn-outline-warning btn-sm"
+                    :class="{ active: taskStatusFilterValue === 'In Progress' }"
+                    @click="taskStatusFilter('In Progress')"
+                  >
+                    In Progress
+                  </button>
+                  <button
+                    class="btn btn-outline-info btn-sm"
+                    :class="{ active: taskStatusFilterValue === 'Completed' }"
+                    @click="taskStatusFilter('Completed')"
+                  >
+                    Completed
+                  </button>
+                </div>
+                <!-- Priority Filter -->
+                <div
+                  class="mb-3 d-flex align-items-center flex-wrap"
+                  style="gap: 0.5rem"
+                >
+                  <span class="font-weight-bold mr-2">Priority</span>
+                  <button
+                    class="btn btn-outline-secondary btn-sm"
+                    :class="{ active: !priorityFilterValue }"
+                    @click="clearPriorityFilter"
+                    type="button"
+                  >
+                    All
+                  </button>
+                  <button
+                    class="btn btn-outline-danger btn-sm"
+                    :class="{ active: priorityFilterValue === 'urgent' }"
+                    @click="priorityFilter('urgent')"
+                    type="button"
+                  >
+                    Urgent
+                  </button>
+                  <button
+                    class="btn btn-outline-warning btn-sm"
+                    :class="{ active: priorityFilterValue === 'high' }"
+                    @click="priorityFilter('high')"
+                    type="button"
+                  >
+                    High
+                  </button>
+                  <button
+                    class="btn btn-outline-info btn-sm"
+                    :class="{ active: priorityFilterValue === 'normal' }"
+                    @click="priorityFilter('normal')"
+                    type="button"
+                  >
+                    Normal
+                  </button>
+                </div>
+              </div>
               <table class="table table-hover text-center table-bordered">
                 <thead>
                   <tr>
@@ -693,7 +769,28 @@ export default {
         }
       }
     },
+    taskStatusFilter(task_status) {
+      this.set_filter_criteria({ task_status }); // Update filter criteria
+      this.set_only_latest_data(true); // Reset to first page
+      this.get_all(); // Fetch filtered data
+    },
 
+    cleartaskStatusFilter() {
+      this.set_filter_criteria({ task_status: null }); // Clear task status filter
+      this.set_only_latest_data(true); // Reset to first page
+      this.get_all(); // Fetch unfiltered data
+    },
+    priorityFilter(priority) {
+      this.set_filter_criteria({ priority }); // Update filter criteria
+      this.set_only_latest_data(true); // Reset to first page
+      this.get_all(); // Fetch filtered data
+    },
+
+    clearPriorityFilter() {
+      this.set_filter_criteria({ priority: null }); // Clear priority filter
+      this.set_only_latest_data(true); // Reset to first page
+      this.get_all(); // Fetch unfiltered data
+    },
     FileUploadHandler: async function ($event) {
       let response = await this.import_data($event);
       if (response.data.status === "success") {

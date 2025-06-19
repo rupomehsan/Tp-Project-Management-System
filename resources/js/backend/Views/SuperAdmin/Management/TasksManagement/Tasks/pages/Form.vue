@@ -33,7 +33,7 @@
                   >
                     <option value="">Selet-- Project Id</option>
                     <option
-                      v-for="item in userProjectGroup?.data"
+                      v-for="item in userProject?.data"
                       :key="item.id"
                       :value="item.id"
                     >
@@ -191,17 +191,23 @@ export default {
       task_status: "",
       priority: "",
     },
-    userProjectGroup: [],
+    userProject: [],
     userData: [],
   }),
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
+    let project_id =  this.$route.query.project_id;
+    if (project_id) {
+      this.form_fields.project_id = project_id;
+    } 
+
     if (id) {
       this.set_fields(id);
     }
 
-    await this.get_project_group_data();
+    await this.get_project_data();
     await this.get_user_data();
+
   },
   methods: {
     ...mapActions(store, {
@@ -212,10 +218,10 @@ export default {
       set_only_latest_data: "set_only_latest_data",
     }),
 
-    async get_project_group_data() {
+    async get_project_data() {
       try {
-        let res = await axios.get("/project-group");
-        this.userProjectGroup = res.data.data; // ✅ Assign data properly
+        let res = await axios.get("/project");
+        this.userProject = res.data.data; // ✅ Assign data properly
       } catch (error) {
         console.error("Error fetching project group", error);
       }

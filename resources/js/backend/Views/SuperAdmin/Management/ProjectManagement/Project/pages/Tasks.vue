@@ -4,7 +4,7 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h5 class="text-capitalize">
-            {{ setup.details_page_title }}
+            Project Tasks
           </h5>
           <div>
             <router-link
@@ -21,62 +21,41 @@
               <table class="table quick_modal_table table-bordered">
                 <tbody>
                   <tr>
-                    <th>Name</th>
+                    <th>Project Group Name</th>
                     <th class="text-center">:</th>
                     <th>{{ item.project_group_id?.name }}</th>
                   </tr>
                   <tr>
-                    <th>task</th>
+                    <th>Name</th>
                     <th class="text-center">:</th>
                     <th>{{ item.name }}</th>
                   </tr>
+                </tbody>
+              </table>
+              <table class="table table-bordered mt-3">
+                <thead>
                   <tr>
-                    <th>Description</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.description }}</th>
-                  </tr>
-                  <tr>
-                    <th>tart Date</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.start_date }}</th>
-                  </tr>
-                  <tr>
+                    <th>#</th>
+                    <th>Task Title</th>
+                    <th>Status</th>
                     <th>End Date</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.end_date }}</th>
+                    <th>Start Date</th>
                   </tr>
-                  <tr>
-                    <th>Project Status</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.project_status }}</th>
+                </thead>
+                <tbody>
+                  <tr
+                    v-if="Array.isArray(item.tasks) && item.tasks.length"
+                    v-for="(task, index) in item.tasks"
+                    :key="index"
+                  >
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.status }}</td>
+                    <td>{{ task.end_date }}</td>
+                    <td>{{ task.start_date }}</td>
                   </tr>
-                  <tr>
-                    <th>Project Link</th>
-                    <th class="text-center">:</th>
-                    <th> <a class="btn btn-info" target="_blank" :href="item.project_link">Click here</a> </th>
-                  </tr>
-                  <tr>
-                    <th>Project progress</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.project_progress }}</th>
-                  </tr>
-                  <tr>
-                    <th>Project agrement File</th>
-                    <th class="text-center">:</th>
-                    <th><span v-if="item.project_agrement_file" >
-                  <a class="btn btn-info btn-sm mx-2" :href="item.project_agrement_file" target="_blank">
-                     Click here
-                  </a>
-                </span></th>
-                  </tr>
-                  <tr>
-                    <th>Project Document</th>
-                    <th class="text-center">:</th>
-                    <th><span v-if="item.project_document" >
-                  <a class="btn btn-info btn-sm mx-2" :href="item.project_document" target="_blank">
-                     Click here
-                  </a>
-                </span></th>
+                  <tr v-else>
+                    <td colspan="4" class="text-center">No tasks available.</td>
                   </tr>
                 </tbody>
               </table>
@@ -86,12 +65,10 @@
         <div class="card-footer">
           <router-link
             class="btn btn-outline-warning btn-sm"
-            :to="{
-              name: `Edit${setup.route_prefix}`,
-              params: { id: item.slug },
-            }"
+            :to="`/tasks/create?project_id=${item.id}`"
+
           >
-            {{ setup.edit_page_title }}
+            Create Task
           </router-link>
 
           <a

@@ -144,7 +144,7 @@
                 <label for="project_agrement_file"
                   >Project Agrement File</label
                 >
-                 <span >
+                 <span>
                   <a class="btn btn-info btn-sm mx-2" :href="form_fields.project_agrement_file" target="_blank">
                      Click here
                   </a>

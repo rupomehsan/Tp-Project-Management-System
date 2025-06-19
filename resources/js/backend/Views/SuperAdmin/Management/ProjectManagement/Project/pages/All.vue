@@ -93,6 +93,7 @@
                               Show
                             </router-link>
                           </li>
+                          
                           <li>
                             <router-link
                               :to="{
@@ -156,6 +157,20 @@
                               <i class="fa fa-trash text-danger"></i>
                               Destroy
                             </a>
+                          </li>
+                          <li>
+                            <router-link
+                              :to="{
+                                name: `Tasks${setup.route_prefix}`,
+                                params: {
+                                  id: item.slug,
+                                },
+                              }"
+                              class="border-secondary"
+                            >
+                              <i class="fa fa-eye text-secondary"></i>
+                              Tasks
+                            </router-link>
                           </li>
                         </ul>
                       </div>

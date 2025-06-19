@@ -14,6 +14,7 @@ class Model extends EloquentModel
 
     public static $userModel = \App\Modules\Management\UserManagement\User\Models\Model::class;
     public static $projectGroupIdsModel = \App\Modules\Management\ProjectManagement\ProjectGroup\Models\Model::class;
+    public static $tasksIdsModel = \App\Modules\Management\TasksManagement\Tasks\Models\Model::class;
 
     protected static function booted()
     {
@@ -53,5 +54,9 @@ class Model extends EloquentModel
     public function projectGroupId()
     {
         return $this->belongsTo(self::$projectGroupIdsModel, 'project_group_id', 'id');
+    }
+    public function tasks()
+    {
+        return $this->hasMany(self::$tasksIdsModel,'project_id' );
     }
 }
