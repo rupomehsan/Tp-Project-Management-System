@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('project_document');
             $table->integer('project_progress');
             $table->enum('project_status', ['Not Started', 'In Progress', 'Completed', 'On Hold'])->default('Not Started');
+            $table->enum('delivery_status', ['Yet to meeting', 'Testing Phase', 'Successfully Delivered', 'Delivery process not started'])->default('Yet to meeting');
+            $table->tinyInteger('client_rating')->nullable()->comment('Rating out of 10');
 
             $table->bigInteger('creator')->unsigned()->nullable();
             $table->string('slug', 50)->nullable();

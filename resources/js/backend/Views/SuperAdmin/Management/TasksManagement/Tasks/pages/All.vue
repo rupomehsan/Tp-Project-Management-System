@@ -133,12 +133,10 @@
                     <th class="w-10">ID</th>
                     <th>Project</th>
                     <th>Title</th>
-                    <th>System Loss</th>
-                    <th>Assigned To</th>
+                    <th>Priority</th>
+                    <th>Task Status</th>
                     <th>Start Date</th>
                     <th>End Date</th>
-                    <th>Task Status</th>
-                    <th>Priority</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -246,12 +244,10 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.project_id?.name }}</td>
                     <td>{{ item.title }}</td>
-                    <td>{{ item.system_loss }}</td>
-                    <td>{{ item.user?.name }}</td>
+                    <td>{{ item.priority }}</td>
+                    <td>{{ item.task_status }}</td>
                     <td>{{ formatDateTime(item.start_date) }}</td>
                     <td>{{ formatDateTime(item.end_date) }}</td>
-                    <td>{{ item.task_status }}</td>
-                    <td>{{ item.priority }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />
@@ -478,6 +474,26 @@
                 class="form-control"
               />
               <!-- <div class="form-control preview"></div> -->
+            </label>
+          </div>
+          <div class="filter_item">
+            <label for="priority">Priority</label>
+            <label
+              for="priority"
+              class="text-capitalize d-block date_custom_control"
+            >
+              <select
+                v-model="priority"
+                id="priority"
+                name="priority"
+                class="form-control"
+              >
+                <option value="">-- Select Priority --</option>
+                <option value="Urgent">Urgent</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
             </label>
           </div>
           <div class="filter_item">
@@ -828,6 +844,7 @@ export default {
       "sort_by_col",
       "start_date",
       "end_date",
+      "priority",
       "search_key",
       "page",
     ]),
@@ -862,6 +879,15 @@ export default {
       handler: function (v) {
         let data = {
           end_date: v,
+        };
+        this.set_filter_criteria(data);
+      },
+      deep: true,
+    },
+    priority: {
+      handler: function (v) {
+        let data = {
+          priority: v,
         };
         this.set_filter_criteria(data);
       },

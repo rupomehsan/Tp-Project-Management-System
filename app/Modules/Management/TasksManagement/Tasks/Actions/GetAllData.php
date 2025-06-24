@@ -13,7 +13,16 @@ class GetAllData
             // dd(request()->all());
 
             $pageLimit = request()->input('limit') ?? 10;
-            $orderByColumn = request()->input('sort_by_col') ?? 'id';
+            $orderByColumn = request()->input('sort_by_col') ?? 'priority';
+
+            // Custom priority order: urgent, high, normal, low
+            if ($orderByColumn === 'priority') {
+        
+                $priorityOrder = "'urgent','high','normal','low'";
+                $orderByRaw = "FIELD(priority, $priorityOrder)";
+            } else {
+                $orderByRaw = null;
+            }
             $orderByType = request()->input('sort_type') ?? 'desc';
             $status = request()->input('status') ?? 'active';
             $fields = request()->input('fields') ?? '*';
@@ -53,32 +62,49 @@ class GetAllData
                 $data = $data->trased();
             }
 
+            // Ensure fields is an array for select()
+            $fields = is_array($fields) ? $fields : (strpos($fields, ',') !== false ? array_map('trim', explode(',', $fields)) : [$fields]);
+
+            // Determine if we need custom priority ordering
+            $usePriorityOrder = ($orderByColumn === 'priority');
+            $priorityOrderRaw = "FIELD(priority, 'urgent', 'normal', 'high', 'medium', 'low')";
+
             if (request()->has('get_all') && (int)request()->input('get_all') === 1) {
                 $data = $data
                     ->with($with)
                     ->select($fields)
                     ->where($condition)
-                    ->where('status', $status)
-                    // ->limit($pageLimit)
-                    ->orderBy($orderByColumn, $orderByType)
+                    ->where('status', $status);
+                if ($usePriorityOrder) {
+                    $data = $data->orderByRaw($priorityOrderRaw);
+                }
+                $data = $data->orderBy($orderByColumn, $orderByType)
                     ->get();
                 return entityResponse($data);
             } else if ($status == 'trased') {
                 $data = $data
                     ->with($with)
                     ->select($fields)
-                    ->where($condition)
-                    ->orderBy($orderByColumn, $orderByType)
+                    ->where($condition);
+                if ($usePriorityOrder) {
+                    $data = $data->orderByRaw($priorityOrderRaw);
+                }
+                $data = $data->orderBy($orderByColumn, $orderByType)
                     ->paginate($pageLimit);
             } else {
                 $data = $data
                     ->with($with)
                     ->select($fields)
                     ->where($condition)
-                    ->where('status', $status)
-                    ->orderBy($orderByColumn, $orderByType)
+                    ->where('status', $status);
+                if ($usePriorityOrder) {
+                    $data = $data->orderByRaw($priorityOrderRaw);
+                }
+                $data = $data->orderBy($orderByColumn, $orderByType)
                     ->paginate($pageLimit);
             }
+
+            
 
             return entityResponse([
                 ...$data->toArray(),

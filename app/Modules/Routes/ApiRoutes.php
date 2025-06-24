@@ -49,3 +49,20 @@ include_once base_path("app/Modules/Management/TasksManagement/Tasks/Routes/Rout
 |--------------------------------------------------------------------------
 */
 include_once base_path("app/Modules/Management/TeamManagement/Team/Routes/Route.php");
+
+/*
+|--------------------------------------------------------------------------
+| Attendance Management Module
+|--------------------------------------------------------------------------
+*/
+include_once base_path("app/Modules/Management/AttendanceManagement/Attendance/Routes/Route.php");
+/*
+|--------------------------------------------------------------------------
+| Meeting Management Module
+|--------------------------------------------------------------------------
+*/
+include_once base_path("app/Modules/Management/MeetingManagement/MeetingGroup/Routes/Route.php");
+include_once base_path("app/Modules/Management/MeetingManagement/Meeting/Routes/Route.php");
+include_once base_path("app/Modules/Management/MeetingManagement/MeetingAgenda/Routes/Route.php");
+
+

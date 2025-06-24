@@ -114,6 +114,40 @@
           },
         ]"
       />
+      <!-- Attendance Management -->
+      <side-bar-drop-down-menus
+        :icon="`fa fa-plus`"
+        :menu_title="`Attendance Management`"
+        :menus="[
+          {
+            route_name: `AllAttendance`,
+            title: `Attendance`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+        ]"
+      />
+      <!-- Meeting Management -->
+      <side-bar-drop-down-menus
+        :icon="`fa fa-plus`"
+        :menu_title="`Meeting Management`"
+        :menus="[
+          {
+            route_name: `AllMeetingGroup`,
+            title: `Meeting Group`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllMeeting`,
+            title: `Meeting`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllMeetingAgenda`,
+            title: `Meeting Agenda`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+        ]"
+      />
      
 
       <!-- Management end -->

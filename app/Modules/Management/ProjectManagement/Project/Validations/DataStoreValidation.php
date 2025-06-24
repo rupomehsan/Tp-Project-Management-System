@@ -55,6 +55,12 @@ class DataStoreValidation extends FormRequest
                 'sometimes',
                 Rule::in(['Not Started', 'In Progress', 'Completed', 'On Hold']),
             ],
+            'delivery_status' => [
+                'sometimes',
+                Rule::in(['Yet to meeting', 'Testing Phase', 'Successfully Delivered', 'Delivery process not started']),
+            ],
+            'client_rating' => 'required | sometimes',
+
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];
     }

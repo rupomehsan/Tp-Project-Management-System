@@ -22,21 +22,8 @@
         <div class="card-body card_body_fixed_height">
           <div class="row">
             <div class="col-md-6">
-               <div class="form-group">
-                <label for="">Name</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    class="form-control form-control-square mb-2"
-                    type="text"
-                    name="name"
-                    id="name"
-                    v-model="form_fields.name"
-                  />
-                </div>
-              </div>
               <div class="form-group">
-                <label for="">Project group Id</label>
-                 
+                <label for="">Project group Name</label>
                 <div class="mt-1 mb-3">
                   <select
                     v-model="form_fields.project_group_id"
@@ -44,7 +31,7 @@
                     name="project_group_id"
                     id="project_group_id"
                   >
-                    <option value="">Selet-- Project group Id</option>
+                    <option value="">Selet-- Project group Name</option>
                     <option
                       v-for="item in userProjectGroup?.data"
                       :key="item.id"
@@ -55,9 +42,23 @@
                   </select>
                 </div>
               </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">Project Name</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    class="form-control form-control-square mb-2"
+                    type="text"
+                    name="name"
+                    id="name"
+                    v-model="form_fields.name"
+                  />
+                </div>
+              </div>
+            </div>
 
-             
-
+            <div class="col-md-6">
               <div class="form-group">
                 <label for="start_date">Start Date</label>
                 <div class="mt-1 mb-3">
@@ -70,11 +71,25 @@
                   />
                 </div>
               </div>
-             
-            
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="end_date">End Date</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="date"
+                    class="form-control form-control-square mb-2"
+                    name="end_date"
+                    id="end_date"
+                    v-model="form_fields.end_date"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
               <div class="form-group">
                 <label for="project_link">Project Link</label>
-              
                 <div class="mt-1 mb-3">
                   <input
                     type="url"
@@ -85,6 +100,8 @@
                   />
                 </div>
               </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-group">
                 <label for="project_progress">Project Progress (%)</label>
                 <div class="mt-1 mb-3">
@@ -102,32 +119,15 @@
             </div>
 
             <div class="col-md-6">
-              <!-- <div class="form-group">
-                <label for="">User Id</label>
-                <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.user_id"
-                    class="form-control form-control-square mb-2"
-                    name="user_id"
-                    id="user_id"
-                  >
-                    <option value="">Selet-- User Id</option>
-                    <option
-                      v-for="item in userData?.data"
-                      :key="item.id"
-                      :value="item.id"
-                    >
-                      {{ item.name }}
-                    </option>
-                  </select>
-                </div>
-              </div> -->
-              
               <div class="form-group">
                 <label for="project_document">Project Document</label>
-                 <span >
-                  <a class="btn btn-info btn-sm mx-2" :href="form_fields.project_document" target="_blank">
-                     Click here
+                <span>
+                  <a
+                    class="btn btn-info btn-sm mx-2"
+                    :href="form_fields.project_document"
+                    target="_blank"
+                  >
+                    Click here
                   </a>
                 </span>
                 <div class="mt-1 mb-3">
@@ -140,13 +140,17 @@
                   />
                 </div>
               </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-group">
-                <label for="project_agrement_file"
-                  >Project Agrement File</label
-                >
-                 <span>
-                  <a class="btn btn-info btn-sm mx-2" :href="form_fields.project_agrement_file" target="_blank">
-                     Click here
+                <label for="project_agrement_file">Project Agrement File</label>
+                <span>
+                  <a
+                    class="btn btn-info btn-sm mx-2"
+                    :href="form_fields.project_agrement_file"
+                    target="_blank"
+                  >
+                    Click here
                   </a>
                 </span>
                 <div class="mt-1 mb-3">
@@ -159,21 +163,10 @@
                   />
                 </div>
               </div>
+            </div>
 
-               <div class="form-group">
-                <label for="end_date">End Date</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    type="date"
-                    class="form-control form-control-square mb-2"
-                    name="end_date"
-                    id="end_date"
-                    v-model="form_fields.end_date"
-                  />
-                </div>
-              </div>
-
-                <div class="form-group">
+            <div class="col-md-6">
+              <div class="form-group">
                 <label for="">Project status</label>
                 <div class="mt-1 mb-3">
                   <select
@@ -182,6 +175,7 @@
                     name="project_status"
                     id="project_status"
                   >
+                    <option value="">Select--- Project Status</option>
                     <option value="Not Started">Not Started</option>
                     <option value="In Progress">In Progress</option>
                     <option value="Completed">Completed</option>
@@ -189,20 +183,54 @@
                   </select>
                 </div>
               </div>
-            
             </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">Delivery Status</label>
+                <div class="mt-1 mb-3">
+                  <select
+                    v-model="form_fields.delivery_status"
+                    class="form-control form-control-square mb-2"
+                    name="delivery_status"
+                    id="delivery_status"
+                  >
+                    <option value="">Select--- Delivery Status</option>
+                    <option value="Yet to meeting">Yet to meeting</option>
+                    <option value="Testing Phase">Testing Phase</option>
+                    <option value="Successfully Delivered">
+                      Successfully Delivered
+                    </option>
+                    <option value="Delivery process not started">
+                      Delivery process not started
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="client_rating">Client Rating (out of 10)</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="number"
+                    class="form-control form-control-square mb-2"
+                    id="client_rating"
+                    name="client_rating"
+                    v-model="form_fields.client_rating"
+                    min="0"
+                    max="10"
+                    placeholder="Enter client rating out of 10"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div class="col-md-12">
-                <div class="form-group">
+              <div class="form-group">
                 <label for="">description</label>
                 <div class="mt-1 mb-3">
                   <text-editor :name="'description'" />
-                  <!-- <textarea 
-                    v-model="form_fields.description"
-                    name="description"
-                    id="description" 
-                    rows="5" 
-                    cols="55">
-                  </textarea> -->
                 </div>
               </div>
             </div>
@@ -236,6 +264,8 @@ export default {
       start_date: "",
       end_date: "",
       project_status: "",
+      delivery_status: "",
+      client_rating: "",
       project_link: "",
       project_progress: "",
       project_agrement_file: null,
@@ -288,9 +318,12 @@ export default {
         this.form_fields.start_date = this.item.start_date;
         this.form_fields.end_date = this.item.end_date;
         this.form_fields.project_status = this.item.project_status;
+        this.form_fields.delivery_status = this.item.delivery_status;
+        this.form_fields.client_rating = this.item.client_rating;
         this.form_fields.project_link = this.item.project_link;
         this.form_fields.project_progress = this.item.project_progress;
-        this.form_fields.project_agrement_file = this.item.project_agrement_file;
+        this.form_fields.project_agrement_file =
+          this.item.project_agrement_file;
         this.form_fields.project_document = this.item.project_document;
         $("#description").summernote("code", this.item.description);
       }

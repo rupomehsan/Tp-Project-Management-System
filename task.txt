@@ -1,2 +1,23 @@
 
 https://docs.google.com/spreadsheets/d/1LdgFZd9TX5uDJQcsfBH4itRY5mkqfdoCaR2FObInnjI/edit?gid=0#gid=0
+
+
+project management-> project->delivery status, clint rating
+
+meating management
+
+meating group type -> title
+meating -> group_type_id ,title , date, description ,meating_type(online,offline),meating_link
+meating_agenda-> meating_id , title, description
+
+tasks er list 
+order by high-> medium-> low
+
+Accounts panel 
+payroll
+
+
+
+my self work 
+1. even listening in laravel
+2. observer in laravel

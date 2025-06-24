@@ -19,8 +19,13 @@ import Tasks from '../Management/TasksManagement/Tasks/setup/routes.js';
 // Team Management
 import Team from '../Management/TeamManagement/Team/setup/routes.js';
 
+// Attendance Management
+import Attendance from '../Management/AttendanceManagement/Attendance/setup/routes.js';
 
-import BlogCategroy from '../Management/BasicTestModule/BlogCategory/setup/routes.js';
+// Meeting Management
+import MeetingGroup from '../Management/MeetingManagement/MeetingGroup/setup/routes.js';
+import Meeting from '../Management/MeetingManagement/Meeting/setup/routes.js';
+import MeetingAgenda from '../Management/MeetingManagement/MeetingAgenda/setup/routes.js';
 
 
 
@@ -46,8 +51,14 @@ const routes = {
         Tasks,
         // Team Management
         Team,
+        // Attendance Management
+        Attendance,
 
-        BlogCategroy,
+        // Meeting Management
+        MeetingGroup,
+        Meeting,
+        MeetingAgenda,
+
         //settings
         SettingsRoutes,
     ],

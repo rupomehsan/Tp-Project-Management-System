@@ -29,18 +29,28 @@ use App\Modules\Management\TodoManagement\AddTodo\Seeder\Seeder as AddTodoSeeder
 /**
  * Task seeder management.
  */
-
 use App\Modules\Management\TasksManagement\Tasks\Seeder\Seeder as TaskSeeder;
 
 
 /**
  * Team seeder management.
  */
-
 use App\Modules\Management\TeamManagement\Team\Seeder\Seeder as TeamSeeder;
 
+/**
+ * Attendance seeder management.
+ */
+use App\Modules\Management\AttendanceManagement\Attendance\Seeder\Seeder as AttendanceSeeder;
 
-// use App\Modules\Management\BlogCategory\Seeder\Seeder as BlogCategorySeeder;
+/**
+ * Meeting seeder management.
+ */
+use App\Modules\Management\MeetingManagement\MeetingGroup\Seeder\Seeder as MeetingGroupSeeder;
+use App\Modules\Management\MeetingManagement\Meeting\Seeder\Seeder as MeetingSeeder;
+use App\Modules\Management\MeetingManagement\MeetingAgenda\Seeder\Seeder as MeetingAgendaSeeder;
+
+
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -75,6 +85,17 @@ class DatabaseSeeder extends Seeder
              */
             TeamSeeder::class,
 
+            /**
+             * Attendance seeder management.
+             */
+            AttendanceSeeder::class,
+            
+            /**
+             * Meeting seeder management.
+             */
+            MeetingGroupSeeder::class,
+            MeetingSeeder::class,
+            MeetingAgendaSeeder::class,
         ]);
     }
 }

@@ -51,6 +51,16 @@
                     <th>{{ item.project_status }}</th>
                   </tr>
                   <tr>
+                    <th>Delivery Status</th>
+                    <th class="text-center">:</th>
+                    <th>{{ item.delivery_status }}</th>
+                  </tr>
+                  <tr>
+                    <th>Client Rating</th>
+                    <th class="text-center">:</th>
+                    <th>{{ item.client_rating }}</th>
+                  </tr>
+                  <tr>
                     <th>Project Link</th>
                     <th class="text-center">:</th>
                     <th> <a class="btn btn-info" target="_blank" :href="item.project_link">Click here</a> </th>
