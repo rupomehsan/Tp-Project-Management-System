@@ -31,7 +31,11 @@
                     <th class="text-center">:</th>
                     <th>{{ item.description }}</th>
                   </tr>
-                  
+                  <tr>
+                    <th>Created At</th>
+                    <th class="text-center">:</th>
+                    <th>{{ formatDateTime(item.created_at) }}</th>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -82,6 +86,19 @@ export default {
   data: () => ({
     setup,
   }),
+  formatDateTime(dateTime) {
+      if (!dateTime) return "";
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      };
+      return new Date(dateTime).toLocaleString("en-US", options);
+    },
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
     await this.get_data(id);

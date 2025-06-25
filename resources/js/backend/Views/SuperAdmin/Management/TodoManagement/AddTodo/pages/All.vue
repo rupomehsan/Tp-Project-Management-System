@@ -165,6 +165,7 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.category_id?.name }}</td>
                     <td>{{ item.description }}</td>
+                    <td>{{ formatDateTime(item.created_at) }}</td>
                     
 
                     <!-- <td>
