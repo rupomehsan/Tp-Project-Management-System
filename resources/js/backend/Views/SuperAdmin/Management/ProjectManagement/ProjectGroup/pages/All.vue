@@ -56,6 +56,7 @@
                     </th>
                     <th class="w-10">ID</th>
                     <th>name</th>
+                    <th>Created At</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -162,7 +163,7 @@
                     </td>
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.name }}</td>
-                    
+                    <td>{{ formatDateTime(item.created_at) }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -525,6 +526,19 @@ export default {
       "set_status",
       "set_paginate",
     ]),
+    formatDateTime(dateTime) {
+      if (!dateTime) return "";
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      };
+      return new Date(dateTime).toLocaleString("en-US", options);
+    },
 
     active_row(event) {
       const targetRow = event.target.closest(".table_rows");

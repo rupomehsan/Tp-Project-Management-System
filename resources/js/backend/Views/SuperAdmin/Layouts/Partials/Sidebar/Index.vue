@@ -71,6 +71,11 @@
             title: `Projects`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
+          {
+            route_name: `AllUpcommingProject`,
+            title: `Upcomming Projects`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
         ]"
       />
        <!-- Task Management -->
@@ -144,6 +149,22 @@
           {
             route_name: `AllMeetingAgenda`,
             title: `Meeting Agenda`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+        ]"
+      />
+      <side-bar-drop-down-menus
+        :icon="`fa fa-plus`"
+        :menu_title="`System Loss Management`"
+        :menus="[
+          {
+            route_name: `AllSystemLossCategory`,
+            title: `System Loss Category`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllSystemLoss`,
+            title: `System Loss`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
         ]"

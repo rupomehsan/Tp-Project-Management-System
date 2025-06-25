@@ -1,156 +1,43 @@
 <template>
   <div class="container-fluid">
     <!--Start Dashboard Content-->
+    <div class="row">
+      <div class="col-12 col-lg-12">
+      <div class="card">
+        <div class="card-header">Calendar (Current Month)</div>
+        <div class="card-body">
+        <div class="calendar">
+          <div class="calendar-header text-center mb-3">
+          <h5>{{ monthName }} {{ currentYear }}</h5>
+          </div>
+          <div class="calendar-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;">
+          <!-- Weekday Headers -->
+          <div class="day-name font-weight-bold bg-light py-2 border" v-for="day in weekDays" :key="day">
+            {{ day }}
+          </div>
+          <!-- Blank Days -->
+          <div
+            class="day blank border"
+            v-for="(blank, index) in blankDays"
+            :key="'b' + index"
+            style="background: #f8f9fa;"
+          ></div>
 
-    <div class="card mt-3">
-      <div class="card-content">
-        <div class="row row-group m-0">
-          <div class="col-12 col-lg-6 col-xl-3 border-light">
-            <div class="card-body">
-              <h5 class="text-white mb-0">
-                {{ data.getTotalIncomes }}
-                <!-- <span class="float-right"><i class="fa fa-users"></i></span> -->
-              </h5>
-              <div class="progress my-3" style="height: 3px">
-                <!-- <div class="progress-bar" style="width: 55%"></div> -->
-              </div>
-              <p class="mb-0 text-white small-font">
-                Total Income
-                <span class="float-right">
-                  <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
-                </span>
-              </p>
-            </div>
+          <!-- Actual Days -->
+          <div
+            class="day border py-2"
+            v-for="day in daysInMonth"
+            :key="'d' + day"
+            style="min-height: 40px;"
+          >
+            <span>{{ day }}</span>
           </div>
-          <div class="col-12 col-lg-6 col-xl-3 border-light">
-            <div class="card-body">
-              <h5 class="text-white mb-0">
-                {{ data.getTotalExpenses }}
-                <!-- <span class="float-right"><i class="fa fa-book"></i></span> -->
-              </h5>
-              <div class="progress my-3" style="height: 3px">
-                <!-- <div class="progress-bar" style="width: 55%"></div> -->
-              </div>
-              <p class="mb-0 text-white small-font">
-                Total Expenses
-                <span class="float-right">
-                  <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
-                </span>
-              </p>
-            </div>
-          </div>
-          <div class="col-12 col-lg-6 col-xl-3 border-light">
-            <div class="card-body">
-              <h5 class="text-white mb-0">
-                {{ data.getTotalProducts }}
-                <!-- <span class="float-right"><i class="fa fa-eye"></i></span> -->
-              </h5>
-              <div class="progress my-3" style="height: 3px">
-                <!-- <div class="progress-bar" style="width: 55%"></div> -->
-              </div>
-              <p class="mb-0 text-white small-font">
-                Total Products
-                <span class="float-right">
-                  <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
-                </span>
-              </p>
-            </div>
-          </div>
-          <div class="col-12 col-lg-6 col-xl-3 border-light">
-            <div class="card-body">
-              <h5 class="text-white mb-0">
-                {{ data.getTotalPurchaseOrders }}
-                <!-- <span class="float-right"><i class="fa fa-envira"></i></span> -->
-              </h5>
-              <div class="progress my-3" style="height: 3px">
-                <!-- <div class="progress-bar" style="width: 55%"></div> -->
-              </div>
-              <p class="mb-0 text-white small-font">
-                Total Purchase Orders
-                <span class="float-right">
-                  <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
-                </span>
-              </p>
-            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="card mt-3">
-      <div class="card-content">
-        <div class="row row-group m-0">
-          <div class="col-12 col-lg-6 col-xl-3 border-light">
-            <div class="card-body">
-              <h5 class="text-white mb-0">
-                {{ data.getTotalSuppliers }}
-                <!-- <span class="float-right"><i class="fa fa-users"></i></span> -->
-              </h5>
-              <div class="progress my-3" style="height: 3px">
-                <!-- <div class="progress-bar" style="width: 55%"></div> -->
-              </div>
-              <p class="mb-0 text-white small-font">
-                Total Suppliers
-                <span class="float-right">
-                  <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
-                </span>
-              </p>
-            </div>
-          </div>
-          <div class="col-12 col-lg-6 col-xl-3 border-light">
-            <div class="card-body">
-              <h5 class="text-white mb-0">
-                {{ data.getTotalWarehouses }}
-                <!-- <span class="float-right"><i class="fa fa-book"></i></span> -->
-              </h5>
-              <div class="progress my-3" style="height: 3px">
-                <!-- <div class="progress-bar" style="width: 55%"></div> -->
-              </div>
-              <p class="mb-0 text-white small-font">
-                Total Warehouses
-                <span class="float-right">
-                  <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
-                </span>
-              </p>
-            </div>
-          </div>
-          <div class="col-12 col-lg-6 col-xl-3 border-light">
-            <div class="card-body">
-              <h5 class="text-white mb-0">
-                {{ data.getTotalCustomers }}
-                <!-- <span class="float-right"><i class="fa fa-eye"></i></span> -->
-              </h5>
-              <div class="progress my-3" style="height: 3px">
-                <!-- <div class="progress-bar" style="width: 55%"></div> -->
-              </div>
-              <p class="mb-0 text-white small-font">
-                Total Customers
-                <span class="float-right">
-                  <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
-                </span>
-              </p>
-            </div>
-          </div>
-          <div class="col-12 col-lg-6 col-xl-3 border-light">
-            <div class="card-body">
-              <h5 class="text-white mb-0">
-                {{ data.getTotalSalesOrders }}
-                <!-- <span class="float-right"><i class="fa fa-envira"></i></span> -->
-              </h5>
-              <div class="progress my-3" style="height: 3px">
-                <!-- <div class="progress-bar" style="width: 55%"></div> -->
-              </div>
-              <p class="mb-0 text-white small-font">
-                Total Sales Orders
-                <span class="float-right">
-                  <!-- <i class="zmdi zmdi-long-arrow-up"></i> -->
-                </span>
-              </p>
-            </div>
-          </div>
         </div>
       </div>
+      </div>
     </div>
-
     <!--End Row-->
     <div class="row">
       <div class="col-12 col-lg-12">
@@ -248,6 +135,8 @@
 export default {
   data: () => ({
     data: {},
+    currentDate: new Date(),
+    weekDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
   }),
   created: async function () {
     await this.get_all_dashboard_data();
@@ -258,6 +147,26 @@ export default {
       if (response.status == 200) {
         this.data = response.data.data;
       }
+    },
+  },
+
+  computed: {
+    currentYear() {
+      return this.currentDate.getFullYear();
+    },
+    monthName() {
+      return this.currentDate.toLocaleString("default", { month: "long" });
+    },
+    daysInMonth() {
+      const month = this.currentDate.getMonth();
+      const year = this.currentYear;
+      return new Array(
+        new Date(year, month + 1, 0).getDate()
+      ).fill(0).map((_, i) => i + 1);
+    },
+    blankDays() {
+      const firstDay = new Date(this.currentYear, this.currentDate.getMonth(), 1);
+      return new Array(firstDay.getDay()).fill(null);
     },
   },
 };

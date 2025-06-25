@@ -65,6 +65,11 @@
                     <th class="text-center">:</th>
                     <td class="text-capitalize">{{ item.priority }}</td>
                   </tr>
+                  <tr>
+                    <th>Created at</th>
+                    <th class="text-center">:</th>
+                    <td>{{ formatDateTime(item.created_at) }}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>

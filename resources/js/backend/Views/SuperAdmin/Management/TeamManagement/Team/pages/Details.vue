@@ -30,6 +30,11 @@
                     <th class="text-center">:</th>
                     <th>{{ item.description }}</th>
                   </tr>
+                  <tr>
+                    <th>Created At</th>
+                    <th class="text-center">:</th>
+                    <td>{{ formatDateTime(item.created_at) }}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -88,6 +93,19 @@ export default {
     ...mapActions(store, {
       details: "details",
     }),
+    formatDateTime(dateTime) {
+      if (!dateTime) return "";
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      };
+      return new Date(dateTime).toLocaleString("en-US", options);
+    },
     get_data: async function (slug) {
       this.item = {};
       await this.details(slug);

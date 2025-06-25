@@ -57,6 +57,7 @@
                     <th class="w-10">ID</th>
                     <th class="text-center">Meeting Title</th>
                     <th class="text-center">Title</th>
+                    <th class="text-center">Created At</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -164,6 +165,7 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.meeting_id?.title }}</td>
                     <td>{{ item.title }}</td>
+                    <td>{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />

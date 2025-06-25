@@ -57,6 +57,7 @@
                     <th class="w-10">Index</th>
                     <th>Name</th>
                     <th>Description</th>
+                    <th>Created At</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -164,6 +165,7 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.category_id?.name }}</td>
                     <td>{{ item.description }}</td>
+                    
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />
@@ -530,7 +532,19 @@ export default {
       "set_status",
       "set_paginate",
     ]),
-
+    formatDateTime(dateTime) {
+      if (!dateTime) return "";
+      const options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      };
+      return new Date(dateTime).toLocaleString("en-US", options);
+    },
     active_row(event) {
       const targetRow = event.target.closest(".table_rows");
       if (!targetRow) return;

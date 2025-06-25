@@ -60,6 +60,7 @@
                     <th>Date</th>
                     <th>Meeting Type</th>
                     <th>Meeting Link</th>
+                    <th>Created At</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -170,6 +171,7 @@
                     <td>{{ formatDateTime(item.date) }}</td>
                     <td>{{ item.meeting_type }}</td>
                     <td>{{ item.meeting_link }}</td>
+                    <td>{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />

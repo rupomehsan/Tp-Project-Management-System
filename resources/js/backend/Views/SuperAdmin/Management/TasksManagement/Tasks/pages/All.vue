@@ -133,10 +133,12 @@
                     <th class="w-10">ID</th>
                     <th>Project</th>
                     <th>Title</th>
+                    <th>Assigned To</th>
                     <th>Priority</th>
                     <th>Task Status</th>
                     <th>Start Date</th>
                     <th>End Date</th>
+                    <th>Created at</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -244,10 +246,12 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.project_id?.name }}</td>
                     <td>{{ item.title }}</td>
+                    <td>{{ item.user?.name || "Not Assigned" }}</td>
                     <td>{{ item.priority }}</td>
                     <td>{{ item.task_status }}</td>
                     <td>{{ formatDateTime(item.start_date) }}</td>
                     <td>{{ formatDateTime(item.end_date) }}</td>
+                    <td>{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />

@@ -62,6 +62,11 @@
                     <th class="text-center">:</th>
                     <th>{{ item.description }}</th>
                   </tr>
+                  <tr>
+                    <th>Created At</th>
+                    <th class="text-center">:</th>
+                    <td>{{ formatDateTime(item.created_at) }}</td>
+                  </tr>
                 </tbody>
               </table>
             </div>

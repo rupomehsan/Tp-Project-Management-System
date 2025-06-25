@@ -20,6 +20,7 @@ use App\Modules\Management\SettingManagement\WebsiteSettings\Seeder\Seeder as We
 
 use App\Modules\Management\ProjectManagement\ProjectGroup\Seeder\Seeder as ProjectGroupSeeder;
 use App\Modules\Management\ProjectManagement\Project\Seeder\Seeder as ProjectSeeder;
+use App\Modules\Management\ProjectManagement\UpcommingProject\Seeder\Seeder as UpcommingProjectSeeder;
 /**
  * Todo seeder management.
  */
@@ -49,6 +50,12 @@ use App\Modules\Management\MeetingManagement\MeetingGroup\Seeder\Seeder as Meeti
 use App\Modules\Management\MeetingManagement\Meeting\Seeder\Seeder as MeetingSeeder;
 use App\Modules\Management\MeetingManagement\MeetingAgenda\Seeder\Seeder as MeetingAgendaSeeder;
 
+/**
+ * SystemLoss seeder management.
+ */
+use App\Modules\Management\SystemLossManagement\SystemLossCategory\Seeder\Seeder as SystemLossCategorySeeder;
+use App\Modules\Management\SystemLossManagement\SystemLoss\Seeder\Seeder as SystemLossSeeder;
+
 
 
 
@@ -71,6 +78,8 @@ class DatabaseSeeder extends Seeder
              */
             ProjectGroupSeeder::class,
             ProjectSeeder::class,
+            UpcommingProjectSeeder::class,
+            
             /**
              * Todo seeder management.
              */
@@ -96,6 +105,12 @@ class DatabaseSeeder extends Seeder
             MeetingGroupSeeder::class,
             MeetingSeeder::class,
             MeetingAgendaSeeder::class,
+
+            /**
+             * SystemLoss seeder management.
+             */
+            SystemLossCategorySeeder::class,
+            SystemLossSeeder::class,
         ]);
     }
 }

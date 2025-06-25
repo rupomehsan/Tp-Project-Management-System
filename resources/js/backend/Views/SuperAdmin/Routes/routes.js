@@ -10,6 +10,9 @@ import UserRoutes from '../Management/UserManagement/User/setup/routes.js';
 // Project Management
 import ProjectGroup from '../Management/ProjectManagement/ProjectGroup/setup/routes.js';
 import Project from '../Management/ProjectManagement/Project/setup/routes.js';
+import UpcommingProject from '../Management/ProjectManagement/UpcommingProject/setup/routes.js';
+
+
 // Todo Management
 import TodoCategory from '../Management/TodoManagement/Category/setup/routes.js';
 import AddTodo from '../Management/TodoManagement/AddTodo/setup/routes.js';
@@ -27,6 +30,9 @@ import MeetingGroup from '../Management/MeetingManagement/MeetingGroup/setup/rou
 import Meeting from '../Management/MeetingManagement/Meeting/setup/routes.js';
 import MeetingAgenda from '../Management/MeetingManagement/MeetingAgenda/setup/routes.js';
 
+//System Loss Management
+import SystemLossCategory from '../Management/SystemLossManagement/SystemLossCategory/setup/routes.js';
+import SystemLoss from '../Management/SystemLossManagement/SystemLoss/setup/routes.js';
 
 
 
@@ -44,6 +50,8 @@ const routes = {
         // project Management
         ProjectGroup,
         Project,
+        UpcommingProject,
+        
         // Todo Management
         TodoCategory,
         AddTodo,
@@ -58,6 +66,9 @@ const routes = {
         MeetingGroup,
         Meeting,
         MeetingAgenda,
+        // System Loss Management
+        SystemLossCategory,
+        SystemLoss,
 
         //settings
         SettingsRoutes,

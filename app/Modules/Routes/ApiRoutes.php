@@ -29,12 +29,14 @@ include_once base_path("app/Modules/Management/UserManagement/Role/Routes/Route.
 */
 include_once base_path("app/Modules/Management/ProjectManagement/ProjectGroup/Routes/Route.php");
 include_once base_path("app/Modules/Management/ProjectManagement/Project/Routes/Route.php");
+include_once base_path("app/Modules/Management/ProjectManagement/UpcommingProject/Routes/Route.php");
+
 /*
 |--------------------------------------------------------------------------
 | Todo Management Module
 |--------------------------------------------------------------------------
 */
-include_once base_path("app/Modules/Management/TodoManagement/category/Routes/Route.php");
+include_once base_path("app/Modules/Management/TodoManagement/Category/Routes/Route.php");
 include_once base_path("app/Modules/Management/TodoManagement/AddTodo/Routes/Route.php");
 /*
 |--------------------------------------------------------------------------
@@ -64,5 +66,13 @@ include_once base_path("app/Modules/Management/AttendanceManagement/Attendance/R
 include_once base_path("app/Modules/Management/MeetingManagement/MeetingGroup/Routes/Route.php");
 include_once base_path("app/Modules/Management/MeetingManagement/Meeting/Routes/Route.php");
 include_once base_path("app/Modules/Management/MeetingManagement/MeetingAgenda/Routes/Route.php");
+
+/*
+|--------------------------------------------------------------------------
+| System Loss Management Module
+|--------------------------------------------------------------------------
+*/
+include_once base_path("app/Modules/Management/SystemLossManagement/SystemLossCategory/Routes/Route.php");
+include_once base_path("app/Modules/Management/SystemLossManagement/SystemLoss/Routes/Route.php");
 
 
