@@ -54,9 +54,9 @@
                         :checked="isAllSelected"
                       />
                     </th>
-                    <th class="w-10">ID</th>
-                    <th>name</th>
-                    <th>created_at</th>
+                    <th class="w-10 text-center">ID</th>
+                    <th class="text-center">name</th>
+                    <th class="text-center">created_at</th>
                   </tr>
                 </thead>
                 <tbody>

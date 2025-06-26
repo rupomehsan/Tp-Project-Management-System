@@ -61,6 +61,7 @@
                     <th>Check_in</th>
                     <th>Check_out</th>
                     <th>Attendance Status</th>
+                    <th>Created At</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -171,6 +172,7 @@
                     <td>{{ formatDateTime(item.check_in) }}</td>
                     <td>{{ formatDateTime(item.check_out) }}</td>
                     <td>{{ item.attendance_status }}</td>
+                    <td>{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />

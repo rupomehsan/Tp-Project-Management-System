@@ -54,10 +54,10 @@
                         :checked="isAllSelected"
                       />
                     </th>
-                    <th class="w-10">Index</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Created At</th>
+                    <th class="w-10 text-center">Index</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">Created At</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -165,6 +165,7 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.category_id?.name }}</td>
                     <td>{{ item.description }}</td>
+                    
                     <td>{{ formatDateTime(item.created_at) }}</td>
                     
 

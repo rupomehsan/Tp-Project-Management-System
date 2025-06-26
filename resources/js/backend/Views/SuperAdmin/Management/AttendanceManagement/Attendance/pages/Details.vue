@@ -45,6 +45,11 @@
                     <th class="text-center">:</th>
                     <td>{{ item.attendance_status }}</td>
                   </tr>
+                  <tr>
+                    <th>Created At</th>
+                    <th class="text-center">:</th>
+                    <td>{{ formatDateTime(item.created_at) }}</td>
+                  </tr>
                   
                 </tbody>
               </table>

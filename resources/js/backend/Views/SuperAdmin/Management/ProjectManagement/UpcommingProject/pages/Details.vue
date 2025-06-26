@@ -143,7 +143,16 @@ export default {
   data: () => ({
     setup,
   }),
-  formatDateTime(dateTime) {
+  
+  created: async function () {
+    let id = (this.param_id = this.$route.params.id);
+    await this.get_data(id);
+  },
+  methods: {
+    ...mapActions(store, {
+      details: "details",
+    }),
+    formatDateTime(dateTime) {
       if (!dateTime) return "";
       const options = {
         year: "numeric",
@@ -156,14 +165,6 @@ export default {
       };
       return new Date(dateTime).toLocaleString("en-US", options);
     },
-  created: async function () {
-    let id = (this.param_id = this.$route.params.id);
-    await this.get_data(id);
-  },
-  methods: {
-    ...mapActions(store, {
-      details: "details",
-    }),
     get_data: async function (slug) {
       this.item = {};
       await this.details(slug);
