@@ -26,6 +26,8 @@ use App\Modules\Management\ProjectManagement\UpcommingProject\Seeder\Seeder as U
  */
 use App\Modules\Management\TodoManagement\Category\Seeder\Seeder as CategorySeeder;
 use App\Modules\Management\TodoManagement\AddTodo\Seeder\Seeder as AddTodoSeeder;
+use App\Modules\Management\TodoManagement\Credential\Seeder\Seeder as CredentialSeeder;
+
 
 /**
  * Task seeder management.
@@ -85,6 +87,7 @@ class DatabaseSeeder extends Seeder
              */
             CategorySeeder::class,
             AddTodoSeeder::class,
+            CredentialSeeder::class,
             /**
              * Task seeder management.
              */

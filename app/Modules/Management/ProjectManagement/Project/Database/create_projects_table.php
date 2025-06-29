@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('project_link')->nullable();
             $table->string('project_agrement_file')->nullable();
             $table->string('project_document')->nullable();
+            $table->json('project_document_files')->nullable();
             $table->integer('project_progress')->nullable();
             $table->enum('project_status', ['Not Started', 'In Progress', 'Completed', 'On Hold'])->default('Not Started');
             $table->enum('delivery_status', ['Yet to meeting', 'Testing Phase', 'Successfully Delivered', 'Delivery process not started'])->default('Yet to meeting');

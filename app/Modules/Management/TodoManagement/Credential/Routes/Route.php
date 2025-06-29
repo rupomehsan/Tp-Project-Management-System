@@ -1,10 +1,10 @@
 <?php
 
-use App\Modules\Management\TodoManagement\AddTodo\Controller\Controller;
+use App\Modules\Management\TodoManagement\Credential\Controller\Controller;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->middleware('auth:api')->group(function () {
-    Route::prefix('todo')->group(function () {
+    Route::prefix('credential')->group(function () {
         Route::get('', [Controller::class,'index']);
         Route::get('{slug}', [Controller::class,'show']);
         Route::post('store', [Controller::class,'store']);

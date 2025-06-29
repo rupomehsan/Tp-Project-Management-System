@@ -105,6 +105,11 @@
             title: `Add Todo`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
+          {
+            route_name: `AllCredential`,
+            title: `Credential`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
         ]"
       />
       <!-- Team Management -->

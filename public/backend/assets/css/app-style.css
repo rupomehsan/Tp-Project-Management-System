@@ -1204,7 +1204,7 @@ body.bg-theme15 {
 .profile-card-2 .profile {
     border-radius: 50%;
     position: absolute;
-    top: -42px;
+    top: -115px;
     left: 50%;
     border: 3px solid rgba(255, 255, 255, 1);
     -webkit-transform: translate(-50%, 0%);
@@ -3248,6 +3248,7 @@ table.grid td {
 .card .table th {
     padding-right: 1.5rem;
     padding-left: 1.5rem;
+    text-align: left;
 }
 
 .table {

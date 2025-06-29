@@ -10,6 +10,9 @@ class Model extends EloquentModel
     use SoftDeletes;
     protected $table = "projects";
     protected $guarded = [];
+    protected $casts = [
+        'project_document_files' => 'array',
+    ];  
 
 
     public static $userModel = \App\Modules\Management\UserManagement\User\Models\Model::class;

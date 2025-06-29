@@ -7,14 +7,16 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     php artisan migrate --path='/app/Modules/Management/TodoManagement/AddTodo/Database/create_todo_lists_table.php'
+     php artisan migrate --path='/app/Modules/Management/TodoManagement/Credential/Database/create_credentials_table.php'
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('todo_lists', function (Blueprint $table) {
+        Schema::create('credentials', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('category_id');
+            $table->string('title', 150)->nullable();
+            $table->string('email', 255)->nullable();
+            $table->string('password');              
             $table->text('description')->nullable();
 
             $table->bigInteger('creator')->unsigned()->nullable();
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('todo_lists');
+        Schema::dropIfExists('credentials');
     }
 };

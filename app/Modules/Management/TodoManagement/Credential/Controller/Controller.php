@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Modules\Management\TodoManagement\AddTodo\Controller;
-use App\Modules\Management\TodoManagement\AddTodo\Actions\GetAllData;
-use App\Modules\Management\TodoManagement\AddTodo\Actions\DestroyData;
-use App\Modules\Management\TodoManagement\AddTodo\Actions\GetSingleData;
-use App\Modules\Management\TodoManagement\AddTodo\Actions\StoreData;
-use App\Modules\Management\TodoManagement\AddTodo\Actions\UpdateData;
-use App\Modules\Management\TodoManagement\AddTodo\Actions\UpdateStatus;
-use App\Modules\Management\TodoManagement\AddTodo\Actions\SoftDelete;
-use App\Modules\Management\TodoManagement\AddTodo\Actions\RestoreData;
-use App\Modules\Management\TodoManagement\AddTodo\Actions\ImportData;
-use App\Modules\Management\TodoManagement\AddTodo\Validations\BulkActionsValidation;
-use App\Modules\Management\TodoManagement\AddTodo\Validations\DataStoreValidation;
-use App\Modules\Management\TodoManagement\AddTodo\Actions\BulkActions;
+namespace App\Modules\Management\TodoManagement\Credential\Controller;
+use App\Modules\Management\TodoManagement\Credential\Actions\GetAllData;
+use App\Modules\Management\TodoManagement\Credential\Actions\DestroyData;
+use App\Modules\Management\TodoManagement\Credential\Actions\GetSingleData;
+use App\Modules\Management\TodoManagement\Credential\Actions\StoreData;
+use App\Modules\Management\TodoManagement\Credential\Actions\UpdateData;
+use App\Modules\Management\TodoManagement\Credential\Actions\UpdateStatus;
+use App\Modules\Management\TodoManagement\Credential\Actions\SoftDelete;
+use App\Modules\Management\TodoManagement\Credential\Actions\RestoreData;
+use App\Modules\Management\TodoManagement\Credential\Actions\ImportData;
+use App\Modules\Management\TodoManagement\Credential\Validations\BulkActionsValidation;
+use App\Modules\Management\TodoManagement\Credential\Validations\DataStoreValidation;
+use App\Modules\Management\TodoManagement\Credential\Actions\BulkActions;
 use App\Http\Controllers\Controller as ControllersController;
 
 

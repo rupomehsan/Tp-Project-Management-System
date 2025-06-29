@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Management\TodoManagement\AddTodo\Validations;
+namespace App\Modules\Management\TodoManagement\Credential\Validations;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;

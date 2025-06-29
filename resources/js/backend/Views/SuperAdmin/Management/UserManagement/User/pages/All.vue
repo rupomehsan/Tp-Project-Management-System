@@ -153,6 +153,20 @@
                               Destroy
                             </a>
                           </li>
+                          <li>
+                            <router-link
+                              :to="{
+                                name: `Profile${setup.route_prefix}`,
+                                params: {
+                                  id: item.slug,
+                                },
+                              }"
+                              class="border-secondary"
+                            >
+                              <i class="fa fa-eye text-secondary"></i>
+                              Show Profile
+                            </router-link>
+                          </li>
                         </ul>
                       </div>
                     </td>

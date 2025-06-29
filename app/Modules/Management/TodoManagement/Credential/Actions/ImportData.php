@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Management\TodoManagement\AddTodo\Actions;
-use App\Modules\Management\TodoManagement\AddTodo\Others\ImportJob;
+namespace App\Modules\Management\TodoManagement\Credential\Actions;
+use App\Modules\Management\TodoManagement\Credential\Others\ImportJob;
 use Illuminate\Support\Facades\Bus;
 use Maatwebsite\Excel\Facades\Excel;
 class ImportData
 {
-    static $model = \App\Modules\Management\TodoManagement\AddTodo\Models\Model::class;
+    static $model = \App\Modules\Management\TodoManagement\Credential\Models\Model::class;
 
     public static function execute()
     {

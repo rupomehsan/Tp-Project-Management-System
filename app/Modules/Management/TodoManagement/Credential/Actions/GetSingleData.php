@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\Management\TodoManagement\AddTodo\Actions;
+namespace App\Modules\Management\TodoManagement\Credential\Actions;
 
 
 
 class GetSingleData
 {
-    static $model = \App\Modules\Management\TodoManagement\AddTodo\Models\Model::class;
+    static $model = \App\Modules\Management\TodoManagement\Credential\Models\Model::class;
 
     public static function execute($slug)
     {
@@ -16,6 +16,7 @@ class GetSingleData
             if (!$data = self::$model::query()->with($with)->select($fields)->where('slug', $slug)->first()) {
                 return messageResponse('Data not found...',$data, 404, 'error');
             }
+ 
             return entityResponse($data);
         } catch (\Exception $e) {
             return messageResponse($e->getMessage(),[], 500, 'server_error');

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Management\TodoManagement\AddTodo\Models;
+namespace App\Modules\Management\TodoManagement\Credential\Models;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Model extends EloquentModel
 {
     use SoftDeletes;
-    protected $table = "todo_lists";
+    protected $table = "credentials";
     protected $guarded = [];
+
 
 
     // public static $userModel = \App\Modules\Management\UserManagement\User\Models\Model::class;

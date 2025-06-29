@@ -16,6 +16,8 @@ import UpcommingProject from '../Management/ProjectManagement/UpcommingProject/s
 // Todo Management
 import TodoCategory from '../Management/TodoManagement/Category/setup/routes.js';
 import AddTodo from '../Management/TodoManagement/AddTodo/setup/routes.js';
+import Credential from '../Management/TodoManagement/Credential/setup/routes.js';
+
 
 // Task Management
 import Tasks from '../Management/TasksManagement/Tasks/setup/routes.js';
@@ -55,6 +57,7 @@ const routes = {
         // Todo Management
         TodoCategory,
         AddTodo,
+        Credential,
         // Tasks Management
         Tasks,
         // Team Management

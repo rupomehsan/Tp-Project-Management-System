@@ -21,7 +21,7 @@
         </div>
         <div class="card-body card_body_fixed_height">
           <div class="row">
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <div class="form-group">
                 <label for="">Project group Name</label>
                 <div class="mt-1 mb-3">
@@ -42,7 +42,12 @@
                   </select>
                 </div>
               </div>
-            </div>
+            </div> -->
+            <ProjectGroupDropDownEl
+              :name="'project_group_id'"
+              :multiple="false"
+              :value="[]"
+            />
             <div class="col-md-6">
               <div class="form-group">
                 <label for="">Project Name</label>
@@ -57,6 +62,12 @@
                 </div>
               </div>
             </div>
+
+            <user-drop-down-el
+              :name="'project_users'"
+              :multiple="true"
+              :value="[]"
+            />
 
             <div class="col-md-6">
               <div class="form-group">
@@ -121,7 +132,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="project_document">Project Document</label>
-                <span>
+                <span v-if="form_fields.project_document">
                   <a
                     class="btn btn-info btn-sm mx-2"
                     :href="form_fields.project_document"
@@ -144,7 +155,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="project_agrement_file">Project Agrement File</label>
-                <span>
+                <span v-if="form_fields.project_agrement_file">
                   <a
                     class="btn btn-info btn-sm mx-2"
                     :href="form_fields.project_agrement_file"
@@ -234,6 +245,7 @@
                 </div>
               </div>
             </div>
+            <multiple-input-field :name="'project_document_files'" />
           </div>
         </div>
         <div class="card-footer">
@@ -251,8 +263,17 @@ import { mapActions, mapState } from "pinia";
 import { store } from "../store";
 import setup from "../setup";
 import TextEditor from "../../../../../../GlobalComponents/FormComponents/TextEditor.vue";
+import UserDropDownEl from "../../../UserManagement/User/components/dropdown/DropDownEl.vue";
+import ProjectGroupDropDownEl from "../../../ProjectManagement/ProjectGroup/components/dropdown/DropDownEl.vue";
+import multipleInputField from "../components/meta_component/MultipleInputField.vue";
+
 export default {
-  components: { TextEditor },
+  components: {
+    TextEditor,
+    UserDropDownEl,
+    ProjectGroupDropDownEl,
+    multipleInputField,
+  },
   data: () => ({
     setup,
     param_id: null,
@@ -370,3 +391,11 @@ export default {
   },
 };
 </script>
+
+<!-- 
+ <multi-chip :name="`tags`" />
+<blog-category-drop-down-el :name="'blog_categories'" :multiple="true" :value="item.blog_categories" />
+<blog-writer-drop-down-el :name="'writer'" :multiple="false" :value="[item.writer]" />
+<multiple-image-uploader :name="'images'" :accept="'image/*'" :images="item.images" />
+<multiple-input-field :name="'contributors'" />
+ -->

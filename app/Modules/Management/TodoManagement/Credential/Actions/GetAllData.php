@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\Management\TodoManagement\AddTodo\Actions;
+namespace App\Modules\Management\TodoManagement\Credential\Actions;
 
 class GetAllData
 {
-    static $model = \App\Modules\Management\TodoManagement\AddTodo\Models\Model::class;
+    static $model = \App\Modules\Management\TodoManagement\Credential\Models\Model::class;
 
     public static function execute()
     {

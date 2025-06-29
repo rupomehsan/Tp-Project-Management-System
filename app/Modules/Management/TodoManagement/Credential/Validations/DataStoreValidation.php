@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Management\TodoManagement\AddTodo\Validations;
+namespace App\Modules\Management\TodoManagement\Credential\Validations;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -42,7 +42,9 @@ class DataStoreValidation extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => 'required',
+            'title' => 'required',
+            'email' => 'required | sometimes',
+            'password' => 'required | sometimes',
             'description' => 'required | sometimes',
 
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],

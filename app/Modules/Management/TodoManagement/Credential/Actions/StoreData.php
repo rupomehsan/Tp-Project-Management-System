@@ -1,16 +1,19 @@
 <?php
 
-namespace App\Modules\Management\TodoManagement\AddTodo\Actions;
+namespace App\Modules\Management\TodoManagement\Credential\Actions;
+
+use Illuminate\Support\Facades\Hash;
 
 class StoreData
 {
-    static $model = \App\Modules\Management\TodoManagement\AddTodo\Models\Model::class;
+    static $model = \App\Modules\Management\TodoManagement\Credential\Models\Model::class;
 
     public static function execute($request)
     {
         try {
       
             $requestData = $request->validated();
+     
             if ($data = self::$model::query()->create($requestData)) {
                 
                 return messageResponse('Item added successfully', $data, 201);
