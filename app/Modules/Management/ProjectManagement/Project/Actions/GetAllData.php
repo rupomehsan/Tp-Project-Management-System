@@ -17,7 +17,7 @@ class GetAllData
             $fields = request()->input('fields') ?? '*';
             $start_date = request()->input('start_date');
             $end_date = request()->input('end_date');
-            $with = ['user','projectGroupId','tasks'];
+            $with = ['project_users','projectGroupId','tasks'];
             $condition = [];
 
             $data = self::$model::query();

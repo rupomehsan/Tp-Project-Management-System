@@ -21,14 +21,28 @@
               <table class="table quick_modal_table table-bordered">
                 <tbody>
                   <tr>
-                    <th>Name</th>
+                    <th>Project Group Name</th>
                     <th class="text-center">:</th>
                     <th>{{ item.project_group_id?.name }}</th>
                   </tr>
                   <tr>
-                    <th>task</th>
+                    <th>Project Name</th>
                     <th class="text-center">:</th>
                     <th>{{ item.name }}</th>
+                  </tr>
+                  <tr>
+                    <th>Project Users</th>
+                    <th class="text-center">:</th>
+                    <th>
+                      <span v-if="Array.isArray(item.project_users)">
+                        <span v-for="(user, idx) in item.project_users" :key="user.id || idx">
+                          {{ user.name }}<span v-if="idx < item.project_users.length - 1">, </span>
+                        </span>
+                      </span>
+                      <span v-else>
+                        {{ item.project_users?.name }}
+                      </span>
+                    </th>
                   </tr>
                   <tr>
                     <th>Description</th>

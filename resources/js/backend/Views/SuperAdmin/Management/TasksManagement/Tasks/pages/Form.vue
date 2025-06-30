@@ -92,6 +92,7 @@
                     <option value="Pending">Pending</option>
                     <option value="In Progress">In Progress</option>
                     <option value="Completed">Completed</option>
+                    <option value="Not Completed">Not Completed</option>
                   </select>
                 </div>
               </div>

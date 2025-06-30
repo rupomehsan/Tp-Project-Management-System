@@ -232,6 +232,34 @@
                               Destroy
                             </a>
                           </li>
+                            <li>
+                            <select
+                              class="form-control form-control-sm"
+                              v-model="item.task_status"
+                              @change="updateTaskStatus(item)"
+                              style="width: 130px"
+                            >
+                              <option disabled value="">Select Status</option>
+                              <option value="In Progress">In Progress</option>
+                              <option value="Completed">Completed</option>
+                              <option value="Not Completed">Not Completed</option>
+                            </select>
+                            </li>
+                            <li v-if="item.task_status === 'Not Completed'">
+                            <form @submit.prevent="submitShortForm(item)">
+                              <input
+                              type="date"
+                              v-model="item.notCompletedDate"
+                              class="form-control form-control-sm mb-1"
+                              placeholder="Date"
+                              required
+                              style="width: 130px"
+                              />
+                              <button type="submit" class="btn btn-sm btn-primary mt-1">
+                              Save
+                              </button>
+                            </form>
+                            </li>
                         </ul>
                       </div>
                     </td>
@@ -480,26 +508,7 @@
               <!-- <div class="form-control preview"></div> -->
             </label>
           </div>
-          <div class="filter_item">
-            <label for="priority">Priority</label>
-            <label
-              for="priority"
-              class="text-capitalize d-block date_custom_control"
-            >
-              <select
-                v-model="priority"
-                id="priority"
-                name="priority"
-                class="form-control"
-              >
-                <option value="">-- Select Priority --</option>
-                <option value="Urgent">Urgent</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-              </select>
-            </label>
-          </div>
+          
           <div class="filter_item">
             <label for="sort_by_col">Sort By Col</label
             ><label
@@ -639,6 +648,10 @@ export default {
       "set_paginate",
     ]),
 
+    // taskStatusFilterValue
+    
+    // taskStatusFilterValue
+
     formatDateTime(dateTime) {
       if (!dateTime) return "";
       const options = {
@@ -678,6 +691,24 @@ export default {
         }
       }
     },
+    async updateTaskStatus(item) {
+      try {
+        // Use slug instead of id for backend compatibility
+        let response = await axios.post(`/task/update/${item.slug}`, {
+          slug: item.slug, // changed from id: item.id
+          task_status: item.task_status,
+        });
+        if (response.data.status === 'success') {
+          window.s_alert('Task status updated!');
+          await this.get_all();
+        } else {
+          window.s_warning(response.data?.message || 'Update failed');
+        }
+      } catch (error) {
+        window.s_warning('Error updating task status');
+      }
+    },
+
     softDelete: async function (item) {
       let con = await window.s_confirm("Are you sure want to delete ?");
       if (con) {
@@ -832,6 +863,7 @@ export default {
       await this.get_all();
       this.only_latest_data = false;
     }, 500),
+
   },
   computed: {
     ...mapWritableState(data_store, [

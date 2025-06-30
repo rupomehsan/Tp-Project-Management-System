@@ -30,6 +30,8 @@ class StoreData
 
             // Create the database record
             if ($data = self::$model::query()->create($requestData)) {
+                $project_users = json_decode($request->input('project_users', []));
+                $data->project_users()->sync($project_users);
                 return messageResponse('Item added successfully', $data, 201);
             }
 

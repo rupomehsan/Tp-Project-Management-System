@@ -144,7 +144,7 @@ export default {
       console.log("newValue", newValue?.project_documents);
 
       if (newValue) {
-        this.project_document_data = newValue?.project_documents.map((project_document) => ({
+        this.project_document_data = newValue?.project_documents?.map((project_document) => ({
           name: project_document.name,
           email: project_document.email,
           age: project_document.age,

@@ -44,9 +44,9 @@ class UpdateData
 
             // Update the model
             $data->update($requestData);
-
+            $project_users = json_decode($request->input('project_users', []));
+            $data->project_users()->sync($project_users);
             return messageResponse('Item updated successfully', $data, 200);
-
         } catch (\Exception $e) {
             return messageResponse($e->getMessage(), [], 500, 'server_error');
         }

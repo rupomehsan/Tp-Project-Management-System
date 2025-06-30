@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('assigned_to')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
-            $table->enum('task_status', ['Pending', 'In Progress', 'Completed'])->default('Pending');
+            $table->enum('task_status', ['Pending', 'In Progress', 'Completed', 'Not Completed'])->default('Pending');
             $table->enum('priority', ['low', 'normal', 'high', 'urgent'])->default('low');
             $table->bigInteger('creator')->unsigned()->nullable();
             $table->string('slug', 50)->nullable();

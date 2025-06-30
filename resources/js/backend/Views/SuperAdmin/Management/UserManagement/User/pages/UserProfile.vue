@@ -76,7 +76,7 @@
                   <h6 class="font-weight-light">TOTAL Task</h6>
                   <i class="fas fa-project-diagram fa-2x"></i>
                 </div>
-                <h2 class="mb-0">24</h2>
+                <h2 class="mb-0">{{ item.tasks.length }}</h2>
               </div>
               <div
                 class="card-footer d-flex align-items-center justify-content-between"
@@ -99,7 +99,13 @@
                   <h6 class="font-weight-light">TOTAL COMPLETED TASK</h6>
                   <i class="fas fa-project-diagram fa-2x"></i>
                 </div>
-                <h2 class="mb-0">24</h2>
+                <h2 class="mb-0">
+                  {{
+                    item.tasks.filter(
+                      (task) => task.task_status === "Completed"
+                    ).length
+                  }}
+                </h2>
               </div>
               <div
                 class="card-footer d-flex align-items-center justify-content-between"
@@ -121,7 +127,13 @@
                   <h6 class="font-weight-light">TOTAL NOT COMPLETED TASK</h6>
                   <!-- <i class="fas fa-users fa-2x"></i> -->
                 </div>
-                <h2 class="mb-0">12</h2>
+                <h2 class="mb-0">
+                  {{
+                    item.tasks.filter(
+                      (task) => task.task_status !== "Completed"
+                    ).length
+                  }}
+                </h2>
               </div>
               <div
                 class="card-footer d-flex align-items-center justify-content-between"
@@ -183,6 +195,54 @@
         </div>
       </div>
     </div>
+
+    <!-- End System Info Section -->
+    <div class="card-body">
+      <div class="table-responsive table_responsive card_body_fixed_height">
+        <table class="table table-hover text-center table-bordered">
+          <thead>
+            <tr>
+              <!-- <th>
+                      <i
+                        class="zmdi zmdi-settings zmdi-hc-2x"
+                        title="Actions"
+                      ></i>
+                    </th> -->
+              <!-- <th class="w-10 text-center">
+                      <input
+                        class="form-check-input ml-0 select_all_checkbox"
+                        @change="($event) => set_all_item_selected($event)"
+                        type="checkbox"
+                        :checked="isAllSelected"
+                      />
+                    </th> -->
+              <th class="w-10">ID</th>
+              <th>Project Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(item, index) in all?.data"
+              :key="item.id"
+              :class="`table_rows table_row_${item.id}`"
+            >
+              <td>{{ index + 1 }}</td>
+              <td>{{}}</td>
+              <td>{{}}</td>
+              <td>{{}}</td>
+              <td>{{ "N/A " }}</td>
+
+              <td>
+                <img :src="item.image" alt="" height="50" width="50" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- End System Info Section -->
   </div>
   <!-- End container-fluid-->
 </template>

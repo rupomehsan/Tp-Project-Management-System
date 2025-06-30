@@ -49,9 +49,9 @@ class Model extends EloquentModel
         return $q->onlyTrashed();
     }
 
-    public function user()
+    public function project_users()
     {
-        return $this->belongsTo(self::$userModel, 'user_id', 'id');
+        return $this->belongsToMany(self::$userModel, 'project_users', 'project_id', 'user_id');
     }
 
     public function projectGroupId()

@@ -46,7 +46,7 @@
             <ProjectGroupDropDownEl
               :name="'project_group_id'"
               :multiple="false"
-              :value="[]"
+              :value="[item.project_group_id]"
             />
             <div class="col-md-6">
               <div class="form-group">
@@ -66,7 +66,7 @@
             <user-drop-down-el
               :name="'project_users'"
               :multiple="true"
-              :value="[]"
+              :value="item.project_users"
             />
 
             <div class="col-md-6">
@@ -278,8 +278,6 @@ export default {
     setup,
     param_id: null,
     form_fields: {
-      project_group_id: "",
-      user_id: [],
       name: "",
       description: "",
       start_date: "",
@@ -334,7 +332,6 @@ export default {
       this.param_id = id;
       await this.details(id);
       if (this.item) {
-        this.form_fields.project_group_id = this.item.project_group_id?.id;
         this.form_fields.name = this.item.name;
         this.form_fields.start_date = this.item.start_date;
         this.form_fields.end_date = this.item.end_date;
@@ -394,8 +391,8 @@ export default {
 
 <!-- 
  <multi-chip :name="`tags`" />
-<blog-category-drop-down-el :name="'blog_categories'" :multiple="true" :value="item.blog_categories" />
-<blog-writer-drop-down-el :name="'writer'" :multiple="false" :value="[item.writer]" />
+<blog-category-drop-down-el :name="'blog_categories'" :multiple="true" :value="[item.blog_categories]" />
+<blog-writer-drop-down-el :name="'writer'" :multiple="false" :value="item.writer" />
 <multiple-image-uploader :name="'images'" :accept="'image/*'" :images="item.images" />
 <multiple-input-field :name="'contributors'" />
  -->

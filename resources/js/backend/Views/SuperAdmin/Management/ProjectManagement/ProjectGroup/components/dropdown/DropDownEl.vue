@@ -12,7 +12,7 @@
         <template v-else>
           <div v-for="item in selected" :key="item.id" :id="item.id" class="selected_item">
             <div class="label">
-              {{ item.name || item.title  }}
+              {{ item.name  }}
             </div>
             <div @click.prevent="remove_item(item)" class="remove">
               <i class="fa fa-close"></i>
@@ -40,7 +40,7 @@
                   class="form-check-input ml-0"
                 />
               </div>
-              <div class="label">{{ item.name || item.title }}</div>
+              <div class="label">{{ item.name }}</div>
             </label>
           </li>
         </ul>
