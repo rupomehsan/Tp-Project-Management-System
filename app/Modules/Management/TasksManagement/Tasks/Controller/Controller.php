@@ -10,6 +10,7 @@ use App\Modules\Management\TasksManagement\Tasks\Actions\UpdateStatus;
 use App\Modules\Management\TasksManagement\Tasks\Actions\SoftDelete;
 use App\Modules\Management\TasksManagement\Tasks\Actions\RestoreData;
 use App\Modules\Management\TasksManagement\Tasks\Actions\ImportData;
+use App\Modules\Management\TasksManagement\Tasks\Actions\TaskOverview;
 use App\Modules\Management\TasksManagement\Tasks\Validations\BulkActionsValidation;
 use App\Modules\Management\TasksManagement\Tasks\Validations\DataStoreValidation;
 use App\Modules\Management\TasksManagement\Tasks\Actions\BulkActions;
@@ -71,6 +72,12 @@ class Controller extends ControllersController
     public function bulkAction(BulkActionsValidation $request)
     {
         $data = BulkActions::execute($request);
+        return $data;
+    }
+
+    public function taskOverview($slug)
+    {
+        $data = TaskOverview::execute($slug);
         return $data;
     }
 

@@ -23,6 +23,8 @@ return new class extends Migration
             $table->timestamp('end_date')->nullable();
             $table->enum('task_status', ['Pending', 'In Progress', 'Completed', 'Not Completed'])->default('Pending');
             $table->enum('priority', ['low', 'normal', 'high', 'urgent'])->default('low');
+            $table->tinyInteger('rating')->nullable()->comment('Rating out of 5')->default(0);
+
             $table->bigInteger('creator')->unsigned()->nullable();
             $table->string('slug', 50)->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');

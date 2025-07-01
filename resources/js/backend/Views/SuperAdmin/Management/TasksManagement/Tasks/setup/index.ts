@@ -26,6 +26,7 @@ const setup: setup_type = {
     "start_date",
     "end_date",
     "task_status",
+    "rating",
     "priority",
     "slug",
     "created_at",

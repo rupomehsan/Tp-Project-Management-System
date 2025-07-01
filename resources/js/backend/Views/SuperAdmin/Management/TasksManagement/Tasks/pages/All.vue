@@ -136,6 +136,7 @@
                     <th>Assigned To</th>
                     <th>Priority</th>
                     <th>Task Status</th>
+                    <th>Rating</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Created at</th>
@@ -232,34 +233,165 @@
                               Destroy
                             </a>
                           </li>
-                            <li>
-                            <select
-                              class="form-control form-control-sm"
-                              v-model="item.task_status"
-                              @change="updateTaskStatus(item)"
-                              style="width: 130px"
+                          <!-- Your existing list item -->
+                          <li>
+                            <a
+                              href=""
+                              @click.prevent="showOverviewModal(item)"
+                              class="border-info"
                             >
-                              <option disabled value="">Select Status</option>
-                              <option value="In Progress">In Progress</option>
-                              <option value="Completed">Completed</option>
-                              <option value="Not Completed">Not Completed</option>
-                            </select>
-                            </li>
-                            <li v-if="item.task_status === 'Not Completed'">
-                            <form @submit.prevent="submitShortForm(item)">
-                              <input
-                              type="date"
-                              v-model="item.notCompletedDate"
-                              class="form-control form-control-sm mb-1"
-                              placeholder="Date"
-                              required
-                              style="width: 130px"
-                              />
-                              <button type="submit" class="btn btn-sm btn-primary mt-1">
-                              Save
-                              </button>
-                            </form>
-                            </li>
+                              <i class="fa fa-info-circle text-info"></i>
+                              Overview
+                            </a>
+                          </li>
+                          <!-- Overview Modal -->
+                          <!-- Overview Modal -->
+                          <div
+                            v-if="isOverviewModalVisible"
+                            class="modal fade show d-block"
+                            tabindex="-1"
+                            role="dialog"
+                            style="background: rgba(0, 0, 0, 0.5)"
+                          >
+                            <div
+                              class="modal-dialog modal-dialog-centered"
+                              role="document"
+                            >
+                              <div class="modal-content shadow">
+                                <div class="modal-header bg-info text-white">
+                                  <h5 class="modal-title">
+                                    <i class="fa fa-tasks mr-2"></i>Update Task
+                                    Status
+                                  </h5>
+                                  <button
+                                    type="button"
+                                    class="close text-white"
+                                    @click="closeOverviewModal"
+                                  >
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <form @submit.prevent="submitTaskOverviewForm(item)">
+                                  <div class="modal-body">
+                                    <div class="form-group">
+                                      <label
+                                        for="taskStatusSelect"
+                                        class="font-weight-bold"
+                                        >Task Status</label
+                                      >
+                                      <select
+                                        id="taskStatusSelect"
+                                        class="form-control"
+                                        v-model="item.task_status"
+                                        name="task_status"
+                                      >
+                                        <option disabled value="">
+                                          Select Status
+                                        </option>
+                                        <option value="In Progress">
+                                          In Progress
+                                        </option>
+                                        <option value="Completed">
+                                          Completed
+                                        </option>
+                                        <option value="Not Completed">
+                                          Not Completed
+                                        </option>
+                                      </select>
+                                    </div>
+                                    <div
+                                      v-if="item.task_status === 'Completed'"
+                                      class="form-group"
+                                    >
+                                      <label
+                                        for="taskRating"
+                                        class="font-weight-bold"
+                                        >Task Rating</label
+                                      >
+                                      <div>
+                                        <span
+                                          v-for="n in 5"
+                                          :key="'star-' + n"
+                                          class="fa"
+                                          :class="[
+                                            'fa-star',
+                                            n <= (item.rating || 0)
+                                              ? 'text-warning'
+                                              : 'text-secondary',
+                                          ]"
+                                          style="font-size: 1.3em"
+                                        ></span>
+                                      </div>
+                                      <div
+                                        class="d-flex align-items-center"
+                                        style="gap: 10px"
+                                      >
+                                        <select
+                                          id="taskRating"
+                                          class="form-control"
+                                          name="rating"
+                                          v-model="item.rating"
+                                        >
+                                          <option disabled value="">
+                                            Select Rating
+                                          </option>
+                                          <option
+                                            v-for="n in 5"
+                                            :key="n"
+                                            :value="n"
+                                          >
+                                            {{ n }}
+                                          </option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div
+                                      v-if="
+                                        item.task_status === 'Not Completed'
+                                      "
+                                      class="form-group"
+                                    >
+                                      <label
+                                        for="nextDateInput"
+                                        class="font-weight-bold"
+                                        >Next Date</label
+                                      >
+                                      <input
+                                        id="nextDateInput"
+                                        type="date"
+                                        v-model="item.start_date"
+                                        name="start_date"
+                                        class="form-control mb-1"
+                                        placeholder="Next Date"
+                                        required
+                                      />
+                                    </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button
+                                      type="button"
+                                      class="btn btn-secondary"
+                                      @click="closeOverviewModal"
+                                    >
+                                      <i class="fa fa-times mr-1"></i>Close
+                                    </button>
+                                    <button
+                                      v-if="
+                                        selectedTask &&
+                                        selectedTask.task_status !== 'Pending'
+                                      "
+                                      type="submit"
+                                      class="btn btn-info"
+                                      :disabled="!item.task_status"
+                                      
+                                    >
+                                      <i class="fa fa-save mr-1"></i>Save
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
                         </ul>
                       </div>
                     </td>
@@ -277,6 +409,24 @@
                     <td>{{ item.user?.name || "Not Assigned" }}</td>
                     <td>{{ item.priority }}</td>
                     <td>{{ item.task_status }}</td>
+                    <td>
+                      <span v-if="item.task_status === 'Completed'">
+                        <span
+                          v-for="n in 5"
+                          :key="'star-' + n"
+                          class="fa"
+                          :class="[
+                            'fa-star',
+                            n <= (item.rating || 0)
+                              ? 'text-warning'
+                              : 'text-secondary',
+                          ]"
+                          style="font-size: 1.3em"
+                        ></span>
+                        <span class="ml-2">{{ item.rating }}</span>
+                      </span>
+                      <span v-else>NA</span>
+                    </td>
                     <td>{{ formatDateTime(item.start_date) }}</td>
                     <td>{{ formatDateTime(item.end_date) }}</td>
                     <td>{{ formatDateTime(item.created_at) }}</td>
@@ -508,7 +658,7 @@
               <!-- <div class="form-control preview"></div> -->
             </label>
           </div>
-          
+
           <div class="filter_item">
             <label for="sort_by_col">Sort By Col</label
             ><label
@@ -620,6 +770,9 @@ export default {
     setup,
     is_trashed_data: false,
     import_csv_modal_show: false,
+    isOverviewModalVisible: false,
+    // selectedTask: null,
+    // selectedStatus: "",
     filePath:
       "resources/js/backend/Views/SuperAdmin/Management/TestModule/helpers/demo.csv",
   }),
@@ -646,11 +799,58 @@ export default {
       "set_page",
       "set_status",
       "set_paginate",
+      'task_overview'
     ]),
 
     // taskStatusFilterValue
-    
+    showOverviewModal(item) {
+      this.selectedTask = item; // keep a live reference
+      this.selectedStatus = item.task_status;
+      this.isOverviewModalVisible = true;
+    },
+    closeOverviewModal() {
+      this.isOverviewModalVisible = false;
+    },
     // taskStatusFilterValue
+    // async updateTaskStatus() {
+    //   try {
+    //     const res = await axios.post(
+    //       `/task/update/${item.slug}`,
+    //       { task_status: this.selectedStatus }
+    //     );
+
+    //     if (res.data.status === "success") {
+    //       this.selectedTask.task_status = this.selectedStatus;
+
+    //       window.s_alert("Task status updated");
+    //     } else {
+    //       window.s_warning(res.data.message || "Update failed");
+    //     }
+    //   } catch (e) {
+    //     window.s_warning("Server error updating task status");
+    //   }
+    // },
+    async updateTaskStatus(item) {
+      try {
+        let payload = {
+          slug: item.slug,
+          task_status: item.task_status,
+        };
+        // If task is completed, include rating
+        if (item.task_status === "Completed" && item.rating) {
+          payload.rating = item.rating;
+        }
+        let response = await axios.post(`/task/update/${item.slug}`, payload);
+        if (response.data.status === "success") {
+          window.s_alert("Task status updated!");
+          await this.get_all();
+        } else {
+          window.s_warning(response.data?.message || "Update failed");
+        }
+      } catch (error) {
+        window.s_warning("Error updating task status");
+      }
+    },
 
     formatDateTime(dateTime) {
       if (!dateTime) return "";
@@ -689,23 +889,6 @@ export default {
         } else {
           window.s_warning(response.data?.message);
         }
-      }
-    },
-    async updateTaskStatus(item) {
-      try {
-        // Use slug instead of id for backend compatibility
-        let response = await axios.post(`/task/update/${item.slug}`, {
-          slug: item.slug, // changed from id: item.id
-          task_status: item.task_status,
-        });
-        if (response.data.status === 'success') {
-          window.s_alert('Task status updated!');
-          await this.get_all();
-        } else {
-          window.s_warning(response.data?.message || 'Update failed');
-        }
-      } catch (error) {
-        window.s_warning('Error updating task status');
       }
     },
 
@@ -864,6 +1047,20 @@ export default {
       this.only_latest_data = false;
     }, 500),
 
+
+    submitTaskOverviewForm: async function (item,) {
+      console.log("Submitting task overview form for item:", event);
+      // this.set_only_latest_data(true);
+       this.set_item(item);
+      let response = await this.task_overview(event);
+        // await this.get_all();
+        if ([200, 201].includes(response.status)) {
+          this.closeOverviewModal();
+          this.get_all();
+          window.s_alert("Data Successfully Created");
+         
+        }
+    },
   },
   computed: {
     ...mapWritableState(data_store, [

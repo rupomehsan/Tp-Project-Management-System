@@ -12,6 +12,7 @@ import restore from "./async_actions/restore";
 import destroy from "./async_actions/destroy";
 import bulk_action from "./async_actions/bulk_action";
 import import_data from "./async_actions/import_data";
+import task_overview from "./async_actions/task_overview";
 
 /** actions */
 import set_filter_criteria from "./actions/set_filter_criteria";
@@ -40,6 +41,7 @@ export const store = defineStore(setup.store_prefix, {
         destroy: destroy,
         bulk_action: bulk_action,
         import_data: import_data,
+        task_overview: task_overview,
 
         /* actions */
         set_page,

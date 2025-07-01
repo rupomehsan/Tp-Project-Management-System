@@ -1,108 +1,130 @@
 <template>
   <div class="col-md-12">
-    <div class="d-flex justify-content-between align-items-center pb-2 section-title">
-      <h5 class="m-0">Add Project documents</h5>
-      <button class="btn btn-sm btn-outline-success" @click.prevent="add_row('project_document')">Add row</button>
+    <div
+      class="d-flex justify-content-between align-items-center pb-2 section-title"
+    >
+      <h5 class="m-0">Add Project document links</h5>
+      <button
+        class="btn btn-sm btn-outline-success"
+        @click.prevent="add_link_row"
+      >
+        Add link
+      </button>
     </div>
-
-    <div class="row align-items-center" v-for="(project_document, index) in project_document_data" :key="index">
-      <div class="col-md-3">
+    <div
+      class="row align-items-center"
+      v-for="(link, index) in project_document_links"
+      :key="'link-' + index"
+    >
+      <div class="col-md-5">
         <div class="form-group">
-          <label for="">name</label>
+          <label for="">Name</label>
           <div class="mt-1 mb-3">
             <input
               class="form-control form-control-square mb-2"
               type="text"
-              :name="`project_documents[${index}][name]`"
-              v-model="project_document.name"
-              id="name"
-              :class="{
-                custom_error: errors['project_document'] && errors['project_document'][index] && errors['project_document'][index].name,
-              }"
+              v-model="link.name"
+              :name="`project_document_links[${index}][name]`"
+              :class="{ custom_error: errors.links?.[index]?.name }"
             />
           </div>
-          <div v-if="errors['project_document'] && errors['project_document'][index] && errors['project_document'][index].name" class="text-danger small">
-            {{ errors["project_document"][index].name }}
+          <div v-if="errors.links?.[index]?.name" class="text-danger small">
+            {{ errors.links[index].name }}
           </div>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label for="">Doucument type</label>
-          <div class="mt-1 mb-3">
-            <select
-              class="form-control form-control-square mb-2"
-              :name="`project_documents[${index}][type]`"
-              v-model="project_document.type"
-              :class="{
-                custom_error: errors['project_document'] && errors['project_document'][index] && errors['project_document'][index].type,
-              }"
-            >
-              
-              <option value="link">Link</option>
-              <option value="file">File</option>
-            </select>
-          </div>
-          <div v-if="errors['project_document'] && errors['project_document'][index] && errors['project_document'][index].type" class="text-danger small">
-            {{ errors["project_document"][index].type }}
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3" v-if="project_document.type === 'link'">
+      <div class="col-md-5">
         <div class="form-group">
           <label for="">Document link</label>
           <div class="mt-1 mb-3">
             <input
               class="form-control form-control-square mb-2"
               type="text"
-              :name="`project_documents[${index}][link]`"
-              v-model="project_document.link"
-              id="link"
-              :class="{
-                custom_error: errors['project_document'] && errors['project_document'][index] && errors['project_document'][index].link,
-              }"
+              v-model="link.link"
+              :name="`project_document_links[${index}][link]`"
+              :class="{ custom_error: errors.links?.[index]?.link }"
             />
           </div>
-          <div v-if="errors['project_document'] && errors['project_document'][index] && errors['project_document'][index].link" class="text-danger small">
-            {{ errors["project_document"][index].link }}
+          <div v-if="errors.links?.[index]?.link" class="text-danger small">
+            {{ errors.links[index].link }}
           </div>
         </div>
       </div>
-     
-      <div class="col-md-3" v-if="project_document.type === 'file'">
-        <div class="form-group">
-          <div>
-             <label for="">Document file</label>
-            <a :href="project_document_data[index].file" data-lightbox="image-1" data-title="My caption">
-              <img class="image_preview" v-if="project_document_data[index].file" :src="project_document_data[index].file" />
-            </a>
-          </div>
+      <div class="col-md-2 d-flex align-items-center justify-content-center">
+        <button
+          class="btn btn-sm btn-outline-danger"
+          @click.prevent="delete_link_row(index)"
+        >
+          <i class="fa fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 
+  <div class="col-md-12 mt-4">
+    <div
+      class="d-flex justify-content-between align-items-center pb-2 section-title"
+    >
+      <h5 class="m-0">Add Project document files</h5>
+      <button
+        class="btn btn-sm btn-outline-success"
+        @click.prevent="add_file_row"
+      >
+        Add file
+      </button>
+    </div>
+    <div
+      class="row align-items-center"
+      v-for="(file, index) in project_document_files"
+      :key="'file-' + index"
+    >
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="">Name</label>
+          <div class="mt-1 mb-3">
+            <input
+              class="form-control form-control-square mb-2"
+              type="text"
+              v-model="file.name"
+              :name="`project_document_files[${index}][name]`"
+              :class="{ custom_error: errors.files?.[index]?.name }"
+            />
+          </div>
+          <div v-if="errors.files?.[index]?.name" class="text-danger small">
+            {{ errors.files[index].name }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="">Document file</label>
+          <a
+            v-if="file.file"
+            target="_blank"
+            :href="file.file"
+            data-lightbox="image-1"
+            data-title="My caption"
+          >
+            <img class="image_preview" :src="file.file" />
+          </a>
           <div class="mt-1 mb-3">
             <input
               class="form-control form-control-square mb-2"
               type="file"
-              @change="onImageChange($event, index)"
-              :name="`project_documents[${index}][file]`"
-              id="file"
-              :class="{
-                custom_error: errors['project_document'] && errors['project_document'][index] && errors['project_document'][index].file,
-              }"
+              @change="onFileChange($event, index)"
+              :name="`project_document_files[${index}][file]`"
+              :class="{ custom_error: errors.files?.[index]?.file }"
             />
           </div>
-          <div v-if="errors['project_document'] && errors['project_document'][index] && errors['project_document'][index].file" class="text-danger small">
-            {{ errors["project_document"][index].file }}
+          <div v-if="errors.files?.[index]?.file" class="text-danger small">
+            {{ errors.files[index].file }}
           </div>
         </div>
       </div>
-      <div class="col-md-1 d-flex align-items-center justify-content-center">
+      <div class="col-md-2 d-flex align-items-center justify-content-center">
         <button
           class="btn btn-sm btn-outline-danger"
-          :style="{
-            width: '50%',
-            marginTop: !errors['project_document']?.[index]?.title ? '30px' : '0',
-          }"
-          @click.prevent="delete_row('project_document', index)"
+          @click.prevent="delete_file_row(index)"
         >
           <i class="fa fa-trash"></i>
         </button>
@@ -110,80 +132,87 @@
     </div>
   </div>
 </template>
+
 <script>
-import { mapActions, mapState, mapWritableState } from "pinia";
+import { mapActions, mapState } from "pinia";
 import { store } from "../../store";
 
 export default {
   props: {
-    name: {
-      type: String,
-    },
-    value: {
-      type: Array,
-      default: [],
-    },
+    name: String,
+    value: { type: Object, default: () => ({ links: [], files: [] }) },
   },
-  data: () => ({
-    errors: [],
-    //----------- for floor_plan list input ----------
-
-    project_document_data: [
-      {
-        name: "",
-        type: "link",
-        link: "",
-        file: "",
-      },
-    ],
-
-    //----------- for floor_plan list input ----------
-  }),
+  data() {
+    return {
+      errors: { links: [], files: [] },
+      project_document_links: [{ name: "", link: "" }],
+      project_document_files: [{ name: "", file: "" }],
+    };
+  },
   created: function () {
-    this.$watch("item", (newValue) => {
-      console.log("newValue", newValue?.project_documents);
-
-      if (newValue) {
-        this.project_document_data = newValue?.project_documents?.map((project_document) => ({
-          name: project_document.name,
-          email: project_document.email,
-          age: project_document.age,
-          image: project_document.image,
-        }));
-      }
-    });
+    this.$watch(
+      "item",
+      (newValue) => {
+        if (newValue) {
+          if (newValue.project_document_links) {
+            this.project_document_links = newValue.project_document_links.map((doc) => ({
+              name: doc.name,
+              link: doc.link,
+            }));
+          }
+          if (newValue.project_document_files) {
+            this.project_document_files = newValue.project_document_files.map((doc) => ({
+              name: doc.name,
+              file: doc.file,
+            }));
+          }
+        }
+      },
+      { immediate: true, deep: true }
+    );
   },
-
+  watch: {
+    project_document_links: {
+      handler() {
+        this.emitChange();
+      },
+      deep: true,
+    },
+    project_document_files: {
+      handler() {
+        this.emitChange();
+      },
+      deep: true,
+    },
+  },
   methods: {
     ...mapActions(store, ["get_all", "set_paginate", "set_page"]),
-    add_row() {
-      this.project_document_data.push({
-        name: "",
-        age: "",
-        email: "",
-        image: "",
-      });
+    add_link_row() {
+      this.project_document_links.push({ name: "", link: "" });
     },
-    onImageChange(event, index) {
+    delete_link_row(index) {
+      if (this.project_document_links.length < 2) return;
+      this.project_document_links.splice(index, 1);
+    },
+    add_file_row() {
+      this.project_document_files.push({ name: "", file: "" });
+    },
+    delete_file_row(index) {
+      if (this.project_document_files.length < 2) return;
+      this.project_document_files.splice(index, 1);
+    },
+    onFileChange(event, index) {
       const file = event.target.files[0];
       if (file) {
-        // store the file for submission
-        this.project_document_data[index].image = file;
-
-        // create base64 preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.project_document_data[index].image = e.target.result;
-        };
-        reader.readAsDataURL(file);
+        this.project_document_files[index].file = file;
+        // Optionally, add preview logic here if needed
       }
     },
-    delete_row(index) {
-      if (this.project_document_data.length < 2) {
-        console.error("cant delete first row");
-        return;
-      }
-      this.project_document_data.splice(index, 1);
+    emitChange() {
+      this.$emit("input", {
+        links: this.project_document_links,
+        files: this.project_document_files,
+      });
     },
   },
   computed: {
@@ -191,6 +220,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .image_preview {
   width: 40px;

@@ -12,6 +12,7 @@ class Model extends EloquentModel
     protected $guarded = [];
     protected $casts = [
         'project_document_files' => 'array',
+        'project_document_links' => 'array',
     ];  
 
 

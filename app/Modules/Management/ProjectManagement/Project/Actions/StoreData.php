@@ -15,6 +15,9 @@ class StoreData
 
             $currentDate = now()->format('Y/m'); // e.g. 2025/05
 
+
+            // dd($request->all());
+
             // Handle project agreement file upload
             if ($request->hasFile('project_agrement_file')) {
                 $project_agrement_file = $request->file('project_agrement_file');
@@ -26,6 +29,36 @@ class StoreData
             if ($request->hasFile('project_document')) {
                 $project_document = $request->file('project_document');
                 $requestData['project_document'] = self::uploader($project_document, "uploads/project/document/{$currentDate}");
+            }
+
+            // Handle new separated project document links and files
+            $links = [];
+            $files = [];
+            if ($request->has('project_document_links') && is_array($request->project_document_links)) {
+                foreach ($request->project_document_links as $doc) {
+                    if (isset($doc['link'])) {
+                        $links[] = [
+                            'name' => $doc['name'] ?? '',
+                            'link' => $doc['link']
+                        ];
+                    }
+                }
+            }
+            if ($request->has('project_document_files') && is_array($request->project_document_files)) {
+                foreach ($request->project_document_files as $doc) {
+                    if (isset($doc['file']) && $doc['file'] instanceof \Illuminate\Http\UploadedFile) {
+                        $files[] = [
+                            'name' => $doc['name'] ?? '',
+                            'file' => self::uploader($doc['file'], "uploads/project/documents/{$currentDate}")
+                        ];
+                    }
+                }
+            }
+            if (!empty($links)) {
+                $requestData['project_document_links'] = $links;
+            }
+            if (!empty($files)) {
+                $requestData['project_document_files'] = $files;
             }
 
             // Create the database record

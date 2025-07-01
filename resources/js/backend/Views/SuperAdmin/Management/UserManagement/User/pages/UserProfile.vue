@@ -53,7 +53,7 @@
                   <h6 class="font-weight-light">TOTAL PROJECT</h6>
                   <i class="fas fa-project-diagram fa-2x"></i>
                 </div>
-                <h2 class="mb-0">24</h2>
+                <h2 class="mb-0">{{ item.project?.length }}</h2>
               </div>
               <div
                 class="card-footer d-flex align-items-center justify-content-between"
@@ -76,7 +76,7 @@
                   <h6 class="font-weight-light">TOTAL Task</h6>
                   <i class="fas fa-project-diagram fa-2x"></i>
                 </div>
-                <h2 class="mb-0">{{ item.tasks.length }}</h2>
+                <h2 class="mb-0">{{ item.tasks?.length }}</h2>
               </div>
               <div
                 class="card-footer d-flex align-items-center justify-content-between"
@@ -101,7 +101,7 @@
                 </div>
                 <h2 class="mb-0">
                   {{
-                    item.tasks.filter(
+                    item.tasks?.filter(
                       (task) => task.task_status === "Completed"
                     ).length
                   }}
@@ -129,7 +129,7 @@
                 </div>
                 <h2 class="mb-0">
                   {{
-                    item.tasks.filter(
+                    item.tasks?.filter(
                       (task) => task.task_status !== "Completed"
                     ).length
                   }}
@@ -199,47 +199,31 @@
     <!-- End System Info Section -->
     <div class="card-body">
       <div class="table-responsive table_responsive card_body_fixed_height">
-        <table class="table table-hover text-center table-bordered">
-          <thead>
-            <tr>
-              <!-- <th>
-                      <i
-                        class="zmdi zmdi-settings zmdi-hc-2x"
-                        title="Actions"
-                      ></i>
-                    </th> -->
-              <!-- <th class="w-10 text-center">
-                      <input
-                        class="form-check-input ml-0 select_all_checkbox"
-                        @change="($event) => set_all_item_selected($event)"
-                        type="checkbox"
-                        :checked="isAllSelected"
-                      />
-                    </th> -->
-              <th class="w-10">ID</th>
-              <th>Project Name</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(item, index) in all?.data"
-              :key="item.id"
-              :class="`table_rows table_row_${item.id}`"
-            >
-              <td>{{ index + 1 }}</td>
-              <td>{{}}</td>
-              <td>{{}}</td>
-              <td>{{}}</td>
-              <td>{{ "N/A " }}</td>
-
-              <td>
-                <img :src="item.image" alt="" height="50" width="50" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <table class="table table-bordered mt-3">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Task Title</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-if="Array.isArray(item.project) && item.project?.length"
+                    v-for="(projects, index) in item.project"
+                    :key="index"
+                  >
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ projects.name }}</td>
+                    <td>{{ projects.start_date }}</td>
+                    <td>{{ projects.end_date }}</td>
+                  </tr>
+                  <tr v-else>
+                    <td colspan="4" class="text-center">No project available.</td>
+                  </tr>
+                </tbody>
+              </table>
       </div>
     </div>
     <!-- End System Info Section -->

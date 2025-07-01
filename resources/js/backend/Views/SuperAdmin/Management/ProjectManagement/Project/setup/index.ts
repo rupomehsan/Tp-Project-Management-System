@@ -27,6 +27,7 @@ const setup: setup_type = {
     "project_link",
     "project_agrement_file",
     "project_document",
+    "project_document_files",
     "project_progress",
     "slug",
     "created_at",
