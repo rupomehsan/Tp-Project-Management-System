@@ -31,6 +31,7 @@ const setup: setup_type = {
     "project_progress",
     "slug",
     "created_at",
+    "delivery_status",
   ],
 
   sort_by_cols: [

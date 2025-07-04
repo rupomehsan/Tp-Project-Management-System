@@ -46,7 +46,14 @@ class DataStoreValidation extends FormRequest
             'title' => 'required | sometimes',
             'date' => 'required | sometimes',
             'meeting_type'  => ['sometimes', Rule::in(['Offline', 'Online', 'Hybrid'])],
-            'meeting_link' => 'required | sometimes',
+            'meeting_link' => [
+                'sometimes',
+                function ($attribute, $value, $fail) {
+                    if ($this->input('meeting_type') === 'Online' && empty($value)) {
+                        $fail('The meeting link field is required when meeting type is Online.');
+                    }
+                }
+            ],
             'description' => 'required | sometimes',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];

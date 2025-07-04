@@ -63,7 +63,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="form-group">
                 <label for="">description</label>
                 <div class="mt-1 mb-3">

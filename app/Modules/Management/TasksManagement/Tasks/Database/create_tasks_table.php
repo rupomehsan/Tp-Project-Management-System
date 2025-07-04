@@ -22,6 +22,7 @@ return new class extends Migration
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->enum('task_status', ['Pending', 'In Progress', 'Completed', 'Not Completed'])->default('Pending');
+            $table->enum('task_user_status', ['Pending', 'In Progress', 'Completed', 'Not Completed'])->default('Pending');
             $table->enum('priority', ['low', 'normal', 'high', 'urgent'])->default('low');
             $table->tinyInteger('rating')->nullable()->comment('Rating out of 5')->default(0);
 

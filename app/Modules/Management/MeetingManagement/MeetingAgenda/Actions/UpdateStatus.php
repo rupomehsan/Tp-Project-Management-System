@@ -12,15 +12,20 @@ class UpdateStatus
             if (!$data = self::$model::query()->where('slug', request('slug'))->first()) {
                 return messageResponse('Data not found...', $data, 404, 'error');
             }
-            if ($data->status == 'active') {
-                $data->status = 'inactive';
+            if (request()->has('agenda_status')) {
+                $data->agenda_status = request('agenda_status');
             } else {
-                $data->status = 'active';
+
+                if ($data->status == 'active') {
+                    $data->status = 'inactive';
+                } else {
+                    $data->status = 'active';
+                }
             }
             $data->update();
-            return messageResponse('Item updated successfully',$data, 201);
+            return messageResponse('Item updated successfully', $data, 201);
         } catch (\Exception $e) {
-            return messageResponse($e->getMessage(),[], 500, 'server_error');
+            return messageResponse($e->getMessage(), [], 500, 'server_error');
         }
     }
 }

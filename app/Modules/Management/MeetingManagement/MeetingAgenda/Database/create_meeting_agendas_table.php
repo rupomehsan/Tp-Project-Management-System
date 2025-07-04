@@ -17,8 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('meeting_id');
             $table->string('title', 150);
             $table->text('description')->nullable();
-
-
+            $table->enum('agenda_status', ['pending', 'completed'])->default('pending');
             $table->bigInteger('creator')->unsigned()->nullable();
             $table->string('slug', 50)->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');

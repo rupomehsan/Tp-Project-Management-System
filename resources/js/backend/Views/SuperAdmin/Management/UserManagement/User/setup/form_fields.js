@@ -20,9 +20,9 @@ export default [
   },
 
   {
-    name: "password_in_text",
-    label: "  password",
-    type: "text",
+    name: "password",
+    label: "password",
+    type: "password",
     value: "",
   },
   {
@@ -40,8 +40,38 @@ export default [
   {
     name: "designation",
     label: " designation",
-    type: "text",
+    type: "select",
     value: "",
+    data_list: [
+      {
+        label: "Admin Officer",
+        value: "admin_officer",
+      },
+      {
+        label: "Software Engineer",
+        value: "software_engineer",
+      },
+      {
+        label: "Web Designer",
+        value: "web_designer",
+      },
+      {
+        label: "Web Developer",
+        value: "web_developer",
+      },
+      {
+        label: "UI/UX Designer",
+        value: "ui_ux_designer",
+      },
+      {
+        label: "Intern",
+        value: "intern",
+      },
+      {
+        label: "Staff",
+        value: "staff",
+      },
+    ],
   },
   {
     name: "nid",
@@ -62,23 +92,23 @@ export default [
     label: " join date",
     type: "date",
     value: "",
-    is_visible: false,
+    is_visible: true,
   },
 
   {
-    name: "salery",
+    name: "salary",
     label: "  salary",
     type: "number",
     value: "",
-    is_visible: false,
+    is_visible: true,
   },
 
   {
     name: "can_login",
     label: "Can login",
     type: "select",
-    value: "0",
-    is_visible: false,
+    value: "1",
+    is_visible: true,
     data_list: [
       {
         label: "Yes",

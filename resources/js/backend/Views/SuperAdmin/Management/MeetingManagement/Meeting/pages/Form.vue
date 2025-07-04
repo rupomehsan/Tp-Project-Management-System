@@ -4,17 +4,10 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h5 class="text-capitalize">
-            {{
-              param_id
-                ? `${setup.edit_page_title}`
-                : `${setup.create_page_title}`
-            }}
+            {{ param_id ? `${setup.edit_page_title}` : `${setup.create_page_title}` }}
           </h5>
           <div>
-            <router-link
-              class="btn btn-outline-warning btn-sm"
-              :to="{ name: `All${setup.route_prefix}` }"
-            >
+            <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${setup.route_prefix}` }">
               {{ setup.all_page_title }}
             </router-link>
           </div>
@@ -25,19 +18,9 @@
               <div class="form-group">
                 <label for="">Meeting Group</label>
                 <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.group_id"
-                    class="form-control"
-                    name="group_id"
-                    id="group_id"
-                  >
-                    <option value="">Selet-- Meeting Group</option>
-                    <option
-                      v-for="item in meetigGroupData?.data"
-                      :key="item.id"
-                      :value="item.id"
-                      
-                    >
+                  <select v-model="form_fields.group_id" class="form-control" name="group_id" id="group_id">
+                    <option value="">Select-- Meeting Group</option>
+                    <option v-for="item in meetigGroupData?.data" :key="item.id" :value="item.id">
                       {{ item.title }}
                     </option>
                   </select>
@@ -48,13 +31,7 @@
               <div class="form-group">
                 <label for="">Title</label>
                 <div class="mt-1 mb-3">
-                  <input
-                    class="form-control form-control-square mb-2"
-                    type="text"
-                    name="title"
-                    id="title"
-                    v-model="form_fields.title"
-                  />
+                  <input class="form-control form-control-square mb-2" type="text" name="title" id="title" v-model="form_fields.title" />
                 </div>
               </div>
             </div>
@@ -62,35 +39,24 @@
               <div class="form-group">
                 <label for="date">Date</label>
                 <div class="mt-1 mb-3">
-                  <input
-                    type="datetime-local"
-                    class="form-control form-control-square mb-2"
-                    name="date"
-                    id="date"
-                    v-model="form_fields.date"
-                  />
+                  <input type="datetime-local" class="form-control form-control-square mb-2" name="date" id="date" v-model="form_fields.date" />
                 </div>
               </div>
             </div>
             <div class="col-md-6">
-                <div class="form-group">
+              <div class="form-group">
                 <label for="">Meeting Type</label>
                 <div class="mt-1 mb-3">
-                  <select
-                  v-model="form_fields.meeting_type"
-                  class="form-control form-control-square mb-2"
-                  name="meeting_type"
-                  id="meeting_type"
-                  >
-                  <option value="">Select-- Meeting Type</option>
-                  <option value="Offline">Offline</option>
-                  <option value="Online">Online</option>
-                  <option value="Hybrid">Hybrid</option>
+                  <select v-model="form_fields.meeting_type" class="form-control form-control-square mb-2" name="meeting_type" id="meeting_type">
+                    <option value="">Select-- Meeting Type</option>
+                    <option value="Offline">Offline</option>
+                    <option value="Online">Online</option>
+                    <option value="Hybrid">Hybrid</option>
                   </select>
                 </div>
-                </div>
+              </div>
             </div>
-            <div class="col-md-6" v-show="form_fields.meeting_type !== 'Offline'">
+            <div class="col-md-6" v-show="form_fields.meeting_type == 'Online'">
               <div class="form-group">
                 <label for="">meeting_link</label>
                 <div class="mt-1 mb-3">
@@ -116,9 +82,7 @@
           </div>
         </div>
         <div class="card-footer">
-          <button type="submit" class="btn btn-light btn-square px-5">
-            <i class="icon-lock"></i> Submit
-          </button>
+          <button type="submit" class="btn btn-light btn-square px-5"><i class="icon-lock"></i> Submit</button>
         </div>
       </div>
     </form>

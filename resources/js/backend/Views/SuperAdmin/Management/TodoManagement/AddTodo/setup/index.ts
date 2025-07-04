@@ -20,6 +20,8 @@ const setup: setup_type = {
     "id",
     "category_id",
     "description",
+    "task_status",
+    "priority",
     "slug",
     "created_at",
   ],

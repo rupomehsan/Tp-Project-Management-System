@@ -7,6 +7,12 @@
 include_once base_path("app/Modules/Management/Auth/Routes/Route.php");
 /*
 |--------------------------------------------------------------------------
+| Dashboard data
+|--------------------------------------------------------------------------
+*/
+include_once base_path("app/Modules/Management/Dashboard/Routes/Route.php");
+/*
+|--------------------------------------------------------------------------
 | Setting Management Module
 |--------------------------------------------------------------------------
 */
@@ -15,8 +21,6 @@ include_once base_path("app/Modules/Management/SettingManagement/WebsiteSettings
 |--------------------------------------------------------------------------
 | User Management Module
 |--------------------------------------------------------------------------
-
-
 */
 include_once base_path("app/Modules/Management/UserManagement/User/Routes/Route.php");
 include_once base_path("app/Modules/Management/UserManagement/Role/Routes/Route.php");
@@ -75,5 +79,3 @@ include_once base_path("app/Modules/Management/MeetingManagement/MeetingAgenda/R
 */
 include_once base_path("app/Modules/Management/SystemLossManagement/SystemLossCategory/Routes/Route.php");
 include_once base_path("app/Modules/Management/SystemLossManagement/SystemLoss/Routes/Route.php");
-
-

@@ -1,4 +1,66 @@
 <template>
+  <!-- <div class="col-md-12">
+    <div
+      class="d-flex justify-content-between align-items-center pb-2 section-title"
+    >
+      <h5 class="m-0">Add Project document links</h5>
+      <button
+        class="btn btn-sm btn-outline-success"
+        @click.prevent="add_link_row"
+      >
+        Add link
+      </button>
+    </div>
+    <div
+      class="row align-items-center"
+      v-for="(link, index) in project_document_links"
+      :key="'link-' + index"
+    >
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="">Name</label>
+          <div class="mt-1 mb-3">
+            <input
+              class="form-control form-control-square mb-2"
+              type="text"
+              v-model="link.name"
+              :name="`project_document_links[${index}][name]`"
+              :class="{ custom_error: errors.links?.[index]?.name }"
+            />
+          </div>
+          <div v-if="errors.links?.[index]?.name" class="text-danger small">
+            {{ errors.links[index].name }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="">Document link</label>
+          <div class="mt-1 mb-3">
+            <input
+              class="form-control form-control-square mb-2"
+              type="text"
+              v-model="link.link"
+              :name="`project_document_links[${index}][link]`"
+              :class="{ custom_error: errors.links?.[index]?.link }"
+            />
+          </div>
+          <div v-if="errors.links?.[index]?.link" class="text-danger small">
+            {{ errors.links[index].link }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 d-flex align-items-center justify-content-center">
+        <button
+          class="btn btn-sm btn-outline-danger"
+          @click.prevent="delete_link_by_id(link.id)"
+        >
+          <i class="fa fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div> -->
+
   <div class="col-md-12">
     <div
       class="d-flex justify-content-between align-items-center pb-2 section-title"
@@ -60,7 +122,6 @@
       </div>
     </div>
   </div>
-
   <div class="col-md-12 mt-4">
     <div
       class="d-flex justify-content-between align-items-center pb-2 section-title"
@@ -73,6 +134,7 @@
         Add file
       </button>
     </div>
+
     <div
       class="row align-items-center"
       v-for="(file, index) in project_document_files"
@@ -99,13 +161,26 @@
         <div class="form-group">
           <label for="">Document file</label>
           <a
-            v-if="file.file"
+            v-if="project_document_files[index].file"
             target="_blank"
-            :href="file.file"
+            :href="filePreview(index)"
             data-lightbox="image-1"
             data-title="My caption"
           >
-            <img class="image_preview" :src="file.file" />
+            <img
+              v-if="isImage(index)"
+              class="image_preview"
+              :src="filePreview(index)"
+              alt="Document preview"
+            />
+            <button
+              v-else
+              type="button"
+              @click="window.open(filePreview(index), '_blank')"
+              class="btn btn-sm btn-outline-primary mx-3"
+            >
+              Show file
+            </button>
           </a>
           <div class="mt-1 mb-3">
             <input
@@ -124,7 +199,7 @@
       <div class="col-md-2 d-flex align-items-center justify-content-center">
         <button
           class="btn btn-sm btn-outline-danger"
-          @click.prevent="delete_file_row(index)"
+          @click.prevent="delete_file_by_id(index, item.id)"
         >
           <i class="fa fa-trash"></i>
         </button>
@@ -146,7 +221,7 @@ export default {
     return {
       errors: { links: [], files: [] },
       project_document_links: [{ name: "", link: "" }],
-      project_document_files: [{ name: "", file: "" }],
+      project_document_files: [{ name: "", file: "", preview: "" }],
     };
   },
   created: function () {
@@ -155,16 +230,28 @@ export default {
       (newValue) => {
         if (newValue) {
           if (newValue.project_document_links) {
-            this.project_document_links = newValue.project_document_links.map((doc) => ({
-              name: doc.name,
-              link: doc.link,
-            }));
+            this.project_document_links = newValue.project_document_links.map(
+              (doc) => ({
+                name: doc.name,
+                link: doc.link,
+              })
+            );
           }
+          // if (newValue.project_document_links) {
+          //   this.project_document_links = newValue.project_document_links.map(doc => ({
+          //     id  : doc.id,
+          //     name: doc.name,
+          //     link: doc.link,
+          //   }));
+          // }
           if (newValue.project_document_files) {
-            this.project_document_files = newValue.project_document_files.map((doc) => ({
-              name: doc.name,
-              file: doc.file,
-            }));
+            this.project_document_files = newValue.project_document_files.map(
+              (doc) => ({
+                id: doc.id, // ← keep it
+                name: doc.name,
+                file: doc.file,
+              })
+            );
           }
         }
       },
@@ -185,8 +272,41 @@ export default {
       deep: true,
     },
   },
+
   methods: {
     ...mapActions(store, ["get_all", "set_paginate", "set_page"]),
+
+    // async delete_link_by_id(id) {
+    //   try {
+    //     await axios.post(`/project/filelink-delete/${this.item.slug}`, {
+    //       id,
+    //       type: "link",
+    //     });
+    //     this.project_document_links = this.project_document_links.filter(
+    //       (l) => l.id !== id
+    //     );
+    //   } catch (e) {
+    //     window.s_warning(e.response?.data?.message || "Delete failed");
+    //   }
+    // },
+
+    async delete_file_by_id(index, id) {
+      try {
+        let con = await window.s_confirm("Delete this file?");
+        if (con) {
+          let response = await axios.post(
+            `/project/filelink-delete/${id}?index=${index}`
+          );
+          if (response.data.status == "success") {
+            window.s_alert("File deleted successfully");
+            this.project_document_files.splice(index, 1);
+          }
+        }
+      } catch (e) {
+        window.s_warning(e.response?.data?.message || "Delete failed");
+      }
+    },
+
     add_link_row() {
       this.project_document_links.push({ name: "", link: "" });
     },
@@ -195,7 +315,11 @@ export default {
       this.project_document_links.splice(index, 1);
     },
     add_file_row() {
-      this.project_document_files.push({ name: "", file: "" });
+      this.project_document_files.push({
+        name: "",
+        file: "",
+        preview: "",
+      });
     },
     delete_file_row(index) {
       if (this.project_document_files.length < 2) return;
@@ -205,7 +329,17 @@ export default {
       const file = event.target.files[0];
       if (file) {
         this.project_document_files[index].file = file;
-        // Optionally, add preview logic here if needed
+
+        // Generate preview only if image
+        if (file.type.startsWith("image/")) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.project_document_files[index].preview = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          this.project_document_files[index].preview = "";
+        }
       }
     },
     emitChange() {
@@ -213,6 +347,33 @@ export default {
         links: this.project_document_links,
         files: this.project_document_files,
       });
+    },
+    filePreview(index) {
+      const item = this.project_document_files[index];
+
+      // If preview exists (user just uploaded), show it
+      if (item.preview) return item.preview;
+
+      // If the file is an existing URL (e.g., from database), show it
+      if (typeof item.file === "string") return item.file;
+
+      // Otherwise, generate a temporary object URL
+      return item.file ? URL.createObjectURL(item.file) : "";
+    },
+    isImage(index) {
+      const item = this.project_document_files[index];
+
+      // If new upload, use File type
+      if (item.file instanceof File) {
+        return item.file.type.startsWith("image/");
+      }
+
+      // If existing file (likely a string URL), check extension
+      if (typeof item.file === "string") {
+        return /\.(jpe?g|png|gif|bmp|webp|svg)$/i.test(item.file);
+      }
+
+      return false;
     },
   },
   computed: {

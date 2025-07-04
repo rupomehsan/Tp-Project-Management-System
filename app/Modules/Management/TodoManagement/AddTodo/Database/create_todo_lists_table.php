@@ -16,7 +16,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('category_id');
             $table->text('description')->nullable();
-
+            $table->enum('task_status', ['pending', 'completed'])->default('pending');
+             $table->enum('priority', ['low', 'normal', 'high', 'urgent'])->default('low');
             $table->bigInteger('creator')->unsigned()->nullable();
             $table->string('slug', 50)->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');

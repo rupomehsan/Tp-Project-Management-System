@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Modules\Management\ProjectManagement\Project\Controller;
+
 use App\Modules\Management\ProjectManagement\Project\Actions\GetAllData;
 use App\Modules\Management\ProjectManagement\Project\Actions\DestroyData;
 use App\Modules\Management\ProjectManagement\Project\Actions\GetSingleData;
@@ -10,16 +11,17 @@ use App\Modules\Management\ProjectManagement\Project\Actions\UpdateStatus;
 use App\Modules\Management\ProjectManagement\Project\Actions\SoftDelete;
 use App\Modules\Management\ProjectManagement\Project\Actions\RestoreData;
 use App\Modules\Management\ProjectManagement\Project\Actions\ImportData;
+use App\Modules\Management\ProjectManagement\Project\Actions\FileLInkDelete;
 use App\Modules\Management\ProjectManagement\Project\Validations\BulkActionsValidation;
 use App\Modules\Management\ProjectManagement\Project\Validations\DataStoreValidation;
 use App\Modules\Management\ProjectManagement\Project\Actions\BulkActions;
 use App\Http\Controllers\Controller as ControllersController;
-
-
+use Illuminate\Http\Request;
 class Controller extends ControllersController
 {
 
-    public function index( ){
+    public function index()
+    {
 
         $data = GetAllData::execute();
         return $data;
@@ -43,7 +45,7 @@ class Controller extends ControllersController
         $data = UpdateData::execute($request, $slug);
         return $data;
     }
-         public function updateStatus()
+    public function updateStatus()
     {
         $data = UpdateStatus::execute();
         return $data;
@@ -74,5 +76,8 @@ class Controller extends ControllersController
         $data = BulkActions::execute($request);
         return $data;
     }
-
+    public function filelinkDelete(Request $request, $slug)
+    {
+        return FileLInkDelete::execute($request,$slug);
+    }
 }

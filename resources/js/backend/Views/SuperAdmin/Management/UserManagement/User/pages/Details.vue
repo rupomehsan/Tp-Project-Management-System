@@ -43,7 +43,7 @@
                   <tr>
                     <th>Salary</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.salery }}</th>
+                    <th>{{ item.salary }}</th>
                   </tr>
                   <tr>
                     <th>Joining date</th>
@@ -60,12 +60,19 @@
                     <th>image</th>
                     <th class="text-center">:</th>
                     <th>
-                      <img
-                        height="100px"
-                        width="100px"
-                        :src="item.image"
-                        alt=""
-                      />
+                      <a
+                        data-lightbox="user"
+                        data-title="Image preview"
+                        :href="item.image"
+                        target="_blank"
+                      >
+                        <img
+                          height="100px"
+                          width="100px"
+                          :src="item.image"
+                          alt=""
+                        />
+                      </a>
                     </th>
                   </tr>
                   <tr>
@@ -86,7 +93,7 @@
                   <tr>
                     <th>commment</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.comment }}</th>
+                    <th>{{ item.description }}</th>
                   </tr>
                 </tbody>
               </table>

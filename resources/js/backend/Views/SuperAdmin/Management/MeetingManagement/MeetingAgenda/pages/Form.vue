@@ -4,17 +4,10 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h5 class="text-capitalize">
-            {{
-              param_id
-                ? `${setup.edit_page_title}`
-                : `${setup.create_page_title}`
-            }}
+            {{ param_id ? `${setup.edit_page_title}` : `${setup.create_page_title}` }}
           </h5>
           <div>
-            <router-link
-              class="btn btn-outline-warning btn-sm"
-              :to="{ name: `All${setup.route_prefix}` }"
-            >
+            <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${setup.route_prefix}` }">
               {{ setup.all_page_title }}
             </router-link>
           </div>
@@ -25,19 +18,9 @@
               <div class="form-group">
                 <label for="">Meeting Title</label>
                 <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.meeting_id"
-                    class="form-control"
-                    name="meeting_id"
-                    id="meeting_id"
-                  >
+                  <select v-model="form_fields.meeting_id" class="form-control" name="meeting_id" id="meeting_id">
                     <option value="">Selet-- Meeting</option>
-                    <option
-                      v-for="item in meetingData?.data"
-                      :key="item.id"
-                      :value="item.id"
-                      
-                    >
+                    <option v-for="item in meetingData?.data" :key="item.id" :value="item.id">
                       {{ item.title }}
                     </option>
                   </select>
@@ -48,13 +31,7 @@
               <div class="form-group">
                 <label for="">Title</label>
                 <div class="mt-1 mb-3">
-                  <input
-                    class="form-control form-control-square mb-2"
-                    type="text"
-                    name="title"
-                    id="title"
-                    v-model="form_fields.title"
-                  />
+                  <input class="form-control form-control-square mb-2" type="text" name="title" id="title" v-model="form_fields.title" />
                 </div>
               </div>
             </div>
@@ -69,9 +46,7 @@
           </div>
         </div>
         <div class="card-footer">
-          <button type="submit" class="btn btn-light btn-square px-5">
-            <i class="icon-lock"></i> Submit
-          </button>
+          <button type="submit" class="btn btn-light btn-square px-5"><i class="icon-lock"></i> Submit</button>
         </div>
       </div>
     </form>
@@ -154,9 +129,8 @@ export default {
         // await this.get_all();
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data Successfully Created");
-          this.$router.push({
-            name: `All${this.setup.route_prefix}`,
-          });
+          this.form_fields.title = "";
+          $("#description").summernote("code", "");
         }
       }
     },

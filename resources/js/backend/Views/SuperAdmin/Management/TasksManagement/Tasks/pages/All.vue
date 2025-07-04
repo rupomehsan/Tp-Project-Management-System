@@ -14,70 +14,56 @@
 
               <!-- Search Input -->
               <div class="col-12 col-md-6 mb-2 mb-md-0">
-                <input
-                  class="form-control"
-                  @keyup="(e) => set_search_key(e)"
-                  placeholder="Search"
-                />
+                <input class="form-control" @keyup="(e) => set_search_key(e)" placeholder="Search" />
               </div>
 
               <!-- Sorting Button -->
               <div class="col-12 col-md-3 text-md-right text-sm-left">
-                <button
-                  class="btn btn-outline-success btn-sm"
-                  @click="set_show_filter_canvas"
-                >
-                  <i class="fa fa-gear mx-2"></i>Filter
-                </button>
+                <button class="btn btn-outline-success btn-sm" @click="set_show_filter_canvas"><i class="fa fa-gear mx-2"></i>Filter</button>
               </div>
             </div>
           </div>
 
           <div class="card-body">
-            <div
-              class="table-responsive table_responsive card_body_fixed_height"
-            >
+            <div class="table-responsive table_responsive card_body_fixed_height">
               <div class="d-flex justify-content-between mb-3">
                 <!-- Task Status Filter -->
-                <div
-                  class="mb-3 d-flex align-items-center flex-wrap"
-                  style="gap: 0.5rem"
-                >
+                <div class="mb-3 d-flex align-items-center flex-wrap" style="gap: 0.5rem">
                   <span class="font-weight-bold mr-2">Status</span>
-                  <button
-                    class="btn btn-outline-secondary btn-sm"
-                    :class="{ active: !taskStatusFilterValue }"
-                    @click="cleartaskStatusFilter"
-                  >
+                  <button class="btn btn-outline-secondary btn-sm" :class="{ active: !taskStatusFilterValue }" @click="cleartaskStatusFilter">
                     All
                   </button>
                   <button
-                    class="btn btn-outline-danger btn-sm"
+                    class="btn btn-outline-primary btn-sm"
                     :class="{ active: taskStatusFilterValue === 'Pending' }"
                     @click="taskStatusFilter('Pending')"
                   >
                     Pending
                   </button>
                   <button
-                    class="btn btn-outline-warning btn-sm"
+                    class="btn btn-outline-info btn-sm"
                     :class="{ active: taskStatusFilterValue === 'In Progress' }"
                     @click="taskStatusFilter('In Progress')"
                   >
                     In Progress
                   </button>
                   <button
-                    class="btn btn-outline-info btn-sm"
+                    class="btn btn-outline-success btn-sm"
                     :class="{ active: taskStatusFilterValue === 'Completed' }"
                     @click="taskStatusFilter('Completed')"
                   >
                     Completed
                   </button>
+                  <button
+                    class="btn btn-outline-danger btn-sm"
+                    :class="{ active: taskStatusFilterValue === 'Not Completed' }"
+                    @click="taskStatusFilter('Not Completed')"
+                  >
+                    Not Completed
+                  </button>
                 </div>
                 <!-- Priority Filter -->
-                <div
-                  class="mb-3 d-flex align-items-center flex-wrap"
-                  style="gap: 0.5rem"
-                >
+                <div class="mb-3 d-flex align-items-center flex-wrap" style="gap: 0.5rem">
                   <span class="font-weight-bold mr-2">Priority</span>
                   <button
                     class="btn btn-outline-secondary btn-sm"
@@ -116,11 +102,8 @@
               <table class="table table-hover text-center table-bordered">
                 <thead>
                   <tr>
-                    <th>
-                      <i
-                        class="zmdi zmdi-settings zmdi-hc-2x"
-                        title="Actions"
-                      ></i>
+                    <th style="padding-left: 12px">
+                      <i class="zmdi zmdi-settings zmdi-hc-2x" title="Actions"></i>
                     </th>
                     <th class="w-10 text-center">
                       <input
@@ -135,24 +118,19 @@
                     <th>Title</th>
                     <th>Assigned To</th>
                     <th>Priority</th>
+                    <th>Developer Status</th>
                     <th>Task Status</th>
                     <th>Rating</th>
+                    <th>Actual Time</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Created at</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr
-                    v-for="(item, index) in all?.data"
-                    :key="item.id"
-                    :class="`table_rows table_row_${item.id}`"
-                  >
+                  <tr v-for="(item, index) in all?.data" :key="item.id" :class="`table_rows table_row_${item.id}`">
                     <td>
-                      <span
-                        class="icon"
-                        @click.prevent="active_row($event)"
-                      ></span>
+                      <span class="icon" @click.prevent="active_row($event)"></span>
                       <div class="table_action_btns">
                         <ul>
                           <li>
@@ -184,62 +162,36 @@
                             </router-link>
                           </li>
                           <li>
-                            <a
-                              v-if="item.status == 'active'"
-                              href=""
-                              @click.prevent="updateStatus(item)"
-                              class="border-warning"
-                            >
+                            <a v-if="item.status == 'active'" href="" @click.prevent="updateStatus(item)" class="border-warning">
                               <i class="fa fa-eye-slash text-warning"></i>
                               Inactive
                             </a>
-                            <a
-                              v-if="item.status == 'inactive'"
-                              href=""
-                              @click.prevent="updateStatus(item)"
-                              class="border-warning"
-                            >
+                            <a v-if="item.status == 'inactive'" href="" @click.prevent="updateStatus(item)" class="border-warning">
                               <i class="fa fa-eye text-warning"></i>
                               Active
                             </a>
                           </li>
                           <li v-if="!is_trashed_data">
-                            <a
-                              @click.prevent="softDelete(item)"
-                              href=""
-                              class="border-danger"
-                            >
+                            <a @click.prevent="softDelete(item)" href="" class="border-danger">
                               <i class="fa fa-ban text-warning"></i>
                               Soft Delete
                             </a>
                           </li>
                           <li v-if="is_trashed_data">
-                            <a
-                              @click.prevent="restore_data(item)"
-                              href=""
-                              class="border-danger"
-                            >
+                            <a @click.prevent="restore_data(item)" href="" class="border-danger">
                               <i class="fa fa-refresh text-warning"></i>
                               Restore data
                             </a>
                           </li>
                           <li>
-                            <a
-                              @click.prevent="destroy_data(item)"
-                              href=""
-                              class="border-danger"
-                            >
+                            <a @click.prevent="destroy_data(item)" href="" class="border-danger">
                               <i class="fa fa-trash text-danger"></i>
                               Destroy
                             </a>
                           </li>
                           <!-- Your existing list item -->
                           <li>
-                            <a
-                              href=""
-                              @click.prevent="showOverviewModal(item)"
-                              class="border-info"
-                            >
+                            <a href="" @click.prevent="showOverviewModal(item)" class="border-info">
                               <i class="fa fa-info-circle text-info"></i>
                               Overview
                             </a>
@@ -253,109 +205,47 @@
                             role="dialog"
                             style="background: rgba(0, 0, 0, 0.5)"
                           >
-                            <div
-                              class="modal-dialog modal-dialog-centered"
-                              role="document"
-                            >
+                            <div class="modal-dialog modal-dialog-centered" role="document">
                               <div class="modal-content shadow">
                                 <div class="modal-header bg-info text-white">
-                                  <h5 class="modal-title">
-                                    <i class="fa fa-tasks mr-2"></i>Update Task
-                                    Status
-                                  </h5>
-                                  <button
-                                    type="button"
-                                    class="close text-white"
-                                    @click="closeOverviewModal"
-                                  >
+                                  <h5 class="modal-title"><i class="fa fa-tasks mr-2"></i>Update Task Status</h5>
+                                  <button type="button" class="close text-white" @click="closeOverviewModal">
                                     <span aria-hidden="true">&times;</span>
                                   </button>
                                 </div>
                                 <form @submit.prevent="submitTaskOverviewForm(item)">
                                   <div class="modal-body">
                                     <div class="form-group">
-                                      <label
-                                        for="taskStatusSelect"
-                                        class="font-weight-bold"
-                                        >Task Status</label
-                                      >
-                                      <select
-                                        id="taskStatusSelect"
-                                        class="form-control"
-                                        v-model="item.task_status"
-                                        name="task_status"
-                                      >
-                                        <option disabled value="">
-                                          Select Status
-                                        </option>
-                                        <option value="In Progress">
-                                          In Progress
-                                        </option>
-                                        <option value="Completed">
-                                          Completed
-                                        </option>
-                                        <option value="Not Completed">
-                                          Not Completed
-                                        </option>
+                                      <label for="taskStatusSelect" class="font-weight-bold">Task Status</label>
+                                      <select id="taskStatusSelect" class="form-control" v-model="item.task_status" name="task_status">
+                                        <option disabled value="">Select Status</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="Completed">Completed</option>
+                                        <option value="Not Completed">Not Completed</option>
                                       </select>
                                     </div>
-                                    <div
-                                      v-if="item.task_status === 'Completed'"
-                                      class="form-group"
-                                    >
-                                      <label
-                                        for="taskRating"
-                                        class="font-weight-bold"
-                                        >Task Rating</label
-                                      >
+                                    <div class="form-group">
+                                      <label for="taskRating" class="font-weight-bold">Task Rating</label>
                                       <div>
                                         <span
                                           v-for="n in 5"
                                           :key="'star-' + n"
                                           class="fa"
-                                          :class="[
-                                            'fa-star',
-                                            n <= (item.rating || 0)
-                                              ? 'text-warning'
-                                              : 'text-secondary',
-                                          ]"
+                                          :class="['fa-star', n <= (item.rating || 0) ? 'text-warning' : 'text-secondary']"
                                           style="font-size: 1.3em"
                                         ></span>
                                       </div>
-                                      <div
-                                        class="d-flex align-items-center"
-                                        style="gap: 10px"
-                                      >
-                                        <select
-                                          id="taskRating"
-                                          class="form-control"
-                                          name="rating"
-                                          v-model="item.rating"
-                                        >
-                                          <option disabled value="">
-                                            Select Rating
-                                          </option>
-                                          <option
-                                            v-for="n in 5"
-                                            :key="n"
-                                            :value="n"
-                                          >
+                                      <div class="d-flex align-items-center" style="gap: 10px">
+                                        <select id="taskRating" class="form-control" name="rating" v-model="item.rating">
+                                          <option disabled value="">Select Rating</option>
+                                          <option v-for="n in 5" :key="n" :value="n">
                                             {{ n }}
                                           </option>
                                         </select>
                                       </div>
                                     </div>
-                                    <div
-                                      v-if="
-                                        item.task_status === 'Not Completed'
-                                      "
-                                      class="form-group"
-                                    >
-                                      <label
-                                        for="nextDateInput"
-                                        class="font-weight-bold"
-                                        >Next Date</label
-                                      >
+                                    <div v-if="item.task_status === 'Not Completed'" class="form-group">
+                                      <label for="nextDateInput" class="font-weight-bold">Next Date</label>
                                       <input
                                         id="nextDateInput"
                                         type="date"
@@ -368,22 +258,14 @@
                                     </div>
                                   </div>
                                   <div class="modal-footer">
-                                    <button
-                                      type="button"
-                                      class="btn btn-secondary"
-                                      @click="closeOverviewModal"
-                                    >
+                                    <button type="button" class="btn btn-secondary" @click="closeOverviewModal">
                                       <i class="fa fa-times mr-1"></i>Close
                                     </button>
                                     <button
-                                      v-if="
-                                        selectedTask &&
-                                        selectedTask.task_status !== 'Pending'
-                                      "
+                                      v-if="selectedTask && selectedTask.task_status !== 'Pending'"
                                       type="submit"
                                       class="btn btn-info"
                                       :disabled="!item.task_status"
-                                      
                                     >
                                       <i class="fa fa-save mr-1"></i>Save
                                     </button>
@@ -396,37 +278,30 @@
                       </div>
                     </td>
                     <td>
-                      <input
-                        @change="set_item_selected(item, $event)"
-                        :checked="isSelected(item)"
-                        class="form-check-input ml-0"
-                        type="checkbox"
-                      />
+                      <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
                     </td>
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.project_id?.name }}</td>
                     <td>{{ item.title }}</td>
                     <td>{{ item.user?.name || "Not Assigned" }}</td>
                     <td>{{ item.priority }}</td>
-                    <td>{{ item.task_status }}</td>
+                    <td>{{ item.task_user_status ?? "N/A" }}</td>
+                    <td :class="getTaskStatusClass(item.task_status)">
+                      {{ item.task_status }}
+                    </td>
                     <td>
-                      <span v-if="item.task_status === 'Completed'">
+                      <span>
                         <span
                           v-for="n in 5"
                           :key="'star-' + n"
                           class="fa"
-                          :class="[
-                            'fa-star',
-                            n <= (item.rating || 0)
-                              ? 'text-warning'
-                              : 'text-secondary',
-                          ]"
+                          :class="['fa-star', n <= (item.rating || 0) ? 'text-warning' : 'text-secondary']"
                           style="font-size: 1.3em"
                         ></span>
-                        <span class="ml-2">{{ item.rating }}</span>
+                        <span class="ml-2 font-weight-bold">({{ item.rating }})</span>
                       </span>
-                      <span v-else>NA</span>
                     </td>
+                    <td>{{ FindActualTime(item.start_date, item.end_date) }}</td>
                     <td>{{ formatDateTime(item.start_date) }}</td>
                     <td>{{ formatDateTime(item.end_date) }}</td>
                     <td>{{ formatDateTime(item.created_at) }}</td>
@@ -440,22 +315,13 @@
             </div>
           </div>
           <div class="mx-3">
-            <nav
-              aria-label=""
-              class="d-flex gap-2 align-items-center"
-              style="gap: 10px"
-            >
+            <nav aria-label="" class="d-flex gap-2 align-items-center" style="gap: 10px">
               <ul class="pagination my-2" style="font-size: 11px">
                 <template v-for="(link, index) in all?.links" :key="index">
                   <li class="page-item" :class="{ active: link.active }">
                     <a
                       class="page-link"
-                      :class="
-                        all?.current_page == all?.last_page &&
-                        all?.links.length - 1 == index
-                          ? 'disabled'
-                          : ''
-                      "
+                      :class="all?.current_page == all?.last_page && all?.links.length - 1 == index ? 'disabled' : ''"
                       @click.prevent="set_page_data(link)"
                       :href="link.url"
                       v-html="`<span>${link.label}</span>`"
@@ -475,11 +341,7 @@
               <div class="d-flex" style="gap: 5px">
                 <span></span>
                 <span> Limit </span>
-                <select
-                  v-model="paginate"
-                  @change="set_per_page_limit"
-                  class="bg-transparent text-white rounded-1"
-                >
+                <select v-model="paginate" @change="set_per_page_limit" class="bg-transparent text-white rounded-1">
                   <option value="5">05</option>
                   <option value="10">10</option>
                   <option value="50">50</option>
@@ -516,64 +378,34 @@
                 </a>
               </div>
               <div class="mr-2 mb-2" v-if="this.selected?.length">
-                <a
-                  href=""
-                  @click.prevent="export_selected_csv(selected)"
-                  class="btn action_btn btn-sm btn-secondary d-flex align-items-center"
-                >
-                  <i class="fa fa-sign-out mr-2"></i> Export ({{
-                    this.selected?.length
-                  }})
+                <a href="" @click.prevent="export_selected_csv(selected)" class="btn action_btn btn-sm btn-secondary d-flex align-items-center">
+                  <i class="fa fa-sign-out mr-2"></i> Export ({{ this.selected?.length }})
                 </a>
               </div>
               <div class="mr-2 mb-2">
-                <a
-                  href=""
-                  @click.prevent="import_csv_modal_show = true"
-                  class="btn action_btn btn-sm btn-secondary d-flex align-items-center"
-                >
+                <a href="" @click.prevent="import_csv_modal_show = true" class="btn action_btn btn-sm btn-secondary d-flex align-items-center">
                   <i class="fa fa-download mr-2"></i> Import
                 </a>
               </div>
               <div class="mr-2 mb-2">
-                <a
-                  href=""
-                  @click.prevent="change_status(`active`)"
-                  class="btn action_btn btn-sm btn-success d-flex align-items-center"
-                >
-                  <i class="fa fa fa fa-eye mr-2"></i> Active ({{
-                    active_data_count
-                  }})
+                <a href="" @click.prevent="change_status(`active`)" class="btn action_btn btn-sm btn-success d-flex align-items-center">
+                  <i class="fa fa fa fa-eye mr-2"></i> Active ({{ active_data_count }})
                 </a>
               </div>
               <div class="mr-2 mb-2">
-                <a
-                  href=""
-                  @click.prevent="change_status(`inactive`)"
-                  class="btn action_btn btn-sm btn-warning d-flex align-items-center"
-                >
+                <a href="" @click.prevent="change_status(`inactive`)" class="btn action_btn btn-sm btn-warning d-flex align-items-center">
                   <i class="fa fa fa-eye-slash mr-2"></i>
                   Inactive ({{ inactive_data_count }})
                 </a>
               </div>
               <div class="mr-2 mb-2">
-                <a
-                  href=""
-                  @click.prevent="change_status(`trased`)"
-                  class="btn action_btn btn-sm btn-danger d-flex align-items-center"
-                >
-                  <i class="fa fa-trash mr-2"></i> Trased ({{
-                    trased_data_count
-                  }})
+                <a href="" @click.prevent="change_status(`trased`)" class="btn action_btn btn-sm btn-danger d-flex align-items-center">
+                  <i class="fa fa-trash mr-2"></i> Trased ({{ trased_data_count }})
                 </a>
               </div>
 
               <div class="mr-2 mb-2" v-if="this.selected?.length">
-                <select
-                  class="form-control"
-                  style="width: 100px; height: 30px; font-size: 12px"
-                  @change="bulkActions"
-                >
+                <select class="form-control" style="width: 100px; height: 30px; font-size: 12px" @change="bulkActions">
                   <option disabled selected>Select action</option>
                   <option value="inactive">Inactive</option>
                   <option value="active">Action</option>
@@ -614,10 +446,7 @@
       </div>
       <div class="off_canvas_overlay"></div>
     </div>
-    <div
-      class="off_canvas data_filter"
-      :class="`${show_filter_canvas ? 'active' : ''}`"
-    >
+    <div class="off_canvas data_filter" :class="`${show_filter_canvas ? 'active' : ''}`">
       <div class="off_canvas_body">
         <div class="header">
           <h3 class="heading_text">Filter</h3>
@@ -628,43 +457,22 @@
         <div class="data_content">
           <div class="filter_item">
             <label for="start_date">Start Date</label>
-            <label
-              for="start_date"
-              class="text-capitalize d-block date_custom_control"
-            >
-              <input
-                v-model="start_date"
-                type="date"
-                id="start_date"
-                name="start_date"
-                class="form-control"
-              />
+            <label for="start_date" class="text-capitalize d-block date_custom_control">
+              <input v-model="start_date" type="date" id="start_date" name="start_date" class="form-control" />
               <!-- <div class="form-control preview"></div> -->
             </label>
           </div>
           <div class="filter_item">
             <label for="end_date">End Date</label>
-            <label
-              for="end_date"
-              class="text-capitalize d-block date_custom_control"
-            >
-              <input
-                v-model="end_date"
-                type="date"
-                id="end_date"
-                name="end_date"
-                class="form-control"
-              />
+            <label for="end_date" class="text-capitalize d-block date_custom_control">
+              <input v-model="end_date" type="date" id="end_date" name="end_date" class="form-control" />
               <!-- <div class="form-control preview"></div> -->
             </label>
           </div>
 
           <div class="filter_item">
             <label for="sort_by_col">Sort By Col</label
-            ><label
-              for="sort_by_col"
-              class="text-capitalize d-block date_custom_control"
-            >
+            ><label for="sort_by_col" class="text-capitalize d-block date_custom_control">
               <select v-model="sort_by_col" class="form-control">
                 <option v-for="col in sort_by_cols" :key="col">
                   {{ col }}
@@ -674,10 +482,7 @@
           </div>
           <div class="filter_item">
             <label for="sort_by_col">Sort Type</label
-            ><label
-              for="sort_by_col"
-              class="text-capitalize d-block date_custom_control"
-            >
+            ><label for="sort_by_col" class="text-capitalize d-block date_custom_control">
               <select v-model="sort_type" class="form-control">
                 <option v-for="col in ['ASC', 'DESC']" :key="col">
                   {{ col }}
@@ -685,37 +490,21 @@
               </select>
             </label>
           </div>
-          <div class="filter_item">
-            <button
-              @click.prevent="get_all()"
-              type="button"
-              class="btn btn-sm btn-outline-info"
-            >
-              Submit
-            </button>
+          <div class="filter_item d-flex justify-content-between align-items-center">
+            <button @click.prevent="get_all()" type="button" class="btn btn-sm btn-outline-info">Submit</button>
+            <button class="btn btn-outline-danger btn-sm" @click="reset_filters">Reset</button>
           </div>
         </div>
       </div>
       <div class="off_canvas_overlay"></div>
     </div>
-    <div
-      class="modal fade"
-      :class="`${import_csv_modal_show ? 'show d-block' : 'd-none'}`"
-      id="primarymodal"
-      aria-modal="true"
-    >
+    <div class="modal fade" :class="`${import_csv_modal_show ? 'show d-block' : 'd-none'}`" id="primarymodal" aria-modal="true">
       <div class="modal-dialog modal-dialog-centered">
         <form @submit.prevent="FileUploadHandler">
           <div class="modal-content border-primary">
             <div class="modal-header bg-primary">
               <h5 class="modal-title text-white">Import {{ setup.prefix }}</h5>
-              <button
-                @click="import_csv_modal_show = false"
-                type="button"
-                class="close text-white"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button @click="import_csv_modal_show = false" type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -724,29 +513,14 @@
                 <label for="">Upload file</label>
                 <input type="file" name="file" class="form-control" required />
               </div>
-              <p class="mt-3">
-                Please check the sample CSV file below to ensure compatibility
-                with the demo data import.
-              </p>
-              <a
-                href=""
-                @click.prevent="export_demo_csv"
-                class="btn btn-sm btn-primary"
-                >Download Demo CSV</a
-              >
+              <p class="mt-3">Please check the sample CSV file below to ensure compatibility with the demo data import.</p>
+              <a href="" @click.prevent="export_demo_csv" class="btn btn-sm btn-primary">Download Demo CSV</a>
             </div>
             <div class="modal-footer">
-              <button
-                @click="import_csv_modal_show = false"
-                type="button"
-                class="btn btn-light"
-                data-dismiss="modal"
-              >
+              <button @click="import_csv_modal_show = false" type="button" class="btn btn-light" data-dismiss="modal">
                 <i class="fa fa-times"></i> Close
               </button>
-              <button type="submit" class="btn btn-primary">
-                <i class="fa fa-download"></i> Import
-              </button>
+              <button type="submit" class="btn btn-primary"><i class="fa fa-download"></i> Import</button>
             </div>
           </div>
         </form>
@@ -773,8 +547,7 @@ export default {
     isOverviewModalVisible: false,
     // selectedTask: null,
     // selectedStatus: "",
-    filePath:
-      "resources/js/backend/Views/SuperAdmin/Management/TestModule/helpers/demo.csv",
+    filePath: "resources/js/backend/Views/SuperAdmin/Management/TestModule/helpers/demo.csv",
   }),
   created: async function () {
     await this.get_all();
@@ -783,6 +556,7 @@ export default {
     export_all_csv,
     export_selected_csv,
     export_demo_csv,
+
     ...mapActions(data_store, [
       "get_all",
       `restore`,
@@ -799,8 +573,18 @@ export default {
       "set_page",
       "set_status",
       "set_paginate",
-      'task_overview'
+      "task_overview",
+      "reset_filter_criteria",
     ]),
+
+    async reset_filters() {
+      this.reset_filter_criteria();
+      await this.get_all();
+    },
+
+    /**
+     * Reset all filters (date, status, priority, search, sort, pagination, etc.) and reload all tasks
+     */
 
     // taskStatusFilterValue
     showOverviewModal(item) {
@@ -811,25 +595,6 @@ export default {
     closeOverviewModal() {
       this.isOverviewModalVisible = false;
     },
-    // taskStatusFilterValue
-    // async updateTaskStatus() {
-    //   try {
-    //     const res = await axios.post(
-    //       `/task/update/${item.slug}`,
-    //       { task_status: this.selectedStatus }
-    //     );
-
-    //     if (res.data.status === "success") {
-    //       this.selectedTask.task_status = this.selectedStatus;
-
-    //       window.s_alert("Task status updated");
-    //     } else {
-    //       window.s_warning(res.data.message || "Update failed");
-    //     }
-    //   } catch (e) {
-    //     window.s_warning("Server error updating task status");
-    //   }
-    // },
     async updateTaskStatus(item) {
       try {
         let payload = {
@@ -984,9 +749,7 @@ export default {
 
     bulkActions: async function () {
       let action = event.target.value;
-      let con = await window.s_confirm(
-        "Are you sure want to " + action + " items ?"
-      );
+      let con = await window.s_confirm("Are you sure want to " + action + " items ?");
       if (con) {
         let selected_data = this.selected;
         selected_data = selected_data.map((item) => item.id);
@@ -1037,6 +800,10 @@ export default {
       }
     },
 
+    /**
+     * Reset all filters (date, status, priority, search, sort, pagination, etc.) and reload all tasks
+     */
+
     set_search_key: debounce(async function (event) {
       let value = event.target.value;
       this.search_key = value;
@@ -1047,19 +814,42 @@ export default {
       this.only_latest_data = false;
     }, 500),
 
-
-    submitTaskOverviewForm: async function (item,) {
+    submitTaskOverviewForm: async function (item) {
       console.log("Submitting task overview form for item:", event);
       // this.set_only_latest_data(true);
-       this.set_item(item);
+      this.set_item(item);
       let response = await this.task_overview(event);
-        // await this.get_all();
-        if ([200, 201].includes(response.status)) {
-          this.closeOverviewModal();
-          this.get_all();
-          window.s_alert("Data Successfully Created");
-         
-        }
+      // await this.get_all();
+      if ([200, 201].includes(response.status)) {
+        this.closeOverviewModal();
+        this.get_all();
+        window.s_alert("Data Successfully Created");
+      }
+    },
+    getTaskStatusClass(status) {
+      switch (status) {
+        case "Pending":
+          return "bg-primary text-white";
+        case "In Progress":
+          return "bg-info text-white";
+        case "Completed":
+          return "bg-success text-white";
+        case "Not Completed":
+          return "bg-danger text-white";
+        case "On Hold":
+          return "bg-warning text-dark";
+        default:
+          return "";
+      }
+    },
+    FindActualTime(start_date, end_date) {
+      if (!start_date || !end_date) return "N/A";
+      const start = new Date(start_date);
+      const end = new Date(end_date);
+      const diff = end - start; // difference in milliseconds
+      const hours = Math.floor(diff / 3600000); // convert to hours
+      const minutes = Math.floor((diff % 3600000) / 60000); // convert to minutes
+      return `${hours}(h) ${minutes}(m)`;
     },
   },
   computed: {
@@ -1080,14 +870,10 @@ export default {
       "priority",
       "search_key",
       "page",
+      "date",
     ]),
     isAllSelected() {
-      return (
-        this.all?.data?.length > 0 &&
-        this.all.data?.every((item) =>
-          this.selected.some((s) => s.id === item.id)
-        )
-      );
+      return this.all?.data?.length > 0 && this.all.data?.every((item) => this.selected.some((s) => s.id === item.id));
     },
   },
 

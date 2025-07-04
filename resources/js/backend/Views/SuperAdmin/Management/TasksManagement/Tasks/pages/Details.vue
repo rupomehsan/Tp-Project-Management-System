@@ -7,10 +7,7 @@
             {{ setup.details_page_title }}
           </h5>
           <div>
-            <router-link
-              class="btn btn-outline-warning btn-sm"
-              :to="{ name: `All${setup.route_prefix}` }"
-            >
+            <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${setup.route_prefix}` }">
               {{ setup.all_page_title }}
             </router-link>
           </div>
@@ -30,16 +27,7 @@
                     <th class="text-center">:</th>
                     <th>{{ item.title }}</th>
                   </tr>
-                  <tr>
-                    <th>Description</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.description }}</th>
-                  </tr>
-                  <tr>
-                    <th>System Loss</th>
-                    <th class="text-center">:</th>
-                    <td>{{ item.system_loss }}%</td>
-                  </tr>
+
                   <tr>
                     <th>Assigned To</th>
                     <th class="text-center">:</th>
@@ -56,9 +44,20 @@
                     <td>{{ formatDateTime(item.end_date) }}</td>
                   </tr>
                   <tr>
+                    <th>Actual Time</th>
+                    <th class="text-center">:</th>
+                    <td class="text-capitalize">{{ FindActualTime(item.start_date, item.end_date) }}</td>
+                  </tr>
+
+                  <tr>
                     <th>Task Status</th>
                     <th class="text-center">:</th>
                     <td>{{ item.task_status }}</td>
+                  </tr>
+                  <tr>
+                    <th>Task Rating</th>
+                    <th class="text-center">:</th>
+                    <td>{{ item.rating }}</td>
                   </tr>
                   <tr>
                     <th>Priority</th>
@@ -69,6 +68,11 @@
                     <th>Created at</th>
                     <th class="text-center">:</th>
                     <td>{{ formatDateTime(item.created_at) }}</td>
+                  </tr>
+                  <tr>
+                    <th>Description</th>
+                    <th class="text-center">:</th>
+                    <th v-html="item.description"></th>
                   </tr>
                 </tbody>
               </table>
@@ -86,22 +90,12 @@
             {{ setup.edit_page_title }}
           </router-link>
 
-          <a
-            href=""
-            v-if="item.prev_slug"
-            @click.prevent="get_data(item.prev_slug)"
-            class="btn btn-secondary btn-sm ml-2"
-          >
+          <a href="" v-if="item.prev_slug" @click.prevent="get_data(item.prev_slug)" class="btn btn-secondary btn-sm ml-2">
             <i class="fa fa-angle-left"></i>
             Previous {{ setup.route_prefix }} ({{ item.prev_count }})
           </a>
 
-          <a
-            href=""
-            v-if="item.next_slug"
-            @click.prevent="get_data(item.next_slug)"
-            class="btn btn-secondary btn-sm ml-2"
-          >
+          <a href="" v-if="item.next_slug" @click.prevent="get_data(item.next_slug)" class="btn btn-secondary btn-sm ml-2">
             Next {{ setup.route_prefix }} ({{ item.next_count }})
             <i class="fa fa-angle-right"></i>
           </a>
@@ -144,6 +138,15 @@ export default {
         hour12: true,
       };
       return new Date(dateTime).toLocaleString("en-US", options);
+    },
+    FindActualTime(start_date, end_date) {
+      if (!start_date || !end_date) return "N/A";
+      const start = new Date(start_date);
+      const end = new Date(end_date);
+      const diff = end - start; // difference in milliseconds
+      const hours = Math.floor(diff / 3600000); // convert to hours
+      const minutes = Math.floor((diff % 3600000) / 60000); // convert to minutes
+      return `${hours}(h) ${minutes}(m)`;
     },
   },
   computed: {

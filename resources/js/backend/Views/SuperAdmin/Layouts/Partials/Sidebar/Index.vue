@@ -71,11 +71,11 @@
             title: `Projects`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
-          {
-            route_name: `AllUpcommingProject`,
-            title: `Upcomming Projects`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
+          // {
+          //   route_name: `AllUpcommingProject`,
+          //   title: `Upcomming Projects`,
+          //   icon: `zmdi zmdi-dot-circle-alt`,
+          // },
         ]"
       />
        <!-- Task Management -->
@@ -113,7 +113,7 @@
         ]"
       />
       <!-- Team Management -->
-      <side-bar-drop-down-menus
+      <!-- <side-bar-drop-down-menus
         :icon="`fa fa-plus`"
         :menu_title="`Team Management`"
         :menus="[
@@ -123,7 +123,7 @@
             icon: `zmdi zmdi-dot-circle-alt`,
           },
         ]"
-      />
+      /> -->
       <!-- Attendance Management -->
       <side-bar-drop-down-menus
         :icon="`fa fa-plus`"

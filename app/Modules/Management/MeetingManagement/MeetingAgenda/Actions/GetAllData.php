@@ -24,12 +24,17 @@ class GetAllData
 
             $data = self::$model::query();
 
+            if (request()->has('meeting_id') && request()->input('meeting_id')) {
+                $condition['meeting_id'] = request()->input('meeting_id');
+            }
             if (request()->has('search') && request()->input('search')) {
                 $searchKey = request()->input('search');
                 $data = $data->where(function ($q) use ($searchKey) {
                     $q->where('title', 'like', '%' . $searchKey . '%');
                 });
             }
+
+
 
             if ($start_date && $end_date) {
                 if ($end_date > $start_date) {

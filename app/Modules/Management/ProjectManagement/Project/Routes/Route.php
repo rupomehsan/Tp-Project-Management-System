@@ -15,5 +15,6 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
         Route::post('restore', [Controller::class,'restore']);
         Route::post('import', [Controller::class,'import']);
         Route::post('bulk-action', [Controller::class, 'bulkAction']);
+        Route::post('filelink-delete/{slug}', [Controller::class, 'filelinkDelete']);
     });
 });

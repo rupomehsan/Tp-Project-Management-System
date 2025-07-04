@@ -50,6 +50,7 @@ class DataStoreValidation extends FormRequest
             'start_date' => 'required | sometimes',
             'end_date' => 'required | sometimes',
             'task_status'  => ['sometimes', Rule::in(['Pending', 'In Progress', 'Completed', 'Not Completed'])],
+            'task_user_status'  => ['sometimes', Rule::in(['Pending', 'In Progress', 'Completed', 'Not Completed'])],
             'priority'     => ['sometimes', Rule::in(['low', 'normal', 'high', 'urgent'])],
             'rating'       => ['sometimes', 'integer', 'between:1,5'],
 

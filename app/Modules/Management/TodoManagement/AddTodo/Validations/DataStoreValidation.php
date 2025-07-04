@@ -44,7 +44,7 @@ class DataStoreValidation extends FormRequest
         return [
             'category_id' => 'required',
             'description' => 'required | sometimes',
-
+            'priority' => 'required | sometimes',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];
     }

@@ -23,3 +23,9 @@ my self work
 2. observer in laravel
 
 title,email,password,description
+
+---------------------------------
+-------------new update----------
+---------------------------------
+
+task management a stardate er theke end date boro hote parbe na

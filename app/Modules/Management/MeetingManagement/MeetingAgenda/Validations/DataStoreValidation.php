@@ -45,6 +45,7 @@ class DataStoreValidation extends FormRequest
             'meeting_id' => 'required',
             'title' => 'required | sometimes',
             'description' => 'required | sometimes',
+            'agenda_status' => 'required | sometimes',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];
     }

@@ -37,7 +37,7 @@
             <div
               class="table-responsive table_responsive card_body_fixed_height"
             >
-              <table class="table table-hover text-center table-bordered">
+              <table class="table table-hover  table-bordered">
                 <thead>
                   <tr>
                     <th>
@@ -46,7 +46,7 @@
                         title="Actions"
                       ></i>
                     </th>
-                    <th class="w-10 text-center">
+                    <th class="w-10 ">
                       <input
                         class="form-check-input ml-0 select_all_checkbox"
                         @change="($event) => set_all_item_selected($event)"
@@ -54,9 +54,9 @@
                         :checked="isAllSelected"
                       />
                     </th>
-                    <th class="w-10 text-center">ID</th>
-                    <th class="text-center">name</th>
-                    <th class="text-center">created_at</th>
+                    <th class="w-10 ">ID</th>
+                    <th class="">name</th>
+                    <th class="">created_at</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -418,14 +418,9 @@
               </select>
             </label>
           </div>
-          <div class="filter_item">
-            <button
-              @click.prevent="get_all()"
-              type="button"
-              class="btn btn-sm btn-outline-info"
-            >
-              Submit
-            </button>
+           <div class="filter_item d-flex justify-content-between align-items-center">
+            <button @click.prevent="get_all()" type="button" class="btn btn-sm btn-outline-info">Submit</button>
+            <button class="btn btn-outline-danger btn-sm" @click="reset_filters">Reset</button>
           </div>
         </div>
       </div>
@@ -529,7 +524,14 @@ export default {
       "set_page",
       "set_status",
       "set_paginate",
+      "task_overview",
+      "reset_filter_criteria",
     ]),
+
+    async reset_filters() {
+      this.reset_filter_criteria();
+      await this.get_all();
+    },
     formatDateTime(dateTime) {
       if (!dateTime) return "";
       const options = {

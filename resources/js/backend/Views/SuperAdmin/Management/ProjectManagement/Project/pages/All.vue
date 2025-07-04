@@ -14,37 +14,23 @@
 
               <!-- Search Input -->
               <div class="col-12 col-md-6 mb-2 mb-md-0">
-                <input
-                  class="form-control"
-                  @keyup="(e) => set_search_key(e)"
-                  placeholder="Search"
-                />
+                <input class="form-control" @keyup="(e) => set_search_key(e)" placeholder="Search" />
               </div>
 
               <!-- Sorting Button -->
               <div class="col-12 col-md-3 text-md-right text-sm-left">
-                <button
-                  class="btn btn-outline-success btn-sm"
-                  @click="set_show_filter_canvas"
-                >
-                  <i class="fa fa-gear mx-2"></i>Filter
-                </button>
+                <button class="btn btn-outline-success btn-sm" @click="set_show_filter_canvas"><i class="fa fa-gear mx-2"></i>Filter</button>
               </div>
             </div>
           </div>
 
           <div class="card-body">
-            <div
-              class="table-responsive table_responsive card_body_fixed_height"
-            >
+            <div class="table-responsive table_responsive card_body_fixed_height">
               <table class="table table-hover text-center table-bordered">
                 <thead>
                   <tr>
-                    <th>
-                      <i
-                        class="zmdi zmdi-settings zmdi-hc-2x"
-                        title="Actions"
-                      ></i>
+ <th style="padding-left: 12px">
+                      <i class="zmdi zmdi-settings zmdi-hc-2x" title="Actions"></i>
                     </th>
                     <th class="w-10 text-center">
                       <input
@@ -54,30 +40,21 @@
                         :checked="isAllSelected"
                       />
                     </th>
-                     <th class="w-10">ID</th>
+                    <th class="w-10">ID</th>
                     <th>Project Group</th>
                     <th>Name</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Project Status</th>
+                    <th>Delivery Status</th>
                     <th>project_link</th>
-                    <th>project_agrement_file</th>
-                    <th>project_document</th>
-                    <th>project_progress</th>
                     <th>Created At</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr
-                    v-for="(item, index) in all?.data"
-                    :key="item.id"
-                    :class="`table_rows table_row_${item.id}`"
-                  >
+                  <tr v-for="(item, index) in all?.data" :key="item.id" :class="`table_rows table_row_${item.id}`">
                     <td>
-                      <span
-                        class="icon"
-                        @click.prevent="active_row($event)"
-                      ></span>
+                      <span class="icon" @click.prevent="active_row($event)"></span>
                       <div class="table_action_btns">
                         <ul>
                           <li>
@@ -94,7 +71,7 @@
                               Show
                             </router-link>
                           </li>
-                          
+
                           <li>
                             <router-link
                               :to="{
@@ -110,51 +87,29 @@
                             </router-link>
                           </li>
                           <li>
-                            <a
-                              v-if="item.status == 'active'"
-                              href=""
-                              @click.prevent="updateStatus(item)"
-                              class="border-warning"
-                            >
+                            <a v-if="item.status == 'active'" href="" @click.prevent="updateStatus(item)" class="border-warning">
                               <i class="fa fa-eye-slash text-warning"></i>
                               Inactive
                             </a>
-                            <a
-                              v-if="item.status == 'inactive'"
-                              href=""
-                              @click.prevent="updateStatus(item)"
-                              class="border-warning"
-                            >
+                            <a v-if="item.status == 'inactive'" href="" @click.prevent="updateStatus(item)" class="border-warning">
                               <i class="fa fa-eye text-warning"></i>
                               Active
                             </a>
                           </li>
                           <li v-if="!is_trashed_data">
-                            <a
-                              @click.prevent="softDelete(item)"
-                              href=""
-                              class="border-danger"
-                            >
+                            <a @click.prevent="softDelete(item)" href="" class="border-danger">
                               <i class="fa fa-ban text-warning"></i>
                               Soft Delete
                             </a>
                           </li>
                           <li v-if="is_trashed_data">
-                            <a
-                              @click.prevent="restore_data(item)"
-                              href=""
-                              class="border-danger"
-                            >
+                            <a @click.prevent="restore_data(item)" href="" class="border-danger">
                               <i class="fa fa-refresh text-warning"></i>
                               Restore data
                             </a>
                           </li>
                           <li>
-                            <a
-                              @click.prevent="destroy_data(item)"
-                              href=""
-                              class="border-danger"
-                            >
+                            <a @click.prevent="destroy_data(item)" href="" class="border-danger">
                               <i class="fa fa-trash text-danger"></i>
                               Destroy
                             </a>
@@ -177,23 +132,26 @@
                       </div>
                     </td>
                     <td>
-                      <input
-                        @change="set_item_selected(item, $event)"
-                        :checked="isSelected(item)"
-                        class="form-check-input ml-0"
-                        type="checkbox"
-                      />
+                      <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
                     </td>
-                     <td>{{ index + 1 }}</td>
+                    <td>{{ index + 1 }}</td>
                     <td>{{ item.project_group_id?.name }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.start_date }}</td>
                     <td>{{ item.end_date }}</td>
-                    <td>{{ item.project_status }}</td>
-                    <td>{{ item.project_link }}</td>
-                    <td>{{ item.project_agrement_file }}</td>
-                    <td>{{ item.project_document }}</td>
-                    <td>{{ item.project_progress }}</td>
+                    <td :class="{
+                      'text-success': item.project_status === 'Completed',
+                      'text-danger': item.project_status === 'Not Started',
+                      'text-warning': item.project_status === 'On Hold',
+                      'text-info': item.project_status === 'In Progress',
+                      'text-primary': item.project_status === 'Upcoming', 
+                      'text-secondary': !['Completed','Not Started','On Hold','In Progress','Upcoming'].includes(item.project_status)
+                    }">{{ item.project_status }}</td>
+                     <td>{{ item.delivery_status }}</td>
+                    <td>
+                      <a class="text-info" :href="item.project_link" target="_blank">{{ item.project_link }}</a>
+                    </td>
+
                     <td>{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
@@ -205,22 +163,13 @@
             </div>
           </div>
           <div class="mx-3">
-            <nav
-              aria-label=""
-              class="d-flex gap-2 align-items-center"
-              style="gap: 10px"
-            >
+            <nav aria-label="" class="d-flex gap-2 align-items-center" style="gap: 10px">
               <ul class="pagination my-2" style="font-size: 11px">
                 <template v-for="(link, index) in all?.links" :key="index">
                   <li class="page-item" :class="{ active: link.active }">
                     <a
                       class="page-link"
-                      :class="
-                        all?.current_page == all?.last_page &&
-                        all?.links.length - 1 == index
-                          ? 'disabled'
-                          : ''
-                      "
+                      :class="all?.current_page == all?.last_page && all?.links.length - 1 == index ? 'disabled' : ''"
                       @click.prevent="set_page_data(link)"
                       :href="link.url"
                       v-html="`<span>${link.label}</span>`"
@@ -240,11 +189,7 @@
               <div class="d-flex" style="gap: 5px">
                 <span></span>
                 <span> Limit </span>
-                <select
-                  v-model="paginate"
-                  @change="set_per_page_limit"
-                  class="bg-transparent text-white rounded-1"
-                >
+                <select v-model="paginate" @change="set_per_page_limit" class="bg-transparent text-white rounded-1">
                   <option value="5">05</option>
                   <option value="10">10</option>
                   <option value="50">50</option>
@@ -281,64 +226,34 @@
                 </a>
               </div>
               <div class="mr-2 mb-2" v-if="this.selected?.length">
-                <a
-                  href=""
-                  @click.prevent="export_selected_csv(selected)"
-                  class="btn action_btn btn-sm btn-secondary d-flex align-items-center"
-                >
-                  <i class="fa fa-sign-out mr-2"></i> Export ({{
-                    this.selected?.length
-                  }})
+                <a href="" @click.prevent="export_selected_csv(selected)" class="btn action_btn btn-sm btn-secondary d-flex align-items-center">
+                  <i class="fa fa-sign-out mr-2"></i> Export ({{ this.selected?.length }})
                 </a>
               </div>
               <div class="mr-2 mb-2">
-                <a
-                  href=""
-                  @click.prevent="import_csv_modal_show = true"
-                  class="btn action_btn btn-sm btn-secondary d-flex align-items-center"
-                >
+                <a href="" @click.prevent="import_csv_modal_show = true" class="btn action_btn btn-sm btn-secondary d-flex align-items-center">
                   <i class="fa fa-download mr-2"></i> Import
                 </a>
               </div>
               <div class="mr-2 mb-2">
-                <a
-                  href=""
-                  @click.prevent="change_status(`active`)"
-                  class="btn action_btn btn-sm btn-success d-flex align-items-center"
-                >
-                  <i class="fa fa fa fa-eye mr-2"></i> Active ({{
-                    active_data_count
-                  }})
+                <a href="" @click.prevent="change_status(`active`)" class="btn action_btn btn-sm btn-success d-flex align-items-center">
+                  <i class="fa fa fa fa-eye mr-2"></i> Active ({{ active_data_count }})
                 </a>
               </div>
               <div class="mr-2 mb-2">
-                <a
-                  href=""
-                  @click.prevent="change_status(`inactive`)"
-                  class="btn action_btn btn-sm btn-warning d-flex align-items-center"
-                >
+                <a href="" @click.prevent="change_status(`inactive`)" class="btn action_btn btn-sm btn-warning d-flex align-items-center">
                   <i class="fa fa fa-eye-slash mr-2"></i>
                   Inactive ({{ inactive_data_count }})
                 </a>
               </div>
               <div class="mr-2 mb-2">
-                <a
-                  href=""
-                  @click.prevent="change_status(`trased`)"
-                  class="btn action_btn btn-sm btn-danger d-flex align-items-center"
-                >
-                  <i class="fa fa-trash mr-2"></i> Trased ({{
-                    trased_data_count
-                  }})
+                <a href="" @click.prevent="change_status(`trased`)" class="btn action_btn btn-sm btn-danger d-flex align-items-center">
+                  <i class="fa fa-trash mr-2"></i> Trased ({{ trased_data_count }})
                 </a>
               </div>
 
               <div class="mr-2 mb-2" v-if="this.selected?.length">
-                <select
-                  class="form-control"
-                  style="width: 100px; height: 30px; font-size: 12px"
-                  @change="bulkActions"
-                >
+                <select class="form-control" style="width: 100px; height: 30px; font-size: 12px" @change="bulkActions">
                   <option disabled selected>Select action</option>
                   <option value="inactive">Inactive</option>
                   <option value="active">Action</option>
@@ -379,10 +294,7 @@
       </div>
       <div class="off_canvas_overlay"></div>
     </div>
-    <div
-      class="off_canvas data_filter"
-      :class="`${show_filter_canvas ? 'active' : ''}`"
-    >
+    <div class="off_canvas data_filter" :class="`${show_filter_canvas ? 'active' : ''}`">
       <div class="off_canvas_body">
         <div class="header">
           <h3 class="heading_text">Filter</h3>
@@ -393,42 +305,21 @@
         <div class="data_content">
           <div class="filter_item">
             <label for="start_date">Start Date</label>
-            <label
-              for="start_date"
-              class="text-capitalize d-block date_custom_control"
-            >
-              <input
-                v-model="start_date"
-                type="date"
-                id="start_date"
-                name="start_date"
-                class="form-control"
-              />
+            <label for="start_date" class="text-capitalize d-block date_custom_control">
+              <input v-model="start_date" type="date" id="start_date" name="start_date" class="form-control" />
               <!-- <div class="form-control preview"></div> -->
             </label>
           </div>
           <div class="filter_item">
             <label for="end_date">End Date</label>
-            <label
-              for="end_date"
-              class="text-capitalize d-block date_custom_control"
-            >
-              <input
-                v-model="end_date"
-                type="date"
-                id="end_date"
-                name="end_date"
-                class="form-control"
-              />
+            <label for="end_date" class="text-capitalize d-block date_custom_control">
+              <input v-model="end_date" type="date" id="end_date" name="end_date" class="form-control" />
               <!-- <div class="form-control preview"></div> -->
             </label>
           </div>
           <div class="filter_item">
             <label for="sort_by_col">Sort By Col</label
-            ><label
-              for="sort_by_col"
-              class="text-capitalize d-block date_custom_control"
-            >
+            ><label for="sort_by_col" class="text-capitalize d-block date_custom_control">
               <select v-model="sort_by_col" class="form-control">
                 <option v-for="col in sort_by_cols" :key="col">
                   {{ col }}
@@ -438,10 +329,7 @@
           </div>
           <div class="filter_item">
             <label for="sort_by_col">Sort Type</label
-            ><label
-              for="sort_by_col"
-              class="text-capitalize d-block date_custom_control"
-            >
+            ><label for="sort_by_col" class="text-capitalize d-block date_custom_control">
               <select v-model="sort_type" class="form-control">
                 <option v-for="col in ['ASC', 'DESC']" :key="col">
                   {{ col }}
@@ -449,37 +337,21 @@
               </select>
             </label>
           </div>
-          <div class="filter_item">
-            <button
-              @click.prevent="get_all()"
-              type="button"
-              class="btn btn-sm btn-outline-info"
-            >
-              Submit
-            </button>
+           <div class="filter_item d-flex justify-content-between align-items-center">
+            <button @click.prevent="get_all()" type="button" class="btn btn-sm btn-outline-info">Submit</button>
+            <button class="btn btn-outline-danger btn-sm" @click="reset_filters">Reset</button>
           </div>
         </div>
       </div>
       <div class="off_canvas_overlay"></div>
     </div>
-    <div
-      class="modal fade"
-      :class="`${import_csv_modal_show ? 'show d-block' : 'd-none'}`"
-      id="primarymodal"
-      aria-modal="true"
-    >
+    <div class="modal fade" :class="`${import_csv_modal_show ? 'show d-block' : 'd-none'}`" id="primarymodal" aria-modal="true">
       <div class="modal-dialog modal-dialog-centered">
         <form @submit.prevent="FileUploadHandler">
           <div class="modal-content border-primary">
             <div class="modal-header bg-primary">
               <h5 class="modal-title text-white">Import {{ setup.prefix }}</h5>
-              <button
-                @click="import_csv_modal_show = false"
-                type="button"
-                class="close text-white"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
+              <button @click="import_csv_modal_show = false" type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -488,29 +360,14 @@
                 <label for="">Upload file</label>
                 <input type="file" name="file" class="form-control" required />
               </div>
-              <p class="mt-3">
-                Please check the sample CSV file below to ensure compatibility
-                with the demo data import.
-              </p>
-              <a
-                href=""
-                @click.prevent="export_demo_csv"
-                class="btn btn-sm btn-primary"
-                >Download Demo CSV</a
-              >
+              <p class="mt-3">Please check the sample CSV file below to ensure compatibility with the demo data import.</p>
+              <a href="" @click.prevent="export_demo_csv" class="btn btn-sm btn-primary">Download Demo CSV</a>
             </div>
             <div class="modal-footer">
-              <button
-                @click="import_csv_modal_show = false"
-                type="button"
-                class="btn btn-light"
-                data-dismiss="modal"
-              >
+              <button @click="import_csv_modal_show = false" type="button" class="btn btn-light" data-dismiss="modal">
                 <i class="fa fa-times"></i> Close
               </button>
-              <button type="submit" class="btn btn-primary">
-                <i class="fa fa-download"></i> Import
-              </button>
+              <button type="submit" class="btn btn-primary"><i class="fa fa-download"></i> Import</button>
             </div>
           </div>
         </form>
@@ -534,8 +391,7 @@ export default {
     setup,
     is_trashed_data: false,
     import_csv_modal_show: false,
-    filePath:
-      "resources/js/backend/Views/SuperAdmin/Management/TestModule/helpers/demo.csv",
+    filePath: "resources/js/backend/Views/SuperAdmin/Management/TestModule/helpers/demo.csv",
   }),
   created: async function () {
     await this.get_all();
@@ -560,7 +416,14 @@ export default {
       "set_page",
       "set_status",
       "set_paginate",
+      "task_overview",
+      "reset_filter_criteria",
     ]),
+
+    async reset_filters() {
+      this.reset_filter_criteria();
+      await this.get_all();
+    },
 
     formatDateTime(dateTime) {
       if (!dateTime) return "";
@@ -693,9 +556,7 @@ export default {
 
     bulkActions: async function () {
       let action = event.target.value;
-      let con = await window.s_confirm(
-        "Are you sure want to " + action + " items ?"
-      );
+      let con = await window.s_confirm("Are you sure want to " + action + " items ?");
       if (con) {
         let selected_data = this.selected;
         selected_data = selected_data.map((item) => item.id);
@@ -754,12 +615,7 @@ export default {
       "page",
     ]),
     isAllSelected() {
-      return (
-        this.all?.data?.length > 0 &&
-        this.all.data?.every((item) =>
-          this.selected.some((s) => s.id === item.id)
-        )
-      );
+      return this.all?.data?.length > 0 && this.all.data?.every((item) => this.selected.some((s) => s.id === item.id));
     },
   },
 

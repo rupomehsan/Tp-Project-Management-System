@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('date'); // attendance date
             $table->timestamp('check_in')->nullable();
             $table->timestamp('check_out')->nullable();
-            $table->enum('attendance_status', ['Present', 'Absent', 'Remote', 'Leave', 'Sick Leave', 'Late'])->default('Present');
+            $table->enum('attendance_status', ['Present', 'Absent','Remote'])->default('Present');
 
             $table->bigInteger('creator')->unsigned()->nullable();
             $table->string('slug', 50)->nullable();

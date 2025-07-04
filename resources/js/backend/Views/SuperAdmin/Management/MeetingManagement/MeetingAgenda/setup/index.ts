@@ -21,6 +21,7 @@ const setup: setup_type = {
     "meeting_id",
     "title",
     "description",
+    "agenda_status",
     "slug",
     "created_at",
   ],

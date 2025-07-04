@@ -191,6 +191,7 @@
                     <option value="In Progress">In Progress</option>
                     <option value="Completed">Completed</option>
                     <option value="On Hold">On Hold</option>
+                    <option value="Upcoming">Upcoming</option>
                   </select>
                 </div>
               </div>
@@ -311,6 +312,7 @@ export default {
       set_only_latest_data: "set_only_latest_data",
     }),
 
+    
     async get_project_group_data() {
       try {
         let res = await axios.get("/project-group");

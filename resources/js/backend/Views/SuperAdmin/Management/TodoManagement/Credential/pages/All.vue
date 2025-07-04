@@ -165,8 +165,18 @@
                     </td>
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.title }}</td>
-                    <td>{{ item.email }}</td>
-                    <td>{{ item.password }}</td>
+                    <td>
+                      <span style="cursor:pointer;" @click="copyToClipboard(item.email)">
+                        {{ item.email }}
+                        <i class="fa fa-copy ml-1 text-info"></i>
+                      </span>
+                    </td>
+                    <td>
+                      <span style="cursor:pointer;" @click="copyToClipboard(item.password)">
+                        {{ item.password }}
+                        <i class="fa fa-copy ml-1 text-info"></i>
+                      </span>
+                    </td>
                     
                     <td>{{ formatDateTime(item.created_at) }}</td>
                     
@@ -424,14 +434,9 @@
               </select>
             </label>
           </div>
-          <div class="filter_item">
-            <button
-              @click.prevent="get_all()"
-              type="button"
-              class="btn btn-sm btn-outline-info"
-            >
-              Submit
-            </button>
+           <div class="filter_item d-flex justify-content-between align-items-center">
+            <button @click.prevent="get_all()" type="button" class="btn btn-sm btn-outline-info">Submit</button>
+            <button class="btn btn-outline-danger btn-sm" @click="reset_filters">Reset</button>
           </div>
         </div>
       </div>
@@ -516,6 +521,23 @@ export default {
     await this.get_all();
   },
   methods: {
+    copyToClipboard(text) {
+      if (!text) return;
+      if (navigator && navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          window.s_alert && window.s_alert('Copied!');
+        });
+      } else {
+        // fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        window.s_alert && window.s_alert('Copied!');
+      }
+    },
     export_all_csv,
     export_selected_csv,
     export_demo_csv,
@@ -535,7 +557,14 @@ export default {
       "set_page",
       "set_status",
       "set_paginate",
+      "task_overview",
+      "reset_filter_criteria",
     ]),
+
+    async reset_filters() {
+      this.reset_filter_criteria();
+      await this.get_all();
+    },
     formatDateTime(dateTime) {
       if (!dateTime) return "";
       const options = {

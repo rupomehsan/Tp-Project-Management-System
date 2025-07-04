@@ -4,17 +4,10 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h5 class="text-capitalize">
-            {{
-              param_id
-                ? `${setup.edit_page_title}`
-                : `${setup.create_page_title}`
-            }}
+            {{ param_id ? `${setup.edit_page_title}` : `${setup.create_page_title}` }}
           </h5>
           <div>
-            <router-link
-              class="btn btn-outline-warning btn-sm"
-              :to="{ name: `All${setup.route_prefix}` }"
-            >
+            <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${setup.route_prefix}` }">
               {{ setup.all_page_title }}
             </router-link>
           </div>
@@ -23,20 +16,11 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="">Project Id</label>
+                <label for="">Project Name</label>
                 <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.project_id"
-                    class="form-control"
-                    name="project_id"
-                    id="project_id"
-                  >
-                    <option value="">Selet-- Project Id</option>
-                    <option
-                      v-for="item in userProject?.data"
-                      :key="item.id"
-                      :value="item.id"
-                    >
+                  <select v-model="form_fields.project_id" class="form-control" name="project_id" id="project_id" @change="onProjectChange">
+                    <option value="">Selet-- Project Name</option>
+                    <option v-for="item in userProject?.data" :key="item.id" :value="item.id">
                       {{ item.name }}
                     </option>
                   </select>
@@ -47,18 +31,9 @@
               <div class="form-group">
                 <label for="">assigned_to</label>
                 <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.assigned_to"
-                    class="form-control"
-                    name="assigned_to"
-                    id="assigned_to"
-                  >
-                    <option value="">Selet-- User Id</option>
-                    <option
-                      v-for="item in userData?.data"
-                      :key="item.id"
-                      :value="item.id"
-                    >
+                  <select v-model="form_fields.assigned_to" class="form-control" name="assigned_to" id="assigned_to">
+                    <option value="">Selet--- Engineer</option>
+                    <option v-for="item in userData?.data" :key="item.id" :value="item.id">
                       {{ item.name }}
                     </option>
                   </select>
@@ -69,13 +44,20 @@
               <div class="form-group">
                 <label for="">Title</label>
                 <div class="mt-1 mb-3">
-                  <input
-                    class="form-control form-control-square mb-2"
-                    type="text"
-                    name="title"
-                    id="title"
-                    v-model="form_fields.title"
-                  />
+                  <input class="form-control form-control-square mb-2" type="text" name="title" id="title" v-model="form_fields.title" />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">Priority</label>
+                <div class="mt-1 mb-3">
+                  <select v-model="form_fields.priority" class="form-control form-control-square mb-2" name="priority" id="priority">
+                    <option value="low">Low</option>
+                    <option value="normal">Normal</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -83,12 +65,7 @@
               <div class="form-group">
                 <label for="">Task status</label>
                 <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.task_status"
-                    class="form-control form-control-square mb-2"
-                    name="task_status"
-                    id="task_status"
-                  >
+                  <select v-model="form_fields.task_status" class="form-control form-control-square mb-2" name="task_status" id="task_status">
                     <option value="Pending">Pending</option>
                     <option value="In Progress">In Progress</option>
                     <option value="Completed">Completed</option>
@@ -99,18 +76,18 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="">Priority</label>
+                <label for="">Developer status</label>
                 <div class="mt-1 mb-3">
                   <select
-                    v-model="form_fields.priority"
+                    v-model="form_fields.task_user_status"
                     class="form-control form-control-square mb-2"
-                    name="priority"
-                    id="priority"
+                    name="task_user_status"
+                    id="task_user_status"
                   >
-                    <option value="low">Low</option>
-                    <option value="normal">Normal</option>
-                    <option value="high">High</option>
-                    <option value="urgent">Urgent</option>
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Not Completed">Not Completed</option>
                   </select>
                 </div>
               </div>
@@ -163,9 +140,7 @@
           </div>
         </div>
         <div class="card-footer">
-          <button type="submit" class="btn btn-light btn-square px-5">
-            <i class="icon-lock"></i> Submit
-          </button>
+          <button type="submit" class="btn btn-light btn-square px-5"><i class="icon-lock"></i> Submit</button>
         </div>
       </div>
     </form>
@@ -190,6 +165,7 @@ export default {
       start_date: "",
       end_date: "",
       task_status: "",
+      task_user_status: "",
       priority: "",
     },
     userProject: [],
@@ -197,18 +173,16 @@ export default {
   }),
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
-    let project_id =  this.$route.query.project_id;
+    let project_id = this.$route.query.project_id;
     if (project_id) {
       this.form_fields.project_id = project_id;
-    } 
+    }
 
     if (id) {
       this.set_fields(id);
     }
 
     await this.get_project_data();
-    await this.get_user_data();
-
   },
   methods: {
     ...mapActions(store, {
@@ -246,6 +220,7 @@ export default {
         this.form_fields.start_date = this.item.start_date;
         this.form_fields.end_date = this.item.end_date;
         this.form_fields.task_status = this.item.task_status;
+        this.form_fields.task_user_status = this.item.task_user_status;
         this.form_fields.priority = this.item.priority;
         $("#description").summernote("code", this.item.description);
       }
@@ -281,6 +256,23 @@ export default {
       target.setAttribute("name", "description");
       target.value = markupStr;
       document.getElementById("description").appendChild(target);
+    },
+    async onProjectChange() {
+      await this.get_user_by_project_id();
+      this.form_fields.assigned_to = "";
+    },
+    async get_user_by_project_id() {
+      if (!this.form_fields.project_id) {
+        this.userData = [];
+        return;
+      }
+      try {
+        let res = await axios.get(`users/get-users-by-project-id/${this.form_fields.project_id}`);
+        this.userData = res.data;
+      } catch (error) {
+        this.userData = [];
+        console.error("Error fetching users by project id", error);
+      }
     },
   },
   computed: {

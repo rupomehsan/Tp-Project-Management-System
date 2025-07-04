@@ -32,7 +32,7 @@ class Seeder extends SeederClass
             'date' => Carbon::today()->format('Y-m-d'),
             'check_in' => Carbon::today()->setTime(10, 30),
             'check_out' => Carbon::today()->setTime(18, 0),
-            'attendance_status' => 'Late',
+            'attendance_status' => 'Absent',
             'creator' => 1,
         ]);
         self::$model::create([

@@ -173,22 +173,22 @@
                     <td>{{ item.loss_date }}</td>
                     <td>{{ item.start_time }}</td>
                     <td>{{ item.end_time }}</td>
-                    <td>{{ formatDateTime(item.created_at) }}</td>
                     <td>
                       {{
-                      (() => {
-                        if (!item.start_time || !item.end_time) return '';
-                        const start = new Date(`1970-01-01T${item.start_time}`);
-                        const end = new Date(`1970-01-01T${item.end_time}`);
-                        let diff = (end - start) / 1000; // seconds
-                        if (diff < 0) diff += 24 * 60 * 60; // handle overnight
-                        const hours = Math.floor(diff / 3600);
-                        const minutes = Math.floor((diff % 3600) / 60);
-                        return `${hours}h ${minutes}m`;
-                      })()
+                        (() => {
+                          if (!item.start_time || !item.end_time) return '';
+                          const start = new Date(`1970-01-01T${item.start_time}`);
+                          const end = new Date(`1970-01-01T${item.end_time}`);
+                          let diff = (end - start) / 1000; // seconds
+                          if (diff < 0) diff += 24 * 60 * 60; // handle overnight
+                          const hours = Math.floor(diff / 3600);
+                          const minutes = Math.floor((diff % 3600) / 60);
+                          return `${hours}h ${minutes}m`;
+                        })()
                       }}
                     </td>
                     <td>{{ item.loss_type }}</td>
+                    <td>{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />
@@ -443,14 +443,9 @@
               </select>
             </label>
           </div>
-          <div class="filter_item">
-            <button
-              @click.prevent="get_all()"
-              type="button"
-              class="btn btn-sm btn-outline-info"
-            >
-              Submit
-            </button>
+           <div class="filter_item d-flex justify-content-between align-items-center">
+            <button @click.prevent="get_all()" type="button" class="btn btn-sm btn-outline-info">Submit</button>
+            <button class="btn btn-outline-danger btn-sm" @click="reset_filters">Reset</button>
           </div>
         </div>
       </div>
@@ -554,7 +549,14 @@ export default {
       "set_page",
       "set_status",
       "set_paginate",
+      "task_overview",
+      "reset_filter_criteria",
     ]),
+
+    async reset_filters() {
+      this.reset_filter_criteria();
+      await this.get_all();
+    },
 
     formatDateTime(dateTime) {
       if (!dateTime) return "";

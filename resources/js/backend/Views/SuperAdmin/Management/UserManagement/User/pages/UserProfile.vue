@@ -21,7 +21,7 @@
             />
             <h5 class="card-title text-capitalize">Name : {{ item.name }}</h5>
             <p class="card-text">Eamil : {{ item.email }}</p>
-            <p class="card-text">Phone : {{ item.phone ?? "N/A" }}</p>
+            <p class="card-text">Phone : {{ item.phone_number }}</p>
             <p class="card-text">Address : {{ item.address ?? "N/A" }}</p>
           </div>
           <div class="card-body border-light">
@@ -55,16 +55,7 @@
                 </div>
                 <h2 class="mb-0">{{ item.project?.length }}</h2>
               </div>
-              <div
-                class="card-footer d-flex align-items-center justify-content-between"
-              >
-                <a class="small text-white stretched-link" href="#"
-                  >View Details</a
-                >
-                <div class="small text-white">
-                  <i class="fas fa-angle-right"></i>
-                </div>
-              </div>
+              
             </div>
           </div>
 
@@ -78,16 +69,7 @@
                 </div>
                 <h2 class="mb-0">{{ item.tasks?.length }}</h2>
               </div>
-              <div
-                class="card-footer d-flex align-items-center justify-content-between"
-              >
-                <a class="small text-white stretched-link" href="#"
-                  >View Details</a
-                >
-                <div class="small text-white">
-                  <i class="fas fa-angle-right"></i>
-                </div>
-              </div>
+              
             </div>
           </div>
 
@@ -107,16 +89,7 @@
                   }}
                 </h2>
               </div>
-              <div
-                class="card-footer d-flex align-items-center justify-content-between"
-              >
-                <a class="small text-white stretched-link" href="#"
-                  >View Details</a
-                >
-                <div class="small text-white">
-                  <i class="fas fa-angle-right"></i>
-                </div>
-              </div>
+              
             </div>
           </div>
           <!-- TOTAL NOT COMPLETED TASK -->
@@ -135,16 +108,7 @@
                   }}
                 </h2>
               </div>
-              <div
-                class="card-footer d-flex align-items-center justify-content-between"
-              >
-                <a class="small text-white stretched-link" href="#"
-                  >View Details</a
-                >
-                <div class="small text-white">
-                  <i class="fas fa-angle-right"></i>
-                </div>
-              </div>
+              
             </div>
           </div>
 
@@ -153,21 +117,15 @@
             <div class="card bg-success text-white h-100">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL ATTENDANCE</h6>
-                  <i class="fas fa-server fa-2x"></i>
+                  <h6 class="font-weight-light">TOTAL PRESENT ATTENDANCE</h6>
                 </div>
-                <h2 class="mb-0">48</h2>
+                <h2 class="mb-0">{{
+                  item.attendance?.filter(
+                    (att) => att.attendance_status === "Present"
+                  ).length
+                  }}</h2>
               </div>
-              <div
-                class="card-footer d-flex align-items-center justify-content-between"
-              >
-                <a class="small text-white stretched-link" href="#"
-                  >View Details</a
-                >
-                <div class="small text-white">
-                  <i class="fas fa-angle-right"></i>
-                </div>
-              </div>
+              
             </div>
           </div>
           <!-- TOTAL Absence -->
@@ -176,20 +134,16 @@
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                   <h6 class="font-weight-light">TOTAL ABSENCE</h6>
-                  <i class="fas fa-server fa-2x"></i>
                 </div>
-                <h2 class="mb-0">05</h2>
+                <h2 class="mb-0">
+                  {{
+                  item.attendance?.filter(
+                    (att) => att.attendance_status === "Absent"
+                  ).length
+                  }}
+                </h2>
               </div>
-              <div
-                class="card-footer d-flex align-items-center justify-content-between"
-              >
-                <a class="small text-white stretched-link" href="#"
-                  >View Details</a
-                >
-                <div class="small text-white">
-                  <i class="fas fa-angle-right"></i>
-                </div>
-              </div>
+              
             </div>
           </div>
         </div>
@@ -200,30 +154,33 @@
     <div class="card-body">
       <div class="table-responsive table_responsive card_body_fixed_height">
         <table class="table table-bordered mt-3">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Task Title</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-if="Array.isArray(item.project) && item.project?.length"
-                    v-for="(projects, index) in item.project"
-                    :key="index"
-                  >
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ projects.name }}</td>
-                    <td>{{ projects.start_date }}</td>
-                    <td>{{ projects.end_date }}</td>
-                  </tr>
-                  <tr v-else>
-                    <td colspan="4" class="text-center">No project available.</td>
-                  </tr>
-                </tbody>
-              </table>
+          <thead>
+            <tr>
+              <th>List</th>
+              <th>Project Title</th>
+              <th>Project Status</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+            </tr>
+          </thead>
+            <tbody>
+            <tr
+              v-if="Array.isArray(item.project) && item.project?.length"
+              v-for="(projects, index) in item.project"
+              :key="index"
+              :style="projects.project_status === 'Completed' ? 'background-color: green;' : ''"
+            >
+              <td>{{ index + 1 }}</td>
+              <td>{{ projects.name }}</td>
+              <td>{{ projects.project_status }}</td>
+              <td>{{ projects.start_date }}</td>
+              <td>{{ projects.end_date }}</td>
+            </tr>
+            <tr v-else>
+              <td colspan="5" class="text-center">No project available.</td>
+            </tr>
+            </tbody>
+        </table>
       </div>
     </div>
     <!-- End System Info Section -->

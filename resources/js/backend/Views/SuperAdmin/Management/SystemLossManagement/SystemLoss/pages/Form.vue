@@ -21,32 +21,11 @@
         </div>
         <div class="card-body card_body_fixed_height">
           <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">Project Id</label>
-                <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.project_id"
-                    class="form-control"
-                    name="project_id"
-                    id="project_id"
-                  >
-                    <option value="">Selet-- Project</option>
-                    <option
-                      v-for="item in projectData?.data"
-                      :key="item.id"
-                      :value="item.id"
-                    >
-                      {{ item.name }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div>
+            
 
             <div class="col-md-6">
               <div class="form-group">
-                <label for="">Loss Category Id</label>
+                <label for="">Loss Category</label>
                 <div class="mt-1 mb-3">
                   <select
                     v-model="form_fields.loss_category_id"
@@ -118,7 +97,7 @@
                   name="loss_type"
                   id="loss_type"
                   >
-                  <option value="">Select-- Meeting Type</option>
+                  <option value="">Select-- Loss Type</option>
                   <option value="planned">planned</option>
                   <option value="unplanned">unplanned</option>
                   </select>

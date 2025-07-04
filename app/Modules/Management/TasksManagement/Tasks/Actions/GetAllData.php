@@ -17,7 +17,7 @@ class GetAllData
 
             // Custom priority order: urgent, high, normal, low
             if ($orderByColumn === 'priority') {
-        
+
                 $priorityOrder = "'urgent','high','normal','low'";
                 $orderByRaw = "FIELD(priority, $priorityOrder)";
             } else {
@@ -46,11 +46,15 @@ class GetAllData
 
             if ($start_date && $end_date) {
                 if ($end_date > $start_date) {
-                    $data->whereBetween('created_at', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
+                    $data->whereBetween('start_date', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
+                    $data->orWhereBetween('end_date', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
                 } elseif ($end_date == $start_date) {
-                    $data->whereDate('created_at', $start_date);
+                    $data->whereDate('start_date', $start_date);
+                    $data->orWhereDate('end_date', $end_date);
                 }
             }
+
+
             if ($task_status !== null && $task_status !== '') {
                 $data->where('task_status', $task_status);
             }
@@ -61,11 +65,6 @@ class GetAllData
             if ($status == 'trased') {
                 $data = $data->trased();
             }
-
-            // Ensure fields is an array for select()
-            $fields = is_array($fields) ? $fields : (strpos($fields, ',') !== false ? array_map('trim', explode(',', $fields)) : [$fields]);
-
-            // Determine if we need custom priority ordering
             $usePriorityOrder = ($orderByColumn === 'priority');
             $priorityOrderRaw = "FIELD(priority, 'urgent', 'normal', 'high', 'medium', 'low')";
 
@@ -92,6 +91,7 @@ class GetAllData
                 $data = $data->orderBy($orderByColumn, $orderByType)
                     ->paginate($pageLimit);
             } else {
+
                 $data = $data
                     ->with($with)
                     ->select($fields)
@@ -103,8 +103,6 @@ class GetAllData
                 $data = $data->orderBy($orderByColumn, $orderByType)
                     ->paginate($pageLimit);
             }
-
-            
 
             return entityResponse([
                 ...$data->toArray(),

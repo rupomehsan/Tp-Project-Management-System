@@ -19,12 +19,16 @@ class Model extends Authenticatable
     protected $table = "users";
     protected $guarded = [];
     protected $hidden = ['password'];
+    protected $casts = [
+        'social_media' => 'array',
+    ]; 
 
 
 
 
     public static $roleModel = \App\Modules\Management\UserManagement\Role\Models\Model::class;
     public static $tasksIdsModel = \App\Modules\Management\TasksManagement\Tasks\Models\Model::class;
+    public static $attendanceModel = \App\Modules\Management\AttendanceManagement\Attendance\Models\Model::class;
 
     public static $projectModel = \App\Modules\Management\ProjectManagement\Project\Models\Model::class;
 
@@ -69,8 +73,13 @@ class Model extends Authenticatable
         return $this->hasMany(self::$tasksIdsModel,'assigned_to' );
     }
 
+    public function attendance()
+    {
+        return $this->hasMany(self::$attendanceModel,'user_id' );
+    }
+
     public function project()
     {
-        return $this->belongsToMany(self::$projectModel, 'project_users', 'project_id', 'user_id');
+        return $this->belongsToMany(self::$projectModel, 'project_users', 'user_id', 'project_id');
     }
 }

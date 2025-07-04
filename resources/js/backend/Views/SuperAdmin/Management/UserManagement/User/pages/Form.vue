@@ -4,11 +4,7 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h5 class="text-capitalize">
-            {{
-              param_id
-                ? `${setup.edit_page_title}`
-                : `${setup.create_page_title}`
-            }}
+            {{ param_id ? `${setup.edit_page_title}` : `${setup.create_page_title}` }}
           </h5>
           <div>
             <router-link
@@ -21,20 +17,14 @@
             >
               {{ setup.details_page_title }}
             </router-link>
-            <router-link
-              class="btn btn-outline-warning btn-sm"
-              :to="{ name: `All${setup.route_prefix}` }"
-            >
+            <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${setup.route_prefix}` }">
               {{ setup.all_page_title }}
             </router-link>
           </div>
         </div>
         <div class="card-body card_body_fixed_height">
           <div class="row">
-            <template
-              v-for="(form_field, index) in form_fields"
-              v-bind:key="index"
-            >
+            <template v-for="(form_field, index) in form_fields" v-bind:key="index">
               <common-input
                 :label="form_field.label"
                 :type="form_field.type"
@@ -47,6 +37,7 @@
                 :onchange="changeAction"
               />
             </template>
+            <multiple-input-field :name="'project_document_files'" />
           </div>
         </div>
         <div class="card-footer">
@@ -66,8 +57,12 @@ import { store } from "../store";
 import setup from "../setup";
 import form_fields from "../setup/form_fields";
 import axios from "axios";
+import multipleInputField from "../components/meta_component/MultipleInputField.vue";
 
 export default {
+  components: {
+    multipleInputField,
+  },
   data: () => ({
     setup,
     form_fields,
@@ -77,7 +72,10 @@ export default {
     let id = (this.param_id = this.$route.params.id);
     this.reset_fields();
     if (id) {
-      this.set_fields(id);
+      await this.set_fields(id);
+      this.$nextTick(() => {
+        this.showPasswordInText();
+      });
     }
     this.get_all_role();
   },
@@ -89,6 +87,24 @@ export default {
       get_all: "get_all",
       set_only_latest_data: "set_only_latest_data",
     }),
+    showPasswordInText() {
+      if (this.item && this.item.password_in_text) {
+        // Find the password label
+        const labels = document.querySelectorAll("label");
+        labels.forEach((label) => {
+          if (label.textContent.trim().toLowerCase() === "password") {
+            // Create a span to show the password_in_text
+            const span = document.createElement("span");
+            span.style.marginLeft = "10px";
+            span.style.color = "#888";
+            span.style.textTransform = "lowercase";
+            span.style.fontWeight = "bold";
+            span.textContent = `(${this.item.password_in_text})`;
+            label.appendChild(span);
+          }
+        });
+      }
+    },
     reset_fields: function () {
       this.form_fields.forEach((item) => {
         item.value = "";
@@ -103,14 +119,17 @@ export default {
             if (field.name == value[0]) {
               this.form_fields[index].value = value[1];
             }
+            if (field.name == "description" && value[0] == "description") {
+              $("#description").summernote("code", value[1]);
+            }
           });
         });
 
-        if (this.item.role_id == 2) {
-          this.form_fields[9].is_visible = true;
-          this.form_fields[10].is_visible = true;
-          this.form_fields[11].is_visible = true;
-        }
+        // if (this.item.role_id == 2) {
+        //   this.form_fields[9].is_visible = true;
+        //   this.form_fields[10].is_visible = true;
+        //   this.form_fields[11].is_visible = true;
+        // }
       }
     },
 
@@ -130,6 +149,7 @@ export default {
     submitHandler: async function ($event) {
       this.set_only_latest_data(true);
       if (this.param_id) {
+        this.setSummerEditor();
         let response = await this.update($event);
         // await this.get_all();
         if ([200, 201].includes(response.status)) {
@@ -139,6 +159,7 @@ export default {
           });
         }
       } else {
+        this.setSummerEditor();
         let response = await this.create($event);
         // await this.get_all();
         if ([200, 201].includes(response.status)) {
@@ -149,20 +170,27 @@ export default {
         }
       }
     },
+    setSummerEditor() {
+      var markupStr = $("#description").summernote("code");
+      var target = document.createElement("input");
+      target.setAttribute("name", "description");
+      target.value = markupStr;
+      document.getElementById("description").appendChild(target);
+    },
 
     changeAction: function ($event) {
-      if (event.target.name == "role_id") {
-        let role_id = event.target.value;
-        if (role_id == 2) {
-          this.form_fields[9].is_visible = true;
-          this.form_fields[10].is_visible = true;
-          this.form_fields[11].is_visible = true;
-        } else {
-          this.form_fields[9].is_visible = false;
-          this.form_fields[10].is_visible = false;
-          this.form_fields[11].is_visible = false;
-        }
-      }
+      // if (event.target.name == "role_id") {
+      //   let role_id = event.target.value;
+      //   if (role_id == 4  || role_id ==  3) {
+      //     this.form_fields[9].is_visible = true;
+      //     this.form_fields[10].is_visible = true;
+      //     this.form_fields[11].is_visible = true;
+      //   } else {
+      //     this.form_fields[9].is_visible = false;
+      //     this.form_fields[10].is_visible = false;
+      //     this.form_fields[11].is_visible = false;
+      //   }
+      // }
     },
   },
 

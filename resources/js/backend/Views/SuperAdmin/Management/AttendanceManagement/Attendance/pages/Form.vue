@@ -31,7 +31,7 @@
                     name="user_id"
                     id="user_id"
                   >
-                    <option value="">Selet-- User Id</option>
+                    <option value="">Selet-- User Name</option>
                     <option
                       v-for="item in userData?.data"
                       :key="item.id"
@@ -76,7 +76,6 @@
                     v-model="form_fields.check_in"
                     :min="param_id ? null : todayStart"
                     :max="param_id ? null : todayEnd"
-                    required
                   />
                 </div>
               </div>
@@ -94,7 +93,6 @@
                     :min="param_id ? null : form_fields.check_in || todayStart"
                     :max="param_id ? null : todayEnd"
                     :disabled="!form_fields.check_in"
-                    required
                   />
                 </div>
               </div>
@@ -113,9 +111,6 @@
                     <option value="Present">Present</option>
                     <option value="Absent">Absent</option>
                     <option value="Remote">Remote</option>
-                    <option value="Leave">Leave</option>
-                    <option value="Sick Leave">Sick Leave</option>
-                    <option value="Late">Late</option>
                   </select>
                 </div>
               </div>
