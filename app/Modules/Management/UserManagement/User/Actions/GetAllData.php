@@ -45,7 +45,7 @@ class GetAllData
                 $data = $data->where('id', '!=', $currentUser->id);
                 if ($currentUser->role_id != 1) {
                     // Not super admin, only see role_id 4
-                    $data = $data->where('role_id', 4);
+                    $data = $data->where('role_id', 2);
                 }
                 // If role_id == 1, see all users except self
             }
@@ -72,6 +72,7 @@ class GetAllData
                     ->limit($pageLimit)
                     ->orderBy($orderByColumn, $orderByType)
                     ->get();
+                return entityResponse($data);
             } else if ($status == 'trased') {
                 $data = $data
                     ->with($with)

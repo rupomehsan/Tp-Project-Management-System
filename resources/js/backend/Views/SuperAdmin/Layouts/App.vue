@@ -1,6 +1,6 @@
 <template>
   <div id="wrapper" v-if="is_auth">
-    <top-header></top-header>
+    <TopHeader :key="headerKey" :headerKey="headerKey" @update:headerKey="headerKey = $event"></TopHeader>
     <div class="clearfix"></div>
     <div class="content-wrapper">
       <router-view></router-view>
@@ -24,6 +24,7 @@ export default {
   components: { TopHeader, Footer },
   data: () => ({
     rightToggle: false,
+    headerKey: 0,
   }),
   created: async function () {
     await this.check_is_auth();

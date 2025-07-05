@@ -176,7 +176,9 @@
       />
      
 
-      <!-- Management end -->
+      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Notification`"  :route_name="`AllNotification`" />
+<side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Message`"  :route_name="`AllMessage`" />
+<!-- Management end -->
     </ul>
   </div>
 </template>

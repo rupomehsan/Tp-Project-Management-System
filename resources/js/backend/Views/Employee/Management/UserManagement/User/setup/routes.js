@@ -3,6 +3,7 @@ import All from "../pages/All.vue";
 import Form from "../pages/Form.vue";
 import Details from "../pages/Details.vue";
 import Layout from "../pages/Layout.vue";
+import UserProfile from "../pages/UserProfile.vue";
 
 let route_prefix = setup.route_prefix;
 let route_path = setup.route_path;
@@ -30,6 +31,11 @@ const routes = {
             path: "edit/:id",
             name: "Edit" + route_prefix,
             component: Form,
+        },
+        {
+            path: "profile/:id",
+            name: "Profile" + route_prefix,
+            component: UserProfile,
         },
     ],
 };

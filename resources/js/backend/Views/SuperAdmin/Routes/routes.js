@@ -4,7 +4,9 @@ import Layout from "../Layouts/Layout.vue";
 import Dashboard from "../Management/Dashboard/Dashboard.vue";
 //SettingsRoutes
 import SettingsRoutes from "../Management/Settings/setup/routes.js";
-//routes
+//routesimport MessageRoutes from '../Management/Message/setup/routes.js';
+import NotificationRoutes from '../Management/Notification/setup/routes.js';
+
 
 import UserRoutes from '../Management/UserManagement/User/setup/routes.js';
 // Project Management
@@ -47,7 +49,9 @@ const routes = {
             component: Dashboard,
             name: 'adminDashboard',
         },
-        //management routes
+        //management routes        MessageRoutes,
+        NotificationRoutes,
+
         UserRoutes,
         // project Management
         ProjectGroup,

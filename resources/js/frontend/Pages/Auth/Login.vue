@@ -6,64 +6,36 @@
           <h3>Login Here</h3>
           <div class="form-group">
             <label for="email">Email</label>
-            <input
-              class="form-control"
-              type="email"
-              placeholder="  email"
-              name="email"
-            />
+            <input class="form-control" type="email" placeholder="  email" name="email" />
           </div>
           <div class="form-group password-icon">
             <label for="password">Password</label>
             <div class="password-icon">
-              <input
-                class="form-control"
-                :type="showPassword ? 'text' : 'password'"
-                placeholder="  password"
-                name="password"
-                value="@12345678"
-              />
+              <input class="form-control" :type="showPassword ? 'text' : 'password'" placeholder="  password" name="password" value="@12345678" />
               <i
                 class="fa-solid fa-eye-slash"
-                :class="[
-                  { 'fa-eye': showPassword },
-                  passwordError ? 'top-33' : '',
-                ]"
+                :class="[{ 'fa-eye': showPassword }, passwordError ? 'top-33' : '']"
                 @click="showPassword = !showPassword"
               ></i>
             </div>
           </div>
 
-          <button
-            class="my-3 btn btn-outline-success"
-            type="submit"
-            id="spiner"
-          >
+          <button class="my-3 btn btn-outline-success" type="submit" id="spiner">
             <span v-if="!loading">Log In</span>
             <template v-if="loading">
-              <span
-                class="spinner-border spinner-border-sm mx-2"
-                role="status"
-                aria-hidden="true"
-              ></span>
+              <span class="spinner-border spinner-border-sm mx-2" role="status" aria-hidden="true"></span>
               <span class="">Loading...</span>
             </template>
           </button>
           <span>Dont have an account ?</span>
-          <Link href="/register" class="font-size-12 text-primary">
-            Register</Link
-          >
+          <Link href="/register" class="font-size-12 text-primary"> Register</Link>
           <br />
-          <Link href="/forgot-password" class="text-info"
-            >Forgot Password ?</Link
-          >
+          <Link href="/forgot-password" class="text-info">Forgot Password ?</Link>
         </form>
       </div>
       <div class="col-md-5">
         <div id="userList">
-          <table
-            class="table table-dark table-striped table-hover table-bordered"
-          >
+          <table class="table table-dark table-striped table-hover table-bordered">
             <thead class="sticky-top">
               <tr>
                 <th scope="col">Email</th>
@@ -76,12 +48,7 @@
                 <td>Super Admin</td>
                 <!-- <td>@12345678</td> -->
                 <td>
-                  <button
-                    @click="setPassword('superadmin@gmail.com')"
-                    class="btn btn-outline-info"
-                  >
-                    Login
-                  </button>
+                  <button @click="setPassword('superadmin@gmail.com')" class="btn btn-outline-info">Login</button>
                 </td>
               </tr>
 
@@ -89,12 +56,7 @@
                 <td>Employee</td>
                 <!-- <td>@12345678</td> -->
                 <td>
-                  <button
-                    @click="setPassword('employee@gmail.com')"
-                    class="btn btn-outline-info"
-                  >
-                    Login
-                  </button>
+                  <button @click="setPassword('employee@gmail.com')" class="btn btn-outline-info">Login</button>
                 </td>
               </tr>
             </tbody>
@@ -131,7 +93,7 @@ export default {
             localStorage.setItem("admin_role", data.user?.role_id);
             if (data.user?.role_id == 1) {
               window.location.href = "super-admin#/dashboard";
-            } else if (data.user?.role_id == 4) {
+            } else if (data.user?.role_id == 2) {
               window.location.href = "employee#/dashboard";
             }
           }

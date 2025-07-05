@@ -26,40 +26,27 @@ class Seeder extends SeederClass
             'image' => 'avatar.png',
             'role_id' => 1,
         ]);
-        self::$model::create([
-            'name' => "admin",
-            'email' => "admin@gmail.com",
-            'password' => Hash::make('@12345678'),
-            'image' => 'avatar.png',
-            'role_id' => 2,
-        ]);
-            self::$model::create([
-            'name' => "Md Ehsan",
-            'email' => "ehsan@gmail.com",
-            'password' => Hash::make('@12345678'),
-            'image' => 'avatar.png',
-            'role_id' => 3,
-        ]);
+
         self::$model::create([
             'name' => "Md Mumin",
             'email' => "mumin@gmail.com",
             'password' => Hash::make('@12345678'),
             'image' => 'avatar.png',
-            'role_id' => 4,
+            'role_id' => 2,
         ]);
         self::$model::create([
             'name' => "Md Nazmul",
             'email' => "nazmul@gmail.com",
             'password' => Hash::make('@12345678'),
             'image' => 'avatar.png',
-            'role_id' => 4,
+            'role_id' => 2,
         ]);
         self::$model::create([
             'name' => "Md Abir",
             'email' => "abir@gmail.com",
             'password' => Hash::make('@12345678'),
             'image' => 'avatar.png',
-            'role_id' => 4,
+            'role_id' => 2,
         ]);
     }
 }

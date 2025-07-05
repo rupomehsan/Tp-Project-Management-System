@@ -2,7 +2,7 @@
 
 namespace App\Modules\Management\ProjectManagement\Project\Actions;
 
-use Illuminate\Support\Facades\Storage;
+use App\Modules\Management\Notification\Actions\StoreData as SendNotification;
 
 class StoreData
 {
@@ -24,7 +24,7 @@ class StoreData
                 $requestData['project_agrement_file'] = self::uploader($project_agrement_file, "uploads/project/agrement/{$currentDate}");
             }
 
-            
+
             // Handle project document file upload
             if ($request->hasFile('project_document')) {
                 $project_document = $request->file('project_document');
@@ -62,12 +62,22 @@ class StoreData
             }
 
             // Create the database record
+
             if ($data = self::$model::query()->create($requestData)) {
                 $project_users = json_decode($request->input('project_users', []));
                 $data->project_users()->sync($project_users);
+                $notification = [
+                    'type' => 'project',
+                    'title' => auth()->user()->name . ' assigned a new project: ' . $data->name,
+                    'link' => 'project/details/' . $data->slug,
+                    'creator' => auth()->user()->id,
+                    'slug' => $data->slug,
+                ];
+                $notificationUsers = $project_users;
+
+                SendNotification::execute($notification, $notificationUsers);
                 return messageResponse('Item added successfully', $data, 201);
             }
-
         } catch (\Exception $e) {
             return messageResponse($e->getMessage(), [], 500, 'server_error');
         }

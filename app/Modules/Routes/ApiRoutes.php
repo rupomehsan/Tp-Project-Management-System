@@ -79,3 +79,5 @@ include_once base_path("app/Modules/Management/MeetingManagement/MeetingAgenda/R
 */
 include_once base_path("app/Modules/Management/SystemLossManagement/SystemLossCategory/Routes/Route.php");
 include_once base_path("app/Modules/Management/SystemLossManagement/SystemLoss/Routes/Route.php");
+include_once base_path("app/Modules/Management/Notification/Routes/Route.php");
+include_once base_path("app/Modules/Management/Message/Routes/Route.php");
