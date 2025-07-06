@@ -18,7 +18,7 @@ axios.interceptors.request.use(
         $(".loader_body").css({ top: $(".main_content").scrollTop() });
         $("#backend_body .main_content").css({ overflowY: "hidden !mportant" });
         $("form button").prop("disabled", true);
-        Pace?.restart();
+        // Pace?.restart();
         window.count_left_time_sec = 1;
         sessionStorage.setItem(
             "last_time",

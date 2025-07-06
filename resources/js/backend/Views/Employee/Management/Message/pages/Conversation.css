@@ -1,0 +1,223 @@
+.chat-layout {
+  display: flex;
+  height: 80vh;
+  max-width: 900px;
+  margin: 0 auto;
+  background: #f5f6fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e0e0e0;
+}
+.chat-sidebar {
+  width: 260px;
+  background: #fff;
+  border-radius: 12px 0 0 12px;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.sidebar-header {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+  padding: 18px 20px 12px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.conversation-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+.conversation-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s;
+  min-width: 250px;
+}
+.conversation-item.active,
+.conversation-item:hover {
+  background: #f5f6fa;
+}
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #555;
+  margin-right: 14px;
+}
+.conversation-info {
+  flex: 1;
+  min-width: 0;
+}
+.conversation-name {
+  font-weight: 600;
+  color: #222;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+.conversation-last {
+  font-size: 0.92em;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.conversation-time {
+  font-size: 0.8em;
+  color: #bbb;
+  margin-left: 10px;
+}
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  width: 100%;
+  margin: 0 auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background: #f5f6fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  border-radius: 0 12px 0 0;
+}
+.chat-header-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+}
+.chat-header-actions {
+  display: flex;
+  gap: 8px;
+}
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 16px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  background: #f5f6fa;
+}
+.chat-bubble {
+  max-width: 70%;
+  margin-bottom: 14px;
+  padding: 12px 18px;
+  border-radius: 18px;
+  position: relative;
+  word-break: break-word;
+  font-size: 1rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+.mine {
+  align-self: flex-end;
+  background: #dcf8c6;
+  color: #222;
+  border-bottom-right-radius: 4px;
+}
+.theirs {
+  align-self: flex-start;
+  background: #fff;
+  color: #222;
+  border-bottom-left-radius: 4px;
+  border: 1px solid #e0e0e0;
+}
+.chat-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 0.8em;
+  color: #888;
+}
+.chat-input-area {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-top: 1px solid #e0e0e0;
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+}
+.chat-input {
+  flex: 1;
+  resize: none;
+  border-radius: 18px;
+  border: 1px solid #ccc;
+  padding: 10px 14px;
+  margin-right: 10px;
+  font-size: 1rem;
+  background: #f9f9f9;
+}
+.chat-send-btn {
+  padding: 8px 22px;
+  border-radius: 18px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  width: 350px;
+  max-width: 90vw;
+  padding: 0;
+  overflow: hidden;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+}
+.modal-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #888;
+}
+.modal-body {
+  padding: 20px;
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 20px 16px 20px;
+  border-top: 1px solid #eee;
+}

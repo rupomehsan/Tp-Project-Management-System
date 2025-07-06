@@ -2,6 +2,8 @@
 
 namespace App\Modules\Management\Message\Actions;
 
+use App\Events\MessageSent;
+
 class SendMessage
 {
     static $messageModel = \App\Modules\Management\Message\Models\Model::class;
@@ -10,6 +12,8 @@ class SendMessage
     public static function execute($request)
     {
         try {
+
+    
 
             $conversationId = $request['conversation_id'] ?? $request->conversation_id ?? null;
             $text = $request['text'] ?? $request->text ?? null;
@@ -36,6 +40,12 @@ class SendMessage
                 'text' => $text,
                 'date_time' => now(),
             ]);
+
+
+
+
+            event(new MessageSent($message, auth()->user()));
+
 
             $conversation->update(['last_updated' => now()]);
 
