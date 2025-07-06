@@ -20,10 +20,9 @@ class Seeder extends SeederClass
         self::$model::truncate();
 
         self::$model::create([
-            'name' => "super admin",
-            'email' => "superadmin@gmail.com",
+            'name' => "Md Abu Ehsan",
+            'email' => "ehsan@gmail.com",
             'password' => Hash::make('@12345678'),
-            'image' => 'avatar.png',
             'role_id' => 1,
         ]);
 
@@ -31,21 +30,48 @@ class Seeder extends SeederClass
             'name' => "Md Mumin",
             'email' => "mumin@gmail.com",
             'password' => Hash::make('@12345678'),
-            'image' => 'avatar.png',
+
             'role_id' => 2,
         ]);
         self::$model::create([
             'name' => "Md Nazmul",
             'email' => "nazmul@gmail.com",
             'password' => Hash::make('@12345678'),
-            'image' => 'avatar.png',
+
             'role_id' => 2,
         ]);
         self::$model::create([
             'name' => "Md Abir",
             'email' => "abir@gmail.com",
             'password' => Hash::make('@12345678'),
-            'image' => 'avatar.png',
+
+            'role_id' => 2,
+        ]);
+        self::$model::create([
+            'name' => "Md Tasnim",
+            'email' => "tasnim@gmail.com",
+            'password' => Hash::make('@12345678'),
+
+            'role_id' => 2,
+        ]);
+        self::$model::create([
+            'name' => "Md Mahfuz",
+            'email' => "mahfuz@gmail.com",
+            'password' => Hash::make('@12345678'),
+
+            'role_id' => 2,
+        ]);
+        self::$model::create([
+            'name' => "Md Sahjalal",
+            'email' => "sahjalal@gmail.com",
+            'password' => Hash::make('@12345678'),
+
+            'role_id' => 2,
+        ]);
+        self::$model::create([
+            'name' => "Md Yamin",
+            'email' => "yamin@gmail.com",
+            'password' => Hash::make('@12345678'),
             'role_id' => 2,
         ]);
     }

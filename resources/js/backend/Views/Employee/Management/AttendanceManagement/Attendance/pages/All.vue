@@ -41,7 +41,7 @@
                       />
                     </th>
                     <th class="w-10">ID</th>
-                    <th>User Name</th>
+                   
                     <th>Date</th>
                     <th>Check_in</th>
                     <th>Check_out</th>
@@ -118,7 +118,7 @@
                       <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
                     </td>
                     <td>{{ index + 1 }}</td>
-                    <td>{{ item.user?.name }}</td>
+                   
                     <td>{{ item.date }}</td>
                     <td
                       :style="{

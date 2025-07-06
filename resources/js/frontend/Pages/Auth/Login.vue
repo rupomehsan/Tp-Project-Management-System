@@ -48,15 +48,50 @@
                 <td>Super Admin</td>
                 <!-- <td>@12345678</td> -->
                 <td>
-                  <button @click="setPassword('superadmin@gmail.com')" class="btn btn-outline-info">Login</button>
+                  <button @click="setPassword('ehsan@gmail.com')" class="btn btn-outline-info">Login</button>
                 </td>
               </tr>
 
               <tr>
-                <td>Employee</td>
-                <!-- <td>@12345678</td> -->
+                <td>Md Mumin</td>
                 <td>
-                  <button @click="setPassword('employee@gmail.com')" class="btn btn-outline-info">Login</button>
+                  <button @click="setPassword('mumin@gmail.com')" class="btn btn-outline-info">Login</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Md Nazmul</td>
+                <td>
+                  <button @click="setPassword('nazmul@gmail.com')" class="btn btn-outline-info">Login</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Md Abir</td>
+                <td>
+                  <button @click="setPassword('abir@gmail.com')" class="btn btn-outline-info">Login</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Md Tasnim</td>
+                <td>
+                  <button @click="setPassword('tasnim@gmail.com')" class="btn btn-outline-info">Login</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Md Mahfuz</td>
+                <td>
+                  <button @click="setPassword('mahfuz@gmail.com')" class="btn btn-outline-info">Login</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Md Sahjalal</td>
+                <td>
+                  <button @click="setPassword('sahjalal@gmail.com')" class="btn btn-outline-info">Login</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Md Yamin</td>
+                <td>
+                  <button @click="setPassword('yamin@gmail.com')" class="btn btn-outline-info">Login</button>
                 </td>
               </tr>
             </tbody>
