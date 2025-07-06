@@ -4,7 +4,7 @@
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-content">
         <div class="modal-header">
-          <span class="modal-title text-dark">Start New Conversation</span>
+          <p class="modal-title">Start new conversation</p>
           <button class="close-btn" @click="showModal = false">&times;</button>
         </div>
         <div class="modal-body">
@@ -21,11 +21,11 @@
     </div>
 
     <!-- Sidebar -->
-    <aside class="chat-sidebar">
-      <div class="sidebar-header d-flex justify-content-between">
+    <aside v-if="!isMobile || mobileView === 'list'" class="chat-sidebar dark-mode">
+      <div class="sidebar-header d-flex justify-content-between align-items-center">
         <span>Conversations</span>
-        <button class="btn btn-link p-0" @click="openModal">
-          <i class="zmdi zmdi-plus-circle"></i>
+        <button class="btn btn-dark btn-sm" @click="openModal">
+          <i class="fa fa-plus text-success"></i>
         </button>
       </div>
       <ul class="conversation-list">
@@ -36,7 +36,8 @@
           class="conversation-item"
           :class="{ active: conversation.id === activeConversation?.id }"
         >
-          <div class="avatar">{{ getInitials(conversation.participant?.name) }}</div>
+          <img v-if="conversation.participant?.image" class="avatar" :src="conversation.participant?.image" />
+          <div v-else class="avatar">{{ getInitials(conversation.participant?.name) }}</div>
           <div class="conversation-info">
             <div class="conversation-name">{{ conversation.participant?.name }}</div>
           </div>
@@ -46,11 +47,19 @@
     </aside>
 
     <!-- Chat Container -->
-    <div class="chat-container">
+    <div v-if="!isMobile || mobileView === 'chat'" class="chat-container dark-mode">
       <div class="chat-header d-flex justify-content-between">
-        <div class="chat-header-title">Chat with {{ activeConversation?.participant?.name || "..." }}</div>
-        <button class="btn btn-link p-0" @click="loadMessages(activeConversation)">
-          <i class="zmdi zmdi-refresh"></i>
+        <div class="d-flex align-items-center gap-3">
+          <!-- Back button only in mobile -->
+          <button v-if="isMobile" class="btn btn-link text-white me-2" @click="backToList">
+            <i class="fa fa-arrow-left"></i>
+          </button>
+          <img v-if="activeConversation?.participant?.image" class="avatar" :src="activeConversation?.participant?.image" />
+          <div v-else class="avatar">{{ getInitials(activeConversation?.participant?.name) }}</div>
+          {{ activeConversation?.participant?.name || "..." }}
+        </div>
+        <button class="btn btn-dark btn-sm" @click="loadMessages(activeConversation)">
+          <i class="fa fa-refresh"></i>
         </button>
       </div>
 
@@ -59,13 +68,13 @@
         <div v-for="message in messages" :key="message.id" :class="['chat-bubble', message.type === 'mine' ? 'mine' : 'theirs']">
           <div class="chat-text">{{ message.text }}</div>
           <div class="chat-meta">
-            <span class="chat-author">{{ message.sender?.name }}</span>
+            <!-- <span class="chat-author">{{ message.sender?.name }}</span> -->
             <span class="chat-time">{{ formatTime(message.created_at) }}</span>
           </div>
         </div>
       </div>
 
-      <form class="chat-input-area" @submit.prevent="sendMessage">
+      <form v-if="activeConversation" class="chat-input-area" @submit.prevent="sendMessage">
         <textarea class="chat-input" placeholder="Type a message..." v-model.trim="newMessage" :disabled="!activeConversation" />
         <button type="submit" class="btn btn-primary chat-send-btn" :disabled="!newMessage || !activeConversation">Send</button>
       </form>
@@ -88,6 +97,9 @@ export default {
       conversations: [],
       messages: [],
       activeConversation: null,
+
+      isMobile: window.innerWidth <= 767,
+      mobileView: "list", // 'list' | 'chat'
     };
   },
   computed: {
@@ -96,6 +108,9 @@ export default {
     }),
   },
   mounted() {
+    window.addEventListener("resize", this.handleResize);
+    this.handleResize(); // initial setup
+
     this.loadConversations();
 
     const userId = this.auth_info?.id;
@@ -168,13 +183,12 @@ export default {
       this.activeConversation = convo;
       try {
         const res = await axios.get(`/messages/get-conversation-messages/${convo.id}`);
-
         this.messages = res.data.data.map((m) => ({
           ...m,
           type: m.sender?.id === this.auth_info.id ? "mine" : "theirs",
         }));
-
         this.scrollToBottom();
+        if (this.isMobile) this.mobileView = "chat";
       } catch (err) {
         console.error("Failed to load messages", err);
       }
@@ -215,6 +229,19 @@ export default {
       if (!time) return "";
       return new Date(time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     },
+    handleResize() {
+      this.isMobile = window.innerWidth <= 767;
+      if (this.isMobile && !this.activeConversation) {
+        this.mobileView = "list";
+      }
+    },
+    backToList() {
+      this.mobileView = "list";
+      this.activeConversation = null;
+    },
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.handleResize);
   },
 };
 </script>

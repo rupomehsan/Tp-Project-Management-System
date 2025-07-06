@@ -37,7 +37,7 @@
             title="Go to Messages"
           >
             <i class="zmdi zmdi-comment-outline align-middle"></i>
-            <span class="bg-danger text-white badge-up">12</span>
+            <!-- <span class="bg-danger text-white badge-up">12</span> -->
           </router-link>
           <!-- <div class="dropdown-menu dropdown-menu-right" :class="{ show: show_message }">
             <ul class="list-group list-group-flush">

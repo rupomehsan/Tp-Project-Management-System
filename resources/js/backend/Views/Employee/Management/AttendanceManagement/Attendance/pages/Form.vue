@@ -4,67 +4,17 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h5 class="text-capitalize">
-            {{
-              param_id
-                ? `${setup.edit_page_title}`
-                : `${setup.create_page_title}`
-            }}
+            {{ param_id ? `${setup.edit_page_title}` : `${setup.create_page_title}` }}
           </h5>
           <div>
-            <router-link
-              class="btn btn-outline-warning btn-sm"
-              :to="{ name: `All${setup.route_prefix}` }"
-            >
+            <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${setup.route_prefix}` }">
               {{ setup.all_page_title }}
             </router-link>
           </div>
         </div>
         <div class="card-body card_body_fixed_height">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">User Name</label>
-                <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.user_id"
-                    class="form-control"
-                    name="user_id"
-                    id="user_id"
-                  >
-                    <option value="">Selet-- User Name</option>
-                    <option
-                      v-for="item in userData?.data"
-                      :key="item.id"
-                      :value="item.id"
-                    >
-                      {{ item.name }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">Date</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    class="form-control form-control-square mb-2"
-                    type="date"
-                    name="date"
-                    id="date"
-                    v-model="form_fields.date"
-                    :min="param_id ? null : todayDate"
-                    :max="param_id ? null : todayDate"
-                    required
-                  />
-                  <small v-if="!param_id" class="form-text text-muted">
-                    Only today's date ({{ todayDate }}) is allowed for new
-                    records
-                  </small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
+          <div class="row justify-content-center align-items-center">
+            <div class="col-md-3">
               <div class="form-group">
                 <label for="check_in">Check In</label>
                 <div class="mt-1 mb-3">
@@ -74,53 +24,36 @@
                     name="check_in"
                     id="check_in"
                     v-model="form_fields.check_in"
-                    :min="param_id ? null : todayStart"
-                    :max="param_id ? null : todayEnd"
+                    :min="todayStart"
+                    :max="todayEnd"
+                    :disabled="param_id"
                   />
                 </div>
+                <p>{{ form_fields.check_in ? form_fields.check_in : "N/A" }}</p>
               </div>
             </div>
-            <div class="col-md-6" v-if="form_fields.check_in">
+            <div class="col-md-3" v-if="form_fields.check_in && param_id">
               <div class="form-group">
                 <label for="check_out">Check Out</label>
                 <div class="mt-1 mb-3">
                   <input
                     type="datetime-local"
-                    class="form-control form-control-square mb-2"
+                    class="form-control form-control-square mb-2 text-white"
                     name="check_out"
                     id="check_out"
                     v-model="form_fields.check_out"
-                    :min="param_id ? null : form_fields.check_in || todayStart"
-                    :max="param_id ? null : todayEnd"
+                    :min="form_fields.check_in || todayStart"
+                    :max="todayEnd"
                     :disabled="!form_fields.check_in"
                   />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">Attendance status</label>
-                <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.attendance_status"
-                    class="form-control form-control-square mb-2"
-                    name="attendance_status"
-                    id="attendance_status"
-                  >
-                    <option value="">Select---- Status</option>
-                    <option value="Present">Present</option>
-                    <option value="Absent">Absent</option>
-                    <option value="Remote">Remote</option>
-                  </select>
+                  <p>{{ form_fields.check_out ? form_fields.check_out : "N/A" }}</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="card-footer">
-          <button type="submit" class="btn btn-light btn-square px-5">
-            <i class="icon-lock"></i> Submit
-          </button>
+          <button type="submit" class="btn btn-light btn-square px-5"><i class="icon-lock"></i> Submit</button>
         </div>
       </div>
     </form>
@@ -247,9 +180,7 @@ export default {
       // Set to start of day in local timezone
       today.setHours(0, 0, 0, 0);
       // Convert to ISO format but keep local time
-      const localISO = new Date(
-        today.getTime() - today.getTimezoneOffset() * 60000
-      ).toISOString();
+      const localISO = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString();
       return localISO.slice(0, 16);
     },
 
@@ -258,9 +189,7 @@ export default {
       // Set to end of day in local timezone
       today.setHours(23, 59, 59, 999);
       // Convert to ISO format but keep local time
-      const localISO = new Date(
-        today.getTime() - today.getTimezoneOffset() * 60000
-      ).toISOString();
+      const localISO = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString();
       return localISO.slice(0, 16);
     },
   },

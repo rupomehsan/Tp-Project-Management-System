@@ -27,19 +27,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">assigned_to</label>
-                <div class="mt-1 mb-3">
-                  <select v-model="form_fields.assigned_to" class="form-control" name="assigned_to" id="assigned_to">
-                    <option value="">Selet--- Engineer</option>
-                    <option v-for="item in userData?.data" :key="item.id" :value="item.id">
-                      {{ item.name }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div>
+
             <div class="col-md-6">
               <div class="form-group">
                 <label for="">Title</label>
@@ -61,22 +49,10 @@
                 </div>
               </div>
             </div>
+
             <div class="col-md-6">
               <div class="form-group">
-                <label for="">Task status</label>
-                <div class="mt-1 mb-3">
-                  <select v-model="form_fields.task_status" class="form-control form-control-square mb-2" name="task_status" id="task_status">
-                    <option value="Pending">Pending</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Not Completed">Not Completed</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">Developer status</label>
+                <label for="">Dev status</label>
                 <div class="mt-1 mb-3">
                   <select
                     v-model="form_fields.task_user_status"
@@ -159,14 +135,13 @@ export default {
     param_id: null,
     form_fields: {
       project_id: "",
-      assigned_to: "",
       title: "",
       description: "",
       start_date: "",
       end_date: "",
       task_status: "",
-      task_user_status: "",
-      priority: "",
+      task_user_status: "Pending",
+      priority: "low",
     },
     userProject: [],
     userData: [],
@@ -215,7 +190,6 @@ export default {
       await this.details(id);
       if (this.item) {
         this.form_fields.project_id = this.item.project_id?.id;
-        this.form_fields.assigned_to = this.item.assigned_to;
         this.form_fields.title = this.item.title;
         this.form_fields.start_date = this.item.start_date;
         this.form_fields.end_date = this.item.end_date;
@@ -256,23 +230,6 @@ export default {
       target.setAttribute("name", "description");
       target.value = markupStr;
       document.getElementById("description").appendChild(target);
-    },
-    async onProjectChange() {
-      await this.get_user_by_project_id();
-      this.form_fields.assigned_to = "";
-    },
-    async get_user_by_project_id() {
-      if (!this.form_fields.project_id) {
-        this.userData = [];
-        return;
-      }
-      try {
-        let res = await axios.get(`users/get-users-by-project-id/${this.form_fields.project_id}`);
-        this.userData = res.data;
-      } catch (error) {
-        this.userData = [];
-        console.error("Error fetching users by project id", error);
-      }
     },
   },
   computed: {

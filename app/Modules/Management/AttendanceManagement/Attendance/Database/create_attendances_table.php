@@ -18,7 +18,13 @@ return new class extends Migration
             $table->date('date'); // attendance date
             $table->timestamp('check_in')->nullable();
             $table->timestamp('check_out')->nullable();
-            $table->enum('attendance_status', ['Present', 'Absent','Remote'])->default('Present');
+            $table->enum('attendance_status', ['Present', 'Absent', 'Remote'])->default('Present');
+            // Late info
+            $table->boolean('is_late')->default(false);
+            $table->unsignedInteger('late_minutes')->nullable(); // How many minutes late
+
+            // Optional: work hours for future reporting
+            $table->unsignedInteger('work_duration_minutes')->nullable();
 
             $table->bigInteger('creator')->unsigned()->nullable();
             $table->string('slug', 50)->nullable();

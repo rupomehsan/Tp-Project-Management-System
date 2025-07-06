@@ -23,6 +23,9 @@ class GetAllData
             $condition = [];
 
             $data = self::$model::query();
+            if (auth()->user()->role_id != 1) {
+                $data = $data->where('user_id', auth()->id());
+            }
 
             if (request()->has('search') && request()->input('search')) {
                 $searchKey = request()->input('search');

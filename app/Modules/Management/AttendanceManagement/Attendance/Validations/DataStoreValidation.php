@@ -41,8 +41,12 @@ class DataStoreValidation extends FormRequest
      */
     public function rules(): array
     {
+        $user = auth()->user();
+
         return [
-            'user_id' => 'required',
+            'user_id' => [
+                $user->role_id !== 2 ? 'required' : 'nullable'
+            ],
             'date' => 'required | sometimes',
             'check_in' => 'sometimes',
             'check_out' => 'sometimes',

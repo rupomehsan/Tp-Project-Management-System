@@ -139,10 +139,14 @@ export default {
         const roles = response.data?.data?.data || [];
         console.log(roles);
 
-        this.form_fields[8].data_list = roles.map((role) => ({
-          label: role.name,
-          value: role.id,
-        }));
+        this.form_fields.forEach((field) => {
+          if (field.name == "role_id") {
+            field.data_list = roles.map((role) => ({
+              label: role.name,
+              value: role.id,
+            }));
+          }
+        });
       }
     },
 

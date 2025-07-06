@@ -16,7 +16,7 @@ class Seeder extends SeederClass
 
     public function run(): void
     {
-       $faker = Faker::create();
+        $faker = Faker::create();
         self::$model::truncate();
 
         self::$model::create([
@@ -27,7 +27,7 @@ class Seeder extends SeederClass
             'name' => 'Shop',
             'creator' => 1,
         ]);
-            self::$model::create([
+        self::$model::create([
             'name' => 'Inventory',
             'creator' => 1,
         ]);

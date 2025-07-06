@@ -11,6 +11,7 @@ class StoreData
         try {
       
             $requestData = $request->validated();
+            $requestData['user_id'] = auth()->id();
             if ($data = self::$model::query()->create($requestData)) {
                 
                 return messageResponse('Item added successfully', $data, 201);

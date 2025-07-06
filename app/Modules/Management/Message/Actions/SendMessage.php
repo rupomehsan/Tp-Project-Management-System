@@ -13,7 +13,7 @@ class SendMessage
     {
         try {
 
-    
+            // dd($request->all());
 
             $conversationId = $request['conversation_id'] ?? $request->conversation_id ?? null;
             $text = $request['text'] ?? $request->text ?? null;

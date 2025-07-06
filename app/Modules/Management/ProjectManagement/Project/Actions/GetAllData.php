@@ -17,10 +17,17 @@ class GetAllData
             $fields = request()->input('fields') ?? '*';
             $start_date = request()->input('start_date');
             $end_date = request()->input('end_date');
-            $with = ['project_users','projectGroupId','tasks'];
+            $with = ['project_users', 'projectGroupId', 'tasks'];
             $condition = [];
 
             $data = self::$model::query();
+
+
+            if (auth()->user()->role_id != 1) {
+                $data = $data->whereHas('project_users', function ($query) {
+                    $query->where('user_id', auth()->id());
+                });
+            }
 
             if (request()->has('search') && request()->input('search')) {
                 $searchKey = request()->input('search');

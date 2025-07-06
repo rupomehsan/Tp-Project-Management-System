@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('todo_lists', function (Blueprint $table) {
             $table->id();
+             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('category_id');
             $table->text('description')->nullable();
             $table->enum('task_status', ['pending', 'completed'])->default('pending');

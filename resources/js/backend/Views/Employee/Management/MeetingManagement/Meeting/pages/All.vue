@@ -26,20 +26,13 @@
 
           <div class="card-body">
             <div class="table-responsive table_responsive card_body_fixed_height">
-              <table class="table table-hover text-center table-bordered">
+              <table class="table table-hover  table-bordered">
                 <thead>
                   <tr>
                     <th>
                       <i class="zmdi zmdi-settings zmdi-hc-2x" title="Actions"></i>
                     </th>
-                    <th class="w-10 text-center">
-                      <input
-                        class="form-check-input ml-0 select_all_checkbox"
-                        @change="($event) => set_all_item_selected($event)"
-                        type="checkbox"
-                        :checked="isAllSelected"
-                      />
-                    </th>
+                   
                     <th class="w-10">ID</th>
                     <th>Group Title</th>
                     <th>Title</th>
@@ -69,54 +62,10 @@
                               Show
                             </router-link>
                           </li>
-                          <li>
-                            <router-link
-                              :to="{
-                                name: `Edit${setup.route_prefix}`,
-                                params: {
-                                  id: item.slug,
-                                },
-                              }"
-                              class="border-secondary"
-                            >
-                              <i class="fa fa-pencil-square-o text-info"></i>
-                              Edit
-                            </router-link>
-                          </li>
-                          <li>
-                            <a v-if="item.status == 'active'" href="" @click.prevent="updateStatus(item)" class="border-warning">
-                              <i class="fa fa-eye-slash text-warning"></i>
-                              Inactive
-                            </a>
-                            <a v-if="item.status == 'inactive'" href="" @click.prevent="updateStatus(item)" class="border-warning">
-                              <i class="fa fa-eye text-warning"></i>
-                              Active
-                            </a>
-                          </li>
-                          <li v-if="!is_trashed_data">
-                            <a @click.prevent="softDelete(item)" href="" class="border-danger">
-                              <i class="fa fa-ban text-warning"></i>
-                              Soft Delete
-                            </a>
-                          </li>
-                          <li v-if="is_trashed_data">
-                            <a @click.prevent="restore_data(item)" href="" class="border-danger">
-                              <i class="fa fa-refresh text-warning"></i>
-                              Restore data
-                            </a>
-                          </li>
-                          <li>
-                            <a @click.prevent="destroy_data(item)" href="" class="border-danger">
-                              <i class="fa fa-trash text-danger"></i>
-                              Destroy
-                            </a>
-                          </li>
                         </ul>
                       </div>
                     </td>
-                    <td>
-                      <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
-                    </td>
+                    
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.meeting_group_id?.title }}</td>
                     <td>{{ item.title }}</td>
@@ -181,68 +130,7 @@
               </div>
             </nav>
           </div>
-          <div class="card-footer py-2">
-            <div class="d-flex flex-wrap align-items-center">
-              <div class="mr-2 mb-2">
-                <router-link
-                  :to="{
-                    name: `Create${setup.route_prefix}`,
-                  }"
-                  class="btn action_btn mr-2 btn-sm btn-info d-flex align-content-center align-items-center"
-                >
-                  <i class="fa fa-edit mr-2"></i>
-                  Create
-                </router-link>
-              </div>
-              <div class="mr-2 mb-2">
-                <a
-                  href=""
-                  @click.prevent="() => export_all_csv()"
-                  class="btn action_btn mr-2 btn-sm btn-primary d-flex align-content-center align-items-center"
-                >
-                  <i class="fa fa-print mr-2"></i>
-                  Export All
-                </a>
-              </div>
-              <div class="mr-2 mb-2" v-if="this.selected?.length">
-                <a href="" @click.prevent="export_selected_csv(selected)" class="btn action_btn btn-sm btn-secondary d-flex align-items-center">
-                  <i class="fa fa-sign-out mr-2"></i> Export ({{ this.selected?.length }})
-                </a>
-              </div>
-              <div class="mr-2 mb-2">
-                <a href="" @click.prevent="import_csv_modal_show = true" class="btn action_btn btn-sm btn-secondary d-flex align-items-center">
-                  <i class="fa fa-download mr-2"></i> Import
-                </a>
-              </div>
-              <div class="mr-2 mb-2">
-                <a href="" @click.prevent="change_status(`active`)" class="btn action_btn btn-sm btn-success d-flex align-items-center">
-                  <i class="fa fa fa fa-eye mr-2"></i> Active ({{ active_data_count }})
-                </a>
-              </div>
-              <div class="mr-2 mb-2">
-                <a href="" @click.prevent="change_status(`inactive`)" class="btn action_btn btn-sm btn-warning d-flex align-items-center">
-                  <i class="fa fa fa-eye-slash mr-2"></i>
-                  Inactive ({{ inactive_data_count }})
-                </a>
-              </div>
-              <div class="mr-2 mb-2">
-                <a href="" @click.prevent="change_status(`trased`)" class="btn action_btn btn-sm btn-danger d-flex align-items-center">
-                  <i class="fa fa-trash mr-2"></i> Trased ({{ trased_data_count }})
-                </a>
-              </div>
-
-              <div class="mr-2 mb-2" v-if="this.selected?.length">
-                <select class="form-control" style="width: 100px; height: 30px; font-size: 12px" @change="bulkActions">
-                  <option disabled selected>Select action</option>
-                  <option value="inactive">Inactive</option>
-                  <option value="active">Action</option>
-                  <option value="soft_delete">Soft Delete</option>
-                  <option value="restore">Restore</option>
-                  <option value="destroy">Destroy</option>
-                </select>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -316,7 +204,7 @@
               </select>
             </label>
           </div>
-           <div class="filter_item d-flex justify-content-between align-items-center">
+          <div class="filter_item d-flex justify-content-between align-items-center">
             <button @click.prevent="get_all()" type="button" class="btn btn-sm btn-outline-info">Submit</button>
             <button class="btn btn-outline-danger btn-sm" @click="reset_filters">Reset</button>
           </div>

@@ -36,6 +36,10 @@ class GetAllData
 
             $data = self::$model::query();
 
+            if (auth()->user()) {
+                $data = $data->where('user_id', auth()->id());
+            }
+
             if (request()->has('search') && request()->input('search')) {
                 $searchKey = request()->input('search');
                 $data = $data->where(function ($q) use ($searchKey) {

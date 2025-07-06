@@ -1,29 +1,63 @@
 <template>
   <div class="container-fluid">
     <!--Start Dashboard Content-->
+
     <div class="row">
-      <div class="col-lg-4 col-md-4">
-        <div class="card profile-card-2">
-          <div class="card-img-block">
-            <img class="img-fluid bg-dark" src="avatar.png" alt="Card image cap" />
+      <div class="col-md-3">
+        <div class="card profile-card-2 position-relative shadow-sm border-0 overflow-hidden">
+          <!-- ⭐ Rating Badge -->
+          <div
+            style="
+              position: absolute;
+              top: 0;
+              right: 0;
+              background-color: #ffc107;
+              color: #212529;
+              font-weight: 900;
+              font-size: 13px;
+              padding: 5px 12px;
+              border-bottom-left-radius: 10px;
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+              z-index: 10;
+            "
+          >
+            ⭐ 4.8 / 10
           </div>
-          <div class="card-body pt-5">
-            <img :src="`${item.image ?? 'avatar.png'}`" alt="profile-image" class="profile" style="width: 150px; height: 150px; object-fit: cover" />
-            <h5 class="card-title text-capitalize">Name : {{ item.name }}</h5>
-            <p class="card-text">Eamil : {{ item.email }}</p>
-            <p class="card-text">Phone : {{ item.phone_number }}</p>
-            <p class="card-text">Address : {{ item.address ?? "N/A" }}</p>
-          </div>
-          <div class="card-body border-light">
-            <div class="media align-items-center">
-              <div class="icon-block">
-                <a href="javascript:void();"><i class="fa fa-facebook bg-facebook text-white"></i></a>
-                <a href="javascript:void();"> <i class="fa fa-twitter bg-twitter text-white"></i></a>
-                <a href="javascript:void();"> <i class="fa fa-google-plus bg-google-plus text-white"></i></a>
+
+          <!-- Optional Cover -->
+          <div class="card-img-top bg-light" style="height: 120px"></div>
+
+          <!-- Profile Image & Info -->
+          <div class="card-body pt-5 text-center">
+            <img
+              :src="`${auth_info.image ?? 'avatar.png'}`"
+              alt="profile-image"
+              class="profile profile-image my-2 rounded-circle border border-3 border-white shadow"
+              style="width: 150px; height: 150px; object-fit: cover; margin-top: -75px"
+            />
+            <div class="d-flex justify-content-center">
+              <div class="ml-5" style="text-align: justify">
+                <h5 class="card-title text-capitalize mt-3">Name: {{ auth_info.name }}</h5>
+                <p class="card-text mb-1">Email: {{ auth_info.email }}</p>
+                <p class="card-text mb-1">Phone: {{ auth_info.phone_number }}</p>
+                <p class="card-text">Address: {{ auth_info.address ?? "N/A" }}</p>
               </div>
             </div>
           </div>
+
+          <!-- Social Links -->
+          <div class="card-body border-light text-center">
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+              <a href="javascript:void();"><i class="fa fa-github bg-github text-white"></i></a>
+              <a href="javascript:void();"> <i class="fa fa-linkedin bg-linkedin text-white"></i></a>
+              <a href="javascript:void();"><i class="fa fa-facebook bg-facebook text-white"></i></a>
+              <a href="javascript:void();"> <i class="fa fa-twitter bg-twitter text-white"></i></a>
+              <a href="javascript:void();"> <i class="fa fa-google-plus bg-google-plus text-white"></i></a>
+              <a href="javascript:void();"> <i class="fa fa-youtube bg-youtube text-white"></i></a>
+            </div>
+          </div>
         </div>
+
         <!-- Stats Cards Section -->
         <!-- TOTAL PROJECT -->
       </div>
@@ -37,7 +71,7 @@
                   <h6 class="font-weight-light">TOTAL PROJECT</h6>
                   <i class="fas fa-project-diagram fa-2x"></i>
                 </div>
-                <h2 class="mb-0">{{ item.project?.length }}</h2>
+                <h2 class="mb-0">{{ dashboard_data.total_projects }}</h2>
               </div>
             </div>
           </div>
@@ -50,7 +84,7 @@
                   <h6 class="font-weight-light">TOTAL Task</h6>
                   <i class="fas fa-project-diagram fa-2x"></i>
                 </div>
-                <h2 class="mb-0">{{ item.tasks?.length }}</h2>
+                <h2 class="mb-0">{{ dashboard_data.total_tasks }}</h2>
               </div>
             </div>
           </div>
@@ -64,7 +98,7 @@
                   <i class="fas fa-project-diagram fa-2x"></i>
                 </div>
                 <h2 class="mb-0">
-                  {{ item.tasks?.filter((task) => task.task_status === "Completed").length }}
+                  {{ dashboard_data.total_complete_tasks }}
                 </h2>
               </div>
             </div>
@@ -78,7 +112,7 @@
                   <!-- <i class="fas fa-users fa-2x"></i> -->
                 </div>
                 <h2 class="mb-0">
-                  {{ item.tasks?.filter((task) => task.task_status !== "Completed").length }}
+                  {{ dashboard_data.total_not_completed_tasks }}
                 </h2>
               </div>
             </div>
@@ -91,7 +125,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                   <h6 class="font-weight-light">TOTAL PRESENT ATTENDANCE</h6>
                 </div>
-                <h2 class="mb-0">{{ item.attendance?.filter((att) => att.attendance_status === "Present").length }}</h2>
+                <h2 class="mb-0">{{ dashboard_data.total_present_attendance }}</h2>
               </div>
             </div>
           </div>
@@ -103,7 +137,31 @@
                   <h6 class="font-weight-light">TOTAL ABSENCE</h6>
                 </div>
                 <h2 class="mb-0">
-                  {{ item.attendance?.filter((att) => att.attendance_status === "Absent").length }}
+                  {{ dashboard_data.total_absent_attendance }}
+                </h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="card bg-primary text-white h-100">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="font-weight-light">TOTAL Creadentials</h6>
+                </div>
+                <h2 class="mb-0">
+                  {{ dashboard_data.total_credentials }}
+                </h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4">
+            <div class="card bg-info text-white h-100">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="font-weight-light">TOTAL Todos</h6>
+                </div>
+                <h2 class="mb-0">
+                  {{ dashboard_data.total_todos }}
                 </h2>
               </div>
             </div>
@@ -111,7 +169,7 @@
         </div>
       </div>
     </div>
-   
+
     <!--End Row-->
 
     <!--Caleder section start-->
@@ -152,13 +210,15 @@
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { auth_store } from "../../../../GlobalStore/auth_store";
 export default {
   data: () => ({
-    data: {},
+    dashboard_data: {},
     selectedDate: new Date().toISOString().substr(0, 10),
     task_list_dates: [],
     meeting_dates: [],
-    item : {},
+    item: {},
   }),
   created: async function () {
     await this.get_all_dashboard_data();
@@ -167,9 +227,9 @@ export default {
   },
   methods: {
     get_all_dashboard_data: async function () {
-      let response = await axios.get("get-all-dashboard-data");
+      let response = await axios.get("get-employee-dashboard-data");
       if (response.status == 200) {
-        this.data = response.data.data;
+        this.dashboard_data = response.data.data;
       }
     },
     get_all_tasks: async function () {
@@ -273,6 +333,9 @@ export default {
     },
   },
   computed: {
+    ...mapState(auth_store, {
+      auth_info: "auth_info",
+    }),
     currentMonthYear() {
       const date = new Date(this.selectedDate);
       return date.toLocaleString("default", { month: "short", year: "numeric" });
@@ -419,5 +482,17 @@ export default {
   padding: 2px 6px;
   border-radius: 12px;
   font-weight: bold;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-top: -75px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  box-shadow: 0 0.5rem 1rem rgb(0 0 0) !important;
 }
 </style>

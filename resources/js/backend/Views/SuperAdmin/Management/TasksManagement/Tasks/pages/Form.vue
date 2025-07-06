@@ -12,7 +12,7 @@
             </router-link>
           </div>
         </div>
-        <div class="card-body card_body_fixed_height">
+        <div class="card-body card_body_fixed_height" v-if="is_loaded">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
@@ -68,7 +68,6 @@
                   <select v-model="form_fields.task_status" class="form-control form-control-square mb-2" name="task_status" id="task_status">
                     <option value="Pending">Pending</option>
                     <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
                     <option value="Not Completed">Not Completed</option>
                   </select>
                 </div>
@@ -170,6 +169,7 @@ export default {
     },
     userProject: [],
     userData: [],
+    is_loaded: false,
   }),
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
@@ -183,6 +183,8 @@ export default {
     }
 
     await this.get_project_data();
+
+    this.is_loaded = true; // ✅ Set is_loaded to true after fetching data
   },
   methods: {
     ...mapActions(store, {
@@ -279,6 +281,15 @@ export default {
     ...mapState(store, {
       item: "item",
     }),
+  },
+  watch: {
+    "form_fields.project_id": {
+      handler(newVal) {
+        if (newVal) {
+          this.get_user_by_project_id();
+        }
+      },
+    },
   },
 };
 </script>

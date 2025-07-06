@@ -29,7 +29,7 @@
               <table class="table table-hover text-center table-bordered">
                 <thead>
                   <tr>
- <th style="padding-left: 12px">
+                    <th style="padding-left: 12px">
                       <i class="zmdi zmdi-settings zmdi-hc-2x" title="Actions"></i>
                     </th>
                     <th class="w-10 text-center">
@@ -130,7 +130,7 @@
                           const totalMinutes = hours * 60 + minutes;
                           if (totalMinutes >= 540 && totalMinutes <= 575) return 'green'; // 9:00-9:35
                           if (totalMinutes >= 576 && totalMinutes <= 690) return 'orange'; // 9:36-11:30
-                          return 'red';
+                          return 'gray';
                         })(),
                       }"
                     >
@@ -323,7 +323,7 @@
               </select>
             </label>
           </div>
-           <div class="filter_item d-flex justify-content-between align-items-center">
+          <div class="filter_item d-flex justify-content-between align-items-center">
             <button @click.prevent="get_all()" type="button" class="btn btn-sm btn-outline-info">Submit</button>
             <button class="btn btn-outline-danger btn-sm" @click="reset_filters">Reset</button>
           </div>

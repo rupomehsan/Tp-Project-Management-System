@@ -32,8 +32,15 @@ class GetAllData
             $priority = request()->input('priority');
             $with = ['user', 'projectId'];
             $condition = [];
+            $user = auth()->user();
 
             $data = self::$model::query();
+
+            // --- Role-based filtering ---
+            if ($user->role_id == 2) {
+                $data = $data->where('assigned_to', $user->id);
+            }
+            // --- End Role-based filtering ---
 
             if (request()->has('search') && request()->input('search')) {
                 $searchKey = request()->input('search');

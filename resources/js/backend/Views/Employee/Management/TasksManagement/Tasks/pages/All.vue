@@ -116,9 +116,8 @@
                     <th class="w-10">ID</th>
                     <th>Project</th>
                     <th>Title</th>
-                    <th>Assigned To</th>
                     <th>Priority</th>
-                    <th>Developer Status</th>
+                    <th>Dev Status</th>
                     <th>Task Status</th>
                     <th>Rating</th>
                     <th>Actual Time</th>
@@ -283,7 +282,6 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.project_id?.name }}</td>
                     <td>{{ item.title }}</td>
-                    <td>{{ item.user?.name || "Not Assigned" }}</td>
                     <td>{{ item.priority }}</td>
                     <td>{{ item.task_user_status ?? "N/A" }}</td>
                     <td :class="getTaskStatusClass(item.task_status)">
