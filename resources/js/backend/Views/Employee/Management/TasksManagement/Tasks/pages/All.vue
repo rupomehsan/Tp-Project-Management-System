@@ -114,7 +114,7 @@
                       />
                     </th>
                     <th class="w-10">ID</th>
-                    <th>Project</th>
+                    <th>Task Group Name</th>
                     <th>Title</th>
                     <th>Priority</th>
                     <th>Dev Status</th>
@@ -160,7 +160,7 @@
                               Edit
                             </router-link>
                           </li>
-                          <li>
+                          <!-- <li>
                             <a v-if="item.status == 'active'" href="" @click.prevent="updateStatus(item)" class="border-warning">
                               <i class="fa fa-eye-slash text-warning"></i>
                               Inactive
@@ -187,14 +187,14 @@
                               <i class="fa fa-trash text-danger"></i>
                               Destroy
                             </a>
-                          </li>
+                          </li> -->
                           <!-- Your existing list item -->
-                          <li>
+                          <!-- <li>
                             <a href="" @click.prevent="showOverviewModal(item)" class="border-info">
                               <i class="fa fa-info-circle text-info"></i>
                               Overview
                             </a>
-                          </li>
+                          </li> -->
                           <!-- Overview Modal -->
                           <!-- Overview Modal -->
                           <div
@@ -280,7 +280,7 @@
                       <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
                     </td>
                     <td>{{ index + 1 }}</td>
-                    <td>{{ item.project_id?.name }}</td>
+                    <td>{{ item.task_group_id?.name }}</td>
                     <td>{{ item.title }}</td>
                     <td>{{ item.priority }}</td>
                     <td>{{ item.task_user_status ?? "N/A" }}</td>
@@ -384,33 +384,6 @@
                 <a href="" @click.prevent="import_csv_modal_show = true" class="btn action_btn btn-sm btn-secondary d-flex align-items-center">
                   <i class="fa fa-download mr-2"></i> Import
                 </a>
-              </div>
-              <div class="mr-2 mb-2">
-                <a href="" @click.prevent="change_status(`active`)" class="btn action_btn btn-sm btn-success d-flex align-items-center">
-                  <i class="fa fa fa fa-eye mr-2"></i> Active ({{ active_data_count }})
-                </a>
-              </div>
-              <div class="mr-2 mb-2">
-                <a href="" @click.prevent="change_status(`inactive`)" class="btn action_btn btn-sm btn-warning d-flex align-items-center">
-                  <i class="fa fa fa-eye-slash mr-2"></i>
-                  Inactive ({{ inactive_data_count }})
-                </a>
-              </div>
-              <div class="mr-2 mb-2">
-                <a href="" @click.prevent="change_status(`trased`)" class="btn action_btn btn-sm btn-danger d-flex align-items-center">
-                  <i class="fa fa-trash mr-2"></i> Trased ({{ trased_data_count }})
-                </a>
-              </div>
-
-              <div class="mr-2 mb-2" v-if="this.selected?.length">
-                <select class="form-control" style="width: 100px; height: 30px; font-size: 12px" @change="bulkActions">
-                  <option disabled selected>Select action</option>
-                  <option value="inactive">Inactive</option>
-                  <option value="active">Action</option>
-                  <option value="soft_delete">Soft Delete</option>
-                  <option value="restore">Restore</option>
-                  <option value="destroy">Destroy</option>
-                </select>
               </div>
             </div>
           </div>

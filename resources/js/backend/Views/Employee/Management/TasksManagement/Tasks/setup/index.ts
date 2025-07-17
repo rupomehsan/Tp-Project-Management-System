@@ -19,9 +19,9 @@ const setup: setup_type = {
   select_fields: [
     "id",
     "project_id",
+    "task_group_id",
     "title",
     "description",
-    "system_loss",
     "assigned_to",
     "start_date",
     "end_date",
@@ -36,9 +36,9 @@ const setup: setup_type = {
   sort_by_cols: [
     "id",
     "project_id",
+    "task_group_id",
     "title",
     "description",
-    "system_loss",
     "assigned_to",
     "start_date",
     "end_date",

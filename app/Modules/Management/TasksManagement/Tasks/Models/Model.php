@@ -14,7 +14,8 @@ class Model extends EloquentModel
 
     public static $userModel = \App\Modules\Management\UserManagement\User\Models\Model::class;
 
-    public static $projectsModel = \App\Modules\Management\ProjectManagement\Project\Models\Model::class;
+    public static $taskGroupModel = \App\Modules\Management\TasksManagement\TaskGroup\Models\Model::class;
+    public static $projectModel = \App\Modules\Management\ProjectManagement\Project\Models\Model::class;
 
     protected static function booted()
     {
@@ -51,8 +52,13 @@ class Model extends EloquentModel
         return $this->belongsTo(self::$userModel, 'assigned_to', 'id');
     }
 
+    public function taskGroupId()
+    {
+        return $this->belongsTo(self::$taskGroupModel, 'task_group_id','id');
+    }
     public function projectId()
     {
-        return $this->belongsTo(self::$projectsModel, 'project_id','id');
+        return $this->belongsTo(self::$projectModel, 'project_id','id');
     }
+
 }

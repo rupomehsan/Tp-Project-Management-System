@@ -42,13 +42,13 @@ class DataStoreValidation extends FormRequest
     public function rules(): array
     {
         return [
-            'project_id' => 'required | sometimes',
-            'title' => 'required | sometimes',
-            'description' => 'required | sometimes',
-            'system_loss' => 'required | sometimes',
-            'assigned_to' => 'required | sometimes',
-            'start_date' => 'required | sometimes',
-            'end_date' => 'required | sometimes',
+            'task_group_id' => 'sometimes',
+            'project_id' => 'sometimes',
+            'title' => 'sometimes',
+            'description' => 'sometimes',
+            'assigned_to' => 'sometimes',
+            'start_date' => 'sometimes',
+            'end_date' => 'sometimes',
             'task_status'  => ['sometimes', Rule::in(['Pending', 'In Progress', 'Completed', 'Not Completed'])],
             'task_user_status'  => ['sometimes', Rule::in(['Pending', 'In Progress', 'Completed', 'Not Completed'])],
             'priority'     => ['sometimes', Rule::in(['low', 'normal', 'high', 'urgent'])],

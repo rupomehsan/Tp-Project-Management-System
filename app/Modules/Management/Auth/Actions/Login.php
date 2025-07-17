@@ -17,10 +17,10 @@ class Login
             $check_auth_user = self::$model::where('status', 'active')->whereAny(['name', 'email'], request()->email)->first();
 
             if (!$check_auth_user) {
-                return response()->json(['status' => 'error', 'message' => 'Sorry,user not found'], 404);
+                return response()->json(['status' => 'error', 'message' => 'Sorry,user not found'], 400);
             }
             if (!$check_auth_user->can_login) {
-                return response()->json(['status' => 'error', 'message' => 'Sorry, you are not allowed to login'], 403);
+                return response()->json(['status' => 'error', 'message' => 'Sorry, you are not allowed to login'], 400);
             }
             if (Hash::check($request->password, $check_auth_user->password)) {
                 DB::table('oauth_access_tokens')->where("user_id", $check_auth_user->id)->update(['revoked' => 1]);
@@ -28,7 +28,7 @@ class Login
                 $data['user'] = $check_auth_user;
                 return messageResponse('Successfully Loged In', $data, 200, 'success');
             } else {
-                return response()->json(['status' => 'error', 'message' => 'Sorry,your password is incorrect'], 404);
+                return response()->json(['status' => 'error', 'message' => 'Sorry,your password is incorrect'], 400);
             }
         } catch (\Exception $e) {
             return messageResponse($e->getMessage(), [], 500, 'server_error');

@@ -11,7 +11,7 @@ const setup: setup_type = {
   api_version: app_config.api_version,
   api_end_point: "project",
 
-  // module_name: "user",
+  module_name: "Project",
   store_prefix: "project",
   route_prefix: "Project",
   route_path: "project",

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('project_link')->nullable();
             $table->string('project_agrement_file')->nullable();
             $table->string('project_document')->nullable();
+            $table->string('authority')->nullable();
             $table->json('project_document_files')->nullable();
             $table->json('project_document_links')->nullable();
             $table->integer('project_progress')->nullable();

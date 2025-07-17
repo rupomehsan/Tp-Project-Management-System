@@ -296,6 +296,7 @@ export default {
   }),
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
+
     if (id) {
       this.set_fields(id);
     }
@@ -312,7 +313,6 @@ export default {
       set_only_latest_data: "set_only_latest_data",
     }),
 
-    
     async get_project_group_data() {
       try {
         let res = await axios.get("/project-group");
@@ -360,7 +360,7 @@ export default {
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data successfully updated");
           this.$router.push({
-            name: `All${this.setup.route_prefix}`,
+            name: `Details${this.setup.route_prefix}`,
           });
         }
       } else {
@@ -369,9 +369,6 @@ export default {
         // await this.get_all();
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data Successfully Created");
-          this.$router.push({
-            name: `All${this.setup.route_prefix}`,
-          });
         }
       }
     },

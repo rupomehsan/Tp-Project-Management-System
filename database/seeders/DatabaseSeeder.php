@@ -11,7 +11,7 @@ use Illuminate\Database\Seeder;
  */
 
 use App\Modules\Management\UserManagement\Role\Seeder\Seeder as RoleSeeder;
-use App\Modules\Management\UserManagement\User\Seeder\Seeder as UserSeeder;
+use App\Modules\Management\UserManagement\User\Seeder\Seeder as UserSeeder;  
 use App\Modules\Management\SettingManagement\WebsiteSettings\Seeder\Seeder as WebsiteSettingsSeeder;
 
 /**
@@ -33,6 +33,7 @@ use App\Modules\Management\TodoManagement\Credential\Seeder\Seeder as Credential
  * Task seeder management.
  */
 use App\Modules\Management\TasksManagement\Tasks\Seeder\Seeder as TaskSeeder;
+use App\Modules\Management\TasksManagement\TaskGroup\Seeder\Seeder as TaskGroupSeeder;
 
 
 /**
@@ -92,6 +93,7 @@ class DatabaseSeeder extends Seeder
              * Task seeder management.
              */
             TaskSeeder::class,
+            TaskGroupSeeder::class,
             /**
              * Team seeder management.
              */

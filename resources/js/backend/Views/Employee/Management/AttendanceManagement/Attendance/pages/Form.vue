@@ -4,10 +4,17 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h5 class="text-capitalize">
-            {{ param_id ? `${setup.edit_page_title}` : `${setup.create_page_title}` }}
+            {{
+              param_id
+                ? `${setup.edit_page_title}`
+                : `${setup.create_page_title}`
+            }}
           </h5>
           <div>
-            <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${setup.route_prefix}` }">
+            <router-link
+              class="btn btn-outline-warning btn-sm"
+              :to="{ name: `All${setup.route_prefix}` }"
+            >
               {{ setup.all_page_title }}
             </router-link>
           </div>
@@ -46,14 +53,18 @@
                     :max="todayEnd"
                     :disabled="!form_fields.check_in"
                   />
-                  <p>{{ form_fields.check_out ? form_fields.check_out : "N/A" }}</p>
+                  <p>
+                    {{ form_fields.check_out ? form_fields.check_out : "N/A" }}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="card-footer">
-          <button type="submit" class="btn btn-light btn-square px-5"><i class="icon-lock"></i> Submit</button>
+          <button type="submit" class="btn btn-light btn-square px-5">
+            <i class="icon-lock"></i> Submit
+          </button>
         </div>
       </div>
     </form>
@@ -180,7 +191,9 @@ export default {
       // Set to start of day in local timezone
       today.setHours(0, 0, 0, 0);
       // Convert to ISO format but keep local time
-      const localISO = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString();
+      const localISO = new Date(
+        today.getTime() - today.getTimezoneOffset() * 60000
+      ).toISOString();
       return localISO.slice(0, 16);
     },
 
@@ -189,7 +202,9 @@ export default {
       // Set to end of day in local timezone
       today.setHours(23, 59, 59, 999);
       // Convert to ISO format but keep local time
-      const localISO = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString();
+      const localISO = new Date(
+        today.getTime() - today.getTimezoneOffset() * 60000
+      ).toISOString();
       return localISO.slice(0, 16);
     },
   },

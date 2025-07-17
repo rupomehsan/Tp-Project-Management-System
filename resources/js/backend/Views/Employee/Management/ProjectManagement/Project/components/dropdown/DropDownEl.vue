@@ -1,17 +1,17 @@
 <template lang="">
   <div class="col-md-6">
-    <label> {{ setup.module_name }} </label>
+    <label> {{ setup.module_name }} Name </label>
     <div class="custom_drop_down">
       <div class="selected_list justify-content-between c-pointer" @click="show_list = !show_list">
         <template v-if="!selected.length">
-          <div class="">Select {{ setup.module_name }}</div>
+          <div class="">Select {{ setup.module_name }} Name</div>
           <i :class="show_list ? 'fa fa-angle-up' : 'fa fa-angle-down'"></i>
         </template>
 
         <template v-else>
           <div v-for="item in selected" :key="item.id" :id="item.id" class="selected_item">
             <div class="label">
-              {{ item.title }}
+              {{ item.name }}
             </div>
             <div @click.prevent="remove_item(item)" class="remove">
               <i class="fa fa-close"></i>
@@ -39,7 +39,7 @@
                   class="form-check-input ml-0"
                 />
               </div>
-              <div class="label">{{ item.title }}</div>
+              <div class="label">{{ item.name }}</div>
             </label>
           </li>
         </ul>

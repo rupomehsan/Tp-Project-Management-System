@@ -101,15 +101,56 @@
 
       <!-- Calendar Grid -->
       <div class="calendar-grid">
-        <div v-for="(date, index) in daysInMonth" :key="index" :class="calendarCellClass(date)" class="position-relative">
-          <router-link :to="`/meeting/all?date=${new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().substr(0, 10)}`">
+        <div
+          class="weekday-header"
+          v-for="day in weekdayNames"
+          :key="day"
+          :class="[
+            'weekday-header',
+            day === 'Fri' || day === 'Sat' ? 'bd-offday' : '',
+          ]"
+        >
+          {{ day }}
+        </div>
+        <div
+          v-for="n in startDayOfMonth"
+          :key="'empty-' + n"
+          class="calendar-cell empty-cell"
+        ></div>
+        <div
+          v-for="(date, index) in daysInMonth"
+          :key="index"
+          :class="calendarCellClass(date)"
+          class="position-relative"
+        >
+          <router-link
+            :to="`/meeting/all?date=${new Date(
+              date.getTime() + 24 * 60 * 60 * 1000
+            )
+              .toISOString()
+              .substr(0, 10)}`"
+          >
             <div class="badge-container" v-if="countTodayMeetings(date) > 0">
-              <span class="badge py-1" style="position: absolute; top: 5px; left: 5px">M ({{ countTodayMeetings(date) }}) </span>
+              <span
+                class="badge py-1"
+                style="position: absolute; top: 5px; left: 5px"
+                >M ({{ countTodayMeetings(date) }})
+              </span>
             </div>
           </router-link>
-          <router-link :to="`/tasks/date-wise-tasks/${new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().substr(0, 10)}`">
+          <router-link
+            :to="`/tasks/date-wise-tasks/${new Date(
+              date.getTime() + 24 * 60 * 60 * 1000
+            )
+              .toISOString()
+              .substr(0, 10)}`"
+          >
             <div class="badge-container" v-if="countTodayTasks(date) > 0">
-              <span class="badge py-1" style="position: absolute; top: 5px; right: 5px">T ({{ countTodayTasks(date) }}) </span>
+              <span
+                class="badge py-1"
+                style="position: absolute; top: 5px; right: 5px"
+                >T ({{ countTodayTasks(date) }})
+              </span>
             </div>
           </router-link>
           <div class="date-number">{{ date.getDate() }}</div>
@@ -149,14 +190,18 @@ export default {
       let response = await axios.get("task?get_all=1");
       if (response.status == 200) {
         // Only keep the start_date values in the array
-        this.task_list_dates = response.data.data.filter((task) => task.start_date).map((task) => task.start_date);
+        this.task_list_dates = response.data.data
+          .filter((task) => task.start_date)
+          .map((task) => task.start_date);
       }
     },
     get_all_meetings: async function () {
       let response = await axios.get("meeting?get_all=1");
       if (response.status == 200) {
         // Only keep the start_date values in the array
-        this.meeting_dates = response.data.data.filter((meeting) => meeting.date).map((meeting) => meeting.date);
+        this.meeting_dates = response.data.data
+          .filter((meeting) => meeting.date)
+          .map((meeting) => meeting.date);
       }
     },
     formatDay(date) {
@@ -168,7 +213,11 @@ export default {
     },
     isToday(date) {
       const today = new Date();
-      return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+      return (
+        date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear()
+      );
     },
     calendarCellClass(date) {
       // If today and holiday, use both classes
@@ -186,7 +235,12 @@ export default {
       // The computed will auto-update
     },
     countTodayTasks(date) {
-      const currentDate = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
+      const currentDate =
+        date.getFullYear() +
+        "-" +
+        String(date.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(date.getDate()).padStart(2, "0");
 
       return this.task_list_dates.filter((taskDate) => {
         const taskDay = taskDate.split(" ")[0]; // Get only YYYY-MM-DD
@@ -194,7 +248,12 @@ export default {
       }).length;
     },
     countTodayMeetings(date) {
-      const currentDate = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
+      const currentDate =
+        date.getFullYear() +
+        "-" +
+        String(date.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(date.getDate()).padStart(2, "0");
 
       return this.meeting_dates.filter((meetingDate) => {
         const meetingDay = meetingDate.split(" ")[0]; // Get only YYYY-MM-DD
@@ -205,7 +264,10 @@ export default {
   computed: {
     currentMonthYear() {
       const date = new Date(this.selectedDate);
-      return date.toLocaleString("default", { month: "short", year: "numeric" });
+      return date.toLocaleString("default", {
+        month: "short",
+        year: "numeric",
+      });
     },
     daysInMonth() {
       const date = new Date(this.selectedDate);
@@ -220,6 +282,14 @@ export default {
       }
 
       return days;
+    },
+    weekdayNames() {
+      return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    },
+    startDayOfMonth() {
+      const date = new Date(this.selectedDate);
+      const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+      return firstDay.getDay(); // 0 (Sun) to 6 (Sat)
     },
   },
 };
@@ -349,5 +419,23 @@ export default {
   padding: 2px 6px;
   border-radius: 12px;
   font-weight: bold;
+}
+
+.weekday-header {
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  background: #027708;
+  padding: 8px 0px;
+  border-radius: 5px;
+}
+
+.empty-cell {
+  background: transparent;
+  border: none;
+}
+
+.bd-offday {
+  background-color: #4d0000 !important;
 }
 </style>

@@ -9,6 +9,7 @@ class StoreData
     public static function execute($request)
     {
         try {
+
             $requestData = $request->validated();
             $date = auth()->user()->role_id != 1 ? date('Y-m-d') : $requestData['date'];
             // Check if date is Friday or Saturday (weekend/holiday)
@@ -48,10 +49,9 @@ class StoreData
                     $requestData['is_late'] = false;
                     $requestData['late_minutes'] = 0;
                 }
-
-                // Optional: if recording check_in time automatically
-                $requestData['check_in'] = now();
             }
+
+
 
 
             if ($data = self::$model::query()->create($requestData)) {

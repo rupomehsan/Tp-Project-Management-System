@@ -20,10 +20,10 @@ class Seeder extends SeederClass
         self::$model::truncate();
 
         self::$model::create([
+            'task_group_id' => 1,
             'project_id' => 1,
             'title' => 'Create UI Wireframes',
             'description' => 'Design the initial user interface wireframes for the client app.',
-            'system_loss' => 2,
             'assigned_to' => 3,
             'start_date' => '2025-06-01',
             'end_date' => '2025-06-05',
@@ -32,10 +32,10 @@ class Seeder extends SeederClass
             'creator' => 1,
         ]);
         self::$model::create([
+            'task_group_id' => 1,
             'project_id' => 1,
             'title' => 'API Integration',
             'description' => 'Integrate authentication and product APIs.',
-            'system_loss' => 1,
             'assigned_to' => 4,
             'start_date' => '2025-06-06',
             'end_date' => '2025-06-10',
@@ -44,10 +44,10 @@ class Seeder extends SeederClass
             'creator' => 1,
         ]);
             self::$model::create([
+            'task_group_id' => 2,
             'project_id' => 2,
             'title' => 'Final QA Testing',
             'description' => 'Conduct final round of quality assurance before launch.',
-            'system_loss' => 0,
             'assigned_to' => 5,
             'start_date' => '2025-06-11',
             'end_date' => '2025-06-14',

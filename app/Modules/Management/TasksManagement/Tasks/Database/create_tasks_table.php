@@ -14,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('project_id');
+            $table->unsignedBigInteger('task_group_id')->nullable();
+            $table->unsignedBigInteger('project_id')->nullable();
             $table->string('title', 150);
             $table->text('description')->nullable();
-            $table->integer('system_loss')->default(0);
             $table->unsignedBigInteger('assigned_to')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();

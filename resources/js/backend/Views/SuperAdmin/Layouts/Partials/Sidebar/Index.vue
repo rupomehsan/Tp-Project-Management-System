@@ -8,6 +8,7 @@
       >
         <img
           :src="`${get_setting_value('image') ?? 'avatar.png'} `"
+          @error="$event.target.src = 'logo.png'"
           class="logo-icon"
           alt="logo icon"
         />
@@ -24,6 +25,7 @@
         height="70"
         width="70"
         :src="`${auth_info.image ?? 'avatar.png'}`"
+        @error="$event.target.src = 'avatar.png'"
         alt=""
       />
       <p class="mt-2">Mr. {{ auth_info.name }}</p>
@@ -78,7 +80,7 @@
           // },
         ]"
       />
-       <!-- Task Management -->
+      <!-- Task Management -->
       <side-bar-drop-down-menus
         :icon="`fa fa-plus`"
         :menu_title="`Task Management`"
@@ -86,6 +88,11 @@
           {
             route_name: `AllTasks`,
             title: `Tasks`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllTaskGroup`,
+            title: `Task Group`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
         ]"
@@ -102,7 +109,7 @@
           },
           {
             route_name: `AllAddTodo`,
-            title: `Add Todo`,
+            title: `Todo List`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
           {
@@ -174,11 +181,14 @@
           },
         ]"
       />
-     
 
-      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Notification`"  :route_name="`AllNotification`" />
-<side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Message`"  :route_name="`AllMessage`" />
-<!-- Management end -->
+      <side-bar-single-menu
+        :icon="`fa fa-plus`"
+        :menu_title="`Notification`"
+        :route_name="`AllNotification`"
+      />
+
+      <!-- Management end -->
     </ul>
   </div>
 </template>

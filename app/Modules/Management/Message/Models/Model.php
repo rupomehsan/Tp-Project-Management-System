@@ -43,4 +43,14 @@ class Model extends EloquentModel
     {
         return $this->belongsTo(\App\Modules\Management\Message\Models\ConversationModel::class, 'conversation_id');
     }
+
+    public function readStatus()
+    {
+        return $this->hasMany(\App\Modules\Management\Message\Models\MessageReadStatusModel::class, 'message_id');
+    }
+
+    public function isReadBy($userId)
+    {
+        return $this->readStatus()->where('user_id', $userId)->exists();
+    }
 }

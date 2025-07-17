@@ -25,13 +25,21 @@ class SendMessage
             $conversation = self::$conversationModel::findOrFail($conversationId);
 
             $authId = auth()->id();
-            if (!in_array($authId, [$conversation->creator, $conversation->participant])) {
-                return messageResponse('You are not part of this conversation', [], 403);
+            
+            // Check if user is part of the conversation (regular or group)
+            if ($conversation->is_group) {
+                if (!$conversation->hasParticipant($authId)) {
+                    return messageResponse('You are not part of this group conversation', [], 403);
+                }
+                $receiverId = null; // For group chats, no specific receiver
+            } else {
+                if (!in_array($authId, [$conversation->creator, $conversation->participant])) {
+                    return messageResponse('You are not part of this conversation', [], 403);
+                }
+                $receiverId = $conversation->creator === $authId
+                    ? $conversation->participant
+                    : $conversation->creator;
             }
-
-            $receiverId = $conversation->creator === $authId
-                ? $conversation->participant
-                : $conversation->creator;
 
             $message = self::$messageModel::create([
                 'conversation_id' => $conversationId,
@@ -41,11 +49,25 @@ class SendMessage
                 'date_time' => now(),
             ]);
 
+            // Load the sender relationship for the response
+            $message->load('sender');
 
-
-
-            event(new MessageSent($message, auth()->user()));
-
+            // Broadcast the message
+            if ($conversation->is_group) {
+                // For group chats, broadcast to all participants except sender
+                $participants = $conversation->group_participants ?? [];
+                foreach ($participants as $participantId) {
+                    if ($participantId != $authId) {
+                        // Create individual events for each participant
+                        $tempMessage = clone $message;
+                        $tempMessage->receiver = $participantId;
+                        event(new MessageSent($tempMessage, auth()->user()));
+                    }
+                }
+            } else {
+                // For regular conversations, broadcast to the receiver
+                event(new MessageSent($message, auth()->user()));
+            }
 
             $conversation->update(['last_updated' => now()]);
 

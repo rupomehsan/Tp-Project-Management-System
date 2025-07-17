@@ -23,6 +23,11 @@
                     <th>{{ item.project_id?.name }}</th>
                   </tr>
                   <tr>
+                    <th>Task Group Name</th>
+                    <th class="text-center">:</th>
+                    <th>{{ item.task_group_id?.name }}</th>
+                  </tr>
+                  <tr>
                     <th>title</th>
                     <th class="text-center">:</th>
                     <th>{{ item.title }}</th>

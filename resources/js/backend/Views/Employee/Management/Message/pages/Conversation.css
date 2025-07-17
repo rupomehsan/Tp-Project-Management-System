@@ -289,6 +289,64 @@
   color: #222;
 }
 
+/* Sender name for group chats */
+.chat-sender-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.chat-container.dark-mode .chat-sender-name {
+  color: #aaa;
+}
+
+/* Group indicator in conversation list */
+.group-indicator {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: normal;
+}
+
+.chat-sidebar.dark-mode .group-indicator {
+  color: #999;
+}
+
+/* Group avatar styling */
+.group-avatar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+}
+
+.group-avatar i {
+  font-size: 0.9rem;
+}
+
+/* Unread message badge */
+.unread-badge {
+  background: #dc3545;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+}
+
+/* Conversation meta container */
+.conversation-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
 .mine {
   align-self: flex-end;
   background: #dcf8c6;
@@ -585,4 +643,159 @@
   .chat-bubble {
     max-width: 90%;
   }
+}
+
+/* Group Members Modal Styles */
+.group-members-btn {
+  opacity: 0.7;
+  padding: 2px 6px;
+  margin-left: 5px;
+  transition: opacity 0.2s ease;
+}
+
+.group-members-btn:hover {
+  opacity: 1;
+}
+
+.add-member-section {
+  background: #2a2a2a;
+  border-radius: 6px;
+  padding: 12px;
+  border: 1px solid #444;
+}
+
+.member-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.member-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #444;
+  transition: background-color 0.2s ease;
+}
+
+.member-item:hover {
+  background-color: #2a2a2a;
+}
+
+.member-item:last-child {
+  border-bottom: none;
+}
+
+.member-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.member-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 12px;
+  background: linear-gradient(45deg, #007bff, #0056b3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.member-details {
+  flex: 1;
+}
+
+.member-name {
+  color: #fff;
+  font-weight: 500;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.member-email {
+  color: #bbb;
+  font-size: 12px;
+}
+
+.creator-badge {
+  background: #28a745;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.user-selection-list {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.form-check {
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.form-check:hover {
+  background-color: #2a2a2a;
+}
+
+.form-check-input {
+  margin-right: 8px;
+}
+
+.form-check-label {
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Edit Group Section Styles */
+.edit-group-section {
+  background: #2c2c2c;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.edit-group-section .form-label {
+  color: #fff;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.edit-group-section .form-control {
+  background: #1a1a1a;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.edit-group-section .form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.edit-group-section .form-control::placeholder {
+  color: #888;
+}
+
+.edit-group-section .btn {
+  padding: 6px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  font-weight: 500;
 }

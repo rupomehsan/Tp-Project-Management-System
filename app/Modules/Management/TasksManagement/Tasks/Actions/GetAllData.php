@@ -30,7 +30,7 @@ class GetAllData
             $end_date = request()->input('end_date');
             $task_status = request()->input('task_status');
             $priority = request()->input('priority');
-            $with = ['user', 'projectId'];
+            $with = ['user', 'taskGroupId', 'projectId'];
             $condition = [];
             $user = auth()->user();
 

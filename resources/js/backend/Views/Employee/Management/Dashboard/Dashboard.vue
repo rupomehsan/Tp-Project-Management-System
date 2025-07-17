@@ -4,7 +4,9 @@
 
     <div class="row">
       <div class="col-md-3">
-        <div class="card profile-card-2 position-relative shadow-sm border-0 overflow-hidden">
+        <div
+          class="card profile-card-2 position-relative shadow-sm border-0 overflow-hidden"
+        >
           <!-- ⭐ Rating Badge -->
           <div
             style="
@@ -33,14 +35,26 @@
               :src="`${auth_info.image ?? 'avatar.png'}`"
               alt="profile-image"
               class="profile profile-image my-2 rounded-circle border border-3 border-white shadow"
-              style="width: 150px; height: 150px; object-fit: cover; margin-top: -75px"
+              style="
+                width: 150px;
+                height: 150px;
+                object-fit: cover;
+                margin-top: -75px;
+              "
+              @error="$event.target.src = 'avatar.png'"
             />
             <div class="d-flex justify-content-center">
               <div class="ml-5" style="text-align: justify">
-                <h5 class="card-title text-capitalize mt-3">Name: {{ auth_info.name }}</h5>
+                <h5 class="card-title text-capitalize mt-3">
+                  Name: {{ auth_info.name }}
+                </h5>
                 <p class="card-text mb-1">Email: {{ auth_info.email }}</p>
-                <p class="card-text mb-1">Phone: {{ auth_info.phone_number }}</p>
-                <p class="card-text">Address: {{ auth_info.address ?? "N/A" }}</p>
+                <p class="card-text mb-1">
+                  Phone: {{ auth_info.phone_number }}
+                </p>
+                <p class="card-text">
+                  Address: {{ auth_info.address ?? "N/A" }}
+                </p>
               </div>
             </div>
           </div>
@@ -48,12 +62,24 @@
           <!-- Social Links -->
           <div class="card-body border-light text-center">
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-              <a href="javascript:void();"><i class="fa fa-github bg-github text-white"></i></a>
-              <a href="javascript:void();"> <i class="fa fa-linkedin bg-linkedin text-white"></i></a>
-              <a href="javascript:void();"><i class="fa fa-facebook bg-facebook text-white"></i></a>
-              <a href="javascript:void();"> <i class="fa fa-twitter bg-twitter text-white"></i></a>
-              <a href="javascript:void();"> <i class="fa fa-google-plus bg-google-plus text-white"></i></a>
-              <a href="javascript:void();"> <i class="fa fa-youtube bg-youtube text-white"></i></a>
+              <a href="javascript:void();"
+                ><i class="fa fa-github bg-github text-white"></i
+              ></a>
+              <a href="javascript:void();">
+                <i class="fa fa-linkedin bg-linkedin text-white"></i
+              ></a>
+              <a href="javascript:void();"
+                ><i class="fa fa-facebook bg-facebook text-white"></i
+              ></a>
+              <a href="javascript:void();">
+                <i class="fa fa-twitter bg-twitter text-white"></i
+              ></a>
+              <a href="javascript:void();">
+                <i class="fa fa-google-plus bg-google-plus text-white"></i
+              ></a>
+              <a href="javascript:void();">
+                <i class="fa fa-youtube bg-youtube text-white"></i
+              ></a>
             </div>
           </div>
         </div>
@@ -125,7 +151,9 @@
                 <div class="d-flex justify-content-between align-items-center">
                   <h6 class="font-weight-light">TOTAL PRESENT ATTENDANCE</h6>
                 </div>
-                <h2 class="mb-0">{{ dashboard_data.total_present_attendance }}</h2>
+                <h2 class="mb-0">
+                  {{ dashboard_data.total_present_attendance }}
+                </h2>
               </div>
             </div>
           </div>
@@ -176,7 +204,7 @@
     <div class="calendar-container mb-5">
       <!-- Header -->
       <div class="calendar-header">
-        <h2><span>📅</span> Calendar</h2>
+        <h2 class="calendar-title">{{ todayFullDate }}</h2>
         <div class="calendar-controls">
           <span class="month-label">{{ currentMonthYear }}</span>
           <input type="date" v-model="selectedDate" @change="onDateChange" />
@@ -185,15 +213,56 @@
 
       <!-- Calendar Grid -->
       <div class="calendar-grid">
-        <div v-for="(date, index) in daysInMonth" :key="index" :class="calendarCellClass(date)" class="position-relative">
-          <router-link :to="`/meeting/all?date=${new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().substr(0, 10)}`">
+        <div
+          class="weekday-header"
+          v-for="day in weekdayNames"
+          :key="day"
+          :class="[
+            'weekday-header',
+            day === 'Fri' || day === 'Sat' ? 'bd-offday' : '',
+          ]"
+        >
+          {{ day }}
+        </div>
+        <div
+          v-for="n in startDayOfMonth"
+          :key="'empty-' + n"
+          class="calendar-cell empty-cell"
+        ></div>
+        <div
+          v-for="(date, index) in daysInMonth"
+          :key="index"
+          :class="calendarCellClass(date)"
+          class="position-relative"
+        >
+          <router-link
+            :to="`/meeting/all?date=${new Date(
+              date.getTime() + 24 * 60 * 60 * 1000
+            )
+              .toISOString()
+              .substr(0, 10)}`"
+          >
             <div class="badge-container" v-if="countTodayMeetings(date) > 0">
-              <span class="badge py-1" style="position: absolute; top: 5px; left: 5px">M ({{ countTodayMeetings(date) }}) </span>
+              <span
+                class="badge py-1"
+                style="position: absolute; top: 5px; left: 5px"
+                >M ({{ countTodayMeetings(date) }})
+              </span>
             </div>
           </router-link>
-          <router-link :to="`/tasks/date-wise-tasks/${new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().substr(0, 10)}`">
+          <router-link
+            :to="`/tasks/date-wise-tasks/${new Date(
+              date.getTime() + 24 * 60 * 60 * 1000
+            )
+              .toISOString()
+              .substr(0, 10)}`"
+          >
             <div class="badge-container" v-if="countTodayTasks(date) > 0">
-              <span class="badge py-1" style="position: absolute; top: 5px; right: 5px">T ({{ countTodayTasks(date) }}) </span>
+              <span
+                class="badge py-1"
+                style="position: absolute; top: 5px; right: 5px"
+                >T ({{ countTodayTasks(date) }})
+              </span>
             </div>
           </router-link>
           <div class="date-number">{{ date.getDate() }}</div>
@@ -236,14 +305,18 @@ export default {
       let response = await axios.get("task?get_all=1");
       if (response.status == 200) {
         // Only keep the start_date values in the array
-        this.task_list_dates = response.data.data.filter((task) => task.start_date).map((task) => task.start_date);
+        this.task_list_dates = response.data.data
+          .filter((task) => task.start_date)
+          .map((task) => task.start_date);
       }
     },
     get_all_meetings: async function () {
       let response = await axios.get("meeting?get_all=1");
       if (response.status == 200) {
         // Only keep the start_date values in the array
-        this.meeting_dates = response.data.data.filter((meeting) => meeting.date).map((meeting) => meeting.date);
+        this.meeting_dates = response.data.data
+          .filter((meeting) => meeting.date)
+          .map((meeting) => meeting.date);
       }
     },
     formatDay(date) {
@@ -255,7 +328,11 @@ export default {
     },
     isToday(date) {
       const today = new Date();
-      return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+      return (
+        date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear()
+      );
     },
     calendarCellClass(date) {
       // If today and holiday, use both classes
@@ -273,7 +350,12 @@ export default {
       // The computed will auto-update
     },
     countTodayTasks(date) {
-      const currentDate = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
+      const currentDate =
+        date.getFullYear() +
+        "-" +
+        String(date.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(date.getDate()).padStart(2, "0");
 
       return this.task_list_dates.filter((taskDate) => {
         const taskDay = taskDate.split(" ")[0]; // Get only YYYY-MM-DD
@@ -281,7 +363,12 @@ export default {
       }).length;
     },
     countTodayMeetings(date) {
-      const currentDate = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
+      const currentDate =
+        date.getFullYear() +
+        "-" +
+        String(date.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(date.getDate()).padStart(2, "0");
 
       return this.meeting_dates.filter((meetingDate) => {
         const meetingDay = meetingDate.split(" ")[0]; // Get only YYYY-MM-DD
@@ -338,7 +425,10 @@ export default {
     }),
     currentMonthYear() {
       const date = new Date(this.selectedDate);
-      return date.toLocaleString("default", { month: "short", year: "numeric" });
+      return date.toLocaleString("default", {
+        month: "short",
+        year: "numeric",
+      });
     },
     daysInMonth() {
       const date = new Date(this.selectedDate);
@@ -353,6 +443,23 @@ export default {
       }
 
       return days;
+    },
+    weekdayNames() {
+      return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    },
+    startDayOfMonth() {
+      const date = new Date(this.selectedDate);
+      const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+      return firstDay.getDay(); // 0 (Sun) to 6 (Sat)
+    },
+    todayFullDate() {
+      const today = new Date();
+      return today.toLocaleDateString("default", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
     },
   },
 };
@@ -450,6 +557,25 @@ export default {
   background-color: #2a3a59;
 }
 
+.calendar-title {
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+}
+
+.calendar-icon {
+  background-color: #0d6efd; /* Bootstrap primary */
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 18px;
+  display: inline-block;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
 .friday {
   background-color: #3b2a4a;
   border: 1px solid #b4004e;
@@ -494,5 +620,22 @@ export default {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
   box-shadow: 0 0.5rem 1rem rgb(0 0 0) !important;
+}
+
+.weekday-header {
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  background: #027708;
+  padding: 8px 0px;
+  border-radius: 5px;
+}
+.empty-cell {
+  background: transparent;
+  border: none;
+}
+
+.bd-offday {
+  background-color: #4d0000 !important;
 }
 </style>

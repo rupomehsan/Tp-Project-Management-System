@@ -118,7 +118,7 @@ export default {
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data successfully updated");
           this.$router.push({
-            name: `All${this.setup.route_prefix}`,
+            name: `Details${this.setup.route_prefix}`,
           });
         }
       } else {
@@ -127,9 +127,9 @@ export default {
         // await this.get_all();
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data Successfully Created");
-          this.$router.push({
-            name: `All${this.setup.route_prefix}`,
-          });
+          // this.$router.push({
+          //   name: `All${this.setup.route_prefix}`,
+          // });
         }
       }
     },

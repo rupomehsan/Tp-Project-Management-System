@@ -37,11 +37,11 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="">Email</label>
+                <label for="">Email/User</label>
                 <div class="mt-1 mb-3">
                   <input
                     class="form-control form-control-square mb-2"
-                    type="email"
+                    type="text"
                     name="email"
                     id="email"
                     v-model="form_fields.email"

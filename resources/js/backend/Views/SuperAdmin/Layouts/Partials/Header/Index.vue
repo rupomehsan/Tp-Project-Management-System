@@ -4,7 +4,11 @@
   <header class="topbar-nav">
     <nav class="navbar navbar-expand fixed-top">
       <div class="toggle-menu">
-        <i @click.prevent="toggle_menu" class="zmdi zmdi-menu" title="toggle menu"></i>
+        <i
+          @click.prevent="toggle_menu"
+          class="zmdi zmdi-menu"
+          title="toggle menu"
+        ></i>
       </div>
 
       <a
@@ -35,9 +39,10 @@
             :to="{ name: 'ConversationMessage' }"
             class="btn nav-link position-relative"
             title="Go to Messages"
+            @click="resetUnreadMessageCount"
           >
             <i class="zmdi zmdi-comment-outline align-middle"></i>
-            <!-- <span class="bg-danger text-white badge-up">12</span> -->
+            <span v-if="unreadMessageCount > 0" class="bg-danger text-white badge-up">{{ unreadMessageCount }}</span>
           </router-link>
           <!-- <div class="dropdown-menu dropdown-menu-right" :class="{ show: show_message }">
             <ul class="list-group list-group-flush">
@@ -67,20 +72,51 @@
           </div> -->
         </li>
 
-        <li class="nav-item dropdown dropdown-lg" @click="toggle_notification('show_notification')">
-          <a role="button" class="btn nav-link dropdown-toggle dropdown-toggle-nocaret position-relative">
+        <li
+          class="nav-item dropdown dropdown-lg"
+          @click="toggle_notification('show_notification')"
+        >
+          <a
+            role="button"
+            class="btn nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"
+          >
             <i class="zmdi zmdi-notifications-active align-middle"></i>
-            <span class="bg-info text-white badge-up">{{ notifications.length }}</span>
+            <span class="bg-info text-white badge-up">{{
+              notifications.length
+            }}</span>
           </a>
-          <div class="dropdown-menu dropdown-menu-right" :class="{ show: show_notification }">
+          <div
+            class="dropdown-menu dropdown-menu-right"
+            :class="{ show: show_notification }"
+          >
             <ul class="list-group list-group-flush">
-              <li class="list-group-item d-flex justify-content-between align-items-center">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
                 <span class="text-info font-weight-bold"> New Projects </span>
-                <a href="javascript:void();" @click="RedirectToDestination('projects')" class="extra-small-font">See All</a>
+                <a
+                  href="javascript:void();"
+                  @click="RedirectToDestination('projects')"
+                  class="extra-small-font"
+                  >See All</a
+                >
               </li>
-              <template v-for="notification in notifications" :key="notification.id">
-                <li class="list-group-item" v-if="notification.type == 'project' && notification.is_seen == 0">
-                  <a @click.prevent="handleLinkClick(notification, `/${notification.link}`)" class="cursor-pointer">
+              <template
+                v-for="notification in notifications"
+                :key="notification.id"
+              >
+                <li
+                  class="list-group-item"
+                  v-if="
+                    notification.type == 'project' && notification.is_seen == 0
+                  "
+                >
+                  <a
+                    @click.prevent="
+                      handleLinkClick(notification, `/${notification.link}`)
+                    "
+                    class="cursor-pointer"
+                  >
                     <div class="media">
                       <div class="media-body">
                         <h6 class="mt-0 msg-title">
@@ -92,13 +128,33 @@
                 </li>
               </template>
 
-              <li class="list-group-item d-flex justify-content-between align-items-center">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
                 <span class="text-info font-weight-bold"> New Tasks </span>
-                <a href="javascript:void();" @click="RedirectToDestination('tasks')" class="extra-small-font">See All</a>
+                <a
+                  href="javascript:void();"
+                  @click="RedirectToDestination('tasks')"
+                  class="extra-small-font"
+                  >See All</a
+                >
               </li>
-              <template v-for="notification in notifications" :key="notification.id">
-                <li class="list-group-item" v-if="notification.type == 'task' && notification.is_seen == 0">
-                  <a @click.prevent="handleLinkClick(notification, `/${notification.link}`)" class="cursor-pointer">
+              <template
+                v-for="notification in notifications"
+                :key="notification.id"
+              >
+                <li
+                  class="list-group-item"
+                  v-if="
+                    notification.type == 'task' && notification.is_seen == 0
+                  "
+                >
+                  <a
+                    @click.prevent="
+                      handleLinkClick(notification, `/${notification.link}`)
+                    "
+                    class="cursor-pointer"
+                  >
                     <div class="media">
                       <div class="media-body">
                         <h6 class="mt-0 msg-title">
@@ -110,24 +166,46 @@
                 </li>
               </template>
               <li class="list-group-item text-center">
-                <router-link class="text-primary font-smaller" :to="{ name: 'AllNotification' }">View All Notifications</router-link>
+                <router-link
+                  class="text-primary font-smaller"
+                  :to="{ name: 'AllNotification' }"
+                  >View All Notifications</router-link
+                >
               </li>
             </ul>
           </div>
         </li>
 
-        <li class="nav-item dropdown" @click="toggle_notification('show_profile')">
-          <a class="btn nav-link dropdown-toggle dropdown-toggle-nocaret position-relative">
+        <li
+          class="nav-item dropdown"
+          @click="toggle_notification('show_profile')"
+        >
+          <a
+            class="btn nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"
+          >
             <span class="user-profile">
-              <img :src="`${auth_info.image ?? 'avatar.png'}`" class="img-circle" alt="user avatar" />
+              <img
+                :src="auth_info.image ? auth_info.image : 'avatar.png'"
+                @error="$event.target.src = 'avatar.png'"
+                class="img-circle"
+                alt="user avatar"
+              />
             </span>
           </a>
-          <ul class="dropdown-menu dropdown-menu-right" :class="{ show: show_profile }">
+          <ul
+            class="dropdown-menu dropdown-menu-right"
+            :class="{ show: show_profile }"
+          >
             <li class="dropdown-item user-details">
               <a href="javaScript:void();">
                 <div class="media">
                   <div class="avatar">
-                    <img class="align-self-start mr-3" :src="`${auth_info.image ?? 'avatar.png'}`" alt="user avatar" />
+                    <img
+                      class="align-self-start mr-3"
+                      :src="`${auth_info.image ?? 'avatar.png'}`"
+                      alt="user avatar"
+                      @error="$event.target.src = 'avatar.png'"
+                    />
                   </div>
                   <div class="media-body">
                     <h6 class="mt-2 user-title">
@@ -146,13 +224,19 @@
 
             <li class="dropdown-divider"></li>
             <li class="dropdown-item">
-              <router-link :to="{ name: 'AdminProfileSettings' }"> <i class="zmdi zmdi-accounts mr-3"></i>Profile </router-link>
+              <router-link :to="{ name: 'AdminProfileSettings' }">
+                <i class="zmdi zmdi-accounts mr-3"></i>Profile
+              </router-link>
             </li>
             <li class="dropdown-item">
-              <router-link :to="{ name: 'AdminSiteSettings' }"> <i class="zmdi zmdi-settings mr-3"></i>Settings </router-link>
+              <router-link :to="{ name: 'AdminSiteSettings' }">
+                <i class="zmdi zmdi-settings mr-3"></i>Settings
+              </router-link>
             </li>
             <li class="dropdown-divider"></li>
-            <li class="dropdown-item" @click="logout()" role="button"><i class="zmdi zmdi-power mr-3"></i>Logout</li>
+            <li class="dropdown-item" @click="logout()" role="button">
+              <i class="zmdi zmdi-power mr-3"></i>Logout
+            </li>
           </ul>
         </li>
       </ul>
@@ -172,10 +256,13 @@ export default {
     show_message: 0,
     show_profile: 0,
     notifications: [],
+    unreadMessageCount: 0,
   }),
 
   created: async function () {
     await this.get_all_noitifications();
+    await this.getUnreadMessageCount();
+    this.setupMessageListener();
   },
 
   methods: {
@@ -199,12 +286,16 @@ export default {
     watch: {
       headerKey(newVal, oldVal) {
         this.get_all_noitifications();
-        console.log("headerKey changed, notifications reloaded");
+        this.getUnreadMessageCount();
+        console.log("headerKey changed, notifications and messages reloaded");
       },
       // This will log when the component is re-created due to key change
       $props: {
         handler() {
-          console.log("Header component re-created, headerKey:", this.headerKey);
+          console.log(
+            "Header component re-created, headerKey:",
+            this.headerKey
+          );
         },
         deep: true,
         immediate: true,
@@ -234,14 +325,65 @@ export default {
       }
     },
 
+    async getUnreadMessageCount() {
+      try {
+        const response = await axios.get("/messages/get-all-conversations");
+        if (response.status === 200) {
+          const conversations = response.data.data;
+          this.unreadMessageCount = conversations.reduce((total, conversation) => {
+            return total + (conversation.unread_count || 0);
+          }, 0);
+        }
+      } catch (error) {
+        console.error("Failed to get unread message count:", error);
+      }
+    },
+
+    setupMessageListener() {
+      const userId = this.auth_info?.id;
+      if (userId && window.Echo) {
+        window.Echo.private(`chat.${userId}`)
+          .listen("MessageSent", (e) => {
+            // Only increment count for messages from other users
+            if (e.message.sender_id !== userId) {
+              this.unreadMessageCount++;
+            }
+          })
+          .error((error) => {
+            console.error("❌ Header message listener error:", error);
+          });
+      }
+
+      // Listen for global events when messages are marked as read
+      window.addEventListener('messagesMarkedAsRead', (event) => {
+        this.getUnreadMessageCount(); // Refresh the count from server
+      });
+
+      // Listen for conversation opened event to refresh count
+      window.addEventListener('conversationOpened', (event) => {
+        this.getUnreadMessageCount(); // Refresh the count from server
+      });
+    },
+
+    resetUnreadMessageCount() {
+      // Don't reset immediately, let the conversation page handle marking as read
+      // The count will be updated via the event listeners above
+    },
+
     async handleLinkClick(data, link) {
       try {
         await axios.post(`/notifications/seen`, { data });
         this.get_all_noitifications();
         if (data.type == "project") {
-          this.$router.push({ name: `DetailsProject`, params: { id: data.slug } });
+          this.$router.push({
+            name: `DetailsProject`,
+            params: { id: data.slug },
+          });
         } else if (data.type == "task") {
-          this.$router.push({ name: `DetailsTasks`, params: { id: data.slug } });
+          this.$router.push({
+            name: `DetailsTasks`,
+            params: { id: data.slug },
+          });
         }
       } catch (e) {
         // Optionally handle error
@@ -276,6 +418,11 @@ export default {
         }
       });
     });
+  },
+  beforeUnmount() {
+    // Clean up event listeners
+    window.removeEventListener('messagesMarkedAsRead', this.getUnreadMessageCount);
+    window.removeEventListener('conversationOpened', this.getUnreadMessageCount);
   },
   computed: {
     ...mapState(auth_store, {

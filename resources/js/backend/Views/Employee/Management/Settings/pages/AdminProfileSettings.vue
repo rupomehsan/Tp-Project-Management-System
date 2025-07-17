@@ -12,12 +12,15 @@
           <div class="card-body pt-5">
             <img
               :src="`${auth_info.image ?? 'avatar.png'}`"
+              @error="$event.target.src = 'avatar.png'"
               alt="profile-image"
               class="profile my-2"
               style="width: 150px; height: 150px; object-fit: cover"
             />
 
-            <h5 class="card-title text-capitalize">Name : {{ auth_info.name }}</h5>
+            <h5 class="card-title text-capitalize">
+              Name : {{ auth_info.name }}
+            </h5>
             <p class="card-text">Eamil : {{ auth_info.email }}</p>
             <p class="card-text">Phone : {{ auth_info.phone_number }}</p>
             <p class="card-text">Address : {{ auth_info.address ?? "N/A" }}</p>
@@ -25,12 +28,24 @@
           <div class="card-body border-light">
             <div class="media align-items-center">
               <div class="icon-block">
-                <a href="javascript:void();"><i class="fa fa-github bg-github text-white"></i></a>
-                <a href="javascript:void();"> <i class="fa fa-linkedin bg-linkedin text-white"></i></a>
-                <a href="javascript:void();"><i class="fa fa-facebook bg-facebook text-white"></i></a>
-                <a href="javascript:void();"> <i class="fa fa-twitter bg-twitter text-white"></i></a>
-                <a href="javascript:void();"> <i class="fa fa-google-plus bg-google-plus text-white"></i></a>
-                <a href="javascript:void();"> <i class="fa fa-youtube bg-youtube text-white"></i></a>
+                <a href="javascript:void();"
+                  ><i class="fa fa-github bg-github text-white"></i
+                ></a>
+                <a href="javascript:void();">
+                  <i class="fa fa-linkedin bg-linkedin text-white"></i
+                ></a>
+                <a href="javascript:void();"
+                  ><i class="fa fa-facebook bg-facebook text-white"></i
+                ></a>
+                <a href="javascript:void();">
+                  <i class="fa fa-twitter bg-twitter text-white"></i
+                ></a>
+                <a href="javascript:void();">
+                  <i class="fa fa-google-plus bg-google-plus text-white"></i
+                ></a>
+                <a href="javascript:void();">
+                  <i class="fa fa-youtube bg-youtube text-white"></i
+                ></a>
               </div>
             </div>
           </div>
@@ -42,8 +57,14 @@
           <div class="card-body">
             <ul class="nav nav-tabs nav-tabs-primary top-icon nav-justified">
               <li class="nav-item" @click="tab = 'edit'">
-                <a :class="tab == 'edit' ? ' active' : ''" href="javascript:void();" data-target="#edit" data-toggle="pill" class="nav-link"
-                  ><i class="icon-note"></i> <span class="hidden-xs">Edit</span></a
+                <a
+                  :class="tab == 'edit' ? ' active' : ''"
+                  href="javascript:void();"
+                  data-target="#edit"
+                  data-toggle="pill"
+                  class="nav-link"
+                  ><i class="icon-note"></i>
+                  <span class="hidden-xs">Edit</span></a
                 >
               </li>
               <li class="nav-item" @click="tab = 'change_password'">
@@ -53,85 +74,179 @@
                   data-target="#profile"
                   data-toggle="pill"
                   class="nav-link"
-                  ><i class="icon-user"></i> <span class="hidden-xs">Change password</span></a
+                  ><i class="icon-user"></i>
+                  <span class="hidden-xs">Change password</span></a
                 >
               </li>
             </ul>
             <div class="tab-content p-3">
-              <div v-if="tab == 'edit'" :class="tab == 'edit' ? ' active' : ''" class="tab-pane active" id="profile">
-                <form @submit.prevent="UpdateProfileHandler" enctype="multipart/form-data">
+              <div
+                v-if="tab == 'edit'"
+                :class="tab == 'edit' ? ' active' : ''"
+                class="tab-pane active"
+                id="profile"
+              >
+                <form
+                  @submit.prevent="UpdateProfileHandler"
+                  enctype="multipart/form-data"
+                >
                   <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label">Name</label>
+                    <label class="col-lg-3 col-form-label form-control-label"
+                      >Name</label
+                    >
                     <div class="col-lg-9">
-                      <input v-model="auth_info.name" name="name" class="form-control" type="text" value="" />
+                      <input
+                        v-model="auth_info.name"
+                        name="name"
+                        class="form-control"
+                        type="text"
+                        value=""
+                      />
                     </div>
                   </div>
 
                   <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label">Email</label>
+                    <label class="col-lg-3 col-form-label form-control-label"
+                      >Email</label
+                    >
                     <div class="col-lg-9">
-                      <input v-model="auth_info.email" name="email" class="form-control" type="email" value="" />
+                      <input
+                        v-model="auth_info.email"
+                        name="email"
+                        class="form-control"
+                        type="email"
+                        value=""
+                      />
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label">Phone</label>
+                    <label class="col-lg-3 col-form-label form-control-label"
+                      >Phone</label
+                    >
                     <div class="col-lg-9">
-                      <input v-model="auth_info.phone_number" name="phone_number" class="form-control" type="number" value="" />
+                      <input
+                        v-model="auth_info.phone_number"
+                        name="phone_number"
+                        class="form-control"
+                        type="number"
+                        value=""
+                      />
                     </div>
                   </div>
 
                   <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label">Address</label>
+                    <label class="col-lg-3 col-form-label form-control-label"
+                      >Address</label
+                    >
                     <div class="col-lg-9">
-                      <input v-model="auth_info.address" name="address" class="form-control" type="text" value="" placeholder="Street" />
+                      <input
+                        v-model="auth_info.address"
+                        name="address"
+                        class="form-control"
+                        type="text"
+                        value=""
+                        placeholder="Street"
+                      />
                     </div>
                   </div>
 
                   <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label">Change image</label>
+                    <label class="col-lg-3 col-form-label form-control-label"
+                      >Change image</label
+                    >
                     <div class="col-lg-9">
                       <input class="form-control" name="image" type="file" />
-                      <img v-if="auth_info.image" class="mt-2" :src="auth_info.image" height="100" width="100" alt="" />
+                      <img
+                        v-if="auth_info.image"
+                        class="mt-2"
+                        :src="auth_info.image"
+                        height="100"
+                        width="100"
+                        alt=""
+                      />
                     </div>
                   </div>
 
                   <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label"></label>
+                    <label
+                      class="col-lg-3 col-form-label form-control-label"
+                    ></label>
                     <div class="col-lg-9">
-                      <input type="submit" class="btn btn-primary" value="Save Changes" />
+                      <input
+                        type="submit"
+                        class="btn btn-primary"
+                        value="Save Changes"
+                      />
                     </div>
                   </div>
                 </form>
               </div>
-              <div v-if="tab == 'change_password'" :class="tab == 'change_password' ? ' active' : ''" class="tab-pane" id="change_password">
+              <div
+                v-if="tab == 'change_password'"
+                :class="tab == 'change_password' ? ' active' : ''"
+                class="tab-pane"
+                id="change_password"
+              >
                 <form @submit.prevent="ChangePasswordHandler">
                   <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label">Current password</label>
+                    <label class="col-lg-3 col-form-label form-control-label"
+                      >Current password</label
+                    >
                     <div class="col-lg-9">
-                      <input class="form-control" name="current_password" type="password" value="" />
+                      <input
+                        class="form-control"
+                        name="current_password"
+                        type="password"
+                        value=""
+                      />
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label">New password</label>
+                    <label class="col-lg-3 col-form-label form-control-label"
+                      >New password</label
+                    >
                     <div class="col-lg-9">
-                      <input class="form-control" name="new_password" type="password" value="" />
+                      <input
+                        class="form-control"
+                        name="new_password"
+                        type="password"
+                        value=""
+                      />
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label">Confirm New password</label>
+                    <label class="col-lg-3 col-form-label form-control-label"
+                      >Confirm New password</label
+                    >
                     <div class="col-lg-9">
-                      <input class="form-control" name="confirm_new_password" type="password" value="" />
+                      <input
+                        class="form-control"
+                        name="confirm_new_password"
+                        type="password"
+                        value=""
+                      />
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-lg-3 col-form-label form-control-label"></label>
+                    <label
+                      class="col-lg-3 col-form-label form-control-label"
+                    ></label>
                     <div class="col-lg-9">
-                      <input type="submit" class="btn btn-primary" value="Save Changes" />
+                      <input
+                        type="submit"
+                        class="btn btn-primary"
+                        value="Save Changes"
+                      />
                     </div>
                   </div>
                 </form>
               </div>
-              <div v-if="tab == 'message'" :class="tab == 'message' ? ' active' : ''" class="tab-pane" id="message">
+              <div
+                v-if="tab == 'message'"
+                :class="tab == 'message' ? ' active' : ''"
+                class="tab-pane"
+                id="message"
+              >
                 <table class="table table-striped table-active table-bordered">
                   <tr v-for="i in 5" :key="i">
                     <td>1</td>

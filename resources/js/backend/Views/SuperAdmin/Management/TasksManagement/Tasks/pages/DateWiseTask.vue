@@ -263,7 +263,7 @@
                       <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
                     </td>
                     <td>{{ index + 1 }}</td>
-                    <td>{{ item.project_id?.name }}</td>
+                    <td>{{ item.task_group_id?.name }}</td>
                     <td>{{ item.title }}</td>
                     <td>{{ item.user?.name || "Not Assigned" }}</td>
                     <td>{{ item.priority }}</td>

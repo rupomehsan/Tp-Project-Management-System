@@ -49,6 +49,7 @@ include_once base_path("app/Modules/Management/TodoManagement/Credential/Routes/
 |--------------------------------------------------------------------------
 */
 include_once base_path("app/Modules/Management/TasksManagement/Tasks/Routes/Route.php");
+include_once base_path("app/Modules/Management/TasksManagement/TaskGroup/Routes/Route.php");
 
 /*
 |--------------------------------------------------------------------------

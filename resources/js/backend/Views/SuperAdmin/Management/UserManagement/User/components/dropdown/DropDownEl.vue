@@ -1,6 +1,6 @@
 <template lang="">
   <div class="col-md-6">
-    <label> {{ setup.module_name }} </label>
+    <label> Assigned To {{ setup.module_name }} </label>
     <!-- {{ value }} -->
     <div class="custom_drop_down">
       <div class="selected_list  c-pointer position-relative" @click="show_list = !show_list">

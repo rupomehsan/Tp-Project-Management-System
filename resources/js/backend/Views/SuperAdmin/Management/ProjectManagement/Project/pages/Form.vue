@@ -21,33 +21,6 @@
         </div>
         <div class="card-body card_body_fixed_height">
           <div class="row">
-            <!-- <div class="col-md-6">
-              <div class="form-group">
-                <label for="">Project group Name</label>
-                <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.project_group_id"
-                    class="form-control"
-                    name="project_group_id"
-                    id="project_group_id"
-                  >
-                    <option value="">Selet-- Project group Name</option>
-                    <option
-                      v-for="item in userProjectGroup?.data"
-                      :key="item.id"
-                      :value="item.id"
-                    >
-                      {{ item.name }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div> -->
-            <ProjectGroupDropDownEl
-              :name="'project_group_id'"
-              :multiple="false"
-              :value="[item.project_group_id]"
-            />
             <div class="col-md-6">
               <div class="form-group">
                 <label for="">Project Name</label>
@@ -62,6 +35,25 @@
                 </div>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="project_link">Project Link</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="url"
+                    class="form-control form-control-square mb-2"
+                    name="project_link"
+                    id="project_link"
+                    v-model="form_fields.project_link"
+                  />
+                </div>
+              </div>
+            </div>
+            <ProjectGroupDropDownEl
+              :name="'project_group_id'"
+              :multiple="false"
+              :value="[item.project_group_id]"
+            />
 
             <user-drop-down-el
               :name="'project_users'"
@@ -93,37 +85,6 @@
                     name="end_date"
                     id="end_date"
                     v-model="form_fields.end_date"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="project_link">Project Link</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    type="url"
-                    class="form-control form-control-square mb-2"
-                    name="project_link"
-                    id="project_link"
-                    v-model="form_fields.project_link"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="project_progress">Project Progress (%)</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    type="number"
-                    class="form-control form-control-square mb-2"
-                    name="project_progress"
-                    id="project_progress"
-                    v-model="form_fields.project_progress"
-                    min="0"
-                    max="100"
                   />
                 </div>
               </div>
@@ -196,7 +157,6 @@
                 </div>
               </div>
             </div>
-
             <div class="col-md-6">
               <div class="form-group">
                 <label for="">Delivery Status</label>
@@ -220,6 +180,24 @@
                 </div>
               </div>
             </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="project_progress">Project Progress (%)</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="number"
+                    class="form-control form-control-square mb-2"
+                    name="project_progress"
+                    id="project_progress"
+                    v-model="form_fields.project_progress"
+                    min="0"
+                    max="100"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div class="col-md-6">
               <div class="form-group">
                 <label for="client_rating">Client Rating (out of 10)</label>
@@ -234,6 +212,22 @@
                     max="10"
                     placeholder="Enter client rating out of 10"
                   />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">Authority</label>
+                <div class="mt-1 mb-3">
+                  <select
+                    v-model="form_fields.authority"
+                    class="form-control form-control-square mb-2"
+                    name="authority"
+                    id="authority"
+                  >
+                    <option value="self">Self</option>
+                    <option value="client">Client</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -290,18 +284,21 @@ export default {
       project_progress: "",
       project_agrement_file: null,
       project_document: null,
+      authority: "client",
     },
     userProjectGroup: [],
-    userData: [],
+    // userData: [],
   }),
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
+    this.item.project_users = [];
+    this.item.project_group_id = [];
     if (id) {
       this.set_fields(id);
     }
 
     await this.get_project_group_data();
-    await this.get_user_data();
+    // await this.get_user_data();
   },
   methods: {
     ...mapActions(store, {
@@ -312,7 +309,6 @@ export default {
       set_only_latest_data: "set_only_latest_data",
     }),
 
-    
     async get_project_group_data() {
       try {
         let res = await axios.get("/project-group");
@@ -321,14 +317,14 @@ export default {
         console.error("Error fetching project group", error);
       }
     },
-    async get_user_data() {
-      try {
-        let res = await axios.get("/users");
-        this.userData = res.data.data; // ✅ Assign data properly
-      } catch (error) {
-        console.error("Error fetching user", error);
-      }
-    },
+    // async get_user_data() {
+    //   try {
+    //     let res = await axios.get("/users");
+    //     this.userData = res.data.data; // ✅ Assign data properly
+    //   } catch (error) {
+    //     console.error("Error fetching user", error);
+    //   }
+    // },
 
     set_fields: async function (id) {
       this.param_id = id;
@@ -336,6 +332,7 @@ export default {
       if (this.item) {
         this.form_fields.name = this.item.name;
         this.form_fields.start_date = this.item.start_date;
+        this.form_fields.authority = this.item.authority;
         this.form_fields.end_date = this.item.end_date;
         this.form_fields.project_status = this.item.project_status;
         this.form_fields.delivery_status = this.item.delivery_status;
@@ -360,7 +357,7 @@ export default {
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data successfully updated");
           this.$router.push({
-            name: `All${this.setup.route_prefix}`,
+            name: `Details${this.setup.route_prefix}`,
           });
         }
       } else {
@@ -368,10 +365,18 @@ export default {
         let response = await this.create($event);
         // await this.get_all();
         if ([200, 201].includes(response.status)) {
+          $event.target.reset();
+            Object.keys(this.form_fields).forEach((key) => {
+            if (typeof this.form_fields[key] === "string") {
+              this.form_fields[key] = "";
+            } else if (typeof this.form_fields[key] === "number") {
+              this.form_fields[key] = null;
+            } else if (this.form_fields[key] instanceof File) {
+              this.form_fields[key] = null;
+            }
+            });
+            $("#description").summernote("code", "");
           window.s_alert("Data Successfully Created");
-          this.$router.push({
-            name: `All${this.setup.route_prefix}`,
-          });
         }
       }
     },

@@ -45,60 +45,6 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="">Date</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    class="form-control form-control-square mb-2"
-                    type="date"
-                    name="date"
-                    id="date"
-                    v-model="form_fields.date"
-                    :min="param_id ? null : todayDate"
-                    :max="param_id ? null : todayDate"
-                    required
-                  />
-                  <small v-if="!param_id" class="form-text text-muted">
-                    Only today's date ({{ todayDate }}) is allowed for new
-                    records
-                  </small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="check_in">Check In</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    type="datetime-local"
-                    class="form-control form-control-square mb-2"
-                    name="check_in"
-                    id="check_in"
-                    v-model="form_fields.check_in"
-                    :min="param_id ? null : todayStart"
-                    :max="param_id ? null : todayEnd"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6" v-if="form_fields.check_in">
-              <div class="form-group">
-                <label for="check_out">Check Out</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    type="datetime-local"
-                    class="form-control form-control-square mb-2"
-                    name="check_out"
-                    id="check_out"
-                    v-model="form_fields.check_out"
-                    :min="param_id ? null : form_fields.check_in || todayStart"
-                    :max="param_id ? null : todayEnd"
-                    :disabled="!form_fields.check_in"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
                 <label for="">Attendance status</label>
                 <div class="mt-1 mb-3">
                   <select
@@ -112,6 +58,35 @@
                     <option value="Absent">Absent</option>
                     <option value="Remote">Remote</option>
                   </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="check_in">Check In</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="datetime-local"
+                    class="form-control form-control-square mb-2"
+                    name="check_in"
+                    id="check_in"
+                    v-model="form_fields.check_in"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="check_out">Check Out</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="datetime-local"
+                    class="form-control form-control-square mb-2"
+                    name="check_out"
+                    id="check_out"
+                    v-model="form_fields.check_out"
+                  />
                 </div>
               </div>
             </div>

@@ -4,7 +4,8 @@ import Layout from "../Layouts/Layout.vue";
 import Dashboard from "../Management/Dashboard/Dashboard.vue";
 //SettingsRoutes
 import SettingsRoutes from "../Management/Settings/setup/routes.js";
-//routesimport MessageRoutes from '../Management/Message/setup/routes.js';
+//routes
+import MessageRoutes from '../Management/Message/setup/routes.js';
 import NotificationRoutes from '../Management/Notification/setup/routes.js';
 
 
@@ -23,6 +24,7 @@ import Credential from '../Management/TodoManagement/Credential/setup/routes.js'
 
 // Task Management
 import Tasks from '../Management/TasksManagement/Tasks/setup/routes.js';
+import TaskGroup from '../Management/TasksManagement/TaskGroup/setup/routes.js';
 // Team Management
 import Team from '../Management/TeamManagement/Team/setup/routes.js';
 
@@ -49,7 +51,8 @@ const routes = {
             component: Dashboard,
             name: 'adminDashboard',
         },
-        //management routes        MessageRoutes,
+        //management routes
+        MessageRoutes,
         NotificationRoutes,
 
         UserRoutes,
@@ -64,6 +67,7 @@ const routes = {
         Credential,
         // Tasks Management
         Tasks,
+        TaskGroup,
         // Team Management
         Team,
         // Attendance Management
