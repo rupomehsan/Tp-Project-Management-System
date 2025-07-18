@@ -81,7 +81,7 @@
                 @click.stop
               >
                 <button
-                  v-if="activeGroup?.creator === auth_info.id"
+                  v-if="activeGroup?.creator === auth_info.id || auth_info.role_id === 1"
                   class="dropdown-item"
                   @click="
                     showEditGroupSection = !showEditGroupSection;
@@ -91,7 +91,7 @@
                   <i class="fa fa-edit me-2"></i> Edit Group Name
                 </button>
                 <button
-                  v-if="activeGroup?.creator === auth_info.id"
+                  v-if="activeGroup?.creator === auth_info.id || auth_info.role_id === 1"
                   class="dropdown-item text-danger"
                   @click="
                     deleteGroup();
@@ -164,7 +164,7 @@
                   </div>
                 </div>
                 <button
-                  v-if="!member.is_creator && activeGroup?.creator === auth_info.id"
+                  v-if="!member.is_creator && (activeGroup?.creator === auth_info.id || auth_info.role_id === 1)"
                   class="btn btn-sm btn-outline-danger"
                   @click="removeMemberFromGroup(member.id)"
                 >
@@ -225,7 +225,7 @@
             <span v-if="conversation.unread_count > 0" class="unread-badge">{{ conversation.unread_count }}</span>
             <button
               v-if="conversation.participant?.is_group"
-              class="btn btn-sm btn-outline-light group-members-btn"
+              class="btn btn-sm btn-outline-light group-members-btn text-white border-white"
               @click.stop="openGroupMembersModal(conversation)"
               title="View Group Members"
             >
@@ -261,7 +261,7 @@
         </button>
       </div>
 
-      <div class="chat-messages" ref="chatMessages">
+      <div class="chat-messages" ref="chatMessages" @scroll="onChatScroll" @click="onChatClick">
         <div v-if="messages.length === 0" class="text-center text-muted mt-4">No messages yet.</div>
         <div v-for="message in messages" :key="message.id" :class="['chat-bubble', message.type === 'mine' ? 'mine' : 'theirs']">
           <!-- Show sender name for group chats (except for own messages) -->
@@ -311,6 +311,7 @@ export default {
       showEditGroupSection: false,
       editGroupName: "",
       showGroupMenu: false,
+      pendingMarkAsRead: null, // Track conversation ID that needs to be marked as read
 
       isMobile: window.innerWidth <= 767,
       mobileView: "list", // 'list' | 'chat'
@@ -423,6 +424,10 @@ export default {
     },
     async loadMessages(convo) {
       if (!convo) return;
+      
+      // Cancel any pending mark as read for previous conversation
+      this.pendingMarkAsRead = null;
+      
       this.activeConversation = convo;
       try {
         const res = await axios.get(`/messages/get-conversation-messages/${convo.id}`);
@@ -432,22 +437,8 @@ export default {
         }));
         this.scrollToBottom();
 
-        // Mark messages as read when opening conversation
-        if (convo.unread_count > 0) {
-          await this.markMessagesAsRead(convo.id);
-          // Update the conversation's unread count in the list
-          const conversationIndex = this.conversations.findIndex((c) => c.id === convo.id);
-          if (conversationIndex !== -1) {
-            this.conversations[conversationIndex].unread_count = 0;
-          }
-
-          // Emit global event to update header badge
-          window.dispatchEvent(
-            new CustomEvent("messagesMarkedAsRead", {
-              detail: { conversationId: convo.id },
-            })
-          );
-        }
+        // Store unread count for later processing
+        this.pendingMarkAsRead = convo.unread_count > 0 ? convo.id : null;
 
         // Emit conversation opened event
         window.dispatchEvent(
@@ -456,6 +447,13 @@ export default {
           })
         );
 
+        // Mark messages as read after a short delay to ensure user is actually viewing
+        if (this.pendingMarkAsRead) {
+          setTimeout(() => {
+            this.checkAndMarkAsRead();
+          }, 1500); // 1.5 second delay to ensure user is actually reading
+        }
+
         if (this.isMobile) this.mobileView = "chat";
       } catch (err) {
         console.error("Failed to load messages", err);
@@ -463,6 +461,12 @@ export default {
     },
     async sendMessage() {
       if (!this.newMessage) return;
+      
+      // Mark messages as read when user sends a message (indicates they're actively in the chat)
+      if (this.pendingMarkAsRead) {
+        await this.checkAndMarkAsRead();
+      }
+      
       try {
         const payload = {
           conversation_id: this.activeConversation.id,
@@ -523,6 +527,42 @@ export default {
         await axios.post(`/messages/mark-as-read/${conversationId}`);
       } catch (err) {
         console.error("Failed to mark messages as read", err);
+      }
+    },
+
+    async checkAndMarkAsRead() {
+      // Only mark as read if user is still on the same conversation and it's pending
+      if (this.pendingMarkAsRead && this.activeConversation?.id === this.pendingMarkAsRead) {
+        await this.markMessagesAsRead(this.pendingMarkAsRead);
+        
+        // Update the conversation's unread count in the list
+        const conversationIndex = this.conversations.findIndex((c) => c.id === this.pendingMarkAsRead);
+        if (conversationIndex !== -1) {
+          this.conversations[conversationIndex].unread_count = 0;
+        }
+
+        // Emit global event to update header badge
+        window.dispatchEvent(
+          new CustomEvent("messagesMarkedAsRead", {
+            detail: { conversationId: this.pendingMarkAsRead },
+          })
+        );
+
+        this.pendingMarkAsRead = null;
+      }
+    },
+
+    onChatScroll() {
+      // Mark messages as read when user scrolls in the chat
+      if (this.pendingMarkAsRead) {
+        this.checkAndMarkAsRead();
+      }
+    },
+
+    onChatClick() {
+      // Mark messages as read when user clicks in the chat area
+      if (this.pendingMarkAsRead) {
+        this.checkAndMarkAsRead();
       }
     },
 
@@ -689,6 +729,8 @@ export default {
   beforeUnmount() {
     window.removeEventListener("resize", this.handleResize);
     document.removeEventListener("click", this.handleClickOutside);
+    // Cancel any pending mark as read
+    this.pendingMarkAsRead = null;
   },
 };
 </script>

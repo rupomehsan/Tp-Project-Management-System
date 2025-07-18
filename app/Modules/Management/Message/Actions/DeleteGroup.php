@@ -23,9 +23,13 @@ class DeleteGroup
                 return messageResponse('This is not a group conversation', [], 400, 'error');
             }
 
-            // Check if user is the creator of the group
-            if ($conversation->creator !== Auth::id()) {
-                return messageResponse('Only the group creator can delete the group', [], 403, 'error');
+            // Check if user is the creator of the group or SuperAdmin
+            $currentUser = Auth::user();
+            $isSuperAdmin = $currentUser && $currentUser->role_id == 1;
+            $isCreator = $conversation->creator === Auth::id();
+            
+            if (!$isCreator && !$isSuperAdmin) {
+                return messageResponse('Only the group creator or SuperAdmin can delete the group', [], 403, 'error');
             }
 
             // Delete all messages in the conversation

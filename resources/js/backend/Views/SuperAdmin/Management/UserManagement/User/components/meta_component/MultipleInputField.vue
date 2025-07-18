@@ -82,13 +82,36 @@
         <div class="form-group">
           <label for="">Social Media Name</label>
           <div class="mt-1 mb-3">
-            <input
+            <select
               class="form-control form-control-square mb-2"
-              type="text"
               v-model="link.name"
               :name="`social_media[${index}][name]`"
               :class="{ custom_error: errors.links?.[index]?.name }"
-            />
+              @change="autoPopulateLink(index, link.name)"
+            >
+              <option value="">Select Social Media</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Instagram">Instagram</option>
+              <option value="Twitter">Twitter</option>
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="YouTube">YouTube</option>
+              <option value="TikTok">TikTok</option>
+              <option value="Snapchat">Snapchat</option>
+              <option value="Pinterest">Pinterest</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Telegram">Telegram</option>
+              <option value="Discord">Discord</option>
+              <option value="Reddit">Reddit</option>
+              <option value="Tumblr">Tumblr</option>
+              <option value="Twitch">Twitch</option>
+              <option value="GitHub">GitHub</option>
+              <option value="Behance">Behance</option>
+              <option value="Dribbble">Dribbble</option>
+              <option value="Skype">Skype</option>
+              <option value="Viber">Viber</option>
+              <option value="WeChat">WeChat</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
           <div v-if="errors.links?.[index]?.name" class="text-danger small">
             {{ errors.links[index].name }}
@@ -198,6 +221,35 @@ export default {
     delete_link_row(index) {
       if (this.social_media.length < 2) return;
       this.social_media.splice(index, 1);
+    },
+    autoPopulateLink(index, selectedPlatform) {
+      const socialMediaTemplates = {
+        'Facebook': 'https://www.facebook.com/',
+        'Instagram': 'https://www.instagram.com/',
+        'Twitter': 'https://twitter.com/',
+        'LinkedIn': 'https://www.linkedin.com/in/',
+        'YouTube': 'https://www.youtube.com/@',
+        'TikTok': 'https://www.tiktok.com/@',
+        'Snapchat': 'https://www.snapchat.com/add/',
+        'Pinterest': 'https://www.pinterest.com/',
+        'WhatsApp': 'https://wa.me/',
+        'Telegram': 'https://t.me/',
+        'Discord': 'https://discord.gg/',
+        'Reddit': 'https://www.reddit.com/u/',
+        'Tumblr': 'https://tumblr.com/',
+        'Twitch': 'https://www.twitch.tv/',
+        'GitHub': 'https://github.com/',
+        'Behance': 'https://www.behance.net/',
+        'Dribbble': 'https://dribbble.com/',
+        'Skype': 'skype:',
+        'Viber': 'viber://contact?number=',
+        'WeChat': 'weixin://',
+        'Other': ''
+      };
+      
+      if (socialMediaTemplates[selectedPlatform] !== undefined) {
+        this.social_media[index].link = socialMediaTemplates[selectedPlatform];
+      }
     },
     emitChange() {
       this.$emit("input", {

@@ -44,7 +44,7 @@ class DataStoreValidation extends FormRequest
         return [
             'task_group_id' => 'sometimes',
             'project_id' => 'sometimes',
-            'title' => 'sometimes',
+            'title' => 'required|string|max:255',
             'description' => 'sometimes',
             'assigned_to' => 'sometimes',
             'start_date' => 'sometimes',
@@ -52,7 +52,7 @@ class DataStoreValidation extends FormRequest
             'task_status'  => ['sometimes', Rule::in(['Pending', 'In Progress', 'Completed', 'Not Completed'])],
             'task_user_status'  => ['sometimes', Rule::in(['Pending', 'In Progress', 'Completed', 'Not Completed'])],
             'priority'     => ['sometimes', Rule::in(['low', 'normal', 'high', 'urgent'])],
-            'rating'       => ['sometimes', 'integer', 'between:1,5'],
+            'rating'       => ['sometimes', 'integer'],
 
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];

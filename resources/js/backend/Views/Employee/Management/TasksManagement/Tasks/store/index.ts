@@ -17,7 +17,6 @@ import task_overview from "./async_actions/task_overview";
 /** actions */
 import set_filter_criteria from "./actions/set_filter_criteria";
 import reset_filter_criteria from "./actions/reset_filter_criteria";
-import reset_filter_criteria from "./actions/reset_filter_criteria";
 import set_item from "./actions/set_item";
 import set_only_latest_data from "./actions/set_only_latest";
 import set_page from "./actions/set_page";

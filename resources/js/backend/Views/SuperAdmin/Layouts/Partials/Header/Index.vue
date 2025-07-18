@@ -223,13 +223,13 @@
             <li class="dropdown-divider"></li>
 
             <li class="dropdown-divider"></li>
-            <li class="dropdown-item">
-              <router-link :to="{ name: 'AdminProfileSettings' }">
+            <li >
+              <router-link class="dropdown-item" :to="{ name: 'AdminProfileSettings' }">
                 <i class="zmdi zmdi-accounts mr-3"></i>Profile
               </router-link>
             </li>
-            <li class="dropdown-item">
-              <router-link :to="{ name: 'AdminSiteSettings' }">
+            <li >
+              <router-link class="dropdown-item" :to="{ name: 'AdminSiteSettings' }">
                 <i class="zmdi zmdi-settings mr-3"></i>Settings
               </router-link>
             </li>

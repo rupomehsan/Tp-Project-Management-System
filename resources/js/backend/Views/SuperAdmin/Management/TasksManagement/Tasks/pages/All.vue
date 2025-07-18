@@ -114,8 +114,8 @@
                       />
                     </th>
                     <th class="w-10">ID</th>
-                    <th>Project</th>
                     <th>Title</th>
+                    <th>Project</th>
                     <th>Assigned To</th>
                     <th>Priority</th>
                     <th>Developer Status</th>
@@ -281,8 +281,8 @@
                       <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
                     </td>
                     <td>{{ index + 1 }}</td>
-                    <td>{{ item.task_group_id?.name }}</td>
                     <td>{{ item.title }}</td>
+                    <td>{{ item.task_group_id?.name }}</td>
                     <td>{{ item.user?.name || "Not Assigned" }}</td>
                     <td>{{ item.priority }}</td>
                     <td>{{ item.task_user_status ?? "N/A" }}</td>

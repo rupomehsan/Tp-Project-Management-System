@@ -41,8 +41,8 @@
                       />
                     </th>
                     <th class="w-10">ID</th>
-                    <th>Project Group</th>
                     <th>Name</th>
+                    <th>Project Group</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Project Status</th>
@@ -135,8 +135,8 @@
                       <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
                     </td>
                     <td>{{ index + 1 }}</td>
-                    <td>{{ item.project_group_id?.name }}</td>
                     <td>{{ item.name }}</td>
+                    <td>{{ item.project_group_id?.name }}</td>
                     <td>{{ item.start_date }}</td>
                     <td>{{ item.end_date }}</td>
                     <td :class="{

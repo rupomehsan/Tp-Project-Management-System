@@ -19,7 +19,10 @@
 
               <!-- Sorting Button -->
               <div class="col-12 col-md-3 text-md-right text-sm-left">
-                <button class="btn btn-outline-success btn-sm" @click="set_show_filter_canvas"><i class="fa fa-gear mx-2"></i>Filter</button>
+                <router-link :to="{ name: 'TaskBoard' }" class="btn btn-outline-success btn-sm" 
+                  ><i class="fa fa-gear mx-2"></i>Task Board</router-link
+                >
+                <button class="btn btn-outline-success btn-sm mx-1" @click="set_show_filter_canvas"><i class="fa fa-gear mx-2"></i>Filter</button>
               </div>
             </div>
           </div>
@@ -276,18 +279,18 @@
                         </ul>
                       </div>
                     </td>
-                    <td>
+                    <td class="text-limit" title="Select">
                       <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
                     </td>
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ item.task_group_id?.name }}</td>
-                    <td>{{ item.title }}</td>
-                    <td>{{ item.priority }}</td>
-                    <td>{{ item.task_user_status ?? "N/A" }}</td>
-                    <td :class="getTaskStatusClass(item.task_status)">
+                    <td class="text-limit" :title="index + 1">{{ index + 1 }}</td>
+                    <td class="text-limit" :title="item.task_group_id?.name">{{ item.task_group_id?.name }}</td>
+                    <td class="text-limit" :title="item.title">{{ item.title }}</td>
+                    <td class="text-limit" :title="item.priority">{{ item.priority }}</td>
+                    <td class="text-limit" :title="item.task_user_status ?? 'N/A'">{{ item.task_user_status ?? "N/A" }}</td>
+                    <td class="text-limit" :class="getTaskStatusClass(item.task_status)" :title="item.task_status">
                       {{ item.task_status }}
                     </td>
-                    <td>
+                    <td class="text-limit" :title="`Rating: ${item.rating}`">
                       <span>
                         <span
                           v-for="n in 5"
@@ -299,10 +302,12 @@
                         <span class="ml-2 font-weight-bold">({{ item.rating }})</span>
                       </span>
                     </td>
-                    <td>{{ FindActualTime(item.start_date, item.end_date) }}</td>
-                    <td>{{ formatDateTime(item.start_date) }}</td>
-                    <td>{{ formatDateTime(item.end_date) }}</td>
-                    <td>{{ formatDateTime(item.created_at) }}</td>
+                    <td class="text-limit" :title="FindActualTime(item.start_date, item.end_date)">
+                      {{ FindActualTime(item.start_date, item.end_date) }}
+                    </td>
+                    <td class="text-limit" :title="formatDateTime(item.start_date)">{{ formatDateTime(item.start_date) }}</td>
+                    <td class="text-limit" :title="formatDateTime(item.end_date)">{{ formatDateTime(item.end_date) }}</td>
+                    <td class="text-limit" :title="formatDateTime(item.created_at)">{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />

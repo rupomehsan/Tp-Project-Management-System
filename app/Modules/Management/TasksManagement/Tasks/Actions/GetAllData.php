@@ -30,7 +30,7 @@ class GetAllData
             $end_date = request()->input('end_date');
             $task_status = request()->input('task_status');
             $priority = request()->input('priority');
-            $with = ['user', 'taskGroupId', 'projectId'];
+            $with = ['user', 'taskGroup', 'projectId'];
             $condition = [];
             $user = auth()->user();
 
@@ -49,6 +49,10 @@ class GetAllData
 
                     $q->orWhere('description', 'like', '%' . $searchKey . '%');
                 });
+            }
+
+            if (request()->has('project_id') && request()->input('project_id')) {
+                $data = $data->where('project_id', request()->input('project_id'));
             }
 
             if ($start_date && $end_date) {

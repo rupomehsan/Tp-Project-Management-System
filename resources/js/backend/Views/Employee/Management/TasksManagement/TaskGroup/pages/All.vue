@@ -55,7 +55,6 @@
                       />
                     </th>
                     <th class="w-10">ID</th>
-                    <th>Project Name</th>
                     <th>Name</th>
                     <th>Created At</th>
                   </tr>
@@ -163,7 +162,6 @@
                       />
                     </td>
                     <td>{{ index + 1 }}</td>
-                    <td>{{ item.projects?.name }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ formatDateTime(item.created_at) }}</td>
                   </tr>

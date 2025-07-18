@@ -52,7 +52,7 @@ class Model extends EloquentModel
         return $this->belongsTo(self::$userModel, 'assigned_to', 'id');
     }
 
-    public function taskGroupId()
+    public function taskGroup()
     {
         return $this->belongsTo(self::$taskGroupModel, 'task_group_id','id');
     }

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->bigInteger('sender')->nullable();
             $table->bigInteger('receiver')->nullable();
             $table->timestamp('date_time')->nullable();
+            $table->boolean('is_read')->default(false);
+            $table->timestamp('read_at')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

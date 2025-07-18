@@ -17,6 +17,9 @@ return new class extends Migration
             $table->bigInteger('creator')->nullable();
             $table->bigInteger('participant')->nullable();
             $table->timestamp('last_updated')->nullable();
+            $table->boolean('is_group')->default(false);
+            $table->string('group_name')->nullable();
+            $table->json('group_participants')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

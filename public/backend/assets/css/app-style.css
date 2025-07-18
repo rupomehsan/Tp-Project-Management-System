@@ -188,7 +188,12 @@ h6 {
 .line-height-10 {
     line-height: 5px;
 }
-
+.text-limit {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .demo-heading {
     font-size: 12px;
     text-transform: uppercase;

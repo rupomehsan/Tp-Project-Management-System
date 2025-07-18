@@ -26,9 +26,13 @@ class UpdateGroup
                 return messageResponse('This is not a group conversation', [], 400, 'error');
             }
 
-            // Check if user is the creator of the group
-            if ($conversation->creator !== Auth::id()) {
-                return messageResponse('Only the group creator can update the group name', [], 403, 'error');
+            // Check if user is the creator of the group or SuperAdmin
+            $currentUser = Auth::user();
+            $isSuperAdmin = $currentUser && $currentUser->role_id == 1;
+            $isCreator = $conversation->creator === Auth::id();
+            
+            if (!$isCreator && !$isSuperAdmin) {
+                return messageResponse('Only the group creator or SuperAdmin can update the group name', [], 403, 'error');
             }
 
             // Update group name

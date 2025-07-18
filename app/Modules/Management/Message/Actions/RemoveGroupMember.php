@@ -34,9 +34,13 @@ class RemoveGroupMember
                 return messageResponse('You are not part of this group', [], 403, 'error');
             }
 
-            // Check if user is the creator (only creators can remove members)
-            if ($conversation->creator != $userId) {
-                return messageResponse('Only group creator can remove members', [], 403, 'error');
+            // Check if user is the creator or SuperAdmin (only creators/SuperAdmin can remove members)
+            $currentUser = \Illuminate\Support\Facades\Auth::user();
+            $isSuperAdmin = $currentUser && $currentUser->role_id == 1;
+            $isCreator = $conversation->creator == $userId;
+            
+            if (!$isCreator && !$isSuperAdmin) {
+                return messageResponse('Only group creator or SuperAdmin can remove members', [], 403, 'error');
             }
 
             // Cannot remove the group creator

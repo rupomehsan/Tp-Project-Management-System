@@ -4,59 +4,57 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h5 class="text-capitalize">
-            {{
-              param_id
-                ? `${setup.edit_page_title}`
-                : `${setup.create_page_title}`
-            }}
+            {{ param_id ? `${setup.edit_page_title}` : `${setup.create_page_title}` }}
           </h5>
           <div>
-            <router-link
-              class="btn btn-outline-warning btn-sm"
-              :to="{ name: `All${setup.route_prefix}` }"
-            >
+            <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${setup.route_prefix}` }">
               {{ setup.all_page_title }}
             </router-link>
           </div>
         </div>
-        <div class="card-body card_body_fixed_height">
+        <div class="card-body card_body_fixed_height" v-if="is_loaded">
           <div class="row">
-            <TaskGroupDropDownEl
-              :name="'task_group_id'"
-              :multiple="false"
-              :value="[item.task_group_id]"
-            />
-
-            <ProjectDropDownEl
-              :name="'project_id'"
-              :multiple="false"
-              :value="[item.project_id]"
-            />
-
-            <div class="col-md-6">
+              <div class="col-md-6">
               <div class="form-group">
                 <label for="">Title</label>
                 <div class="mt-1 mb-3">
-                  <input
-                    class="form-control form-control-square mb-2"
-                    type="text"
-                    name="title"
-                    id="title"
-                    v-model="form_fields.title"
-                  />
+                  <input class="form-control form-control-square mb-2" type="text" name="title" id="title" v-model="form_fields.title" />
                 </div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
+                <label for="">Project Name</label>
+                <div class="mt-1 mb-3">
+                  <select v-model="form_fields.project_id" class="form-control" name="project_id" id="project_id" @change="onProjectChange">
+                    <option value="">Selet-- Project Name</option>
+                    <option v-for="item in userProject?.data" :key="item.id" :value="item.id">
+                      {{ item.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">Task Group</label>
+                <div class="mt-1 mb-3">
+                  <select v-model="form_fields.task_group_id" class="form-control" name="task_group_id" id="task_group_id">
+                    <option value="">Select-- Task Group</option>
+                    <option v-for="item in taskGroupData?.data" :key="item.id" :value="item.id">
+                      {{ item.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          
+          
+            <div class="col-md-6">
+              <div class="form-group">
                 <label for="">Priority</label>
                 <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.priority"
-                    class="form-control form-control-square mb-2"
-                    name="priority"
-                    id="priority"
-                  >
+                  <select v-model="form_fields.priority" class="form-control form-control-square mb-2" name="priority" id="priority">
                     <option value="low">Low</option>
                     <option value="normal">Normal</option>
                     <option value="high">High</option>
@@ -65,10 +63,10 @@
                 </div>
               </div>
             </div>
-
+            
             <div class="col-md-6">
               <div class="form-group">
-                <label for="">Dev status</label>
+                <label for="">Developer status</label>
                 <div class="mt-1 mb-3">
                   <select
                     v-model="form_fields.task_user_status"
@@ -132,9 +130,7 @@
           </div>
         </div>
         <div class="card-footer">
-          <button type="submit" class="btn btn-light btn-square px-5">
-            <i class="icon-lock"></i> Submit
-          </button>
+          <button type="submit" class="btn btn-light btn-square px-5"><i class="icon-lock"></i> Submit</button>
         </div>
       </div>
     </form>
@@ -146,37 +142,43 @@ import { mapActions, mapState } from "pinia";
 import { store } from "../store";
 import setup from "../setup";
 import TextEditor from "../../../../../../GlobalComponents/FormComponents/TextEditor.vue";
-import TaskGroupDropDownEl from "../../../TasksManagement/TaskGroup/components/dropdown/DropDownEl.vue";
-import ProjectDropDownEl from "../../../ProjectManagement/Project/components/dropdown/DropDownEl.vue";
 export default {
-  components: { TextEditor, TaskGroupDropDownEl, ProjectDropDownEl },
+  components: { TextEditor },
   data: () => ({
     setup,
     param_id: null,
     form_fields: {
+      project_id: "",
+      task_group_id: "",
+      assigned_to: "",
       title: "",
       description: "",
       start_date: "",
       end_date: "",
       task_status: "",
-      task_user_status: "Pending",
-      priority: "low",
+      task_user_status: "",
+      priority: "",
     },
     userProject: [],
     userData: [],
+    taskGroupData: [],
+    is_loaded: false,
   }),
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
-    this.item.task_group_id = [];
-    this.item.project_id = [];
-    // this.item.assigned_to = [];
-    // this.form_fields.assigned_to = this.$store.state.auth.user.id;
+    let project_id = this.$route.query.project_id;
+    if (project_id) {
+      this.form_fields.project_id = project_id;
+    }
 
     if (id) {
       this.set_fields(id);
     }
 
+    await this.get_project_data();
     await this.get_task_group_data();
+
+    this.is_loaded = true; // ✅ Set is_loaded to true after fetching data
   },
   methods: {
     ...mapActions(store, {
@@ -187,10 +189,18 @@ export default {
       set_only_latest_data: "set_only_latest_data",
     }),
 
+    async get_project_data() {
+      try {
+        let res = await axios.get("/project");
+        this.userProject = res.data.data; // ✅ Assign data properly
+      } catch (error) {
+        console.error("Error fetching project group", error);
+      }
+    },
     async get_task_group_data() {
       try {
-        let res = await axios.get("/task-group");
-        this.userProject = res.data.data; // ✅ Assign data properly
+        let res = await axios.get("/task-group?get_all=1");
+        this.taskGroupData = res.data; // ✅ Assign data properly
       } catch (error) {
         console.error("Error fetching task group", error);
       }
@@ -208,7 +218,9 @@ export default {
       this.param_id = id;
       await this.details(id);
       if (this.item) {
-        this.form_fields.task_group_id = this.item.task_group_id?.id;
+        this.form_fields.project_id = this.item.project_id?.id;
+        this.form_fields.task_group_id = this.item.task_group_id;
+        this.form_fields.assigned_to = this.item.assigned_to;
         this.form_fields.title = this.item.title;
         this.form_fields.start_date = this.item.start_date;
         this.form_fields.end_date = this.item.end_date;
@@ -228,7 +240,7 @@ export default {
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data successfully updated");
           this.$router.push({
-            name: `Details${this.setup.route_prefix}`,
+            name: `All${this.setup.route_prefix}`,
           });
         }
       } else {
@@ -237,9 +249,9 @@ export default {
         // await this.get_all();
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data Successfully Created");
-          // this.$router.push({
-          //   name: `All${this.setup.route_prefix}`,
-          // });
+          this.$router.push({
+            name: `All${this.setup.route_prefix}`,
+          });
         }
       }
     },
@@ -250,11 +262,37 @@ export default {
       target.value = markupStr;
       document.getElementById("description").appendChild(target);
     },
+    async onProjectChange() {
+      await this.get_user_by_project_id();
+      this.form_fields.assigned_to = "";
+    },
+    async get_user_by_project_id() {
+      if (!this.form_fields.project_id) {
+        this.userData = [];
+        return;
+      }
+      try {
+        let res = await axios.get(`users/get-users-by-project-id/${this.form_fields.project_id}`);
+        this.userData = res.data;
+      } catch (error) {
+        this.userData = [];
+        console.error("Error fetching users by project id", error);
+      }
+    },
   },
   computed: {
     ...mapState(store, {
       item: "item",
     }),
+  },
+  watch: {
+    "form_fields.project_id": {
+      handler(newVal) {
+        if (newVal) {
+          this.get_user_by_project_id();
+        }
+      },
+    },
   },
 };
 </script>

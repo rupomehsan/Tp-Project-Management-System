@@ -36,7 +36,7 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Select Members</label>
-            <div class="user-selection-list" style="max-height: 200px; overflow-y: auto;padding-left: 15px">
+            <div class="user-selection-list" style="max-height: 200px; overflow-y: auto; padding-left: 15px">
               <div v-for="user in users" :key="user.id" class="form-check">
                 <input v-model="selectedUserIds" :value="user.id" type="checkbox" class="form-check-input" :id="`user-${user.id}`" />
                 <label :for="`user-${user.id}`" class="form-check-label">
@@ -61,12 +61,7 @@
           <div class="d-flex align-items-center gap-2">
             <!-- 3-dot menu button -->
             <div class="dropdown" style="position: relative">
-              <button 
-                class="btn btn-sm btn-outline-secondary" 
-                type="button" 
-                @click.stop="showGroupMenu = !showGroupMenu" 
-                title="Group Actions"
-              >
+              <button class="btn btn-sm btn-outline-secondary" type="button" @click.stop="showGroupMenu = !showGroupMenu" title="Group Actions">
                 <i class="fa fa-ellipsis-v"></i>
               </button>
               <div
@@ -86,7 +81,7 @@
                 @click.stop
               >
                 <button
-                  v-if="activeGroup?.creator === auth_info.id"
+                  v-if="activeGroup?.creator === auth_info.id || auth_info.role_id === 1"
                   class="dropdown-item"
                   @click="
                     showEditGroupSection = !showEditGroupSection;
@@ -96,7 +91,7 @@
                   <i class="fa fa-edit me-2"></i> Edit Group Name
                 </button>
                 <button
-                  v-if="activeGroup?.creator === auth_info.id"
+                  v-if="activeGroup?.creator === auth_info.id || auth_info.role_id === 1"
                   class="dropdown-item text-danger"
                   @click="
                     deleteGroup();
@@ -115,24 +110,13 @@
           <div v-if="showEditGroupSection" class="edit-group-section mb-3">
             <div class="mb-2">
               <label class="form-label">Edit Group Name</label>
-              <input 
-                v-model="editGroupName" 
-                type="text" 
-                class="form-control" 
-                placeholder="Enter new group name"
-              />
+              <input v-model="editGroupName" type="text" class="form-control" placeholder="Enter new group name" />
             </div>
             <div class="d-flex gap-2">
-              <button 
-                class="btn btn-sm btn-success" 
-                @click="updateGroupName"
-                :disabled="!editGroupName || editGroupName === activeGroup?.group_name"
-              >
-                Save Changes
+              <button class="btn btn-sm btn-success" @click="updateGroupName" :disabled="!editGroupName || editGroupName === activeGroup?.group_name">
+                Update
               </button>
-              <button class="btn btn-sm btn-secondary" @click="cancelEditGroup">
-                Cancel
-              </button>
+              <button class="btn btn-sm btn-secondary mx-2" @click="cancelEditGroup">Cancel</button>
             </div>
           </div>
 
@@ -146,7 +130,10 @@
 
             <!-- Add Member Section -->
             <div v-if="showAddMemberSection" class="add-member-section mb-3">
-              <div class="user-selection-list" style="max-height: 150px; overflow-y: auto; border: 1px solid #444; border-radius: 4px; padding-left: 15px">
+              <div
+                class="user-selection-list"
+                style="max-height: 150px; overflow-y: auto; border: 1px solid #444; border-radius: 4px; padding-left: 15px"
+              >
                 <div v-for="user in availableUsers" :key="user.id" class="form-check">
                   <input v-model="newMemberIds" :value="user.id" type="checkbox" class="form-check-input" :id="`new-member-${user.id}`" />
                   <label :for="`new-member-${user.id}`" class="form-check-label">
@@ -155,7 +142,7 @@
                 </div>
               </div>
               <div class="mt-2">
-                <button class="btn btn-sm btn-success me-2 " @click="addMembersToGroup" :disabled="newMemberIds.length === 0">Add Selected</button>
+                <button class="btn btn-sm btn-success me-2" @click="addMembersToGroup" :disabled="newMemberIds.length === 0">Add Selected</button>
                 <button class="btn btn-sm btn-secondary mx-2" @click="showAddMemberSection = false">Cancel</button>
               </div>
             </div>
@@ -177,7 +164,7 @@
                   </div>
                 </div>
                 <button
-                  v-if="!member.is_creator && activeGroup?.creator === auth_info.id"
+                  v-if="!member.is_creator && (activeGroup?.creator === auth_info.id || auth_info.role_id === 1)"
                   class="btn btn-sm btn-outline-danger"
                   @click="removeMemberFromGroup(member.id)"
                 >
@@ -238,7 +225,7 @@
             <span v-if="conversation.unread_count > 0" class="unread-badge">{{ conversation.unread_count }}</span>
             <button
               v-if="conversation.participant?.is_group"
-              class="btn btn-sm btn-outline-light group-members-btn"
+              class="btn btn-sm btn-outline-light group-members-btn text-white border-white"
               @click.stop="openGroupMembersModal(conversation)"
               title="View Group Members"
             >
@@ -274,7 +261,7 @@
         </button>
       </div>
 
-      <div class="chat-messages" ref="chatMessages">
+      <div class="chat-messages" ref="chatMessages" @scroll="onChatScroll" @click="onChatClick">
         <div v-if="messages.length === 0" class="text-center text-muted mt-4">No messages yet.</div>
         <div v-for="message in messages" :key="message.id" :class="['chat-bubble', message.type === 'mine' ? 'mine' : 'theirs']">
           <!-- Show sender name for group chats (except for own messages) -->
@@ -324,6 +311,7 @@ export default {
       showEditGroupSection: false,
       editGroupName: "",
       showGroupMenu: false,
+      pendingMarkAsRead: null, // Track conversation ID that needs to be marked as read
 
       isMobile: window.innerWidth <= 767,
       mobileView: "list", // 'list' | 'chat'
@@ -436,6 +424,10 @@ export default {
     },
     async loadMessages(convo) {
       if (!convo) return;
+      
+      // Cancel any pending mark as read for previous conversation
+      this.pendingMarkAsRead = null;
+      
       this.activeConversation = convo;
       try {
         const res = await axios.get(`/messages/get-conversation-messages/${convo.id}`);
@@ -445,25 +437,22 @@ export default {
         }));
         this.scrollToBottom();
 
-        // Mark messages as read when opening conversation
-        if (convo.unread_count > 0) {
-          await this.markMessagesAsRead(convo.id);
-          // Update the conversation's unread count in the list
-          const conversationIndex = this.conversations.findIndex((c) => c.id === convo.id);
-          if (conversationIndex !== -1) {
-            this.conversations[conversationIndex].unread_count = 0;
-          }
-          
-          // Emit global event to update header badge
-          window.dispatchEvent(new CustomEvent('messagesMarkedAsRead', { 
-            detail: { conversationId: convo.id } 
-          }));
-        }
+        // Store unread count for later processing
+        this.pendingMarkAsRead = convo.unread_count > 0 ? convo.id : null;
 
         // Emit conversation opened event
-        window.dispatchEvent(new CustomEvent('conversationOpened', { 
-          detail: { conversationId: convo.id } 
-        }));
+        window.dispatchEvent(
+          new CustomEvent("conversationOpened", {
+            detail: { conversationId: convo.id },
+          })
+        );
+
+        // Mark messages as read after a short delay to ensure user is actually viewing
+        if (this.pendingMarkAsRead) {
+          setTimeout(() => {
+            this.checkAndMarkAsRead();
+          }, 1500); // 1.5 second delay to ensure user is actually reading
+        }
 
         if (this.isMobile) this.mobileView = "chat";
       } catch (err) {
@@ -472,6 +461,12 @@ export default {
     },
     async sendMessage() {
       if (!this.newMessage) return;
+      
+      // Mark messages as read when user sends a message (indicates they're actively in the chat)
+      if (this.pendingMarkAsRead) {
+        await this.checkAndMarkAsRead();
+      }
+      
       try {
         const payload = {
           conversation_id: this.activeConversation.id,
@@ -515,14 +510,14 @@ export default {
         this.mobileView = "list";
       }
     },
-    
+
     handleClickOutside(event) {
       // Close dropdown if clicking outside
-      if (!event.target.closest('.dropdown')) {
+      if (!event.target.closest(".dropdown")) {
         this.showGroupMenu = false;
       }
     },
-    
+
     backToList() {
       this.mobileView = "list";
       this.activeConversation = null;
@@ -532,6 +527,42 @@ export default {
         await axios.post(`/messages/mark-as-read/${conversationId}`);
       } catch (err) {
         console.error("Failed to mark messages as read", err);
+      }
+    },
+
+    async checkAndMarkAsRead() {
+      // Only mark as read if user is still on the same conversation and it's pending
+      if (this.pendingMarkAsRead && this.activeConversation?.id === this.pendingMarkAsRead) {
+        await this.markMessagesAsRead(this.pendingMarkAsRead);
+        
+        // Update the conversation's unread count in the list
+        const conversationIndex = this.conversations.findIndex((c) => c.id === this.pendingMarkAsRead);
+        if (conversationIndex !== -1) {
+          this.conversations[conversationIndex].unread_count = 0;
+        }
+
+        // Emit global event to update header badge
+        window.dispatchEvent(
+          new CustomEvent("messagesMarkedAsRead", {
+            detail: { conversationId: this.pendingMarkAsRead },
+          })
+        );
+
+        this.pendingMarkAsRead = null;
+      }
+    },
+
+    onChatScroll() {
+      // Mark messages as read when user scrolls in the chat
+      if (this.pendingMarkAsRead) {
+        this.checkAndMarkAsRead();
+      }
+    },
+
+    onChatClick() {
+      // Mark messages as read when user clicks in the chat area
+      if (this.pendingMarkAsRead) {
+        this.checkAndMarkAsRead();
       }
     },
 
@@ -636,15 +667,16 @@ export default {
 
       try {
         const response = await axios.put(`/messages/conversations/${this.activeGroup.id}/group`, {
-          group_name: this.editGroupName
+          group_name: this.editGroupName,
         });
 
-        if (response.data.success) {
+        console.log("Update Group Name Response:", response.data.status);
+        if (response.data?.status == "success") {
           // Update local data
           this.activeGroup.group_name = this.editGroupName;
-          
+
           // Update conversations list
-          const conversationIndex = this.conversations.findIndex(c => c.id === this.activeGroup.id);
+          const conversationIndex = this.conversations.findIndex((c) => c.id === this.activeGroup.id);
           if (conversationIndex !== -1) {
             this.conversations[conversationIndex].group_name = this.editGroupName;
           }
@@ -656,7 +688,7 @@ export default {
 
           this.showEditGroupSection = false;
           this.editGroupName = "";
-          
+
           window.s_alert("Group name updated successfully");
         }
       } catch (err) {
@@ -673,10 +705,10 @@ export default {
       try {
         const response = await axios.delete(`/messages/conversations/${this.activeGroup.id}/group`);
 
-        if (response.data.success) {
+        if (response.data.status == "success") {
           // Remove from conversations list
-          this.conversations = this.conversations.filter(c => c.id !== this.activeGroup.id);
-          
+          this.conversations = this.conversations.filter((c) => c.id !== this.activeGroup.id);
+
           // Clear active conversation if it's the deleted group
           if (this.activeConversation?.id === this.activeGroup.id) {
             this.activeConversation = null;
@@ -685,7 +717,7 @@ export default {
 
           this.showGroupMembersModal = false;
           this.activeGroup = null;
-          
+
           window.s_alert("Group deleted successfully");
         }
       } catch (err) {
@@ -697,6 +729,8 @@ export default {
   beforeUnmount() {
     window.removeEventListener("resize", this.handleResize);
     document.removeEventListener("click", this.handleClickOutside);
+    // Cancel any pending mark as read
+    this.pendingMarkAsRead = null;
   },
 };
 </script>
