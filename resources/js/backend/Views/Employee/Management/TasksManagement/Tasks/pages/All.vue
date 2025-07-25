@@ -14,26 +14,46 @@
 
               <!-- Search Input -->
               <div class="col-12 col-md-6 mb-2 mb-md-0">
-                <input class="form-control" @keyup="(e) => set_search_key(e)" placeholder="Search" />
+                <input
+                  class="form-control"
+                  @keyup="(e) => set_search_key(e)"
+                  placeholder="Search"
+                />
               </div>
 
               <!-- Sorting Button -->
               <div class="col-12 col-md-3 text-md-right text-sm-left">
-                <router-link :to="{ name: 'TaskBoard' }" class="btn btn-outline-success btn-sm" 
+                <router-link
+                  :to="{ name: 'TaskBoard' }"
+                  class="btn btn-outline-success btn-sm"
                   ><i class="fa fa-gear mx-2"></i>Task Board</router-link
                 >
-                <button class="btn btn-outline-success btn-sm mx-1" @click="set_show_filter_canvas"><i class="fa fa-gear mx-2"></i>Filter</button>
+                <button
+                  class="btn btn-outline-success btn-sm mx-1"
+                  @click="set_show_filter_canvas"
+                >
+                  <i class="fa fa-gear mx-2"></i>Filter
+                </button>
               </div>
             </div>
           </div>
 
           <div class="card-body">
-            <div class="table-responsive table_responsive card_body_fixed_height">
+            <div
+              class="table-responsive table_responsive card_body_fixed_height"
+            >
               <div class="d-flex justify-content-between mb-3">
                 <!-- Task Status Filter -->
-                <div class="mb-3 d-flex align-items-center flex-wrap" style="gap: 0.5rem">
+                <div
+                  class="mb-3 d-flex align-items-center flex-wrap"
+                  style="gap: 0.5rem"
+                >
                   <span class="font-weight-bold mr-2">Status</span>
-                  <button class="btn btn-outline-secondary btn-sm" :class="{ active: !taskStatusFilterValue }" @click="cleartaskStatusFilter">
+                  <button
+                    class="btn btn-outline-secondary btn-sm"
+                    :class="{ active: !taskStatusFilterValue }"
+                    @click="cleartaskStatusFilter"
+                  >
                     All
                   </button>
                   <button
@@ -59,14 +79,19 @@
                   </button>
                   <button
                     class="btn btn-outline-danger btn-sm"
-                    :class="{ active: taskStatusFilterValue === 'Not Completed' }"
+                    :class="{
+                      active: taskStatusFilterValue === 'Not Completed',
+                    }"
                     @click="taskStatusFilter('Not Completed')"
                   >
                     Not Completed
                   </button>
                 </div>
                 <!-- Priority Filter -->
-                <div class="mb-3 d-flex align-items-center flex-wrap" style="gap: 0.5rem">
+                <div
+                  class="mb-3 d-flex align-items-center flex-wrap"
+                  style="gap: 0.5rem"
+                >
                   <span class="font-weight-bold mr-2">Priority</span>
                   <button
                     class="btn btn-outline-secondary btn-sm"
@@ -106,7 +131,10 @@
                 <thead>
                   <tr>
                     <th style="padding-left: 12px">
-                      <i class="zmdi zmdi-settings zmdi-hc-2x" title="Actions"></i>
+                      <i
+                        class="zmdi zmdi-settings zmdi-hc-2x"
+                        title="Actions"
+                      ></i>
                     </th>
                     <th class="w-10 text-center">
                       <input
@@ -117,8 +145,9 @@
                       />
                     </th>
                     <th class="w-10">ID</th>
-                    <th>Task Group Name</th>
                     <th>Title</th>
+                    <th>Task Group</th>
+                    <th>Project</th>
                     <th>Priority</th>
                     <th>Dev Status</th>
                     <th>Task Status</th>
@@ -130,9 +159,16 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in all?.data" :key="item.id" :class="`table_rows table_row_${item.id}`">
+                  <tr
+                    v-for="(item, index) in all?.data"
+                    :key="item.id"
+                    :class="`table_rows table_row_${item.id}`"
+                  >
                     <td>
-                      <span class="icon" @click.prevent="active_row($event)"></span>
+                      <span
+                        class="icon"
+                        @click.prevent="active_row($event)"
+                      ></span>
                       <div class="table_action_btns">
                         <ul>
                           <li>
@@ -207,47 +243,108 @@
                             role="dialog"
                             style="background: rgba(0, 0, 0, 0.5)"
                           >
-                            <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div
+                              class="modal-dialog modal-dialog-centered"
+                              role="document"
+                            >
                               <div class="modal-content shadow">
                                 <div class="modal-header bg-info text-white">
-                                  <h5 class="modal-title"><i class="fa fa-tasks mr-2"></i>Update Task Status</h5>
-                                  <button type="button" class="close text-white" @click="closeOverviewModal">
+                                  <h5 class="modal-title">
+                                    <i class="fa fa-tasks mr-2"></i>Update Task
+                                    Status
+                                  </h5>
+                                  <button
+                                    type="button"
+                                    class="close text-white"
+                                    @click="closeOverviewModal"
+                                  >
                                     <span aria-hidden="true">&times;</span>
                                   </button>
                                 </div>
-                                <form @submit.prevent="submitTaskOverviewForm(item)">
+                                <form
+                                  @submit.prevent="submitTaskOverviewForm(item)"
+                                >
                                   <div class="modal-body">
                                     <div class="form-group">
-                                      <label for="taskStatusSelect" class="font-weight-bold">Task Status</label>
-                                      <select id="taskStatusSelect" class="form-control" v-model="item.task_status" name="task_status">
-                                        <option disabled value="">Select Status</option>
-                                        <option value="In Progress">In Progress</option>
-                                        <option value="Completed">Completed</option>
-                                        <option value="Not Completed">Not Completed</option>
+                                      <label
+                                        for="taskStatusSelect"
+                                        class="font-weight-bold"
+                                        >Task Status</label
+                                      >
+                                      <select
+                                        id="taskStatusSelect"
+                                        class="form-control"
+                                        v-model="item.task_status"
+                                        name="task_status"
+                                      >
+                                        <option disabled value="">
+                                          Select Status
+                                        </option>
+                                        <option value="In Progress">
+                                          In Progress
+                                        </option>
+                                        <option value="Completed">
+                                          Completed
+                                        </option>
+                                        <option value="Not Completed">
+                                          Not Completed
+                                        </option>
                                       </select>
                                     </div>
                                     <div class="form-group">
-                                      <label for="taskRating" class="font-weight-bold">Task Rating</label>
+                                      <label
+                                        for="taskRating"
+                                        class="font-weight-bold"
+                                        >Task Rating</label
+                                      >
                                       <div>
                                         <span
                                           v-for="n in 5"
                                           :key="'star-' + n"
                                           class="fa"
-                                          :class="['fa-star', n <= (item.rating || 0) ? 'text-warning' : 'text-secondary']"
+                                          :class="[
+                                            'fa-star',
+                                            n <= (item.rating || 0)
+                                              ? 'text-warning'
+                                              : 'text-secondary',
+                                          ]"
                                           style="font-size: 1.3em"
                                         ></span>
                                       </div>
-                                      <div class="d-flex align-items-center" style="gap: 10px">
-                                        <select id="taskRating" class="form-control" name="rating" v-model="item.rating">
-                                          <option disabled value="">Select Rating</option>
-                                          <option v-for="n in 5" :key="n" :value="n">
+                                      <div
+                                        class="d-flex align-items-center"
+                                        style="gap: 10px"
+                                      >
+                                        <select
+                                          id="taskRating"
+                                          class="form-control"
+                                          name="rating"
+                                          v-model="item.rating"
+                                        >
+                                          <option disabled value="">
+                                            Select Rating
+                                          </option>
+                                          <option
+                                            v-for="n in 5"
+                                            :key="n"
+                                            :value="n"
+                                          >
                                             {{ n }}
                                           </option>
                                         </select>
                                       </div>
                                     </div>
-                                    <div v-if="item.task_status === 'Not Completed'" class="form-group">
-                                      <label for="nextDateInput" class="font-weight-bold">Next Date</label>
+                                    <div
+                                      v-if="
+                                        item.task_status === 'Not Completed'
+                                      "
+                                      class="form-group"
+                                    >
+                                      <label
+                                        for="nextDateInput"
+                                        class="font-weight-bold"
+                                        >Next Date</label
+                                      >
                                       <input
                                         id="nextDateInput"
                                         type="date"
@@ -260,11 +357,18 @@
                                     </div>
                                   </div>
                                   <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" @click="closeOverviewModal">
+                                    <button
+                                      type="button"
+                                      class="btn btn-secondary"
+                                      @click="closeOverviewModal"
+                                    >
                                       <i class="fa fa-times mr-1"></i>Close
                                     </button>
                                     <button
-                                      v-if="selectedTask && selectedTask.task_status !== 'Pending'"
+                                      v-if="
+                                        selectedTask &&
+                                        selectedTask.task_status !== 'Pending'
+                                      "
                                       type="submit"
                                       class="btn btn-info"
                                       :disabled="!item.task_status"
@@ -280,14 +384,41 @@
                       </div>
                     </td>
                     <td class="text-limit" title="Select">
-                      <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
+                      <input
+                        @change="set_item_selected(item, $event)"
+                        :checked="isSelected(item)"
+                        class="form-check-input ml-0"
+                        type="checkbox"
+                      />
                     </td>
-                    <td class="text-limit" :title="index + 1">{{ index + 1 }}</td>
-                    <td class="text-limit" :title="item.task_group_id?.name">{{ item.task_group_id?.name }}</td>
-                    <td class="text-limit" :title="item.title">{{ item.title }}</td>
-                    <td class="text-limit" :title="item.priority">{{ item.priority }}</td>
-                    <td class="text-limit" :title="item.task_user_status ?? 'N/A'">{{ item.task_user_status ?? "N/A" }}</td>
-                    <td class="text-limit" :class="getTaskStatusClass(item.task_status)" :title="item.task_status">
+                    <td class="text-limit" :title="index + 1">
+                      {{ index + 1 }}
+                    </td>
+                    <td class="text-limit" :title="item.title">
+                      {{ item.title }}
+                    </td>
+                    <td class="text-limit" :title="item.task_group?.name">
+                      {{ item.task_group?.name }}
+                    </td>
+
+                    <td class="text-limit" :title="item.project_id?.name">
+                      {{ item.project_id?.name }}
+                    </td>
+
+                    <td class="text-limit" :title="item.priority">
+                      {{ item.priority }}
+                    </td>
+                    <td
+                      class="text-limit"
+                      :title="item.task_user_status ?? 'N/A'"
+                    >
+                      {{ item.task_user_status ?? "N/A" }}
+                    </td>
+                    <td
+                      class="text-limit"
+                      :class="getTaskStatusClass(item.task_status)"
+                      :title="item.task_status"
+                    >
                       {{ item.task_status }}
                     </td>
                     <td class="text-limit" :title="`Rating: ${item.rating}`">
@@ -296,18 +427,43 @@
                           v-for="n in 5"
                           :key="'star-' + n"
                           class="fa"
-                          :class="['fa-star', n <= (item.rating || 0) ? 'text-warning' : 'text-secondary']"
+                          :class="[
+                            'fa-star',
+                            n <= (item.rating || 0)
+                              ? 'text-warning'
+                              : 'text-secondary',
+                          ]"
                           style="font-size: 1.3em"
                         ></span>
-                        <span class="ml-2 font-weight-bold">({{ item.rating }})</span>
+                        <span class="ml-2 font-weight-bold"
+                          >({{ item.rating }})</span
+                        >
                       </span>
                     </td>
-                    <td class="text-limit" :title="FindActualTime(item.start_date, item.end_date)">
+                    <td
+                      class="text-limit"
+                      :title="FindActualTime(item.start_date, item.end_date)"
+                    >
                       {{ FindActualTime(item.start_date, item.end_date) }}
                     </td>
-                    <td class="text-limit" :title="formatDateTime(item.start_date)">{{ formatDateTime(item.start_date) }}</td>
-                    <td class="text-limit" :title="formatDateTime(item.end_date)">{{ formatDateTime(item.end_date) }}</td>
-                    <td class="text-limit" :title="formatDateTime(item.created_at)">{{ formatDateTime(item.created_at) }}</td>
+                    <td
+                      class="text-limit"
+                      :title="formatDateTime(item.start_date)"
+                    >
+                      {{ formatDateTime(item.start_date) }}
+                    </td>
+                    <td
+                      class="text-limit"
+                      :title="formatDateTime(item.end_date)"
+                    >
+                      {{ formatDateTime(item.end_date) }}
+                    </td>
+                    <td
+                      class="text-limit"
+                      :title="formatDateTime(item.created_at)"
+                    >
+                      {{ formatDateTime(item.created_at) }}
+                    </td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />
@@ -318,13 +474,22 @@
             </div>
           </div>
           <div class="mx-3">
-            <nav aria-label="" class="d-flex gap-2 align-items-center" style="gap: 10px">
+            <nav
+              aria-label=""
+              class="d-flex gap-2 align-items-center"
+              style="gap: 10px"
+            >
               <ul class="pagination my-2" style="font-size: 11px">
                 <template v-for="(link, index) in all?.links" :key="index">
                   <li class="page-item" :class="{ active: link.active }">
                     <a
                       class="page-link"
-                      :class="all?.current_page == all?.last_page && all?.links.length - 1 == index ? 'disabled' : ''"
+                      :class="
+                        all?.current_page == all?.last_page &&
+                        all?.links.length - 1 == index
+                          ? 'disabled'
+                          : ''
+                      "
                       @click.prevent="set_page_data(link)"
                       :href="link.url"
                       v-html="`<span>${link.label}</span>`"
@@ -344,7 +509,11 @@
               <div class="d-flex" style="gap: 5px">
                 <span></span>
                 <span> Limit </span>
-                <select v-model="paginate" @change="set_per_page_limit" class="bg-transparent text-white rounded-1">
+                <select
+                  v-model="paginate"
+                  @change="set_per_page_limit"
+                  class="bg-transparent text-white rounded-1"
+                >
                   <option value="5">05</option>
                   <option value="10">10</option>
                   <option value="50">50</option>
@@ -381,12 +550,22 @@
                 </a>
               </div>
               <div class="mr-2 mb-2" v-if="this.selected?.length">
-                <a href="" @click.prevent="export_selected_csv(selected)" class="btn action_btn btn-sm btn-secondary d-flex align-items-center">
-                  <i class="fa fa-sign-out mr-2"></i> Export ({{ this.selected?.length }})
+                <a
+                  href=""
+                  @click.prevent="export_selected_csv(selected)"
+                  class="btn action_btn btn-sm btn-secondary d-flex align-items-center"
+                >
+                  <i class="fa fa-sign-out mr-2"></i> Export ({{
+                    this.selected?.length
+                  }})
                 </a>
               </div>
               <div class="mr-2 mb-2">
-                <a href="" @click.prevent="import_csv_modal_show = true" class="btn action_btn btn-sm btn-secondary d-flex align-items-center">
+                <a
+                  href=""
+                  @click.prevent="import_csv_modal_show = true"
+                  class="btn action_btn btn-sm btn-secondary d-flex align-items-center"
+                >
                   <i class="fa fa-download mr-2"></i> Import
                 </a>
               </div>
@@ -422,7 +601,10 @@
       </div>
       <div class="off_canvas_overlay"></div>
     </div>
-    <div class="off_canvas data_filter" :class="`${show_filter_canvas ? 'active' : ''}`">
+    <div
+      class="off_canvas data_filter"
+      :class="`${show_filter_canvas ? 'active' : ''}`"
+    >
       <div class="off_canvas_body">
         <div class="header">
           <h3 class="heading_text">Filter</h3>
@@ -433,22 +615,43 @@
         <div class="data_content">
           <div class="filter_item">
             <label for="start_date">Start Date</label>
-            <label for="start_date" class="text-capitalize d-block date_custom_control">
-              <input v-model="start_date" type="date" id="start_date" name="start_date" class="form-control" />
+            <label
+              for="start_date"
+              class="text-capitalize d-block date_custom_control"
+            >
+              <input
+                v-model="start_date"
+                type="date"
+                id="start_date"
+                name="start_date"
+                class="form-control"
+              />
               <!-- <div class="form-control preview"></div> -->
             </label>
           </div>
           <div class="filter_item">
             <label for="end_date">End Date</label>
-            <label for="end_date" class="text-capitalize d-block date_custom_control">
-              <input v-model="end_date" type="date" id="end_date" name="end_date" class="form-control" />
+            <label
+              for="end_date"
+              class="text-capitalize d-block date_custom_control"
+            >
+              <input
+                v-model="end_date"
+                type="date"
+                id="end_date"
+                name="end_date"
+                class="form-control"
+              />
               <!-- <div class="form-control preview"></div> -->
             </label>
           </div>
 
           <div class="filter_item">
             <label for="sort_by_col">Sort By Col</label
-            ><label for="sort_by_col" class="text-capitalize d-block date_custom_control">
+            ><label
+              for="sort_by_col"
+              class="text-capitalize d-block date_custom_control"
+            >
               <select v-model="sort_by_col" class="form-control">
                 <option v-for="col in sort_by_cols" :key="col">
                   {{ col }}
@@ -458,7 +661,10 @@
           </div>
           <div class="filter_item">
             <label for="sort_by_col">Sort Type</label
-            ><label for="sort_by_col" class="text-capitalize d-block date_custom_control">
+            ><label
+              for="sort_by_col"
+              class="text-capitalize d-block date_custom_control"
+            >
               <select v-model="sort_type" class="form-control">
                 <option v-for="col in ['ASC', 'DESC']" :key="col">
                   {{ col }}
@@ -466,21 +672,45 @@
               </select>
             </label>
           </div>
-          <div class="filter_item d-flex justify-content-between align-items-center">
-            <button @click.prevent="get_all()" type="button" class="btn btn-sm btn-outline-info">Submit</button>
-            <button class="btn btn-outline-danger btn-sm" @click="reset_filters">Reset</button>
+          <div
+            class="filter_item d-flex justify-content-between align-items-center"
+          >
+            <button
+              @click.prevent="get_all()"
+              type="button"
+              class="btn btn-sm btn-outline-info"
+            >
+              Submit
+            </button>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              @click="reset_filters"
+            >
+              Reset
+            </button>
           </div>
         </div>
       </div>
       <div class="off_canvas_overlay"></div>
     </div>
-    <div class="modal fade" :class="`${import_csv_modal_show ? 'show d-block' : 'd-none'}`" id="primarymodal" aria-modal="true">
+    <div
+      class="modal fade"
+      :class="`${import_csv_modal_show ? 'show d-block' : 'd-none'}`"
+      id="primarymodal"
+      aria-modal="true"
+    >
       <div class="modal-dialog modal-dialog-centered">
         <form @submit.prevent="FileUploadHandler">
           <div class="modal-content border-primary">
             <div class="modal-header bg-primary">
               <h5 class="modal-title text-white">Import {{ setup.prefix }}</h5>
-              <button @click="import_csv_modal_show = false" type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+              <button
+                @click="import_csv_modal_show = false"
+                type="button"
+                class="close text-white"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
                 <span aria-hidden="true">×</span>
               </button>
             </div>
@@ -489,14 +719,29 @@
                 <label for="">Upload file</label>
                 <input type="file" name="file" class="form-control" required />
               </div>
-              <p class="mt-3">Please check the sample CSV file below to ensure compatibility with the demo data import.</p>
-              <a href="" @click.prevent="export_demo_csv" class="btn btn-sm btn-primary">Download Demo CSV</a>
+              <p class="mt-3">
+                Please check the sample CSV file below to ensure compatibility
+                with the demo data import.
+              </p>
+              <a
+                href=""
+                @click.prevent="export_demo_csv"
+                class="btn btn-sm btn-primary"
+                >Download Demo CSV</a
+              >
             </div>
             <div class="modal-footer">
-              <button @click="import_csv_modal_show = false" type="button" class="btn btn-light" data-dismiss="modal">
+              <button
+                @click="import_csv_modal_show = false"
+                type="button"
+                class="btn btn-light"
+                data-dismiss="modal"
+              >
                 <i class="fa fa-times"></i> Close
               </button>
-              <button type="submit" class="btn btn-primary"><i class="fa fa-download"></i> Import</button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fa fa-download"></i> Import
+              </button>
             </div>
           </div>
         </form>
@@ -523,7 +768,8 @@ export default {
     isOverviewModalVisible: false,
     // selectedTask: null,
     // selectedStatus: "",
-    filePath: "resources/js/backend/Views/SuperAdmin/Management/TestModule/helpers/demo.csv",
+    filePath:
+      "resources/js/backend/Views/SuperAdmin/Management/TestModule/helpers/demo.csv",
   }),
   created: async function () {
     await this.get_all();
@@ -725,7 +971,9 @@ export default {
 
     bulkActions: async function () {
       let action = event.target.value;
-      let con = await window.s_confirm("Are you sure want to " + action + " items ?");
+      let con = await window.s_confirm(
+        "Are you sure want to " + action + " items ?"
+      );
       if (con) {
         let selected_data = this.selected;
         selected_data = selected_data.map((item) => item.id);
@@ -849,7 +1097,12 @@ export default {
       "date",
     ]),
     isAllSelected() {
-      return this.all?.data?.length > 0 && this.all.data?.every((item) => this.selected.some((s) => s.id === item.id));
+      return (
+        this.all?.data?.length > 0 &&
+        this.all.data?.every((item) =>
+          this.selected.some((s) => s.id === item.id)
+        )
+      );
     },
   },
 

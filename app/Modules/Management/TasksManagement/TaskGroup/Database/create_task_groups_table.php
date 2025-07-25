@@ -14,6 +14,8 @@ return new class extends Migration
     {
         Schema::create('task_groups', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('project_id')->unsigned()->nullable();
+            $table->bigInteger('user_id')->unsigned()->nullable();
             $table->string('name', 80)->nullable();
             $table->bigInteger('creator')->unsigned()->nullable();
             $table->string('slug', 50)->nullable();

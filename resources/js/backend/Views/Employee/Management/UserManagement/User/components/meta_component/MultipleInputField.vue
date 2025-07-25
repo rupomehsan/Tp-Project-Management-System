@@ -65,7 +65,7 @@
     <div
       class="d-flex justify-content-between align-items-center pb-2 section-title"
     >
-      <h5 class="m-0">Add Project document links</h5>
+      <h5 class="m-0">Add Social links</h5>
       <button
         class="btn btn-sm btn-outline-success"
         @click.prevent="add_link_row"
@@ -145,12 +145,10 @@ export default {
       (newValue) => {
         if (newValue) {
           if (newValue.social_media) {
-            this.social_media = newValue.social_media.map(
-              (doc) => ({
-                name: doc.name,
-                link: doc.link,
-              })
-            );
+            this.social_media = newValue.social_media.map((doc) => ({
+              name: doc.name,
+              link: doc.link,
+            }));
           }
         }
       },

@@ -51,7 +51,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in all?.data" :key="item.id" :class="`table_rows table_row_${item.id}`">
-                    <td>
+                    <td class="text-limit" :title="`Actions for ${item.title}`">
                       <span class="icon" @click.prevent="active_row($event)"></span>
                       <div class="table_action_btns">
                         <ul>
@@ -114,15 +114,15 @@
                         </ul>
                       </div>
                     </td>
-                    <td>
+                    <td class="text-limit" :title="`Select ${item.title}`">
                       <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
                     </td>
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ item.meeting_group_id?.title }}</td>
-                    <td>{{ item.title }}</td>
-                    <td>{{ formatDateTime(item.date) }}</td>
-                    <td>{{ item.meeting_type }}</td>
-                    <td>
+                    <td class="text-limit" :title="`ID: ${index + 1}`">{{ index + 1 }}</td>
+                    <td class="text-limit" :title="`Meeting Group: ${item.meeting_group_id?.title || 'N/A'}`">{{ item.meeting_group_id?.title }}</td>
+                    <td class="text-limit" :title="`Title: ${item.title}`">{{ item.title }}</td>
+                    <td class="text-limit" :title="`Date: ${formatDateTime(item.date)}`">{{ formatDateTime(item.date) }}</td>
+                    <td class="text-limit" :title="`Type: ${item.meeting_type}`">{{ item.meeting_type }}</td>
+                    <td class="text-limit" :title="`Meeting Link: ${item.meeting_link || 'No link'}`">
                       <span v-if="item.meeting_link" style="cursor: pointer">
                         <a class="text-info" :href="item.meeting_link" target="_blank" rel="noopener noreferrer">
                           {{ item.meeting_link }}
@@ -131,7 +131,7 @@
                       </span>
                       <span v-else>-</span>
                     </td>
-                    <td>{{ formatDateTime(item.created_at) }}</td>
+                    <td class="text-limit" :title="`Created At: ${formatDateTime(item.created_at)}`">{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />

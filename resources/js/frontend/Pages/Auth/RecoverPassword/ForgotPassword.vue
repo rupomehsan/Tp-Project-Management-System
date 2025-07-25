@@ -1,46 +1,64 @@
 <template>
   <Layout>
-    <div
-      v-if="step_one"
-      class="row justify-content-center align-items-center vh-100"
-    >
-      <div class="col-md-6">
-        <form @submit.prevent="ForgotPasswordSubmitHandler">
-          <h3>Forgot Password</h3>
-
-          <div class="form-group">
-            <label for="email"> email</label>
-            <input
-              class="form-control"
-              type="email"
-              placeholder="  email"
-              name="email"
-            />
+    <div class="professional-login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="brand-section">
+            <div class="brand-icon">
+              <i class="fas fa-key"></i>
+            </div>
+            <h2 class="brand-title">Forgot Password</h2>
+            <p class="brand-subtitle">Enter your email to receive a verification code</p>
           </div>
+        </div>
+        
+        <div v-if="step_one">
+          <form @submit.prevent="ForgotPasswordSubmitHandler" class="login-form">
+            <div class="form-group">
+              <label for="email" class="form-label">
+                <i class="fas fa-envelope"></i>
+                Email Address
+              </label>
+              <input
+                id="email"
+                class="form-control"
+                type="email"
+                placeholder="Enter your email address"
+                name="email"
+                v-model="email"
+                required
+              />
+            </div>
 
-          <button
-            class="my-4 btn btn-outline-success"
-            type="submit"
-            id="spiner"
-          >
-            <span v-if="!loading">Send</span>
-            <template v-if="loading">
-              <span
-                class="spinner-border spinner-border-sm mx-2"
-                role="status"
-                aria-hidden="true"
-              ></span>
-              <span class="">Loading...</span>
-            </template>
-          </button>
-          <!-- <Link href="/" class="text-primary">Go to home page</Link> <br>
-                    <Link href="/verify-code" class="text-info">Go to verify page</Link> <br> -->
-        </form>
+            <button
+              class="login-button"
+              type="submit"
+              :disabled="loading || !email"
+            >
+              <span v-if="!loading" class="button-content">
+                <i class="fas fa-paper-plane"></i>
+                Send Verification Code
+              </span>
+              <span v-if="loading" class="button-content loading">
+                <div class="spinner"></div>
+                Sending...
+              </span>
+            </button>
+          </form>
+          
+          <div class="login-footer">
+            <p class="footer-text">
+              Remember your password? 
+              <Link href="/login" class="signup-link">Back to Login</Link>
+            </p>
+          </div>
+        </div>
+
+        <template v-if="step_two">
+          <verify-code :email="email"></verify-code>
+        </template>
       </div>
     </div>
-    <template v-if="step_two">
-      <verify-code :email="email"></verify-code>
-    </template>
   </Layout>
 </template>
 <script>

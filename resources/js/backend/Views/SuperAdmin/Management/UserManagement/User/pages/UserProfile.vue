@@ -7,7 +7,13 @@
         <div class="card profile-card-2">
           <div>
             <img
-              style="padding: 5px; max-height: 325px; object-fit: cover; object-position: top center;border-radius:   8px;"
+              style="
+                padding: 5px;
+                max-height: 325px;
+                object-fit: cover;
+                object-position: top center;
+                border-radius: 8px;
+              "
               class="img-fluid w-100"
               :src="`${item.image ?? 'avatar.png'}`"
               alt="Card image cap"
@@ -22,7 +28,6 @@
                   <div class="rating-separator">/</div>
                   <div class="rating-max">10</div>
                 </div>
-               
               </div>
               <div class="rating-glow"></div>
             </div>
@@ -36,12 +41,14 @@
           <div class="card-body border-light">
             <div class="media align-items-center">
               <div class="icon-block">
-                <template v-if="item.social_media && item.social_media.length > 0">
-                  <a 
-                    v-for="(social, index) in item.social_media" 
+                <template
+                  v-if="item.social_media && item.social_media.length > 0"
+                >
+                  <a
+                    v-for="(social, index) in item.social_media"
                     :key="index"
-                    :href="social.link" 
-                    target="_blank" 
+                    :href="social.link"
+                    target="_blank"
                     :title="social.name"
                     class="social-link"
                   >
@@ -49,7 +56,9 @@
                   </a>
                 </template>
                 <template v-else>
-                  <span class="text-muted">No social media links available</span>
+                  <span class="text-muted"
+                    >No social media links available</span
+                  >
                 </template>
               </div>
             </div>
@@ -95,7 +104,11 @@
                   <i class="fas fa-project-diagram fa-2x"></i>
                 </div>
                 <h2 class="mb-0">
-                  {{ item.tasks?.filter((task) => task.task_status === "Completed").length }}
+                  {{
+                    item.tasks?.filter(
+                      (task) => task.task_status === "Completed"
+                    ).length
+                  }}
                 </h2>
               </div>
             </div>
@@ -109,7 +122,11 @@
                   <!-- <i class="fas fa-users fa-2x"></i> -->
                 </div>
                 <h2 class="mb-0">
-                  {{ item.tasks?.filter((task) => task.task_status !== "Completed").length }}
+                  {{
+                    item.tasks?.filter(
+                      (task) => task.task_status !== "Completed"
+                    ).length
+                  }}
                 </h2>
               </div>
             </div>
@@ -122,7 +139,13 @@
                 <div class="d-flex justify-content-between align-items-center">
                   <h6 class="font-weight-light">TOTAL PRESENT ATTENDANCE</h6>
                 </div>
-                <h2 class="mb-0">{{ item.attendance?.filter((att) => att.attendance_status === "Present").length }}</h2>
+                <h2 class="mb-0">
+                  {{
+                    item.attendance?.filter(
+                      (att) => att.attendance_status === "Present"
+                    ).length
+                  }}
+                </h2>
               </div>
             </div>
           </div>
@@ -134,7 +157,11 @@
                   <h6 class="font-weight-light">TOTAL ABSENCE</h6>
                 </div>
                 <h2 class="mb-0">
-                  {{ item.attendance?.filter((att) => att.attendance_status === "Absent").length }}
+                  {{
+                    item.attendance?.filter(
+                      (att) => att.attendance_status === "Absent"
+                    ).length
+                  }}
                 </h2>
               </div>
             </div>
@@ -161,7 +188,11 @@
               v-if="Array.isArray(item.project) && item.project?.length"
               v-for="(projects, index) in item.project"
               :key="index"
-              :style="projects.project_status === 'Completed' ? 'background-color: green;' : ''"
+              :style="
+                projects.project_status === 'Completed'
+                  ? 'background-color: green;'
+                  : ''
+              "
             >
               <td>{{ index + 1 }}</td>
               <td>{{ projects.name }}</td>
@@ -203,30 +234,30 @@ export default {
     },
     getSocialMediaIcon(socialMediaName) {
       const iconMap = {
-        'Facebook': 'fa fa-facebook bg-facebook text-white',
-        'Instagram': 'fa fa-instagram bg-instagram text-white',
-        'Twitter': 'fa fa-twitter bg-twitter text-white',
-        'LinkedIn': 'fa fa-linkedin bg-linkedin text-white',
-        'YouTube': 'fa fa-youtube bg-youtube text-white',
-        'TikTok': 'fa fa-tiktok bg-tiktok text-white',
-        'Snapchat': 'fa fa-snapchat bg-snapchat text-white',
-        'Pinterest': 'fa fa-pinterest bg-pinterest text-white',
-        'WhatsApp': 'fa fa-whatsapp bg-whatsapp text-white',
-        'Telegram': 'fa fa-telegram bg-telegram text-white',
-        'Discord': 'fa fa-discord bg-discord text-white',
-        'Reddit': 'fa fa-reddit bg-reddit text-white',
-        'Tumblr': 'fa fa-tumblr bg-tumblr text-white',
-        'Twitch': 'fa fa-twitch bg-twitch text-white',
-        'GitHub': 'fa fa-github bg-github text-white',
-        'Behance': 'fa fa-behance bg-behance text-white',
-        'Dribbble': 'fa fa-dribbble bg-dribbble text-white',
-        'Skype': 'fa fa-skype bg-skype text-white',
-        'Viber': 'fa fa-viber bg-viber text-white',
-        'WeChat': 'fa fa-wechat bg-wechat text-white',
-        'Other': 'fa fa-link bg-secondary text-white'
+        Facebook: "fa fa-facebook bg-facebook text-white",
+        Instagram: "fa fa-instagram bg-instagram text-white",
+        Twitter: "fa fa-twitter bg-twitter text-white",
+        LinkedIn: "fa fa-linkedin bg-linkedin text-white",
+        YouTube: "fa fa-youtube bg-youtube text-white",
+        TikTok: "fa fa-tiktok bg-tiktok text-white",
+        Snapchat: "fa fa-snapchat bg-snapchat text-white",
+        Pinterest: "fa fa-pinterest bg-pinterest text-white",
+        WhatsApp: "fa fa-whatsapp bg-whatsapp text-white",
+        Telegram: "fa fa-telegram bg-telegram text-white",
+        Discord: "fa fa-discord bg-discord text-white",
+        Reddit: "fa fa-reddit bg-reddit text-white",
+        Tumblr: "fa fa-tumblr bg-tumblr text-white",
+        Twitch: "fa fa-twitch bg-twitch text-white",
+        GitHub: "fa fa-github bg-github text-white",
+        Behance: "fa fa-behance bg-behance text-white",
+        Dribbble: "fa fa-dribbble bg-dribbble text-white",
+        Skype: "fa fa-skype bg-skype text-white",
+        Viber: "fa fa-viber bg-viber text-white",
+        WeChat: "fa fa-wechat bg-wechat text-white",
+        Other: "fa fa-link bg-secondary text-white",
       };
-      
-      return iconMap[socialMediaName] || 'fa fa-link bg-secondary text-white';
+
+      return iconMap[socialMediaName] || "fa fa-link bg-secondary text-white";
     },
   },
   computed: {
@@ -302,7 +333,7 @@ tr th {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
-  margin-top: -3px;
+  margin-top: 0px;
 }
 
 .profile-card-2 {
@@ -315,8 +346,8 @@ tr th {
 }
 
 .rating-circle {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
@@ -325,9 +356,7 @@ tr th {
   justify-content: center;
   color: white;
   font-weight: 600;
-  box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.2),
-    0 0 0 8px rgba(255, 255, 255, 0.9),
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 8px rgba(255, 255, 255, 0.9),
     0 0 0 12px rgba(0, 0, 0, 0.1);
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -336,10 +365,8 @@ tr th {
 
 .rating-circle:hover {
   transform: scale(1.08);
-  box-shadow: 
-    0 15px 40px rgba(0, 0, 0, 0.25),
-    0 0 0 8px rgba(255, 255, 255, 0.95),
-    0 0 0 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25),
+    0 0 0 8px rgba(255, 255, 255, 0.95), 0 0 0 12px rgba(0, 0, 0, 0.15);
 }
 
 .rating-inner {
@@ -383,17 +410,22 @@ tr th {
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(102, 126, 234, 0.3) 0%,
+    transparent 70%
+  );
   animation: pulse 3s ease-in-out infinite;
   z-index: -1;
 }
 
 @keyframes pulse {
-  0%, 100% { 
+  0%,
+  100% {
     opacity: 0.6;
     transform: translate(-50%, -50%) scale(1);
   }
-  50% { 
+  50% {
     opacity: 0.8;
     transform: translate(-50%, -50%) scale(1.1);
   }
@@ -449,24 +481,72 @@ tr th {
 }
 
 /* Social Media Background Colors */
-.bg-facebook { background-color: #3b5998 !important; }
-.bg-instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%) !important; }
-.bg-twitter { background-color: #1da1f2 !important; }
-.bg-linkedin { background-color: #0077b5 !important; }
-.bg-youtube { background-color: #ff0000 !important; }
-.bg-tiktok { background-color: #000000 !important; }
-.bg-snapchat { background-color: #fffc00 !important; color: #000 !important; }
-.bg-pinterest { background-color: #bd081c !important; }
-.bg-whatsapp { background-color: #25d366 !important; }
-.bg-telegram { background-color: #0088cc !important; }
-.bg-discord { background-color: #7289da !important; }
-.bg-reddit { background-color: #ff4500 !important; }
-.bg-tumblr { background-color: #00cf35 !important; }
-.bg-twitch { background-color: #9146ff !important; }
-.bg-github { background-color: #333333 !important; }
-.bg-behance { background-color: #1769ff !important; }
-.bg-dribbble { background-color: #ea4c89 !important; }
-.bg-skype { background-color: #00aff0 !important; }
-.bg-viber { background-color: #665cac !important; }
-.bg-wechat { background-color: #7bb32e !important; }
+.bg-facebook {
+  background-color: #3b5998 !important;
+}
+.bg-instagram {
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  ) !important;
+}
+.bg-twitter {
+  background-color: #1da1f2 !important;
+}
+.bg-linkedin {
+  background-color: #0077b5 !important;
+}
+.bg-youtube {
+  background-color: #ff0000 !important;
+}
+.bg-tiktok {
+  background-color: #000000 !important;
+}
+.bg-snapchat {
+  background-color: #fffc00 !important;
+  color: #000 !important;
+}
+.bg-pinterest {
+  background-color: #bd081c !important;
+}
+.bg-whatsapp {
+  background-color: #25d366 !important;
+}
+.bg-telegram {
+  background-color: #0088cc !important;
+}
+.bg-discord {
+  background-color: #7289da !important;
+}
+.bg-reddit {
+  background-color: #ff4500 !important;
+}
+.bg-tumblr {
+  background-color: #00cf35 !important;
+}
+.bg-twitch {
+  background-color: #9146ff !important;
+}
+.bg-github {
+  background-color: #333333 !important;
+}
+.bg-behance {
+  background-color: #1769ff !important;
+}
+.bg-dribbble {
+  background-color: #ea4c89 !important;
+}
+.bg-skype {
+  background-color: #00aff0 !important;
+}
+.bg-viber {
+  background-color: #665cac !important;
+}
+.bg-wechat {
+  background-color: #7bb32e !important;
+}
 </style>

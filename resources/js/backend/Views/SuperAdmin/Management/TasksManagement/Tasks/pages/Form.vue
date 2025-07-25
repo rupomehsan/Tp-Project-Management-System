@@ -162,7 +162,11 @@
               <div class="form-group">
                 <label for="">description</label>
                 <div class="mt-1 mb-3">
-                  <text-editor :name="'description'" />
+                  <text-editor
+                    :name="'description'"
+                    :value="form_fields.description"
+                    @input="form_fields.description = $event"
+                  />
                   <!-- <textarea 
                     v-model="form_fields.description"
                     name="description"
@@ -263,12 +267,12 @@ export default {
       if (this.item) {
         // this.form_fields.assigned_to = this.item.assigned_to;
         this.form_fields.title = this.item.title;
+        this.form_fields.description = this.item.description; // Set description in form_fields
         this.form_fields.start_date = this.item.start_date;
         this.form_fields.end_date = this.item.end_date;
         this.form_fields.task_status = this.item.task_status;
         this.form_fields.task_user_status = this.item.task_user_status;
         this.form_fields.priority = this.item.priority;
-        $("#description").summernote("code", this.item.description);
       }
     },
 

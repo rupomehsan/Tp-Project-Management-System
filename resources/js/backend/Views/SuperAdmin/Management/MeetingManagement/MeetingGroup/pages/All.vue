@@ -65,7 +65,7 @@
                     :key="item.id"
                     :class="`table_rows table_row_${item.id}`"
                   >
-                    <td>
+                    <td class="text-limit" :title="`Actions for ${item.title}`">
                       <span
                         class="icon"
                         @click.prevent="active_row($event)"
@@ -153,7 +153,7 @@
                         </ul>
                       </div>
                     </td>
-                    <td>
+                    <td class="text-limit" :title="`Select ${item.title}`">
                       <input
                         @change="set_item_selected(item, $event)"
                         :checked="isSelected(item)"
@@ -161,9 +161,9 @@
                         type="checkbox"
                       />
                     </td>
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ item.title }}</td>
-                    <td>{{ formatDateTime(item.created_at) }}</td>
+                    <td class="text-limit" :title="`ID: ${index + 1}`">{{ index + 1 }}</td>
+                    <td class="text-limit" :title="`Title: ${item.title}`">{{ item.title }}</td>
+                    <td class="text-limit" :title="`Created At: ${formatDateTime(item.created_at)}`">{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />

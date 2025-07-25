@@ -28,24 +28,27 @@
           <div class="card-body border-light">
             <div class="media align-items-center">
               <div class="icon-block">
-                <a href="javascript:void();"
-                  ><i class="fa fa-github bg-github text-white"></i
-                ></a>
-                <a href="javascript:void();">
-                  <i class="fa fa-linkedin bg-linkedin text-white"></i
-                ></a>
-                <a href="javascript:void();"
-                  ><i class="fa fa-facebook bg-facebook text-white"></i
-                ></a>
-                <a href="javascript:void();">
-                  <i class="fa fa-twitter bg-twitter text-white"></i
-                ></a>
-                <a href="javascript:void();">
-                  <i class="fa fa-google-plus bg-google-plus text-white"></i
-                ></a>
-                <a href="javascript:void();">
-                  <i class="fa fa-youtube bg-youtube text-white"></i
-                ></a>
+                <template
+                  v-if="
+                    auth_info.social_media && auth_info.social_media.length > 0
+                  "
+                >
+                  <a
+                    v-for="(social, index) in auth_info.social_media"
+                    :key="index"
+                    :href="social.link"
+                    target="_blank"
+                    :title="social.name"
+                    class="social-link"
+                  >
+                    <i :class="getSocialMediaIcon(social.name)"></i>
+                  </a>
+                </template>
+                <template v-else>
+                  <span class="text-muted"
+                    >No social media links available</span
+                  >
+                </template>
               </div>
             </div>
           </div>
@@ -150,12 +153,11 @@
                     </div>
                   </div>
 
-                  <div class="form-group row">
+                  <div class="form-group row align-items-center">
                     <label class="col-lg-3 col-form-label form-control-label"
                       >Change image</label
                     >
                     <div class="col-lg-9">
-                      <input class="form-control" name="image" type="file" />
                       <img
                         v-if="auth_info.image"
                         class="mt-2"
@@ -164,9 +166,14 @@
                         width="100"
                         alt=""
                       />
+                      <input class="form-control" name="image" type="file" />
                     </div>
                   </div>
 
+                  <multiple-input-field
+                    :name="'social_media'"
+                    :value="auth_info.social_media"
+                  />
                   <div class="form-group row">
                     <label
                       class="col-lg-3 col-form-label form-control-label"
@@ -271,7 +278,9 @@
 import { auth_store } from "../../../../../GlobalStore/auth_store";
 import { settings_store } from "../store/store";
 import { mapState, mapActions } from "pinia";
+import MultipleInputField from "../components/meta_component/MultipleInputField.vue";
 export default {
+  components: { MultipleInputField },
   data: () => ({
     tab: "edit",
   }),
@@ -279,6 +288,33 @@ export default {
     ...mapActions(auth_store, {
       check_is_auth: "check_is_auth",
     }),
+    getSocialMediaIcon(socialMediaName) {
+      const iconMap = {
+        Facebook: "fa fa-facebook bg-facebook text-white",
+        Instagram: "fa fa-instagram bg-instagram text-white",
+        Twitter: "fa fa-twitter bg-twitter text-white",
+        LinkedIn: "fa fa-linkedin bg-linkedin text-white",
+        YouTube: "fa fa-youtube bg-youtube text-white",
+        TikTok: "fa fa-tiktok bg-tiktok text-white",
+        Snapchat: "fa fa-snapchat bg-snapchat text-white",
+        Pinterest: "fa fa-pinterest bg-pinterest text-white",
+        WhatsApp: "fa fa-whatsapp bg-whatsapp text-white",
+        Telegram: "fa fa-telegram bg-telegram text-white",
+        Discord: "fa fa-discord bg-discord text-white",
+        Reddit: "fa fa-reddit bg-reddit text-white",
+        Tumblr: "fa fa-tumblr bg-tumblr text-white",
+        Twitch: "fa fa-twitch bg-twitch text-white",
+        GitHub: "fa fa-github bg-github text-white",
+        Behance: "fa fa-behance bg-behance text-white",
+        Dribbble: "fa fa-dribbble bg-dribbble text-white",
+        Skype: "fa fa-skype bg-skype text-white",
+        Viber: "fa fa-viber bg-viber text-white",
+        WeChat: "fa fa-wechat bg-wechat text-white",
+        Other: "fa fa-link bg-secondary text-white",
+      };
+
+      return iconMap[socialMediaName] || "fa fa-link bg-secondary text-white";
+    },
     UpdateProfileHandler: async function () {
       let formData = new FormData(event.target);
       let response = await axios.post("user-profile-update", formData);

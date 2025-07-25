@@ -4,21 +4,12 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-header">
-            <div class="row align-items-center">
+            <div class="row align-items-center justify-content-between">
               <!-- Title Section -->
               <div class="col-12 col-md-3 mb-2 mb-md-0">
                 <h5 class="text-capitalize mb-0">
                   {{ setup.all_page_title }}
                 </h5>
-              </div>
-
-              <!-- Search Input -->
-              <div class="col-12 col-md-6 mb-2 mb-md-0">
-                <input
-                  class="form-control"
-                  @keyup="(e) => set_search_key(e)"
-                  placeholder="Search"
-                />
               </div>
 
               <!-- Sorting Button -->
@@ -46,21 +37,11 @@
                         title="Actions"
                       ></i>
                     </th>
-                    <th class="w-10 text-center">
-                      <input
-                        class="form-check-input ml-0 select_all_checkbox"
-                        @change="($event) => set_all_item_selected($event)"
-                        type="checkbox"
-                        :checked="isAllSelected"
-                      />
-                    </th>
-                    <th class="w-10">ID</th>
 
-                    <th>Date</th>
+                    <th class="w-10">ID</th>
                     <th>Check_in</th>
                     <th>Check_out</th>
                     <th>Attendance Status</th>
-                    <th>Created At</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -76,7 +57,7 @@
                       ></span>
                       <div class="table_action_btns">
                         <ul>
-                          <li>
+                          <li v-if="isCheckoutAllowed(item)">
                             <router-link
                               :to="{
                                 name: `Edit${setup.route_prefix}`,
@@ -93,17 +74,9 @@
                         </ul>
                       </div>
                     </td>
-                    <td>
-                      <input
-                        @change="set_item_selected(item, $event)"
-                        :checked="isSelected(item)"
-                        class="form-check-input ml-0"
-                        type="checkbox"
-                      />
-                    </td>
+
                     <td>{{ index + 1 }}</td>
 
-                    <td>{{ item.date }}</td>
                     <td
                       :style="{
                         backgroundColor: (() => {
@@ -112,19 +85,47 @@
                           const hours = time.getHours();
                           const minutes = time.getMinutes();
                           const totalMinutes = hours * 60 + minutes;
-                          if (totalMinutes >= 540 && totalMinutes <= 575)
-                            return 'green'; // 9:00-9:35
-                          if (totalMinutes >= 576 && totalMinutes <= 690)
-                            return 'orange'; // 9:36-11:30
-                          return 'gray';
+                          if (totalMinutes < 540) return '#28a745'; // Before 9:00 AM - Green
+                          if (totalMinutes >= 555 && totalMinutes < 660)
+                            return '#ffc107'; // After 9:15 AM but before 11:00 AM - Warning (yellow)
+                          if (totalMinutes >= 660) return '#dc3545'; // After 11:00 AM - Danger (red)
+                          return '#28a745'; // 9:00-9:15 AM - Still green
+                        })(),
+                        color: (() => {
+                          if (!item.check_in) return '';
+                          const time = new Date(item.check_in);
+                          const hours = time.getHours();
+                          const minutes = time.getMinutes();
+                          const totalMinutes = hours * 60 + minutes;
+                          if (totalMinutes >= 555) return 'white'; // White text for better contrast on warning/danger backgrounds
+                          return 'white';
                         })(),
                       }"
                     >
                       {{ formatDateTime(item.check_in) }}
                     </td>
-                    <td>{{ formatDateTime(item.check_out) }}</td>
+                    <td
+                      :style="{
+                        backgroundColor: (() => {
+                          if (!item.check_out) return '';
+                          const time = new Date(item.check_out);
+                          const hours = time.getHours();
+                          const minutes = time.getMinutes();
+                          const totalMinutes = hours * 60 + minutes;
+                          if (totalMinutes < 1140)
+                            // Before 7:00 PM (19:00)
+                            return '#ffc107'; // Warning (yellow)
+                          return '#28a745'; // After 7:00 PM - Green
+                        })(),
+                        color: (() => {
+                          if (!item.check_out) return '';
+                          return 'white'; // White text for better contrast
+                        })(),
+                      }"
+                    >
+                      {{ formatDateTime(item.check_out) }}
+                    </td>
                     <td>{{ item.attendance_status }}</td>
-                    <td>{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />
@@ -440,6 +441,19 @@ export default {
       await this.get_all();
     },
 
+    isCheckoutAllowed(item) {
+      if (!item.check_in) return false;
+
+      const today = new Date();
+      const checkInDate = new Date(item.check_in);
+
+      // Set both dates to start of day for comparison
+      today.setHours(0, 0, 0, 0);
+      checkInDate.setHours(0, 0, 0, 0);
+
+      // Only allow checkout if check-in date is exactly today (same date)
+      return checkInDate.getTime() === today.getTime();
+    },
     formatDateTime(dateTime) {
       if (!dateTime) return "N/A";
       const options = {

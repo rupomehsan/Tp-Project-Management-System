@@ -53,7 +53,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in all?.data" :key="item.id" :class="`table_rows table_row_${item.id}`">
-                    <td>
+                    <td class="text-limit" >
                       <span class="icon" @click.prevent="active_row($event)"></span>
                       <div class="table_action_btns">
                         <ul>
@@ -131,15 +131,15 @@
                         </ul>
                       </div>
                     </td>
-                    <td>
+                    <td class="text-limit" :title="`Select ${item.name}`">
                       <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
                     </td>
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.project_group_id?.name }}</td>
-                    <td>{{ item.start_date }}</td>
-                    <td>{{ item.end_date }}</td>
-                    <td :class="{
+                    <td class="text-limit" :title="`ID: ${index + 1}`">{{ index + 1 }}</td>
+                    <td class="text-limit" :title="`Name: ${item.name}`">{{ item.name }}</td>
+                    <td class="text-limit" :title="`Project Group: ${item.project_group_id?.name || 'N/A'}`">{{ item.project_group_id?.name }}</td>
+                    <td class="text-limit" :title="`Start Date: ${item.start_date}`">{{ item.start_date }}</td>
+                    <td class="text-limit" :title="`End Date: ${item.end_date}`">{{ item.end_date }}</td>
+                    <td class="text-limit" :title="`Project Status: ${item.project_status}`" :class="{
                       'text-success': item.project_status === 'Completed',
                       'text-danger': item.project_status === 'Not Started',
                       'text-warning': item.project_status === 'On Hold',
@@ -147,12 +147,12 @@
                       'text-primary': item.project_status === 'Upcoming', 
                       'text-secondary': !['Completed','Not Started','On Hold','In Progress','Upcoming'].includes(item.project_status)
                     }">{{ item.project_status }}</td>
-                     <td>{{ item.delivery_status }}</td>
-                    <td>
+                     <td class="text-limit" :title="`Delivery Status: ${item.delivery_status}`">{{ item.delivery_status }}</td>
+                    <td class="text-limit" :title="`Project Link: ${item.project_link}`">
                       <a class="text-info" :href="item.project_link" target="_blank">{{ item.project_link }}</a>
                     </td>
 
-                    <td>{{ formatDateTime(item.created_at) }}</td>
+                    <td class="text-limit" :title="`Created At: ${formatDateTime(item.created_at)}`">{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />

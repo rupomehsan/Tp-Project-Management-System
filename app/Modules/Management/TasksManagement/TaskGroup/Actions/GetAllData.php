@@ -17,10 +17,16 @@ class GetAllData
             $fields = request()->input('fields') ?? '*';
             $start_date = request()->input('start_date');
             $end_date = request()->input('end_date');
-            $with = ['projects'];
+            $with = [];
             $condition = [];
 
             $data = self::$model::query();
+
+            if (auth()->user()->role_id == 2) {
+                $data = $data->where('user_id', auth()->user()->id);
+            }
+
+
 
             if (request()->has('search') && request()->input('search')) {
                 $searchKey = request()->input('search');
@@ -40,6 +46,7 @@ class GetAllData
             if ($status == 'trased') {
                 $data = $data->trased();
             }
+
 
             if (request()->has('get_all') && (int)request()->input('get_all') === 1) {
                 $data = $data
@@ -67,6 +74,8 @@ class GetAllData
                     ->orderBy($orderByColumn, $orderByType)
                     ->paginate($pageLimit);
             }
+
+
 
             return entityResponse([
                 ...$data->toArray(),

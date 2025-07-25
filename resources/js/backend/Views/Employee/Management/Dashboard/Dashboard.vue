@@ -4,93 +4,81 @@
 
     <div class="row">
       <div class="col-md-3">
-        <div
-          class="card profile-card-2 position-relative shadow-sm border-0 overflow-hidden"
-        >
-          <!-- ⭐ Rating Badge -->
-          <div
-            style="
-              position: absolute;
-              top: 0;
-              right: 0;
-              background-color: #ffc107;
-              color: #212529;
-              font-weight: 900;
-              font-size: 13px;
-              padding: 5px 12px;
-              border-bottom-left-radius: 10px;
-              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-              z-index: 10;
-            "
-          >
-            ⭐ 4.8 / 10
-          </div>
-
-          <!-- Optional Cover -->
-          <div class="card-img-top bg-light" style="height: 120px"></div>
-
-          <!-- Profile Image & Info -->
-          <div class="card-body pt-5 text-center">
+        <div class="card profile-card-2">
+          <div>
             <img
-              :src="`${auth_info.image ?? 'avatar.png'}`"
-              alt="profile-image"
-              class="profile profile-image my-2 rounded-circle border border-3 border-white shadow"
               style="
-                width: 150px;
-                height: 150px;
+                padding: 5px;
+                max-height: 325px;
                 object-fit: cover;
-                margin-top: -75px;
+                object-position: top center;
+                border-radius: 8px;
               "
+              class="img-fluid w-100"
+              :src="`${auth_info.image ?? 'avatar.png'}`"
               @error="$event.target.src = 'avatar.png'"
+              alt="Card image cap"
             />
-            <div class="d-flex justify-content-center">
-              <div class="ml-5" style="text-align: justify">
-                <h5 class="card-title text-capitalize mt-3">
-                  Name: {{ auth_info.name }}
-                </h5>
-                <p class="card-text mb-1">Email: {{ auth_info.email }}</p>
-                <p class="card-text mb-1">
-                  Phone: {{ auth_info.phone_number }}
-                </p>
-                <p class="card-text">
-                  Address: {{ auth_info.address ?? "N/A" }}
-                </p>
+          </div>
+          <!-- Professional Circular Rating Display -->
+          <div class="circular-rating-overlay">
+            <div class="rating-wrapper">
+              <div class="rating-circle" :data-rating="auth_info.rating || 0">
+                <div class="rating-inner">
+                  <div class="rating-number">
+                    {{ dashboard_data.user_rating || 0 }}
+                  </div>
+                  <div class="rating-separator">/</div>
+                  <div class="rating-max">10</div>
+                </div>
+              </div>
+              <div class="rating-glow"></div>
+            </div>
+          </div>
+          <div class="card-body" style="padding-top: 80px">
+            <h5 class="card-title text-capitalize">
+              Name : {{ auth_info.name }}
+            </h5>
+            <p class="card-text">Designation : {{ auth_info.designation }}</p>
+            <p class="card-text">Eamil : {{ auth_info.email }}</p>
+            <p class="card-text">Phone : {{ auth_info.phone_number }}</p>
+            <p class="card-text">Address : {{ auth_info.address ?? "N/A" }}</p>
+          </div>
+          <div class="card-body border-light">
+            <div class="media align-items-center">
+              <div class="icon-block">
+                <template
+                  v-if="
+                    auth_info.social_media && auth_info.social_media.length > 0
+                  "
+                >
+                  <a
+                    v-for="(social, index) in auth_info.social_media"
+                    :key="index"
+                    :href="social.link"
+                    target="_blank"
+                    :title="social.name"
+                    class="social-link"
+                  >
+                    <i :class="getSocialMediaIcon(social.name)"></i>
+                  </a>
+                </template>
+                <template v-else>
+                  <span class="text-muted"
+                    >No social media links available</span
+                  >
+                </template>
               </div>
             </div>
           </div>
-
-          <!-- Social Links -->
-          <div class="card-body border-light text-center">
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
-              <a href="javascript:void();"
-                ><i class="fa fa-github bg-github text-white"></i
-              ></a>
-              <a href="javascript:void();">
-                <i class="fa fa-linkedin bg-linkedin text-white"></i
-              ></a>
-              <a href="javascript:void();"
-                ><i class="fa fa-facebook bg-facebook text-white"></i
-              ></a>
-              <a href="javascript:void();">
-                <i class="fa fa-twitter bg-twitter text-white"></i
-              ></a>
-              <a href="javascript:void();">
-                <i class="fa fa-google-plus bg-google-plus text-white"></i
-              ></a>
-              <a href="javascript:void();">
-                <i class="fa fa-youtube bg-youtube text-white"></i
-              ></a>
-            </div>
-          </div>
         </div>
-
         <!-- Stats Cards Section -->
         <!-- TOTAL PROJECT -->
       </div>
       <div class="col-lg-8 col-md-8">
         <div class="row mb-4" style="gap: 20px 0">
           <!-- Add gap at the bottom using mb-4 and vertical gap with style -->
-          <div class="col-lg-3 col-md-4">
+          <div class="col-lg-4 col-md-4">
             <div class="card bg-primary text-white h-100">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -103,7 +91,7 @@
           </div>
 
           <!-- TOTAL TASK -->
-          <div class="col-lg-3 col-md-4">
+          <div class="col-lg-4 col-md-4">
             <div class="card bg-warning text-white h-100">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -116,7 +104,7 @@
           </div>
 
           <!-- TOTAL COMPLETED TASK -->
-          <div class="col-lg-3 col-md-4">
+          <div class="col-lg-4 col-md-4">
             <div class="card bg-secondary text-white h-100">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -130,7 +118,7 @@
             </div>
           </div>
           <!-- TOTAL NOT COMPLETED TASK -->
-          <div class="col-lg-3 col-md-4">
+          <div class="col-lg-4 col-md-4">
             <div class="card bg-danger text-white h-100">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -143,9 +131,37 @@
               </div>
             </div>
           </div>
+          <!-- TOTAL NOT COMPLETED TASK -->
+          <div class="col-lg-4 col-md-4">
+            <div class="card bg-info text-white h-100">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="font-weight-light">TOTAL PENDING TASK</h6>
+                  <!-- <i class="fas fa-users fa-2x"></i> -->
+                </div>
+                <h2 class="mb-0">
+                  {{ dashboard_data.total_pending_tasks }}
+                </h2>
+              </div>
+            </div>
+          </div>
+          <!-- TOTAL NOT COMPLETED TASK -->
+          <div class="col-lg-4 col-md-4">
+            <div class="card bg-primary text-white h-100">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="font-weight-light">TOTAL IN PROGRESS TASK</h6>
+                  <!-- <i class="fas fa-users fa-2x"></i> -->
+                </div>
+                <h2 class="mb-0">
+                  {{ dashboard_data.total_in_progress_tasks }}
+                </h2>
+              </div>
+            </div>
+          </div>
 
           <!-- TOTAL Attendance -->
-          <div class="col-lg-3 col-md-4">
+          <div class="col-lg-4 col-md-4">
             <div class="card bg-success text-white h-100">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -158,7 +174,7 @@
             </div>
           </div>
           <!-- TOTAL Absence -->
-          <div class="col-lg-3 col-md-4">
+          <div class="col-lg-4 col-md-4">
             <div class="card bg-dark text-white h-100">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -166,30 +182,6 @@
                 </div>
                 <h2 class="mb-0">
                   {{ dashboard_data.total_absent_attendance }}
-                </h2>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-primary text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL Creadentials</h6>
-                </div>
-                <h2 class="mb-0">
-                  {{ dashboard_data.total_credentials }}
-                </h2>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-info text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL Todos</h6>
-                </div>
-                <h2 class="mb-0">
-                  {{ dashboard_data.total_todos }}
                 </h2>
               </div>
             </div>
@@ -295,6 +287,33 @@ export default {
     await this.get_all_meetings();
   },
   methods: {
+    getSocialMediaIcon(socialMediaName) {
+      const iconMap = {
+        Facebook: "fa fa-facebook bg-facebook text-white",
+        Instagram: "fa fa-instagram bg-instagram text-white",
+        Twitter: "fa fa-twitter bg-twitter text-white",
+        LinkedIn: "fa fa-linkedin bg-linkedin text-white",
+        YouTube: "fa fa-youtube bg-youtube text-white",
+        TikTok: "fa fa-tiktok bg-tiktok text-white",
+        Snapchat: "fa fa-snapchat bg-snapchat text-white",
+        Pinterest: "fa fa-pinterest bg-pinterest text-white",
+        WhatsApp: "fa fa-whatsapp bg-whatsapp text-white",
+        Telegram: "fa fa-telegram bg-telegram text-white",
+        Discord: "fa fa-discord bg-discord text-white",
+        Reddit: "fa fa-reddit bg-reddit text-white",
+        Tumblr: "fa fa-tumblr bg-tumblr text-white",
+        Twitch: "fa fa-twitch bg-twitch text-white",
+        GitHub: "fa fa-github bg-github text-white",
+        Behance: "fa fa-behance bg-behance text-white",
+        Dribbble: "fa fa-dribbble bg-dribbble text-white",
+        Skype: "fa fa-skype bg-skype text-white",
+        Viber: "fa fa-viber bg-viber text-white",
+        WeChat: "fa fa-wechat bg-wechat text-white",
+        Other: "fa fa-link bg-secondary text-white",
+      };
+
+      return iconMap[socialMediaName] || "fa fa-link bg-secondary text-white";
+    },
     get_all_dashboard_data: async function () {
       let response = await axios.get("get-employee-dashboard-data");
       if (response.status == 200) {

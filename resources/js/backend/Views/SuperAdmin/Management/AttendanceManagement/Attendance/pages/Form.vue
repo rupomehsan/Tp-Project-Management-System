@@ -45,6 +45,21 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
+                <label for="date">Date</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="date"
+                    class="form-control form-control-square mb-2"
+                    name="date"
+                    id="date"
+                    v-model="form_fields.date"
+                    :max="todayDate"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
                 <label for="">Attendance status</label>
                 <div class="mt-1 mb-3">
                   <select
@@ -114,7 +129,7 @@ export default {
     param_id: null,
     form_fields: {
       user_id: "",
-      date: "",
+      date: new Date().toLocaleDateString("en-CA"), // Default to today's date
       check_in: "",
       check_out: "",
       attendance_status: "",

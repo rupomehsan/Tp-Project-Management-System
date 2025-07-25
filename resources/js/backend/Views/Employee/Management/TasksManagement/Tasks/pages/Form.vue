@@ -4,21 +4,34 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h5 class="text-capitalize">
-            {{ param_id ? `${setup.edit_page_title}` : `${setup.create_page_title}` }}
+            {{
+              param_id
+                ? `${setup.edit_page_title}`
+                : `${setup.create_page_title}`
+            }}
           </h5>
           <div>
-            <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${setup.route_prefix}` }">
+            <router-link
+              class="btn btn-outline-warning btn-sm"
+              :to="{ name: `All${setup.route_prefix}` }"
+            >
               {{ setup.all_page_title }}
             </router-link>
           </div>
         </div>
         <div class="card-body card_body_fixed_height" v-if="is_loaded">
           <div class="row">
-              <div class="col-md-6">
+            <div class="col-md-6">
               <div class="form-group">
                 <label for="">Title</label>
                 <div class="mt-1 mb-3">
-                  <input class="form-control form-control-square mb-2" type="text" name="title" id="title" v-model="form_fields.title" />
+                  <input
+                    class="form-control form-control-square mb-2"
+                    type="text"
+                    name="title"
+                    id="title"
+                    v-model="form_fields.title"
+                  />
                 </div>
               </div>
             </div>
@@ -26,9 +39,19 @@
               <div class="form-group">
                 <label for="">Project Name</label>
                 <div class="mt-1 mb-3">
-                  <select v-model="form_fields.project_id" class="form-control" name="project_id" id="project_id" @change="onProjectChange">
-                    <option value="">Selet-- Project Name</option>
-                    <option v-for="item in userProject?.data" :key="item.id" :value="item.id">
+                  <select
+                    v-model="form_fields.project_id"
+                    class="form-control"
+                    name="project_id"
+                    id="project_id"
+                    @change="onProjectChange"
+                  >
+                    <option value="">Select-- Project Name</option>
+                    <option
+                      v-for="item in userProject?.data"
+                      :key="item.id"
+                      :value="item.id"
+                    >
                       {{ item.name }}
                     </option>
                   </select>
@@ -39,22 +62,35 @@
               <div class="form-group">
                 <label for="">Task Group</label>
                 <div class="mt-1 mb-3">
-                  <select v-model="form_fields.task_group_id" class="form-control" name="task_group_id" id="task_group_id">
+                  <select
+                    v-model="form_fields.task_group_id"
+                    class="form-control"
+                    name="task_group_id"
+                    id="task_group_id"
+                  >
                     <option value="">Select-- Task Group</option>
-                    <option v-for="item in taskGroupData?.data" :key="item.id" :value="item.id">
+                    <option
+                      v-for="item in taskGroupData?.data"
+                      :key="item.id"
+                      :value="item.id"
+                    >
                       {{ item.name }}
                     </option>
                   </select>
                 </div>
               </div>
             </div>
-          
-          
+
             <div class="col-md-6">
               <div class="form-group">
                 <label for="">Priority</label>
                 <div class="mt-1 mb-3">
-                  <select v-model="form_fields.priority" class="form-control form-control-square mb-2" name="priority" id="priority">
+                  <select
+                    v-model="form_fields.priority"
+                    class="form-control form-control-square mb-2"
+                    name="priority"
+                    id="priority"
+                  >
                     <option value="low">Low</option>
                     <option value="normal">Normal</option>
                     <option value="high">High</option>
@@ -63,7 +99,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="col-md-6">
               <div class="form-group">
                 <label for="">Developer status</label>
@@ -93,6 +129,7 @@
                     name="start_date"
                     id="start_date"
                     v-model="form_fields.start_date"
+                    @click="$event.target.showPicker()"
                   />
                 </div>
               </div>
@@ -107,7 +144,13 @@
                     name="end_date"
                     id="end_date"
                     v-model="form_fields.end_date"
+                    :min="form_fields.start_date"
+                    @change="validateEndDate"
+                    @click="$event.target.showPicker()"
                   />
+                  <div v-if="endDateError" class="text-danger small mt-1">
+                    {{ endDateError }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -116,13 +159,19 @@
               <div class="form-group">
                 <label for="">description</label>
                 <div class="mt-1 mb-3">
-                  <text-editor :name="'description'" />
-                  <!-- <textarea 
+                  <text-editor
+                    :name="'description'"
+                    :value="form_fields.description"
+                    @input="form_fields.description = $event"
+                  />
+                  <!-- <textarea
                     v-model="form_fields.description"
                     name="description"
-                    id="description" 
-                    rows="5" 
-                    cols="55">
+                    id="description"
+                    class="form-control form-control-square mb-2"
+                    rows="5"
+                    cols="55"
+                  >
                   </textarea> -->
                 </div>
               </div>
@@ -130,7 +179,9 @@
           </div>
         </div>
         <div class="card-footer">
-          <button type="submit" class="btn btn-light btn-square px-5"><i class="icon-lock"></i> Submit</button>
+          <button type="submit" class="btn btn-light btn-square px-5">
+            <i class="icon-lock"></i> Submit
+          </button>
         </div>
       </div>
     </form>
@@ -155,14 +206,14 @@ export default {
       description: "",
       start_date: "",
       end_date: "",
-      task_status: "",
-      task_user_status: "",
-      priority: "",
+      task_user_status: "Pending",
+      priority: "normal",
     },
     userProject: [],
     userData: [],
     taskGroupData: [],
     is_loaded: false,
+    endDateError: "",
   }),
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
@@ -227,11 +278,41 @@ export default {
         this.form_fields.task_status = this.item.task_status;
         this.form_fields.task_user_status = this.item.task_user_status;
         this.form_fields.priority = this.item.priority;
-        $("#description").summernote("code", this.item.description);
+        this.form_fields.description = this.item.description;
       }
     },
 
+    validateEndDate() {
+      if (this.form_fields.start_date && this.form_fields.end_date) {
+        const startDate = new Date(this.form_fields.start_date);
+        const endDate = new Date(this.form_fields.end_date);
+
+        if (endDate < startDate) {
+          this.endDateError = "End date cannot be earlier than start date";
+          // Reset end date to empty or start date
+          this.form_fields.end_date = "";
+        } else {
+          this.endDateError = "";
+        }
+      } else {
+        this.endDateError = "";
+      }
+    },
+
+    validateDates() {
+      this.validateEndDate();
+      return !this.endDateError;
+    },
+
     submitHandler: async function ($event) {
+      // Validate dates before submission
+      if (!this.validateDates()) {
+        window.s_warning(
+          "Please fix the date validation errors before submitting"
+        );
+        return;
+      }
+
       // this.set_only_latest_data(true);
       if (this.param_id) {
         this.setSummerEditor();
@@ -240,7 +321,7 @@ export default {
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data successfully updated");
           this.$router.push({
-            name: `All${this.setup.route_prefix}`,
+            name: `Details${this.setup.route_prefix}`,
           });
         }
       } else {
@@ -249,9 +330,9 @@ export default {
         // await this.get_all();
         if ([200, 201].includes(response.status)) {
           window.s_alert("Data Successfully Created");
-          this.$router.push({
-            name: `All${this.setup.route_prefix}`,
-          });
+          // this.$router.push({
+          //   name: `All${this.setup.route_prefix}`,
+          // });
         }
       }
     },
@@ -272,7 +353,9 @@ export default {
         return;
       }
       try {
-        let res = await axios.get(`users/get-users-by-project-id/${this.form_fields.project_id}`);
+        let res = await axios.get(
+          `users/get-users-by-project-id/${this.form_fields.project_id}`
+        );
         this.userData = res.data;
       } catch (error) {
         this.userData = [];
@@ -291,6 +374,20 @@ export default {
         if (newVal) {
           this.get_user_by_project_id();
         }
+      },
+    },
+    "form_fields.start_date": {
+      handler() {
+        // Re-validate end date when start date changes
+        if (this.form_fields.end_date) {
+          this.validateEndDate();
+        }
+      },
+    },
+    "form_fields.end_date": {
+      handler() {
+        // Validate end date when it changes
+        this.validateEndDate();
       },
     },
   },

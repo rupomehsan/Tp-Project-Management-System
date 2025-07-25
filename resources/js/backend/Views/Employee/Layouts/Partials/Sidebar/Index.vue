@@ -2,8 +2,16 @@
   <!--Start sidebar-wrapper-->
   <div id="sidebar-wrapper">
     <div class="brand-logo">
-      <router-link :to="{ name: `adminDashboard` }" class="d-flex align-items-center">
-        <img :src="`${get_setting_value('image') ?? 'avatar.png'} `" class="logo-icon" alt="logo icon" @error="$event.target.src = 'logo.png'" />
+      <router-link
+        :to="{ name: `adminDashboard` }"
+        class="d-flex align-items-center profile-image "
+      >
+        <img
+          :src="`${get_setting_value('image') ?? 'avatar.png'} `"
+          class="logo-icon"
+          alt="logo icon"
+          @error="$event.target.src = 'logo.png'"
+        />
         <h5 class="logo-text">Employee Panel</h5>
       </router-link>
       <div class="close-btn">
@@ -20,13 +28,19 @@
         @error="$event.target.src = 'avatar.png'"
         alt=""
       />
-      <p class="mt-2">Mr. {{ auth_info.name }}</p>
+      <p class="mt-2"> {{ auth_info.name }}</p>
     </div>
     <hr />
     <ul class="metismenu" id="menu">
       <!-- <li class="menu-label">Management</li> -->
-      <li>
-        <router-link :to="{ name: `adminDashboard` }" class="border" href="javascript:void();">
+      <li :class="{ 'active': $route.name === 'adminDashboard' }">
+        <router-link
+          :to="{ name: `adminDashboard` }"
+          class="border"
+          href="javascript:void();"
+          @click="onDashboardClick"
+          :class="{ 'active': $route.name === 'adminDashboard' }"
+        >
           <div class="parent-icon">
             <i class="zmdi zmdi-view-dashboard"></i>
           </div>
@@ -34,8 +48,16 @@
         </router-link>
       </li>
 
-      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Attendance`" :route_name="`AllAttendance`" />
-      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Projects`" :route_name="`AllProject`" />
+      <side-bar-single-menu
+        :icon="`fa fa-plus`"
+        :menu_title="`Attendance`"
+        :route_name="`AllAttendance`"
+      />
+      <side-bar-single-menu
+        :icon="`fa fa-plus`"
+        :menu_title="`Projects`"
+        :route_name="`AllProject`"
+      />
       <!-- <side-bar-single-menu
         :icon="`fa fa-plus`"
         :menu_title="`Tasks`"
@@ -53,6 +75,11 @@
           {
             route_name: `AllTasks`,
             title: `Tasks`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `TaskBoard`,
+            title: `TaskBoard`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
         ]"
@@ -86,8 +113,16 @@
         ]"
       />
 
-      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Meeting Agenda`" :route_name="`AllMeetingAgenda`" />
-      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Notification`" :route_name="`AllNotification`" />
+      <side-bar-single-menu
+        :icon="`fa fa-plus`"
+        :menu_title="`Meeting Agenda`"
+        :route_name="`AllMeetingAgenda`"
+      />
+      <side-bar-single-menu
+        :icon="`fa fa-plus`"
+        :menu_title="`Notification`"
+        :route_name="`AllNotification`"
+      />
       <!-- <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Message`" :route_name="`AllMessage`" /> -->
       <!-- Management end -->
     </ul>
@@ -118,6 +153,12 @@ export default {
     toggle_menu: function () {
       document.getElementById("wrapper").classList.toggle("toggled");
     },
+    onDashboardClick() {
+      // Close all dropdown menus when dashboard is clicked
+      window.dispatchEvent(new CustomEvent('collapse-all-menus-employee', {
+        detail: { except: null }
+      }));
+    }
   },
   computed: {
     ...mapState(auth_store, {
@@ -127,7 +168,16 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+/* Dashboard active state styling */
+#menu > li.active > a,
+#menu > li > a.active {
+    background-color: #007bff !important;
+    color: white !important;
+    border-radius: 4px;
+    margin: 2px;
+}
+</style>
 <!-- <side-bar-drop-down-menus :icon="`fa fa-plus`" :icon_image="`https://files.etek.com.bd/images/icon_sales.png`"
     :menu_title="`title Management`" :menus="[
                 {
