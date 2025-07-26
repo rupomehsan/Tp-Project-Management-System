@@ -1,4 +1,3 @@
 add reset button on filter date
 
-dashboard a profile er upore paddnig  
-onlcik a page side menu hide hiua jabe
+boiller template text change

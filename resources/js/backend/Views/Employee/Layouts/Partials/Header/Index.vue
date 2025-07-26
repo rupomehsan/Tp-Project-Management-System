@@ -429,4 +429,10 @@ export default {
   max-height: 400px;
   overflow-y: auto;
 }
+
+@media only screen and (max-width: 768px) {
+    #sidebar-wrapper .metismenu {
+        margin-top: 0px;
+    }
+}
 </style>

@@ -3,6 +3,7 @@ import All from "../pages/All.vue";
 import Form from "../pages/Form.vue";
 import Details from "../pages/Details.vue";
 import DateWiseTask from "../pages/DateWiseTask.vue";
+import TaskBoard from "../pages/TaskBoard.vue";
 import Layout from "../pages/Layout.vue";
 
 let route_prefix = setup.route_prefix;
@@ -36,6 +37,11 @@ const routes = {
       path: "date-wise-tasks/:date",
       name: "DateWiseTask" + route_prefix,
       component: DateWiseTask,
+    },
+    {
+      path: "taskboard",
+      name: "TaskBoard",
+      component: TaskBoard,
     },
   ],
 };

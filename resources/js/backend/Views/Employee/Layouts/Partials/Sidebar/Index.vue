@@ -33,13 +33,11 @@
     <hr />
     <ul class="metismenu" id="menu">
       <!-- <li class="menu-label">Management</li> -->
-      <li :class="{ 'active': $route.name === 'adminDashboard' }">
+      <li>
         <router-link
           :to="{ name: `adminDashboard` }"
           class="border"
           href="javascript:void();"
-          @click="onDashboardClick"
-          :class="{ 'active': $route.name === 'adminDashboard' }"
         >
           <div class="parent-icon">
             <i class="zmdi zmdi-view-dashboard"></i>
@@ -153,12 +151,6 @@ export default {
     toggle_menu: function () {
       document.getElementById("wrapper").classList.toggle("toggled");
     },
-    onDashboardClick() {
-      // Close all dropdown menus when dashboard is clicked
-      window.dispatchEvent(new CustomEvent('collapse-all-menus-employee', {
-        detail: { except: null }
-      }));
-    }
   },
   computed: {
     ...mapState(auth_store, {
@@ -168,16 +160,7 @@ export default {
 };
 </script>
 
-<style>
-/* Dashboard active state styling */
-#menu > li.active > a,
-#menu > li > a.active {
-    background-color: #007bff !important;
-    color: white !important;
-    border-radius: 4px;
-    margin: 2px;
-}
-</style>
+<style></style>
 <!-- <side-bar-drop-down-menus :icon="`fa fa-plus`" :icon_image="`https://files.etek.com.bd/images/icon_sales.png`"
     :menu_title="`title Management`" :menus="[
                 {

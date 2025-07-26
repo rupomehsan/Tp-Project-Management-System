@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-layout">
+  <div class="chat-layout mb-3">
     <!-- Modal -->
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-content">
@@ -297,7 +297,7 @@
     <!-- Sidebar -->
     <aside
       v-if="!isMobile || mobileView === 'list'"
-      class="chat-sidebar dark-mode"
+      class="chat-sidebar dark-mode "
     >
       <div
         class="sidebar-header d-flex justify-content-between align-items-center"

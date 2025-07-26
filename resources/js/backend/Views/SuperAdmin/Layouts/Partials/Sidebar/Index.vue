@@ -25,8 +25,14 @@
     <hr />
     <ul class="metismenu" id="menu">
       <!-- <li class="menu-label">Management</li> -->
-      <li :class="{ 'active': $route.name === 'adminDashboard' }">
-        <router-link :to="{ name: `adminDashboard` }" class="border" href="javascript:void();" @click="onDashboardClick" :class="{ 'active': $route.name === 'adminDashboard' }">
+      <li :class="{ active: $route.name === 'adminDashboard' }">
+        <router-link
+          :to="{ name: `adminDashboard` }"
+          class="border"
+          href="javascript:void();"
+          @click="onDashboardClick"
+          :class="{ active: $route.name === 'adminDashboard' }"
+        >
           <div class="parent-icon">
             <i class="zmdi zmdi-view-dashboard"></i>
           </div>
@@ -79,13 +85,18 @@
         :menu_title="`Task Management`"
         :menus="[
           {
+            route_name: `AllTaskGroup`,
+            title: `Task Group`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
             route_name: `AllTasks`,
             title: `Tasks`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
           {
-            route_name: `AllTaskGroup`,
-            title: `Task Group`,
+            route_name: `TaskBoard`,
+            title: `Task Board`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
         ]"
@@ -125,7 +136,7 @@
         ]"
       /> -->
       <!-- Attendance Management -->
-     
+
       <!-- Meeting Management -->
       <side-bar-drop-down-menus
         :icon="`fa fa-plus`"
@@ -196,11 +207,24 @@ export default {
     toggle_menu: function () {
       document.getElementById("wrapper").classList.toggle("toggled");
     },
+    hide_menu: function () {
+      document.getElementById("wrapper").classList.add("toggled");
+    },
     onDashboardClick() {
       // Close all dropdown menus when dashboard is clicked
-      window.dispatchEvent(new CustomEvent('collapse-all-menus', {
-        detail: { except: null }
-      }));
+      window.dispatchEvent(
+        new CustomEvent("collapse-all-menus", {
+          detail: { except: null },
+        })
+      );
+    },
+  },
+  watch: {
+    '$route'(to, from) {
+      // Auto-hide sidebar when navigating to task board
+      if (to.name === 'TaskBoard') {
+        this.hide_menu();
+      }
     }
   },
   computed: {
@@ -215,10 +239,10 @@ export default {
 /* Dashboard active state styling */
 #menu > li.active > a,
 #menu > li > a.active {
-    background-color: #007bff !important;
-    color: white !important;
-    border-radius: 4px;
-    margin: 2px;
+  background-color: #007bff !important;
+  color: white !important;
+  border-radius: 4px;
+  margin: 2px;
 }
 </style>
 <!-- <side-bar-drop-down-menus :icon="`fa fa-plus`" :icon_image="`https://files.etek.com.bd/images/icon_sales.png`"

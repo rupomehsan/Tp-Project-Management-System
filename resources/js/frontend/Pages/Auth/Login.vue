@@ -1,4 +1,7 @@
 <template>
+  <Head>
+    <title> Login</title>
+  </Head>
   <Layout>
     <div class="professional-login-container">
       <div class="login-card">
@@ -11,24 +14,16 @@
             <p class="brand-subtitle">Welcome back! Please sign in to your account</p>
           </div>
         </div>
-        
+
         <form @submit.prevent="LoginSubmitHandler" class="login-form">
           <div class="form-group">
             <label for="email" class="form-label">
               <i class="fas fa-envelope"></i>
               Email Address
             </label>
-            <input
-              id="email"
-              class="form-control"
-              type="email"
-              placeholder="Enter your email"
-              name="email"
-              v-model="email"
-              required
-            />
+            <input id="email" class="form-control" type="email" placeholder="Enter your email" name="email" v-model="email" required />
           </div>
-          
+
           <div class="form-group">
             <label for="password" class="form-label">
               <i class="fas fa-lock"></i>
@@ -54,29 +49,16 @@
               </button>
             </div>
           </div>
-          
+
           <div class="form-options">
             <div class="remember-me">
-              <input
-                type="checkbox"
-                id="rememberMe"
-                v-model="rememberMe"
-                class="checkbox-input"
-              />
-              <label for="rememberMe" class="checkbox-label">
-                Remember me
-              </label>
+              <input type="checkbox" id="rememberMe" v-model="rememberMe" class="checkbox-input" />
+              <label for="rememberMe" class="checkbox-label"> Remember me </label>
             </div>
-            <Link href="/forgot-password" class="forgot-password-link">
-              Forgot password?
-            </Link>
+            <Link href="/forgot-password" class="forgot-password-link"> Forgot password? </Link>
           </div>
 
-          <button
-            class="login-button"
-            type="submit"
-            :disabled="loading || !email || !password"
-          >
+          <button class="login-button" type="submit" :disabled="loading || !email || !password">
             <span v-if="!loading" class="button-content">
               <i class="fas fa-sign-in-alt"></i>
               Sign In
@@ -87,10 +69,10 @@
             </span>
           </button>
         </form>
-        
+
         <div class="login-footer">
           <p class="footer-text">
-            Don't have an account? 
+            Don't have an account?
             <a href="#" class="signup-link">Contact Administrator</a>
           </p>
         </div>
@@ -110,8 +92,8 @@ export default {
       loading: false,
       showPassword: false,
       passwordError: false,
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       rememberMe: false,
     };
   },
@@ -124,19 +106,19 @@ export default {
     LoginSubmitHandler: async function () {
       try {
         this.loading = true;
-        
+
         // Handle remember me functionality
         if (this.rememberMe) {
           this.saveCredentials();
         } else {
           this.clearSavedCredentials();
         }
-        
+
         let formData = new FormData();
-        formData.append('email', this.email);
-        formData.append('password', this.password);
-        formData.append('remember', this.rememberMe);
-        
+        formData.append("email", this.email);
+        formData.append("password", this.password);
+        formData.append("remember", this.rememberMe);
+
         let response = await axios.post("/login", formData);
         if (response.data?.status === "success") {
           let data = response.data?.data;
@@ -158,39 +140,38 @@ export default {
         this.loading = false;
       }
     },
-    
+
     saveCredentials() {
       const credentials = {
         email: this.email,
         password: this.password,
-        rememberMe: this.rememberMe
+        rememberMe: this.rememberMe,
       };
-      localStorage.setItem('rememberedCredentials', JSON.stringify(credentials));
+      localStorage.setItem("rememberedCredentials", JSON.stringify(credentials));
     },
-    
+
     clearSavedCredentials() {
-      localStorage.removeItem('rememberedCredentials');
+      localStorage.removeItem("rememberedCredentials");
     },
-    
+
     loadRememberedCredentials() {
-      const savedCredentials = localStorage.getItem('rememberedCredentials');
+      const savedCredentials = localStorage.getItem("rememberedCredentials");
       if (savedCredentials) {
         try {
           const credentials = JSON.parse(savedCredentials);
-          this.email = credentials.email || '';
-          this.password = credentials.password || '';
+          this.email = credentials.email || "";
+          this.password = credentials.password || "";
           this.rememberMe = credentials.rememberMe || false;
         } catch (error) {
-          console.error('Error loading remembered credentials:', error);
+          console.error("Error loading remembered credentials:", error);
           this.clearSavedCredentials();
         }
       }
     },
-    
+
     setPassword(email) {
       this.email = email;
     },
   },
 };
 </script>
-
