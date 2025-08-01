@@ -5,6 +5,7 @@ namespace App\Modules\Management\TasksManagement\TaskGroup\Models;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Model extends EloquentModel
 {
     use SoftDeletes;
@@ -46,21 +47,12 @@ class Model extends EloquentModel
         return $q->onlyTrashed();
     }
 
-    public function projects()
+
+
+
+
+    public function user()
     {
-        return $this->belongsTo(self::$ProjectModel, 'project_id', 'id');
+        return $this->belongsTo(\App\Modules\Management\UserManagement\User\Models\Model::class, 'user_id', 'id');
     }
-
-
-
-
-    // public function user()
-    // {
-    //     return $this->belongsTo(self::$userModel);
-    // }
-
-    // public function monthlyMealId()
-    // {
-    //     return $this->belongsTo(self::$monthlyMealRatesModel, 'meal_rate_id', 'id');
-    // }
 }

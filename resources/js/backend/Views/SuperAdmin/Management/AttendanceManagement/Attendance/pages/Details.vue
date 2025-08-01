@@ -46,10 +46,16 @@
                     <td>{{ item.attendance_status }}</td>
                   </tr>
                   <tr>
+                    <th>Notes</th>
+                    <th class="text-center">:</th>
+                    <td v-html="item.notes"></td>
+                  </tr>
+                  <tr>
                     <th>Created At</th>
                     <th class="text-center">:</th>
                     <td>{{ formatDateTime(item.created_at) }}</td>
                   </tr>
+
                   
                 </tbody>
               </table>

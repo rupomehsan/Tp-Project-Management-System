@@ -25,7 +25,7 @@
                   <tr>
                     <th>Task Group Name</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.task_group_id?.name }}</th>
+                    <th>{{ item.task_group?.name }}</th>
                   </tr>
                   <tr>
                     <th>title</th>

@@ -51,6 +51,7 @@ class DataStoreValidation extends FormRequest
             'check_in' => 'sometimes',
             'check_out' => 'sometimes',
             'attendance_status'  => ['sometimes', Rule::in(['Present', 'Absent', 'Remote'])],
+            'notes' => 'sometimes| nullable',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];
     }

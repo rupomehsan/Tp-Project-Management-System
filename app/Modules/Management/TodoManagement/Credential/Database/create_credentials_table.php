@@ -15,11 +15,12 @@ return new class extends Migration
         Schema::create('credentials', function (Blueprint $table) {
             $table->id();
 
-              $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('title', 150)->nullable();
             $table->string('email', 255)->nullable();
             $table->string('password');
             $table->text('description')->nullable();
+            $table->text('link')->nullable();
 
             $table->bigInteger('creator')->unsigned()->nullable();
             $table->string('slug', 50)->nullable();

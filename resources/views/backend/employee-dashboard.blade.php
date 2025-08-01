@@ -10,8 +10,8 @@
     <meta name="author" content="" />
     <title>Dashboard</title>
     <!-- loader-->
-    <link href="{{ asset('backend/assets/css/pace.min.css') }}" rel="stylesheet" />
-    <script src="{{ asset('backend/assets/js/pace.min.js') }}"></script>
+    {{-- <link href="{{ asset('backend/assets/css/pace.min.css') }}" rel="stylesheet" />
+    <script src="{{ asset('backend/assets/js/pace.min.js') }}"></script> --}}
     <!--favicon-->
     <link rel="icon" href="{{ asset('backend/assets/images/favicon.ico') }}" type="image/x-icon">
     <!-- Vector CSS -->

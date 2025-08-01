@@ -1,196 +1,286 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid px-4 py-3 my-3" :data-theme="currentTheme">
     <!--Start Dashboard Content-->
 
     <div class="row">
       <div class="col-md-3">
-        <div
-          class="card profile-card-2 position-relative shadow-sm border-0 overflow-hidden"
-        >
-          <!-- ⭐ Rating Badge -->
-          <div
-            style="
-              position: absolute;
-              top: 0;
-              right: 0;
-              background-color: #ffc107;
-              color: #212529;
-              font-weight: 900;
-              font-size: 13px;
-              padding: 5px 12px;
-              border-bottom-left-radius: 10px;
-              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-              z-index: 10;
-            "
-          >
-            ⭐ 4.8 / 10
-          </div>
-
-          <!-- Optional Cover -->
-          <div class="card-img-top bg-light" style="height: 120px"></div>
-
-          <!-- Profile Image & Info -->
-          <div class="card-body pt-5 text-center">
-            <img
-              :src="`${auth_info.image ?? 'avatar.png'}`"
-              alt="profile-image"
-              class="profile profile-image my-2 rounded-circle border border-3 border-white shadow"
-              style="
-                width: 150px;
-                height: 150px;
-                object-fit: cover;
-                margin-top: -75px;
-              "
-              @error="$event.target.src = 'avatar.png'"
-            />
-            <div class="d-flex justify-content-center">
-              <div class="ml-5" style="text-align: justify">
-                <h5 class="card-title text-capitalize mt-3">
-                  Name: {{ auth_info.name }}
-                </h5>
-                <p class="card-text mb-1">Email: {{ auth_info.email }}</p>
-                <p class="card-text mb-1">
-                  Phone: {{ auth_info.phone_number }}
-                </p>
-                <p class="card-text">
-                  Address: {{ auth_info.address ?? "N/A" }}
-                </p>
+        <div class="card profile-card shadow-lg">
+          <!-- Profile Header -->
+          <div class="profile-header">
+            <div class="profile-bg"></div>
+            <div class="profile-image-container text-center">
+              <div class="profile-avatar">
+                <img
+                  class="avatar-img"
+                  :src="`${auth_info.image ?? 'avatar.png'}`"
+                  @error="$event.target.src = 'avatar.png'"
+                  alt="Profile Picture"
+                />
+                <!-- Professional Circular Rating Display -->
+                <div class="rating-badge">
+                  <div class="rating-circle" :data-rating="dashboard_data.user_rating || 0">
+                    <div class="rating-value">{{ dashboard_data.user_rating || 0 }}</div>
+                    <div class="rating-scale">/10</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Profile Name Section -->
+              <div class="profile-name mt-3">
+                <h3 class="mb-1">{{ auth_info.name }}</h3>
+                <p class="mb-0">{{ auth_info.designation }}</p>
               </div>
             </div>
           </div>
 
-          <!-- Social Links -->
-          <div class="card-body border-light text-center">
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
-              <a href="javascript:void();"
-                ><i class="fa fa-github bg-github text-white"></i
-              ></a>
-              <a href="javascript:void();">
-                <i class="fa fa-linkedin bg-linkedin text-white"></i
-              ></a>
-              <a href="javascript:void();"
-                ><i class="fa fa-facebook bg-facebook text-white"></i
-              ></a>
-              <a href="javascript:void();">
-                <i class="fa fa-twitter bg-twitter text-white"></i
-              ></a>
-              <a href="javascript:void();">
-                <i class="fa fa-google-plus bg-google-plus text-white"></i
-              ></a>
-              <a href="javascript:void();">
-                <i class="fa fa-youtube bg-youtube text-white"></i
-              ></a>
+          <!-- Profile Information -->
+          <div class="card-body">
+            <div class="profile-details">
+              <div class="detail-row">
+                <div class="detail-icon">
+                  <i class="zmdi zmdi-email text-primary"></i>
+                </div>
+                <div class="detail-content">
+                  <span class="detail-label">Email</span>
+                  <span class="detail-value">{{ auth_info.email }}</span>
+                </div>
+              </div>
+
+              <div class="detail-row">
+                <div class="detail-icon">
+                  <i class="zmdi zmdi-phone text-success"></i>
+                </div>
+                <div class="detail-content">
+                  <span class="detail-label">Phone</span>
+                  <span class="detail-value">{{ auth_info.phone_number }}</span>
+                </div>
+              </div>
+
+              <div class="detail-row">
+                <div class="detail-icon">
+                  <i class="zmdi zmdi-pin text-danger"></i>
+                </div>
+                <div class="detail-content">
+                  <span class="detail-label">Address</span>
+                  <span class="detail-value">{{ auth_info.address ?? "N/A" }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Media Section -->
+          <div class="social-section">
+            <div class="social-header">
+              <h6 class="social-title">
+                <i class="zmdi zmdi-share mr-2"></i>Professional Networks
+              </h6>
+            </div>
+            <div class="social-content">
+              <div class="social-links" v-if="auth_info.social_media && auth_info.social_media.length > 0">
+                <a
+                  v-for="(social, index) in auth_info.social_media"
+                  :key="index"
+                  :href="social.link"
+                  target="_blank"
+                  :title="social.name"
+                  class="social-link"
+                  :class="getSocialMediaClass(social.name)"
+                >
+                  <i :class="getSocialMediaIcon(social.name)"></i>
+                  <div class="social-tooltip">{{ social.name }}</div>
+                </a>
+              </div>
+              <div class="no-social-state" v-else>
+                <i class="zmdi zmdi-info zmdi-hc-2x"></i>
+                <p class="mb-0">No social media links available</p>
+              </div>
             </div>
           </div>
         </div>
-
         <!-- Stats Cards Section -->
         <!-- TOTAL PROJECT -->
       </div>
-      <div class="col-lg-8 col-md-8">
-        <div class="row mb-4" style="gap: 20px 0">
-          <!-- Add gap at the bottom using mb-4 and vertical gap with style -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-primary text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL PROJECT</h6>
-                  <i class="fas fa-project-diagram fa-2x"></i>
+      <div class="col-lg-9 col-md-9">
+        <div class="row stats-row mb-4">
+          <!-- Projects Card -->
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
+            <div class="stat-card stat-card-primary">
+              <div class="stat-card-body">
+                <div class="stat-icon-container">
+                  <div class="stat-icon bg-primary">
+                    <i class="zmdi zmdi-assignment"></i>
+                  </div>
                 </div>
-                <h2 class="mb-0">{{ dashboard_data.total_projects }}</h2>
+                <div class="stat-content">
+                  <div class="stat-number">{{ dashboard_data.total_projects || 0 }}</div>
+                  <div class="stat-label">Total Projects</div>
+                  <div class="stat-trend">
+                    <span class="trend-indicator positive">
+                      <i class="zmdi zmdi-trending-up"></i>
+                      Active
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- TOTAL TASK -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-warning text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL Task</h6>
-                  <i class="fas fa-project-diagram fa-2x"></i>
+          <!-- Total Tasks Card -->
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
+            <div class="stat-card stat-card-warning">
+              <div class="stat-card-body">
+                <div class="stat-icon-container">
+                  <div class="stat-icon bg-warning">
+                    <i class="zmdi zmdi-assignment-check"></i>
+                  </div>
                 </div>
-                <h2 class="mb-0">{{ dashboard_data.total_tasks }}</h2>
+                <div class="stat-content">
+                  <div class="stat-number">{{ dashboard_data.total_tasks || 0 }}</div>
+                  <div class="stat-label">Total Tasks</div>
+                  <div class="stat-trend">
+                    <span class="trend-indicator neutral">
+                      <i class="zmdi zmdi-assignment"></i>
+                      Overall
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- TOTAL COMPLETED TASK -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-secondary text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL COMPLETED TASK</h6>
-                  <i class="fas fa-project-diagram fa-2x"></i>
+          <!-- Completed Tasks Card -->
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
+            <div class="stat-card stat-card-success">
+              <div class="stat-card-body">
+                <div class="stat-icon-container">
+                  <div class="stat-icon bg-success">
+                    <i class="zmdi zmdi-check-circle"></i>
+                  </div>
                 </div>
-                <h2 class="mb-0">
-                  {{ dashboard_data.total_complete_tasks }}
-                </h2>
+                <div class="stat-content">
+                  <div class="stat-number">{{ dashboard_data.total_complete_tasks || 0 }}</div>
+                  <div class="stat-label">Completed Tasks</div>
+                  <div class="stat-trend">
+                    <span class="trend-indicator positive">
+                      <i class="zmdi zmdi-check"></i>
+                      Done
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <!-- TOTAL NOT COMPLETED TASK -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-danger text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL NOT COMPLETED TASK</h6>
-                  <!-- <i class="fas fa-users fa-2x"></i> -->
+          <!-- Not Completed Tasks Card -->
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
+            <div class="stat-card stat-card-danger">
+              <div class="stat-card-body">
+                <div class="stat-icon-container">
+                  <div class="stat-icon bg-danger">
+                    <i class="zmdi zmdi-close-circle"></i>
+                  </div>
                 </div>
-                <h2 class="mb-0">
-                  {{ dashboard_data.total_not_completed_tasks }}
-                </h2>
+                <div class="stat-content">
+                  <div class="stat-number">{{ dashboard_data.total_not_completed_tasks || 0 }}</div>
+                  <div class="stat-label">Not Completed</div>
+                  <div class="stat-trend">
+                    <span class="trend-indicator negative">
+                      <i class="zmdi zmdi-close"></i>
+                      Failed
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Pending Tasks Card -->
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
+            <div class="stat-card stat-card-info">
+              <div class="stat-card-body">
+                <div class="stat-icon-container">
+                  <div class="stat-icon bg-info">
+                    <i class="zmdi zmdi-time"></i>
+                  </div>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-number">{{ dashboard_data.total_pending_tasks || 0 }}</div>
+                  <div class="stat-label">Pending Tasks</div>
+                  <div class="stat-trend">
+                    <span class="trend-indicator neutral">
+                      <i class="zmdi zmdi-time-countdown"></i>
+                      Waiting
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- In Progress Tasks Card -->
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
+            <div class="stat-card stat-card-secondary">
+              <div class="stat-card-body">
+                <div class="stat-icon-container">
+                  <div class="stat-icon bg-secondary">
+                    <i class="zmdi zmdi-refresh"></i>
+                  </div>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-number">{{ dashboard_data.total_in_progress_tasks || 0 }}</div>
+                  <div class="stat-label">In Progress</div>
+                  <div class="stat-trend">
+                    <span class="trend-indicator working">
+                      <i class="zmdi zmdi-refresh"></i>
+                      Active
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- TOTAL Attendance -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-success text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL PRESENT ATTENDANCE</h6>
+          <!-- Present Attendance Card -->
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
+            <div class="stat-card stat-card-attendance">
+              <div class="stat-card-body">
+                <div class="stat-icon-container">
+                  <div class="stat-icon bg-success">
+                    <i class="zmdi zmdi-calendar-check"></i>
+                  </div>
                 </div>
-                <h2 class="mb-0">
-                  {{ dashboard_data.total_present_attendance }}
-                </h2>
+                <div class="stat-content">
+                  <div class="stat-number">{{ dashboard_data.total_present_attendance || 0 }}</div>
+                  <div class="stat-label">Present Days</div>
+                  <div class="stat-trend">
+                    <span class="trend-indicator positive">
+                      <i class="zmdi zmdi-check"></i>
+                      Good
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <!-- TOTAL Absence -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-dark text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL ABSENCE</h6>
+          
+          <!-- Absent Attendance Card -->
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
+            <div class="stat-card stat-card-dark">
+              <div class="stat-card-body">
+                <div class="stat-icon-container">
+                  <div class="stat-icon bg-dark">
+                    <i class="zmdi zmdi-calendar-close"></i>
+                  </div>
                 </div>
-                <h2 class="mb-0">
-                  {{ dashboard_data.total_absent_attendance }}
-                </h2>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-primary text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL Creadentials</h6>
+                <div class="stat-content">
+                  <div class="stat-number">{{ dashboard_data.total_absent_attendance || 0 }}</div>
+                  <div class="stat-label">Absent Days</div>
+                  <div class="stat-trend">
+                    <span class="trend-indicator negative">
+                      <i class="zmdi zmdi-minus-circle"></i>
+                      Absent
+                    </span>
+                  </div>
                 </div>
-                <h2 class="mb-0">
-                  {{ dashboard_data.total_credentials }}
-                </h2>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-info text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL Todos</h6>
-                </div>
-                <h2 class="mb-0">
-                  {{ dashboard_data.total_todos }}
-                </h2>
               </div>
             </div>
           </div>
@@ -200,77 +290,101 @@
 
     <!--End Row-->
 
-    <!--Caleder section start-->
+    <!--Calendar section start-->
     <div class="calendar-container mb-5">
       <!-- Header -->
       <div class="calendar-header">
-        <h2 class="calendar-title">{{ todayFullDate }}</h2>
+        <h2 class="calendar-title">
+          <i class="zmdi zmdi-calendar calendar-icon"></i>
+          {{ todayFullDate }}
+        </h2>
         <div class="calendar-controls">
           <span class="month-label">{{ currentMonthYear }}</span>
           <input type="date" v-model="selectedDate" @change="onDateChange" />
         </div>
       </div>
 
-      <!-- Calendar Grid -->
-      <div class="calendar-grid">
-        <div
-          class="weekday-header"
-          v-for="day in weekdayNames"
-          :key="day"
-          :class="[
-            'weekday-header',
-            day === 'Fri' || day === 'Sat' ? 'bd-offday' : '',
-          ]"
-        >
-          {{ day }}
+      <!-- Mobile Scrollable Calendar Wrapper -->
+      <div class="calendar-wrapper">
+        <!-- Weekday Headers -->
+        <div class="weekday-headers">
+          <div
+            class="weekday-header"
+            v-for="day in weekdayNames"
+            :key="day"
+            :class="[
+              'weekday-header',
+              day === 'Fri' || day === 'Sat' ? 'bd-offday' : '',
+            ]"
+          >
+            {{ day }}
+          </div>
         </div>
-        <div
-          v-for="n in startDayOfMonth"
-          :key="'empty-' + n"
-          class="calendar-cell empty-cell"
-        ></div>
-        <div
-          v-for="(date, index) in daysInMonth"
-          :key="index"
-          :class="calendarCellClass(date)"
-          class="position-relative"
-        >
-          <router-link
-            :to="`/meeting/all?date=${new Date(
-              date.getTime() + 24 * 60 * 60 * 1000
-            )
-              .toISOString()
-              .substr(0, 10)}`"
+
+        <!-- Calendar Grid -->
+        <div class="calendar-grid">
+          <div
+            v-for="n in startDayOfMonth"
+            :key="'empty-' + n"
+            class="calendar-cell empty-cell"
+          ></div>
+          <div
+            v-for="(date, index) in daysInMonth"
+            :key="index"
+            :class="calendarCellClass(date)"
+            class="calendar-cell-item position-relative"
           >
-            <div class="badge-container" v-if="countTodayMeetings(date) > 0">
-              <span
-                class="badge py-1"
-                style="position: absolute; top: 5px; left: 5px"
-                >M ({{ countTodayMeetings(date) }})
-              </span>
+            <!-- Meeting Badge -->
+            <router-link
+              :to="`/meeting/all?date=${new Date(
+                date.getTime() + 24 * 60 * 60 * 1000
+              )
+                .toISOString()
+                .substr(0, 10)}`"
+              v-if="countTodayMeetings(date) > 0"
+              class="badge-link"
+            >
+              <div class="badge meeting-badge">
+                <i class="zmdi zmdi-accounts"></i>
+                {{ countTodayMeetings(date) }}
+              </div>
+            </router-link>
+            
+            <!-- Task Badge -->
+            <router-link
+              :to="`/tasks/date-wise-tasks/${new Date(
+                date.getTime() + 24 * 60 * 60 * 1000
+              )
+                .toISOString()
+                .substr(0, 10)}`"
+              v-if="countTodayTasks(date) > 0"
+              class="badge-link"
+            >
+              <div class="badge task-badge">
+                <i class="zmdi zmdi-assignment"></i>
+                {{ countTodayTasks(date) }}
+              </div>
+            </router-link>
+
+            <!-- Date Display -->
+            <div class="date-content">
+              <div class="date-number">{{ date.getDate() }}</div>
+              <div class="day-name">{{ formatDay(date).substring(0, 3) }}</div>
             </div>
-          </router-link>
-          <router-link
-            :to="`/tasks/date-wise-tasks/${new Date(
-              date.getTime() + 24 * 60 * 60 * 1000
-            )
-              .toISOString()
-              .substr(0, 10)}`"
-          >
-            <div class="badge-container" v-if="countTodayTasks(date) > 0">
-              <span
-                class="badge py-1"
-                style="position: absolute; top: 5px; right: 5px"
-                >T ({{ countTodayTasks(date) }})
-              </span>
+            
+            <!-- Date Full Name for Mobile -->
+            <div class="date-full-name">
+              {{ date.toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                day: 'numeric',
+                month: 'short'
+              }) }}
             </div>
-          </router-link>
-          <div class="date-number">{{ date.getDate() }}</div>
-          <div class="day-name">{{ formatDay(date) }}</div>
+          </div>
         </div>
       </div>
     </div>
-    <!--Caleder section end-->
+    <!--Calendar section end-->
     <!--start overlay-->
     <div class="overlay"></div>
     <!--end overlay-->
@@ -288,13 +402,84 @@ export default {
     task_list_dates: [],
     meeting_dates: [],
     item: {},
+    currentTheme: 'dark',
   }),
   created: async function () {
+    this.detectTheme();
     await this.get_all_dashboard_data();
     await this.get_all_tasks();
     await this.get_all_meetings();
   },
   methods: {
+    detectTheme() {
+      // Auto-detect system theme preference
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        this.currentTheme = 'dark';
+      } else {
+        this.currentTheme = 'light';
+      }
+      
+      // Listen for theme changes
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          this.currentTheme = e.matches ? 'dark' : 'light';
+        });
+      }
+    },
+    getSocialMediaIcon(socialMediaName) {
+      const iconMap = {
+        Facebook: "zmdi zmdi-facebook",
+        Instagram: "zmdi zmdi-instagram",
+        Twitter: "zmdi zmdi-twitter",
+        LinkedIn: "zmdi zmdi-linkedin",
+        YouTube: "zmdi zmdi-youtube",
+        TikTok: "zmdi zmdi-vimeo",
+        Snapchat: "zmdi zmdi-accounts",
+        Pinterest: "zmdi zmdi-pinterest",
+        WhatsApp: "zmdi zmdi-whatsapp",
+        Telegram: "zmdi zmdi-comments",
+        Discord: "zmdi zmdi-comments",
+        Reddit: "zmdi zmdi-reddit",
+        Tumblr: "zmdi zmdi-tumblr",
+        Twitch: "zmdi zmdi-twitch",
+        GitHub: "zmdi zmdi-github",
+        Behance: "zmdi zmdi-dribbble",
+        Dribbble: "zmdi zmdi-dribbble",
+        Skype: "zmdi zmdi-skype",
+        Viber: "zmdi zmdi-phone",
+        WeChat: "zmdi zmdi-comments",
+        Other: "zmdi zmdi-link",
+      };
+
+      return iconMap[socialMediaName] || "zmdi zmdi-link";
+    },
+    getSocialMediaClass(socialMediaName) {
+      const classMap = {
+        Facebook: "bg-facebook",
+        Instagram: "bg-instagram",
+        Twitter: "bg-twitter",
+        LinkedIn: "bg-linkedin",
+        YouTube: "bg-youtube",
+        TikTok: "bg-tiktok",
+        Snapchat: "bg-snapchat",
+        Pinterest: "bg-pinterest",
+        WhatsApp: "bg-whatsapp",
+        Telegram: "bg-telegram",
+        Discord: "bg-discord",
+        Reddit: "bg-reddit",
+        Tumblr: "bg-tumblr",
+        Twitch: "bg-twitch",
+        GitHub: "bg-github",
+        Behance: "bg-behance",
+        Dribbble: "bg-dribbble",
+        Skype: "bg-skype",
+        Viber: "bg-viber",
+        WeChat: "bg-wechat",
+        Other: "bg-secondary",
+      };
+
+      return classMap[socialMediaName] || "bg-secondary";
+    },
     get_all_dashboard_data: async function () {
       let response = await axios.get("get-employee-dashboard-data");
       if (response.status == 200) {
@@ -466,176 +651,1817 @@ export default {
 </script>
 
 <style scoped>
-.calendar-container {
-  color: #ffffff;
-  padding: 20px;
+/* CSS Variables for Theme Support */
+.container-fluid {
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --text-primary: #2c3e50;
+  --text-secondary: #6c757d;
+  --text-muted: #6c757d;
+  --border-color: #e9ecef;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-hover: rgba(0, 0, 0, 0.15);
+  --card-bg: #ffffff;
+  --table-hover: #f8f9fa;
+  --detail-row-bg: #f8f9fa;
+  --detail-row-hover: #e9ecef;
+}
+
+/* Dark Theme Variables */
+.container-fluid[data-theme="dark"] {
+  --bg-primary: #2d2d2d;
+  --bg-secondary: #3a3a3a;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-muted: #888888;
+  --border-color: #555555;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --shadow-hover: rgba(0, 0, 0, 0.4);
+  --card-bg: #3a3a3a;
+  --table-hover: #404040;
+  --detail-row-bg: #404040;
+  --detail-row-hover: #4a4a4a;
+}
+
+/* Page Layout */
+.container-fluid {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Profile Card */
+.profile-card {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px var(--shadow-hover) !important;
+}
+
+.profile-header {
+  padding: 0;
+  margin: 0;
+}
+
+.profile-bg {
+  height: 120px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+}
+
+.profile-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1));
+}
+
+.profile-image-container {
+  position: relative;
+  margin-top: -60px;
+  z-index: 10;
+}
+
+.profile-avatar {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 5px solid var(--card-bg);
+  object-fit: cover;
+  object-position: center;
+  box-shadow: 0 10px 30px var(--shadow-color);
+  transition: transform 0.3s ease;
+}
+
+.profile-avatar:hover .avatar-img {
+  transform: scale(1.05);
+}
+
+.rating-badge {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
+
+.rating-circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 15px var(--shadow-color);
+  border: 3px solid var(--card-bg);
+  transition: all 0.3s ease;
+}
+
+.rating-circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.rating-value {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.rating-scale {
+  font-size: 8px;
+  opacity: 0.8;
+  line-height: 1;
+}
+
+.profile-name h3 {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.profile-name p {
+  color: var(--text-secondary);
+}
+
+/* Rating Colors */
+.rating-circle[data-rating="0"],
+.rating-circle[data-rating="1"],
+.rating-circle[data-rating="2"] {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.rating-circle[data-rating="3"],
+.rating-circle[data-rating="4"] {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+}
+
+.rating-circle[data-rating="5"],
+.rating-circle[data-rating="6"] {
+  background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+  color: #2c3e50;
+}
+
+.rating-circle[data-rating="7"],
+.rating-circle[data-rating="8"] {
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+}
+
+.rating-circle[data-rating="9"],
+.rating-circle[data-rating="10"] {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+}
+
+/* Profile Details */
+.profile-details {
+  padding: 1rem 0;
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background: var(--detail-row-bg);
   border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.detail-row:hover {
+  background: var(--detail-row-hover);
+  transform: translateX(5px);
+}
+
+.detail-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg);
+  border-radius: 10px;
+  margin-right: 1rem;
+  box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.detail-content {
+  flex: 1;
+}
+
+.detail-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* Social Section */
+.social-section {
+  padding: 1.5rem;
+  background: var(--detail-row-bg);
+}
+
+.social-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.social-title {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.social-content {
+  text-align: center;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.social-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  border: 3px solid transparent;
+  margin: 0.25rem;
+  padding: 0;
+  color: white;
+}
+
+.social-link:hover {
+  transform: translateY(-6px) scale(1.1);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  text-decoration: none;
+}
+
+.social-link:active {
+  transform: translateY(-3px) scale(1.05);
+}
+
+.social-link i {
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-link:hover i {
+  transform: scale(1.1);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Social Tooltip */
+.social-tooltip {
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.social-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid rgba(0, 0, 0, 0.8);
+}
+
+.social-link:hover .social-tooltip {
+  opacity: 1;
+  visibility: visible;
+  bottom: -40px;
+}
+
+/* No Social State */
+.no-social-state {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.no-social-state i {
+  opacity: 0.4;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+.no-social-state p {
+  margin: 0;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* Social Media Background Colors - Modern Vibrant Theme */
+.bg-facebook { 
+  background: radial-gradient(circle at 30% 30%, #4267B2, #365899) !important;
+  box-shadow: 0 6px 20px rgba(66, 103, 178, 0.4) !important;
+}
+.bg-instagram { 
+  background: radial-gradient(circle at 30% 30%, #833ab4, #fd1d1d, #fcb045) !important;
+  box-shadow: 0 6px 20px rgba(131, 58, 180, 0.4) !important;
+}
+.bg-twitter { 
+  background: radial-gradient(circle at 30% 30%, #1DA1F2, #0d8bd9) !important;
+  box-shadow: 0 6px 20px rgba(29, 161, 242, 0.4) !important;
+}
+.bg-linkedin { 
+  background: radial-gradient(circle at 30% 30%, #0077B5, #005885) !important;
+  box-shadow: 0 6px 20px rgba(0, 119, 181, 0.4) !important;
+}
+.bg-youtube { 
+  background: radial-gradient(circle at 30% 30%, #FF0000, #cc0000) !important;
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4) !important;
+}
+.bg-tiktok { 
+  background: radial-gradient(circle at 30% 30%, #000000, #ff0050) !important;
+  box-shadow: 0 6px 20px rgba(255, 0, 80, 0.4) !important;
+}
+.bg-snapchat { 
+  background: radial-gradient(circle at 30% 30%, #FFFC00, #fff700) !important;
+  box-shadow: 0 6px 20px rgba(255, 252, 0, 0.4) !important;
+  color: #000 !important; 
+}
+.bg-pinterest { 
+  background: radial-gradient(circle at 30% 30%, #E60023, #bd081c) !important;
+  box-shadow: 0 6px 20px rgba(230, 0, 35, 0.4) !important;
+}
+.bg-whatsapp { 
+  background: radial-gradient(circle at 30% 30%, #25D366, #128c7e) !important;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4) !important;
+}
+.bg-telegram { 
+  background: radial-gradient(circle at 30% 30%, #0088CC, #005f8a) !important;
+  box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4) !important;
+}
+.bg-discord { 
+  background: radial-gradient(circle at 30% 30%, #7289DA, #5b6eae) !important;
+  box-shadow: 0 6px 20px rgba(114, 137, 218, 0.4) !important;
+}
+.bg-reddit { 
+  background: radial-gradient(circle at 30% 30%, #FF4500, #cc3700) !important;
+  box-shadow: 0 6px 20px rgba(255, 69, 0, 0.4) !important;
+}
+.bg-tumblr { 
+  background: radial-gradient(circle at 30% 30%, #00CF35, #00a62a) !important;
+  box-shadow: 0 6px 20px rgba(0, 207, 53, 0.4) !important;
+}
+.bg-twitch { 
+  background: radial-gradient(circle at 30% 30%, #9146FF, #7329cc) !important;
+  box-shadow: 0 6px 20px rgba(145, 70, 255, 0.4) !important;
+}
+.bg-github { 
+  background: radial-gradient(circle at 30% 30%, #333333, #1a1a1a) !important;
+  box-shadow: 0 6px 20px rgba(51, 51, 51, 0.4) !important;
+}
+.bg-behance { 
+  background: radial-gradient(circle at 30% 30%, #1769FF, #0d4fd1) !important;
+  box-shadow: 0 6px 20px rgba(23, 105, 255, 0.4) !important;
+}
+.bg-dribbble { 
+  background: radial-gradient(circle at 30% 30%, #EA4C89, #c73670) !important;
+  box-shadow: 0 6px 20px rgba(234, 76, 137, 0.4) !important;
+}
+.bg-skype { 
+  background: radial-gradient(circle at 30% 30%, #00AFF0, #0085c7) !important;
+  box-shadow: 0 6px 20px rgba(0, 175, 240, 0.4) !important;
+}
+.bg-viber { 
+  background: radial-gradient(circle at 30% 30%, #665CAC, #4f4788) !important;
+  box-shadow: 0 6px 20px rgba(102, 92, 172, 0.4) !important;
+}
+.bg-wechat { 
+  background: radial-gradient(circle at 30% 30%, #7BB32E, #5f8f24) !important;
+  box-shadow: 0 6px 20px rgba(123, 179, 46, 0.4) !important;
+}
+
+/* Enhanced Hover Effects for Social Icons */
+.social-link:hover.bg-facebook {
+  box-shadow: 0 12px 35px rgba(66, 103, 178, 0.6) !important;
+}
+.social-link:hover.bg-instagram {
+  box-shadow: 0 12px 35px rgba(131, 58, 180, 0.6) !important;
+}
+.social-link:hover.bg-twitter {
+  box-shadow: 0 12px 35px rgba(29, 161, 242, 0.6) !important;
+}
+.social-link:hover.bg-linkedin {
+  box-shadow: 0 12px 35px rgba(0, 119, 181, 0.6) !important;
+}
+.social-link:hover.bg-youtube {
+  box-shadow: 0 12px 35px rgba(255, 0, 0, 0.6) !important;
+}
+.social-link:hover.bg-tiktok {
+  box-shadow: 0 12px 35px rgba(255, 0, 80, 0.6) !important;
+}
+.social-link:hover.bg-twitch {
+  box-shadow: 0 12px 35px rgba(145, 70, 255, 0.6) !important;
+}
+
+/* Professional Statistics Cards */
+.stats-row {
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+}
+
+.stats-row > [class*="col-"] {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px var(--shadow-color);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px var(--shadow-hover);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+.stat-card-body {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+  min-height: 120px;
+}
+
+.stat-icon-container {
+  flex-shrink: 0;
+}
+
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  border-radius: inherit;
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.stat-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.stat-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  transition: color 0.3s ease;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.stat-trend {
+  display: flex;
+  align-items: center;
+}
+
+.trend-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 16px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+}
+
+.trend-indicator i {
+  font-size: 0.7rem;
+}
+
+.trend-indicator.positive {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.trend-indicator.negative {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.trend-indicator.neutral {
+  background: rgba(156, 163, 175, 0.1);
+  color: #6b7280;
+  border: 1px solid rgba(156, 163, 175, 0.2);
+}
+
+.trend-indicator.working {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Card Type Specific Styles */
+.stat-card-primary {
+  --accent-color: #3b82f6;
+}
+
+.stat-card-warning {
+  --accent-color: #f59e0b;
+}
+
+.stat-card-success {
+  --accent-color: #10b981;
+}
+
+.stat-card-danger {
+  --accent-color: #ef4444;
+}
+
+.stat-card-info {
+  --accent-color: #06b6d4;
+}
+
+.stat-card-secondary {
+  --accent-color: #6b7280;
+}
+
+.stat-card-attendance {
+  --accent-color: #22c55e;
+}
+
+.stat-card-dark {
+  --accent-color: #374151;
+}
+
+/* Icon Background Colors */
+.stat-icon.bg-primary {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.stat-icon.bg-warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-icon.bg-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-icon.bg-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.stat-icon.bg-info {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+.stat-icon.bg-secondary {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+.stat-icon.bg-dark {
+  background: linear-gradient(135deg, #374151, #1f2937);
+}
+
+/* Responsive Design for Stats Cards */
+@media (max-width: 1200px) {
+  .stat-card-body {
+    padding: 1.25rem;
+    min-height: 110px;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .stat-card-body {
+    padding: 1rem;
+    min-height: 100px;
+    gap: 0.75rem;
+  }
+  
+  .stat-number {
+    font-size: 1.4rem;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+  }
+  
+  .stat-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-row {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+  
+  .stats-row > [class*="col-"] {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .stat-card-body {
+    padding: 1rem;
+    min-height: 90px;
+    gap: 0.75rem;
+  }
+  
+  .stat-number {
+    font-size: 1.3rem;
+  }
+  
+  .stat-label {
+    font-size: 0.7rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+  }
+  
+  .trend-indicator {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .stat-card-body {
+    padding: 0.875rem;
+    min-height: 85px;
+    gap: 0.625rem;
+  }
+  
+  .stat-number {
+    font-size: 1.2rem;
+  }
+  
+  .stat-label {
+    font-size: 0.65rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+    border-radius: 12px;
+  }
+  
+  .trend-indicator {
+    padding: 0.1rem 0.4rem;
+    font-size: 0.55rem;
+    gap: 0.2rem;
+  }
+  
+  .trend-indicator i {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stat-card-body {
+    padding: 0.75rem;
+    min-height: 80px;
+    gap: 0.5rem;
+  }
+  
+  .stat-number {
+    font-size: 1.1rem;
+  }
+  
+  .stat-label {
+    font-size: 0.6rem;
+  }
+  
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+}
+
+/* Dark Theme Specific Adjustments for Stats */
+.container-fluid[data-theme="dark"] .stat-card {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.container-fluid[data-theme="dark"] .stat-number {
+  color: var(--text-primary);
+}
+
+.container-fluid[data-theme="dark"] .stat-label {
+  color: var(--text-secondary);
+}
+
+.container-fluid[data-theme="dark"] .trend-indicator.positive {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.container-fluid[data-theme="dark"] .trend-indicator.negative {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.container-fluid[data-theme="dark"] .trend-indicator.neutral {
+  background: rgba(156, 163, 175, 0.15);
+  color: #9ca3af;
+}
+
+.container-fluid[data-theme="dark"] .trend-indicator.working {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+/* General Card Styling */
+.card {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card-header {
+  background: var(--card-bg) !important;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.card-title {
+  color: var(--text-primary);
+}
+
+/* Override Bootstrap Text Classes for Dark Theme */
+.container-fluid[data-theme="dark"] .text-dark,
+.container-fluid[data-theme="dark"] .text-muted,
+.container-fluid[data-theme="dark"] .fw-medium,
+.container-fluid[data-theme="dark"] .fw-semibold,
+.container-fluid[data-theme="dark"] h1, .container-fluid[data-theme="dark"] h2, .container-fluid[data-theme="dark"] h3, 
+.container-fluid[data-theme="dark"] h4, .container-fluid[data-theme="dark"] h5, .container-fluid[data-theme="dark"] h6,
+.container-fluid[data-theme="dark"] p, .container-fluid[data-theme="dark"] span {
+  color: var(--text-primary) !important;
+}
+
+.container-fluid[data-theme="dark"] .text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* Calendar Styles */
+.calendar-container {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  padding: 1.5rem;
+  border-radius: 16px;
   margin: auto;
   font-family: Arial, sans-serif;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px var(--shadow-color);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .calendar-header h2 {
-  font-size: 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 0.5rem;
+  color: var(--text-primary);
+  margin: 0;
 }
 
 .calendar-controls {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .calendar-controls input {
-  background-color: #1f2e47;
-  color: #ffffff;
-  border: 1px solid #33415c;
-  padding: 5px 10px;
-  border-radius: 5px;
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  min-width: 150px;
+}
+
+.calendar-controls input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .month-label {
-  font-weight: bold;
-  color: #ccc;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+/* Calendar Wrapper for Mobile Scroll */
+.calendar-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.weekday-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  min-width: 100%;
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
+  gap: 0.75rem;
+  width: 100%;
+  min-width: 100%;
 }
 
-@media (max-width: 900px) {
-  .calendar-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .calendar-container {
-    padding: 8px;
-    font-size: 13px;
-  }
-  .calendar-header h2 {
-    font-size: 15px;
-  }
-  .calendar-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-  }
-  .calendar-cell {
-    padding: 18px 4px;
-    font-size: 12px;
-  }
-  .date-number {
-    font-size: 14px;
-  }
-  .day-name {
-    font-size: 10px;
-  }
-}
-
-.calendar-cell {
-  background-color: #1f2e47;
-  border: 1px solid #2a3a59;
-  padding: 40px 10px;
-  border-radius: 8px;
+.calendar-cell,
+.calendar-cell-item {
+  background-color: var(--card-bg);
+  border: 2px solid var(--border-color);
+  padding: 0.75rem 0.5rem;
+  border-radius: 12px;
   text-align: center;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
 }
 
-.calendar-cell:hover {
-  background-color: #2a3a59;
+.calendar-cell-item:hover {
+  background-color: var(--detail-row-bg);
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 
 .calendar-title {
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 1.5rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: #ffffff;
+  gap: 0.75rem;
+  color: var(--text-primary);
 }
 
 .calendar-icon {
-  background-color: #0d6efd; /* Bootstrap primary */
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
   color: #ffffff;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 18px;
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-size: 1.25rem;
   display: inline-block;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .friday {
-  background-color: #3b2a4a;
-  border: 1px solid #b4004e;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--text-primary);
 }
 
 .today-success {
-  background-color: #198754 !important;
-  border: 1px solid #157347 !important;
+  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+  border-color: #16a34a !important;
   color: #fff !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3) !important;
 }
 
-/* Red border if today is a holiday */
 .today-holiday-border {
-  border: 2px solid #ff2d2d !important;
+  border: 3px solid #ef4444 !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+}
+
+.date-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 }
 
 .date-number {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  line-height: 1;
 }
 
 .day-name {
-  font-size: 12px;
-  color: #ccc;
-}
-.badge {
-  background-color: #dc3545;
-  color: white;
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 12px;
-  font-weight: bold;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  line-height: 1;
 }
 
-.profile-image {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  margin-top: -75px;
-  border-radius: 50%;
-  border: 4px solid #fff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
-  box-shadow: 0 0.5rem 1rem rgb(0 0 0) !important;
+.date-full-name {
+  display: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  padding: 0.25rem;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+
+/* Badge Styles */
+.badge-link {
+  position: absolute;
+  z-index: 3;
+  text-decoration: none;
+}
+
+.meeting-badge {
+  top: 4px;
+  left: 4px;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  font-size: 0.6rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  min-width: 24px;
+  justify-content: center;
+}
+
+.task-badge {
+  top: 4px;
+  right: 4px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  font-size: 0.6rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  min-width: 24px;
+  justify-content: center;
+}
+
+.badge i {
+  font-size: 0.5rem;
 }
 
 .weekday-header {
-  font-weight: bold;
+  font-weight: 700;
   text-align: center;
   color: #fff;
-  background: #027708;
-  padding: 8px 0px;
-  border-radius: 5px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  padding: 0.75rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
 }
+
 .empty-cell {
-  background: transparent;
-  border: none;
+  background: transparent !important;
+  border: none !important;
+  cursor: default;
+}
+
+.empty-cell:hover {
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .bd-offday {
-  background-color: #4d0000 !important;
+  background: linear-gradient(135deg, rgba(127, 29, 29, 0.8), rgba(153, 27, 27, 0.8)) !important;
+  color: #fff !important;
+}
+
+/* Responsive Design for Calendar */
+@media (max-width: 1200px) {
+  .calendar-container {
+    padding: 1.25rem;
+  }
+  
+  .calendar-grid,
+  .weekday-headers {
+    gap: 0.5rem;
+  }
+  
+  .calendar-cell,
+  .calendar-cell-item {
+    padding: 0.6rem 0.4rem;
+    min-height: 70px;
+  }
+  
+  .date-number {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .calendar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .calendar-controls {
+    align-self: flex-end;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .calendar-grid,
+  .weekday-headers {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .calendar-cell,
+  .calendar-cell-item {
+    min-height: 65px;
+    padding: 0.5rem 0.3rem;
+  }
+  
+  .date-number {
+    font-size: 1.2rem;
+  }
+  
+  .day-name {
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .calendar-container {
+    padding: 1rem;
+    margin: 0 -0.5rem;
+  }
+  
+  .calendar-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .calendar-header h2 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+  
+  .calendar-controls {
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .calendar-controls input {
+    min-width: 120px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  .month-label {
+    font-size: 0.9rem;
+  }
+  
+  /* Make calendar horizontally scrollable on mobile */
+  .calendar-wrapper {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  
+  .weekday-headers,
+  .calendar-grid {
+    grid-template-columns: repeat(7, minmax(80px, 1fr));
+    min-width: 560px; /* 7 * 80px */
+    gap: 0.4rem;
+  }
+  
+  .calendar-cell,
+  .calendar-cell-item {
+    min-height: 75px;
+    padding: 0.5rem 0.3rem;
+    border-radius: 8px;
+    min-width: 75px;
+  }
+  
+  .date-number {
+    font-size: 1.1rem;
+    margin-bottom: 0.15rem;
+  }
+  
+  .day-name {
+    font-size: 0.6rem;
+  }
+  
+  .weekday-header {
+    padding: 0.6rem 0.3rem;
+    font-size: 0.75rem;
+    min-width: 75px;
+  }
+  
+  .date-full-name {
+    display: block;
+    font-size: 0.65rem;
+  }
+  
+  .date-content {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .calendar-container {
+    padding: 0.75rem;
+    margin: 0 -0.75rem;
+    border-radius: 12px;
+  }
+  
+  .calendar-header {
+    gap: 0.75rem;
+  }
+  
+  .calendar-header h2 {
+    font-size: 1.1rem;
+  }
+  
+  .calendar-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .calendar-controls input {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .month-label {
+    text-align: center;
+    font-size: 0.85rem;
+  }
+  
+  .weekday-headers,
+  .calendar-grid {
+    grid-template-columns: repeat(7, minmax(75px, 1fr));
+    min-width: 525px; /* 7 * 75px */
+    gap: 0.3rem;
+  }
+  
+  .calendar-cell,
+  .calendar-cell-item {
+    min-height: 70px;
+    padding: 0.4rem 0.2rem;
+    border-radius: 6px;
+    min-width: 70px;
+  }
+  
+  .date-full-name {
+    font-size: 0.6rem;
+    padding: 0.2rem;
+  }
+  
+  .weekday-header {
+    padding: 0.5rem 0.2rem;
+    font-size: 0.7rem;
+    min-width: 70px;
+  }
+  
+  .meeting-badge,
+  .task-badge {
+    font-size: 0.55rem;
+    padding: 0.15rem 0.3rem;
+    min-width: 20px;
+  }
+  
+  .badge i {
+    font-size: 0.45rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar-container {
+    padding: 0.5rem;
+    margin: 0 -1rem;
+  }
+  
+  .calendar-header h2 {
+    font-size: 1rem;
+  }
+  
+  .weekday-headers,
+  .calendar-grid {
+    grid-template-columns: repeat(7, minmax(65px, 1fr));
+    min-width: 455px; /* 7 * 65px */
+    gap: 0.25rem;
+  }
+  
+  .calendar-cell,
+  .calendar-cell-item {
+    min-height: 65px;
+    padding: 0.3rem 0.15rem;
+    min-width: 65px;
+  }
+  
+  .date-full-name {
+    font-size: 0.55rem;
+    padding: 0.15rem;
+  }
+  
+  .weekday-header {
+    padding: 0.4rem 0.15rem;
+    font-size: 0.65rem;
+    min-width: 65px;
+  }
+  
+  .meeting-badge,
+  .task-badge {
+    font-size: 0.5rem;
+    padding: 0.1rem 0.25rem;
+    min-width: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .calendar-container {
+    padding: 0.4rem;
+  }
+  
+  .calendar-header h2 {
+    font-size: 0.95rem;
+  }
+  
+  .weekday-headers,
+  .calendar-grid {
+    grid-template-columns: repeat(7, minmax(55px, 1fr));
+    min-width: 385px; /* 7 * 55px */
+    gap: 0.2rem;
+  }
+  
+  .calendar-cell,
+  .calendar-cell-item {
+    min-height: 60px;
+    padding: 0.25rem 0.1rem;
+    min-width: 55px;
+  }
+  
+  .date-full-name {
+    font-size: 0.5rem;
+    padding: 0.1rem;
+    line-height: 1.2;
+  }
+  
+  .weekday-header {
+    padding: 0.3rem 0.1rem;
+    font-size: 0.6rem;
+    min-width: 55px;
+  }
+  
+  .meeting-badge,
+  .task-badge {
+    font-size: 0.45rem;
+    padding: 0.08rem 0.2rem;
+    min-width: 16px;
+  }
+  
+  .badge i {
+    font-size: 0.4rem;
+  }
+}
+
+/* Scrollbar Styling for Mobile */
+@media (max-width: 768px) {
+  .calendar-wrapper::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .calendar-wrapper::-webkit-scrollbar-track {
+    background: var(--border-color);
+    border-radius: 2px;
+  }
+  
+  .calendar-wrapper::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+    border-radius: 2px;
+  }
+  
+  .calendar-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #1d4ed8;
+  }
+}
+
+/* Dark Theme Adjustments for Calendar */
+.container-fluid[data-theme="dark"] .calendar-container {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.container-fluid[data-theme="dark"] .calendar-controls input {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.container-fluid[data-theme="dark"] .calendar-cell,
+.container-fluid[data-theme="dark"] .calendar-cell-item {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.container-fluid[data-theme="dark"] .calendar-cell-item:hover {
+  background-color: var(--detail-row-hover);
+}
+
+.container-fluid[data-theme="dark"] .date-number {
+  color: var(--text-primary);
+}
+
+.container-fluid[data-theme="dark"] .day-name {
+  color: var(--text-secondary);
+}
+
+.container-fluid[data-theme="dark"] .date-full-name {
+  color: var(--text-primary);
+  background: rgba(59, 130, 246, 0.15);
+}
+
+/* Responsive Design for Calendar */
+@media (max-width: 1200px) {
+  .calendar-container {
+    padding: 1.25rem;
+  }
+  
+  .calendar-grid {
+    gap: 0.5rem;
+  }
+  
+  .calendar-cell {
+    padding: 0.75rem 0.4rem;
+    min-height: 70px;
+  }
+  
+  .date-number {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .calendar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .calendar-controls {
+    align-self: flex-end;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .calendar-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .calendar-cell {
+    min-height: 65px;
+    padding: 0.6rem 0.3rem;
+  }
+  
+  .date-number {
+    font-size: 1rem;
+  }
+  
+  .day-name {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .calendar-container {
+    padding: 1rem;
+    margin: 0 -0.5rem;
+  }
+  
+  .calendar-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .calendar-header h2 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+  
+  .calendar-controls {
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .calendar-controls input {
+    min-width: 120px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  .month-label {
+    font-size: 0.9rem;
+  }
+  
+  .calendar-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+  }
+  
+  .calendar-cell {
+    min-height: 60px;
+    padding: 0.5rem 0.25rem;
+    border-radius: 8px;
+  }
+  
+  .date-number {
+    font-size: 0.95rem;
+    margin-bottom: 0.15rem;
+  }
+  
+  .day-name {
+    font-size: 0.65rem;
+  }
+  
+  .weekday-header {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.8rem;
+  }
+  
+  .badge {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.4rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .calendar-container {
+    padding: 0.75rem;
+    margin: 0 -0.75rem;
+    border-radius: 12px;
+  }
+  
+  .calendar-header {
+    gap: 0.75rem;
+  }
+  
+  .calendar-header h2 {
+    font-size: 1.1rem;
+  }
+  
+  .calendar-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .calendar-controls input {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .month-label {
+    text-align: center;
+    font-size: 0.85rem;
+  }
+  
+  .calendar-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.3rem;
+  }
+  
+  .calendar-cell {
+    min-height: 55px;
+    padding: 0.4rem 0.2rem;
+    border-radius: 6px;
+  }
+  
+  .date-number {
+    font-size: 0.9rem;
+    margin-bottom: 0.1rem;
+  }
+  
+  .day-name {
+    font-size: 0.6rem;
+  }
+  
+  .weekday-header {
+    padding: 0.5rem 0.3rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar-container {
+    padding: 0.5rem;
+    margin: 0 -1rem;
+  }
+  
+  .calendar-header h2 {
+    font-size: 1rem;
+  }
+  
+  .calendar-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.25rem;
+  }
+  
+  .calendar-cell {
+    min-height: 50px;
+    padding: 0.3rem 0.15rem;
+  }
+  
+  .date-number {
+    font-size: 0.85rem;
+  }
+  
+  .day-name {
+    font-size: 0.55rem;
+  }
+  
+  .weekday-header {
+    padding: 0.4rem 0.2rem;
+    font-size: 0.7rem;
+  }
+  
+  .badge {
+    font-size: 0.55rem;
+    padding: 0.1rem 0.3rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .calendar-container {
+    padding: 0.4rem;
+  }
+  
+  .calendar-header h2 {
+    font-size: 0.95rem;
+  }
+  
+  .calendar-grid {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+  
+  .calendar-cell {
+    min-height: 45px;
+    padding: 0.25rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+  }
+  
+  .date-number {
+    font-size: 0.8rem;
+    margin-bottom: 0;
+    margin-right: 0.5rem;
+  }
+  
+  .day-name {
+    font-size: 0.5rem;
+    flex: 1;
+  }
+  
+  .weekday-header {
+    display: none;
+  }
+}
+
+/* Dark Theme Adjustments for Calendar */
+.container-fluid[data-theme="dark"] .calendar-container {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.container-fluid[data-theme="dark"] .calendar-controls input {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.container-fluid[data-theme="dark"] .calendar-cell {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.container-fluid[data-theme="dark"] .calendar-cell:hover {
+  background-color: var(--detail-row-hover);
+}
+
+.container-fluid[data-theme="dark"] .date-number {
+  color: var(--text-primary);
+}
+
+.container-fluid[data-theme="dark"] .day-name {
+  color: var(--text-secondary);
+}
+
+/* Responsive Design for Profile */
+@media (max-width: 768px) {
+  .profile-card {
+    margin-bottom: 20px;
+  }
+  
+  .profile-bg {
+    height: 100px;
+  }
+  
+  .avatar-img {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .profile-image-container {
+    margin-top: -50px;
+  }
+  
+  .profile-name h3 {
+    font-size: 1.3rem;
+  }
+  
+  .detail-row {
+    padding: 10px;
+  }
+  
+  .social-links {
+    justify-content: center;
+  }
 }
 </style>
+

@@ -69,7 +69,6 @@ class GetAllData
                     ->select($fields)
                     ->where($condition)
                     ->where('status', $status)
-                    ->limit($pageLimit)
                     ->orderBy($orderByColumn, $orderByType)
                     ->get();
                 return entityResponse($data);

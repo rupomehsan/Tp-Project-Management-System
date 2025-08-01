@@ -1,184 +1,290 @@
 <template>
-  <div class="container-fluid">
-    <!-- System Info Section -->
+  <div class="container-fluid px-4 py-3 my-3" :data-theme="currentTheme">
+    <!-- Page Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="page-header">
+          <h1 class="page-title">User Profile</h1>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Users</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Profile</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
 
-    <div class="row">
-      <div class="col-md-3">
-        <div class="card profile-card-2">
-          <div>
-            <img
-              style="padding: 5px; max-height: 325px; object-fit: cover; object-position: top center;border-radius:   8px;"
-              class="img-fluid w-100"
-              :src="`${item.image ?? 'avatar.png'}`"
-              alt="Card image cap"
-            />
-          </div>
-          <!-- Professional Circular Rating Display -->
-          <div class="circular-rating-overlay">
-            <div class="rating-wrapper">
-              <div class="rating-circle" :data-rating="item.rating || 0">
-                <div class="rating-inner">
-                  <div class="rating-number">{{ item.rating || 0 }}</div>
-                  <div class="rating-separator">/</div>
-                  <div class="rating-max">10</div>
+    <!-- Main Profile Section -->
+    <div class="row g-4">
+      <!-- Profile Card -->
+      <div class="col-xl-4 col-lg-5 col-md-6">
+        <div class="card profile-card shadow-lg border-0">
+          <!-- Profile Header -->
+          <div class="profile-header position-relative">
+            <div class="profile-bg"></div>
+            <div class="profile-image-container text-center">
+              <div class="profile-avatar">
+                <img
+                  class="avatar-img"
+                  :src="`${item.image ?? 'avatar.png'}`"
+                  alt="User Profile"
+                />
+                <!-- Rating Badge -->
+                <div class="rating-badge">
+                  <div class="rating-circle" :data-rating="item.rating || 0">
+                    <span class="rating-value">{{ item.rating || 0 }}</span>
+                    <span class="rating-scale">/10</span>
+                  </div>
                 </div>
-               
               </div>
-              <div class="rating-glow"></div>
+              <div class="profile-name mt-3">
+                <h3 class="mb-1 fw-bold">{{ item.name || 'N/A' }}</h3>
+                <p class="mb-0">Team Member</p>
+              </div>
             </div>
           </div>
-          <div class="card-body" style="padding-top: 80px">
-            <h5 class="card-title text-capitalize">Name : {{ item.name }}</h5>
-            <p class="card-text">Eamil : {{ item.email }}</p>
-            <p class="card-text">Phone : {{ item.phone_number }}</p>
-            <p class="card-text">Address : {{ item.address ?? "N/A" }}</p>
+          
+          <!-- Profile Information -->
+          <div class="card-body pt-4">
+            <div class="profile-details">
+              <div class="detail-row">
+                <div class="detail-icon">
+                  <i class="zmdi zmdi-email text-primary"></i>
+                </div>
+                <div class="detail-content">
+                  <label class="detail-label">Email Address</label>
+                  <span class="detail-value">{{ item.email || 'N/A' }}</span>
+                </div>
+              </div>
+              
+              <div class="detail-row">
+                <div class="detail-icon">
+                  <i class="zmdi zmdi-phone text-success"></i>
+                </div>
+                <div class="detail-content">
+                  <label class="detail-label">Phone Number</label>
+                  <span class="detail-value">{{ item.phone_number || 'N/A' }}</span>
+                </div>
+              </div>
+              
+              <div class="detail-row">
+                <div class="detail-icon">
+                  <i class="zmdi zmdi-pin-drop text-danger"></i>
+                </div>
+                <div class="detail-content">
+                  <label class="detail-label">Address</label>
+                  <span class="detail-value">{{ item.address || "N/A" }}</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="card-body border-light">
-            <div class="media align-items-center">
-              <div class="icon-block">
+          
+          <!-- Social Media Section -->
+          <div class="card-footer bg-light border-0">
+            <div class="social-section">
+              <div class="social-header mb-3">
+              
+                <h6 class="social-title d-inline mb-0">Professional Networks</h6>
+              </div>
+              <div class="social-content">
                 <template v-if="item.social_media && item.social_media.length > 0">
-                  <a 
-                    v-for="(social, index) in item.social_media" 
-                    :key="index"
-                    :href="social.link" 
-                    target="_blank" 
-                    :title="social.name"
-                    class="social-link"
-                  >
-                    <i :class="getSocialMediaIcon(social.name)"></i>
-                  </a>
+                  <div class="social-links">
+                    <a
+                      v-for="(social, index) in item.social_media"
+                      :key="index"
+                      :href="social.link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      :title="`Connect on ${social.name}`"
+                      class="social-link"
+                      :data-platform="social.name.toLowerCase()"
+                    >
+                      <i :class="getSocialMediaIcon(social.name)"></i>
+                      <span class="social-tooltip">{{ social.name }}</span>
+                    </a>
+                  </div>
                 </template>
                 <template v-else>
-                  <span class="text-muted">No social media links available</span>
+                  <div class="no-social-state">
+                    <i class="zmdi zmdi-link zmdi-hc-2x text-muted mb-2"></i>
+                    <p class="text-muted mb-0 small">No professional networks connected</p>
+                  </div>
                 </template>
               </div>
             </div>
           </div>
         </div>
-        <!-- Stats Cards Section -->
-        <!-- TOTAL PROJECT -->
       </div>
-      <div class="col-lg-8 col-md-8">
-        <div class="row mb-4" style="gap: 20px 0">
-          <!-- Add gap at the bottom using mb-4 and vertical gap with style -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-primary text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL PROJECT</h6>
-                  <i class="fas fa-project-diagram fa-2x"></i>
+      
+      <!-- Stats and Content Section -->
+      <div class="col-xl-8 col-lg-7 col-md-6">
+        <!-- Statistics Cards -->
+        <div class="row mb-4 stats-row">
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 stats-col">
+            <div class="stats-card card border-0 shadow-sm h-100">
+              <div class="card-body p-4">
+                <div class="stats-content">
+                  <div class="stats-icon bg-primary-subtle">
+                    <i class="zmdi zmdi-case text-primary"></i>
+                  </div>
+                  <div class="stats-info">
+                    <h3 class="stats-number text-primary">{{ item.project?.length || 0 }}</h3>
+                    <p class="stats-label mb-0">Total Projects</p>
+                  </div>
                 </div>
-                <h2 class="mb-0">{{ item.project?.length }}</h2>
               </div>
             </div>
           </div>
 
-          <!-- TOTAL TASK -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-warning text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL Task</h6>
-                  <i class="fas fa-project-diagram fa-2x"></i>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 stats-col">
+            <div class="stats-card card border-0 shadow-sm h-100">
+              <div class="card-body p-4">
+                <div class="stats-content">
+                  <div class="stats-icon bg-warning-subtle">
+                    <i class="zmdi zmdi-assignment text-warning"></i>
+                  </div>
+                  <div class="stats-info">
+                    <h3 class="stats-number text-warning">{{ item.tasks?.length || 0 }}</h3>
+                    <p class="stats-label mb-0">Total Tasks</p>
+                  </div>
                 </div>
-                <h2 class="mb-0">{{ item.tasks?.length }}</h2>
               </div>
             </div>
           </div>
 
-          <!-- TOTAL COMPLETED TASK -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-secondary text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL COMPLETED TASK</h6>
-                  <i class="fas fa-project-diagram fa-2x"></i>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 stats-col">
+            <div class="stats-card card border-0 shadow-sm h-100">
+              <div class="card-body p-4">
+                <div class="stats-content">
+                  <div class="stats-icon bg-success-subtle">
+                    <i class="zmdi zmdi-check-circle text-success"></i>
+                  </div>
+                  <div class="stats-info">
+                    <h3 class="stats-number text-success">
+                      {{ item.tasks?.filter(task => task.task_status === "Completed").length || 0 }}
+                    </h3>
+                    <p class="stats-label mb-0">Completed</p>
+                  </div>
                 </div>
-                <h2 class="mb-0">
-                  {{ item.tasks?.filter((task) => task.task_status === "Completed").length }}
-                </h2>
               </div>
             </div>
           </div>
-          <!-- TOTAL NOT COMPLETED TASK -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-danger text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL NOT COMPLETED TASK</h6>
-                  <!-- <i class="fas fa-users fa-2x"></i> -->
+          
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 stats-col">
+            <div class="stats-card card border-0 shadow-sm h-100">
+              <div class="card-body p-4">
+                <div class="stats-content">
+                  <div class="stats-icon bg-danger-subtle">
+                    <i class="zmdi zmdi-time text-danger"></i>
+                  </div>
+                  <div class="stats-info">
+                    <h3 class="stats-number text-danger">
+                      {{ item.tasks?.filter(task => task.task_status !== "Completed").length || 0 }}
+                    </h3>
+                    <p class="stats-label mb-0">Pending</p>
+                  </div>
                 </div>
-                <h2 class="mb-0">
-                  {{ item.tasks?.filter((task) => task.task_status !== "Completed").length }}
-                </h2>
               </div>
             </div>
           </div>
 
-          <!-- TOTAL Attendance -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-success text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL PRESENT ATTENDANCE</h6>
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 stats-col">
+            <div class="stats-card card border-0 shadow-sm h-100">
+              <div class="card-body p-4">
+                <div class="stats-content">
+                  <div class="stats-icon bg-info-subtle">
+                    <i class="zmdi zmdi-calendar-check text-info"></i>
+                  </div>
+                  <div class="stats-info">
+                    <h3 class="stats-number text-info">
+                      {{ item.attendance?.filter(att => att.attendance_status === "Present").length || 0 }}
+                    </h3>
+                    <p class="stats-label mb-0">Present Days</p>
+                  </div>
                 </div>
-                <h2 class="mb-0">{{ item.attendance?.filter((att) => att.attendance_status === "Present").length }}</h2>
               </div>
             </div>
           </div>
-          <!-- TOTAL Absence -->
-          <div class="col-lg-3 col-md-4">
-            <div class="card bg-dark text-white h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h6 class="font-weight-light">TOTAL ABSENCE</h6>
+          
+          <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 stats-col">
+            <div class="stats-card card border-0 shadow-sm h-100">
+              <div class="card-body p-4">
+                <div class="stats-content">
+                  <div class="stats-icon bg-secondary-subtle">
+                    <i class="zmdi zmdi-calendar-close text-secondary"></i>
+                  </div>
+                  <div class="stats-info">
+                    <h3 class="stats-number text-secondary">
+                      {{ item.attendance?.filter(att => att.attendance_status === "Absent").length || 0 }}
+                    </h3>
+                    <p class="stats-label mb-0">Absent Days</p>
+                  </div>
                 </div>
-                <h2 class="mb-0">
-                  {{ item.attendance?.filter((att) => att.attendance_status === "Absent").length }}
-                </h2>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projects Table -->
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom">
+            <h5 class="card-title mb-0 fw-semibold">
+              <i class="zmdi zmdi-folder text-primary me-2"></i>
+              Project Overview
+            </h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="border-0 fw-semibold">#</th>
+                    <th class="border-0 fw-semibold">Project Name</th>
+                    <th class="border-0 fw-semibold">Status</th>
+                    <th class="border-0 fw-semibold">Start Date</th>
+                    <th class="border-0 fw-semibold">End Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template v-if="Array.isArray(item.project) && item.project?.length">
+                    <tr
+                      v-for="(project, index) in item.project"
+                      :key="project.id || index"
+                      class="border-bottom"
+                    >
+                      <td class="fw-medium">{{ index + 1 }}</td>
+                      <td>
+                        <div class="project-name">
+                          <span class="fw-semibold">{{ project.name || 'N/A' }}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span :class="getStatusBadgeClass(project.project_status)" class="badge">
+                          {{ project.project_status || 'Unknown' }}
+                        </span>
+                      </td>
+                      <td>{{ formatDate(project.start_date) }}</td>
+                      <td>{{ formatDate(project.end_date) }}</td>
+                    </tr>
+                  </template>
+                  <tr v-else>
+                    <td colspan="5" class="text-center py-5">
+                      <div class="empty-state">
+                        <i class="zmdi zmdi-folder zmdi-hc-3x mb-3"></i>
+                        <p class="mb-0">No projects available</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- End System Info Section -->
-    <div class="card-body">
-      <div class="table-responsive table_responsive card_body_fixed_height">
-        <table class="table table-bordered mt-3">
-          <thead>
-            <tr>
-              <th>List</th>
-              <th>Project Title</th>
-              <th>Project Status</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-if="Array.isArray(item.project) && item.project?.length"
-              v-for="(projects, index) in item.project"
-              :key="index"
-              :style="projects.project_status === 'Completed' ? 'background-color: green;' : ''"
-            >
-              <td>{{ index + 1 }}</td>
-              <td>{{ projects.name }}</td>
-              <td>{{ projects.project_status }}</td>
-              <td>{{ projects.start_date }}</td>
-              <td>{{ projects.end_date }}</td>
-            </tr>
-            <tr v-else>
-              <td colspan="5" class="text-center">No project available.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <!-- End System Info Section -->
   </div>
-  <!-- End container-fluid-->
 </template>
 <script>
 import { mapActions, mapState, mapWritableState } from "pinia";
@@ -188,10 +294,26 @@ import setup from "../setup";
 export default {
   data: () => ({
     setup,
+    currentTheme: 'dark',
   }),
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
     await this.get_data(id);
+    this.detectTheme();
+  },
+  mounted() {
+    // Listen for theme changes
+    if (window.matchMedia) {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      mediaQuery.addListener(this.handleThemeChange);
+    }
+  },
+  beforeUnmount() {
+    // Clean up listener
+    if (window.matchMedia) {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      mediaQuery.removeListener(this.handleThemeChange);
+    }
   },
   methods: {
     ...mapActions(store, {
@@ -203,30 +325,96 @@ export default {
     },
     getSocialMediaIcon(socialMediaName) {
       const iconMap = {
-        'Facebook': 'fa fa-facebook bg-facebook text-white',
-        'Instagram': 'fa fa-instagram bg-instagram text-white',
-        'Twitter': 'fa fa-twitter bg-twitter text-white',
-        'LinkedIn': 'fa fa-linkedin bg-linkedin text-white',
-        'YouTube': 'fa fa-youtube bg-youtube text-white',
-        'TikTok': 'fa fa-tiktok bg-tiktok text-white',
-        'Snapchat': 'fa fa-snapchat bg-snapchat text-white',
-        'Pinterest': 'fa fa-pinterest bg-pinterest text-white',
-        'WhatsApp': 'fa fa-whatsapp bg-whatsapp text-white',
-        'Telegram': 'fa fa-telegram bg-telegram text-white',
-        'Discord': 'fa fa-discord bg-discord text-white',
-        'Reddit': 'fa fa-reddit bg-reddit text-white',
-        'Tumblr': 'fa fa-tumblr bg-tumblr text-white',
-        'Twitch': 'fa fa-twitch bg-twitch text-white',
-        'GitHub': 'fa fa-github bg-github text-white',
-        'Behance': 'fa fa-behance bg-behance text-white',
-        'Dribbble': 'fa fa-dribbble bg-dribbble text-white',
-        'Skype': 'fa fa-skype bg-skype text-white',
-        'Viber': 'fa fa-viber bg-viber text-white',
-        'WeChat': 'fa fa-wechat bg-wechat text-white',
-        'Other': 'fa fa-link bg-secondary text-white'
+        Facebook: "zmdi zmdi-facebook bg-facebook text-white",
+        Instagram: "zmdi zmdi-instagram bg-instagram text-white",
+        Twitter: "zmdi zmdi-twitter bg-twitter text-white",
+        LinkedIn: "zmdi zmdi-linkedin bg-linkedin text-white",
+        YouTube: "zmdi zmdi-youtube bg-youtube text-white",
+        TikTok: "zmdi zmdi-link bg-tiktok text-white",
+        Snapchat: "zmdi zmdi-link bg-snapchat text-dark",
+        Pinterest: "zmdi zmdi-link bg-pinterest text-white",
+        WhatsApp: "zmdi zmdi-link bg-whatsapp text-white",
+        Telegram: "zmdi zmdi-link bg-telegram text-white",
+        Discord: "zmdi zmdi-link bg-discord text-white",
+        Reddit: "zmdi zmdi-link bg-reddit text-white",
+        Tumblr: "zmdi zmdi-link bg-tumblr text-white",
+        Twitch: "zmdi zmdi-link bg-twitch text-white",
+        GitHub: "zmdi zmdi-github bg-github text-white",
+        Behance: "zmdi zmdi-link bg-behance text-white",
+        Dribbble: "zmdi zmdi-link bg-dribbble text-white",
+        Skype: "zmdi zmdi-link bg-skype text-white",
+        Viber: "zmdi zmdi-link bg-viber text-white",
+        WeChat: "zmdi zmdi-link bg-wechat text-white",
+        Other: "zmdi zmdi-link bg-secondary text-white",
       };
+
+      return iconMap[socialMediaName] || "zmdi zmdi-link bg-secondary text-white";
+    },
+    
+    getProjectStatusClass(status) {
+      const statusClasses = {
+        'Completed': 'table-success',
+        'In Progress': 'table-warning',
+        'Pending': 'table-info',
+        'On Hold': 'table-secondary',
+        'Cancelled': 'table-danger',
+        'Planning': 'table-light'
+      };
+      return statusClasses[status] || '';
+    },
+    
+    getStatusBadgeClass(status) {
+      const badgeClasses = {
+        'Completed': 'badge-success',
+        'In Progress': 'badge-warning',
+        'Pending': 'badge-info',
+        'On Hold': 'badge-secondary',
+        'Cancelled': 'badge-danger',
+        'Planning': 'badge-light text-dark'
+      };
+      return badgeClasses[status] || 'badge-secondary';
+    },
+    
+    formatDate(dateString) {
+      if (!dateString) return 'N/A';
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      } catch (error) {
+        return dateString;
+      }
+    },
+    
+    detectTheme() {
+      // Check for manual theme setting first
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        this.currentTheme = savedTheme;
+        return;
+      }
       
-      return iconMap[socialMediaName] || 'fa fa-link bg-secondary text-white';
+      // Check system preference
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        this.currentTheme = 'dark';
+      } else {
+        this.currentTheme = 'light';
+      }
+    },
+    
+    handleThemeChange(e) {
+      // Only auto-switch if no manual theme is set
+      if (!localStorage.getItem('theme')) {
+        this.currentTheme = e.matches ? 'dark' : 'light';
+      }
+    },
+    
+    setTheme(theme) {
+      this.currentTheme = theme;
+      localStorage.setItem('theme', theme);
     },
   },
   computed: {
@@ -239,37 +427,37 @@ export default {
         {
           label: "Total Project",
           value: this.item.total_project ?? 0,
-          icon: "fas fa-briefcase",
+          icon: "zmdi zmdi-case",
           bg: "bg-primary text-white",
         },
         {
           label: "Total Task",
           value: this.item.total_task ?? 0,
-          icon: "fas fa-tasks",
+          icon: "zmdi zmdi-assignment",
           bg: "bg-warning text-dark",
         },
         {
           label: "Total Completed Task",
           value: this.item.completed_task ?? 0,
-          icon: "fas fa-check-circle",
+          icon: "zmdi zmdi-check-circle",
           bg: "bg-light text-dark",
         },
         {
           label: "Total Not Completed Task",
           value: this.item.incomplete_task ?? 0,
-          icon: "fas fa-times-circle",
+          icon: "zmdi zmdi-time",
           bg: "bg-light text-dark",
         },
         {
           label: "Total Attendance",
           value: this.item.total_attendance ?? 0,
-          icon: "far fa-calendar-check",
+          icon: "zmdi zmdi-calendar-check",
           bg: "bg-success text-white",
         },
         {
           label: "Total Absent",
           value: this.item.total_absent ?? 0,
-          icon: "far fa-calendar-times",
+          icon: "zmdi zmdi-calendar-close",
           bg: "bg-danger text-white",
         },
         // two empty placeholders
@@ -281,42 +469,155 @@ export default {
 };
 </script>
 
-<style>
-tr th {
-  text-align: left !important;
-}
-.gap-20 {
-  gap: 20px;
-}
-
-/* Professional Circular Rating Styles */
-.circular-rating {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.circular-rating-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-  margin-top: -3px;
+<style scoped>
+/* CSS Variables for Theme Support */
+.container-fluid {
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --text-primary: #2c3e50;
+  --text-secondary: #6c757d;
+  --text-muted: #6c757d;
+  --border-color: #e9ecef;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-hover: rgba(0, 0, 0, 0.15);
+  --card-bg: #ffffff;
+  --table-hover: #f8f9fa;
+  --detail-row-bg: #f8f9fa;
+  --detail-row-hover: #e9ecef;
 }
 
-.profile-card-2 {
+/* Dark Theme Variables */
+.container-fluid[data-theme="dark"] {
+  --bg-primary: #2d2d2d;
+  --bg-secondary: #3a3a3a;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-muted: #888888;
+  --border-color: #555555;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --shadow-hover: rgba(0, 0, 0, 0.4);
+  --card-bg: #3a3a3a;
+  --table-hover: #404040;
+  --detail-row-bg: #404040;
+  --detail-row-hover: #4a4a4a;
+}
+
+/* Page Layout */
+.container-fluid {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Page Header */
+.page-header {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px var(--shadow-color);
+  border-left: 4px solid #0d6efd;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.breadcrumb {
+  margin: 0;
+  background: none;
+  padding: 0;
+}
+
+.breadcrumb-item a {
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.breadcrumb-item a:hover {
+  color: #0d6efd;
+}
+
+.breadcrumb-item.active {
+  color: var(--text-primary);
+}
+
+/* Profile Card */
+.profile-card {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px var(--shadow-hover) !important;
+}
+
+.profile-header {
+  padding: 0;
+  margin: 0;
+}
+
+.profile-bg {
+  height: 120px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
 }
 
-.rating-wrapper {
+.profile-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1));
+}
+
+.profile-image-container {
+  position: relative;
+  margin-top: -60px;
+  z-index: 10;
+}
+
+.profile-avatar {
   position: relative;
   display: inline-block;
 }
 
+.avatar-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 5px solid var(--card-bg);
+  object-fit: cover;
+  object-position: center;
+  box-shadow: 0 10px 30px var(--shadow-color);
+  transition: transform 0.3s ease;
+}
+
+.profile-avatar:hover .avatar-img {
+  transform: scale(1.05);
+}
+
+.rating-badge {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
+
 .rating-circle {
-  width: 100px;
-  height: 100px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
@@ -325,148 +626,764 @@ tr th {
   justify-content: center;
   color: white;
   font-weight: 600;
-  box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.2),
-    0 0 0 8px rgba(255, 255, 255, 0.9),
-    0 0 0 12px rgba(0, 0, 0, 0.1);
-  position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px var(--shadow-color);
+  border: 3px solid var(--card-bg);
+  transition: all 0.3s ease;
 }
 
 .rating-circle:hover {
-  transform: scale(1.08);
-  box-shadow: 
-    0 15px 40px rgba(0, 0, 0, 0.25),
-    0 0 0 8px rgba(255, 255, 255, 0.95),
-    0 0 0 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
-.rating-inner {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  margin-bottom: 2px;
-}
-
-.rating-number {
-  font-size: 28px;
-  line-height: 1;
-  font-weight: 700;
-}
-
-.rating-separator {
-  font-size: 16px;
-  margin: 0 2px;
-  opacity: 0.8;
-}
-
-.rating-max {
+.rating-value {
   font-size: 14px;
-  font-weight: 500;
-  opacity: 0.9;
+  font-weight: 700;
+  line-height: 1;
 }
 
-.rating-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  opacity: 0.9;
-  font-weight: 500;
+.rating-scale {
+  font-size: 8px;
+  opacity: 0.8;
+  line-height: 1;
 }
 
-.rating-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
-  animation: pulse 3s ease-in-out infinite;
-  z-index: -1;
+.profile-name h3 {
+  font-size: 1.5rem;
+  color: var(--text-primary);
 }
 
-@keyframes pulse {
-  0%, 100% { 
-    opacity: 0.6;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% { 
-    opacity: 0.8;
-    transform: translate(-50%, -50%) scale(1.1);
-  }
+.profile-name p {
+  color: var(--text-secondary);
 }
 
-/* Dynamic color based on rating */
+/* Rating Colors */
 .rating-circle[data-rating="0"],
 .rating-circle[data-rating="1"],
 .rating-circle[data-rating="2"] {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
 }
 
 .rating-circle[data-rating="3"],
 .rating-circle[data-rating="4"] {
-  background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
 }
 
 .rating-circle[data-rating="5"],
 .rating-circle[data-rating="6"] {
-  background: linear-gradient(135deg, #ffeb3b 0%, #ffc107 100%);
-  color: #333;
+  background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+  color: #2c3e50;
 }
 
 .rating-circle[data-rating="7"],
 .rating-circle[data-rating="8"] {
-  background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
 }
 
 .rating-circle[data-rating="9"],
 .rating-circle[data-rating="10"] {
-  background: linear-gradient(135deg, #42a5f5 0%, #2196f3 100%);
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
 }
 
-/* Social Media Icon Styles */
+/* Profile Details */
+.profile-details {
+  padding: 1rem 0;
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background: var(--detail-row-bg);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.detail-row:hover {
+  background: var(--detail-row-hover);
+  transform: translateX(5px);
+}
+
+.detail-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg);
+  border-radius: 10px;
+  margin-right: 1rem;
+  box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.detail-content {
+  flex: 1;
+}
+
+.detail-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* Social Section */
+.social-section {
+  padding: 1.5rem;
+  background: var(--detail-row-bg);
+
+}
+
+.social-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.social-title {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.social-content {
+  text-align: center;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 .social-link {
-  display: inline-block;
-  margin-right: 8px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   text-decoration: none;
-  transition: transform 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  border: 3px solid transparent;
+  margin: 0.25rem;
+  padding: 0;
 }
 
 .social-link:hover {
-  transform: scale(1.1);
+  transform: translateY(-6px) scale(1.1);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.social-link:active {
+  transform: translateY(-3px) scale(1.05);
 }
 
 .social-link i {
-  width: 35px;
-  height: 35px;
-  line-height: 35px;
-  text-align: center;
-  border-radius: 50%;
-  font-size: 16px;
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Social Media Background Colors */
-.bg-facebook { background-color: #3b5998 !important; }
-.bg-instagram { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%) !important; }
-.bg-twitter { background-color: #1da1f2 !important; }
-.bg-linkedin { background-color: #0077b5 !important; }
-.bg-youtube { background-color: #ff0000 !important; }
-.bg-tiktok { background-color: #000000 !important; }
-.bg-snapchat { background-color: #fffc00 !important; color: #000 !important; }
-.bg-pinterest { background-color: #bd081c !important; }
-.bg-whatsapp { background-color: #25d366 !important; }
-.bg-telegram { background-color: #0088cc !important; }
-.bg-discord { background-color: #7289da !important; }
-.bg-reddit { background-color: #ff4500 !important; }
-.bg-tumblr { background-color: #00cf35 !important; }
-.bg-twitch { background-color: #9146ff !important; }
-.bg-github { background-color: #333333 !important; }
-.bg-behance { background-color: #1769ff !important; }
-.bg-dribbble { background-color: #ea4c89 !important; }
-.bg-skype { background-color: #00aff0 !important; }
-.bg-viber { background-color: #665cac !important; }
-.bg-wechat { background-color: #7bb32e !important; }
+.social-link:hover i {
+  transform: scale(1.1);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Social Tooltip */
+.social-tooltip {
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.social-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid rgba(0, 0, 0, 0.8);
+}
+
+.social-link:hover .social-tooltip {
+  opacity: 1;
+  visibility: visible;
+  bottom: -40px;
+}
+
+/* No Social State */
+.no-social-state {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.no-social-state i {
+  opacity: 0.4;
+  margin-bottom: 0.5rem;
+}
+
+.no-social-state p {
+  margin: 0;
+  font-style: italic;
+}
+
+/* Stats Cards */
+.stats-row {
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+}
+
+.stats-col {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.stats-card {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px var(--shadow-hover) !important;
+}
+
+/* Force horizontal gaps for stats cards */
+.row.g-4 > [class*="col-"] {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.row.g-4 > [class*="col-"]:first-child {
+  padding-left: 0;
+}
+
+.row.g-4 > [class*="col-"]:last-child {
+  padding-right: 0;
+}
+
+.stats-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stats-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stats-icon i {
+  font-size: 1.5rem;
+}
+
+.stats-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.stats-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.stats-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Table Styles */
+.table {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.table thead th {
+  background: var(--detail-row-bg);
+  border: none;
+  color: var(--text-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  padding: 1rem;
+}
+
+.table tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.table tbody tr:hover {
+  background-color: var(--table-hover);
+}
+
+.project-name {
+  display: flex;
+  align-items: center;
+}
+
+/* General Card Styling */
+.card {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card-header {
+  background: var(--card-bg) !important;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.card-title {
+  color: var(--text-primary);
+}
+
+.card-footer {
+  background: var(--detail-row-bg) !important;
+  border-top: 1px solid var(--border-color) !important;
+}
+
+/* Status Badges */
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.badge-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.badge-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+.badge-secondary {
+  background-color: #e2e3e5;
+  color: #383d41;
+  border: 1px solid #d6d8db;
+}
+
+.badge-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Empty State */
+.empty-state {
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+.empty-state i {
+  opacity: 0.5;
+  color: var(--text-muted);
+}
+
+.empty-state p {
+  color: var(--text-muted);
+}
+
+/* Dark Theme Badge Overrides */
+.container-fluid[data-theme="dark"] .badge-success {
+  background-color: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+  border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.container-fluid[data-theme="dark"] .badge-warning {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.container-fluid[data-theme="dark"] .badge-info {
+  background-color: rgba(23, 162, 184, 0.2);
+  color: #17a2b8;
+  border: 1px solid rgba(23, 162, 184, 0.3);
+}
+
+.container-fluid[data-theme="dark"] .badge-secondary {
+  background-color: rgba(108, 117, 125, 0.2);
+  color: #6c757d;
+  border: 1px solid rgba(108, 117, 125, 0.3);
+}
+
+.container-fluid[data-theme="dark"] .badge-danger {
+  background-color: rgba(220, 53, 69, 0.2);
+  color: #dc3545;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+/* Override Bootstrap Text Classes for Dark Theme */
+.container-fluid[data-theme="dark"] .text-dark,
+.container-fluid[data-theme="dark"] .text-muted,
+.container-fluid[data-theme="dark"] .fw-medium,
+.container-fluid[data-theme="dark"] .fw-semibold,
+.container-fluid[data-theme="dark"] h1, .container-fluid[data-theme="dark"] h2, .container-fluid[data-theme="dark"] h3, 
+.container-fluid[data-theme="dark"] h4, .container-fluid[data-theme="dark"] h5, .container-fluid[data-theme="dark"] h6,
+.container-fluid[data-theme="dark"] p, .container-fluid[data-theme="dark"] span {
+  color: var(--text-primary) !important;
+}
+
+.container-fluid[data-theme="dark"] .text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .stats-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  .stats-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .stats-number {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 1rem;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .avatar-img {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .rating-circle {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .rating-value {
+    font-size: 12px;
+  }
+  
+  .rating-scale {
+    font-size: 7px;
+  }
+  
+  .detail-row {
+    padding: 0.5rem;
+  }
+  
+  .detail-icon {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .stats-number {
+    font-size: 1.25rem;
+  }
+  
+  .table {
+    font-size: 0.8rem;
+  }
+  
+  .table thead th,
+  .table tbody td {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container-fluid {
+    padding: 1rem;
+  }
+  
+  .social-link {
+    width: 44px;
+    height: 44px;
+    margin: 0.2rem;
+    padding: 0;
+  }
+  
+  .social-link i {
+    font-size: 1.1rem;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  
+  .social-links {
+    gap: 0.3rem;
+    padding: 0.3rem;
+  }
+  
+  .social-section {
+    padding: 1rem;
+  }
+  
+  .social-tooltip {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+  
+  .social-link:hover {
+    transform: translateY(-4px) scale(1.05);
+  }
+  
+  .social-link:hover i {
+    transform: scale(1.05);
+  }
+}
+
+/* Social Media Background Colors - Modern Vibrant Theme */
+.bg-facebook { 
+  background: radial-gradient(circle at 30% 30%, #4267B2, #365899) !important;
+  box-shadow: 0 6px 20px rgba(66, 103, 178, 0.4) !important;
+}
+.bg-instagram { 
+  background: radial-gradient(circle at 30% 30%, #833ab4, #fd1d1d, #fcb045) !important;
+  box-shadow: 0 6px 20px rgba(131, 58, 180, 0.4) !important;
+}
+.bg-twitter { 
+  background: radial-gradient(circle at 30% 30%, #1DA1F2, #0d8bd9) !important;
+  box-shadow: 0 6px 20px rgba(29, 161, 242, 0.4) !important;
+}
+.bg-linkedin { 
+  background: radial-gradient(circle at 30% 30%, #0077B5, #005885) !important;
+  box-shadow: 0 6px 20px rgba(0, 119, 181, 0.4) !important;
+}
+.bg-youtube { 
+  background: radial-gradient(circle at 30% 30%, #FF0000, #cc0000) !important;
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4) !important;
+}
+.bg-tiktok { 
+  background: radial-gradient(circle at 30% 30%, #000000, #ff0050) !important;
+  box-shadow: 0 6px 20px rgba(255, 0, 80, 0.4) !important;
+}
+.bg-snapchat { 
+  background: radial-gradient(circle at 30% 30%, #FFFC00, #fff700) !important;
+  box-shadow: 0 6px 20px rgba(255, 252, 0, 0.4) !important;
+  color: #000 !important; 
+}
+.bg-pinterest { 
+  background: radial-gradient(circle at 30% 30%, #E60023, #bd081c) !important;
+  box-shadow: 0 6px 20px rgba(230, 0, 35, 0.4) !important;
+}
+.bg-whatsapp { 
+  background: radial-gradient(circle at 30% 30%, #25D366, #128c7e) !important;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4) !important;
+}
+.bg-telegram { 
+  background: radial-gradient(circle at 30% 30%, #0088CC, #005f8a) !important;
+  box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4) !important;
+}
+.bg-discord { 
+  background: radial-gradient(circle at 30% 30%, #7289DA, #5b6eae) !important;
+  box-shadow: 0 6px 20px rgba(114, 137, 218, 0.4) !important;
+}
+.bg-reddit { 
+  background: radial-gradient(circle at 30% 30%, #FF4500, #cc3700) !important;
+  box-shadow: 0 6px 20px rgba(255, 69, 0, 0.4) !important;
+}
+.bg-tumblr { 
+  background: radial-gradient(circle at 30% 30%, #00CF35, #00a62a) !important;
+  box-shadow: 0 6px 20px rgba(0, 207, 53, 0.4) !important;
+}
+.bg-twitch { 
+  background: radial-gradient(circle at 30% 30%, #9146FF, #7329cc) !important;
+  box-shadow: 0 6px 20px rgba(145, 70, 255, 0.4) !important;
+}
+.bg-github { 
+  background: radial-gradient(circle at 30% 30%, #333333, #1a1a1a) !important;
+  box-shadow: 0 6px 20px rgba(51, 51, 51, 0.4) !important;
+}
+.bg-behance { 
+  background: radial-gradient(circle at 30% 30%, #1769FF, #0d4fd1) !important;
+  box-shadow: 0 6px 20px rgba(23, 105, 255, 0.4) !important;
+}
+.bg-dribbble { 
+  background: radial-gradient(circle at 30% 30%, #EA4C89, #c73670) !important;
+  box-shadow: 0 6px 20px rgba(234, 76, 137, 0.4) !important;
+}
+.bg-skype { 
+  background: radial-gradient(circle at 30% 30%, #00AFF0, #0085c7) !important;
+  box-shadow: 0 6px 20px rgba(0, 175, 240, 0.4) !important;
+}
+.bg-viber { 
+  background: radial-gradient(circle at 30% 30%, #665CAC, #4f4788) !important;
+  box-shadow: 0 6px 20px rgba(102, 92, 172, 0.4) !important;
+}
+.bg-wechat { 
+  background: radial-gradient(circle at 30% 30%, #7BB32E, #5f8f24) !important;
+  box-shadow: 0 6px 20px rgba(123, 179, 46, 0.4) !important;
+}
+
+/* Enhanced Hover Effects for Social Icons */
+.social-link:hover.bg-facebook {
+  box-shadow: 0 12px 35px rgba(66, 103, 178, 0.6) !important;
+}
+.social-link:hover.bg-instagram {
+  box-shadow: 0 12px 35px rgba(131, 58, 180, 0.6) !important;
+}
+.social-link:hover.bg-twitter {
+  box-shadow: 0 12px 35px rgba(29, 161, 242, 0.6) !important;
+}
+.social-link:hover.bg-linkedin {
+  box-shadow: 0 12px 35px rgba(0, 119, 181, 0.6) !important;
+}
+.social-link:hover.bg-youtube {
+  box-shadow: 0 12px 35px rgba(255, 0, 0, 0.6) !important;
+}
+.social-link:hover.bg-tiktok {
+  box-shadow: 0 12px 35px rgba(255, 0, 80, 0.6) !important;
+}
+.social-link:hover.bg-twitch {
+  box-shadow: 0 12px 35px rgba(145, 70, 255, 0.6) !important;
+}
+.social-link:hover.bg-github {
+  box-shadow: 0 12px 35px rgba(51, 51, 51, 0.6) !important;
+}
+
+/* Dark Theme Social Media Adjustments */
+.container-fluid[data-theme="dark"] .social-link {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.container-fluid[data-theme="dark"] .social-link:hover {
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.container-fluid[data-theme="dark"] .social-tooltip {
+  background: rgba(255, 255, 255, 0.95);
+  color: #2c3e50;
+  backdrop-filter: blur(10px);
+}
+
+.container-fluid[data-theme="dark"] .social-tooltip::before {
+  border-bottom-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Additional Modern Effects */
+.social-link {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.social-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.social-link:hover::before {
+  opacity: 1;
+}
+
+/* Improved Social Links Container */
+.social-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+/* Bootstrap Color Variants */
+.bg-primary-subtle { background-color: rgba(13, 110, 253, 0.1) !important; }
+.bg-warning-subtle { background-color: rgba(255, 193, 7, 0.1) !important; }
+.bg-success-subtle { background-color: rgba(25, 135, 84, 0.1) !important; }
+.bg-danger-subtle { background-color: rgba(220, 53, 69, 0.1) !important; }
+.bg-info-subtle { background-color: rgba(13, 202, 240, 0.1) !important; }
+.bg-secondary-subtle { background-color: rgba(108, 117, 125, 0.1) !important; }
 </style>

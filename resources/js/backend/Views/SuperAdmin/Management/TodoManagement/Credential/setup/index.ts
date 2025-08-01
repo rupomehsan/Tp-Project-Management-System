@@ -24,6 +24,7 @@ const setup: setup_type = {
     "description",
     "slug",
     "created_at",
+    "link"
   ],
 
   sort_by_cols: [

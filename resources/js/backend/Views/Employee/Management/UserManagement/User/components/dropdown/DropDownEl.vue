@@ -44,8 +44,11 @@
             </label>
           </li>
         </ul>
-        <div class="drop_down_footer data_list">
-          <pagination :data="all" :get_data="get_all" :set_paginate="set_paginate" :set_page="set_page" />
+        <div class="drop_down_footer data_list" v-if="all?.links && all.links.length > 3">
+          <Pagination
+            :data="all"
+            :method="handlePagination"
+          />
         </div>
       </div>
     </div>
@@ -57,7 +60,12 @@ import { mapActions, mapState, mapWritableState } from "pinia";
 import { store } from "../../store";
 import debounce from "../../helpers/debounce";
 import setup from "../../setup";
+import Pagination from "../../../../../../../GlobalComponents/Pagination.vue";
+
 export default {
+  components: {
+    Pagination,
+  },
   props: {
     multiple: {
       type: Boolean,
@@ -95,12 +103,34 @@ export default {
   }),
   methods: {
     ...mapActions(store, ["get_all", "set_paginate", "set_page"]),
+    
+    // Wrapper method for pagination
+    async handlePagination(url) {
+      try {
+        if (url) {
+          // Extract page number from URL
+          const urlParams = new URLSearchParams(url.split('?')[1]);
+          const page = urlParams.get('page');
+          if (page) {
+            this.set_page(parseInt(page));
+          }
+        }
+        await this.get_all();
+      } catch (error) {
+        console.error('Pagination error:', error);
+      }
+    },
+    
     search_item: debounce(async function (event) {
       let value = event.target.value;
       this.search_key = value;
+      // Store current selection to preserve it
+      const currentSelection = [...this.selected];
       this.only_latest_data = true;
       await this.get_all();
       this.only_latest_data = false;
+      // Restore selection after search
+      this.selected = currentSelection;
     }, 500),
     set_selected: function (item, event) {
       if (!this.multiple) {
@@ -126,8 +156,11 @@ export default {
   },
   computed: {
     ...mapState(store, ["all"]),
-    ...mapWritableState(store, ["search_key"]),
+    ...mapWritableState(store, ["search_key", "page", "paginate"]),
     selected_ids: function () {
+      if (!this.selected || !Array.isArray(this.selected) || this.selected.length === 0) {
+        return "";
+      }
       return this.selected.map((i) => i.id).join(",");
     },
   },

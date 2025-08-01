@@ -12,11 +12,11 @@ class StoreData
     {
         try {
             $requestData = $request->validated();
-            
+
             if (auth()->user()->role_id != 1) {
                 $requestData['assigned_to'] = auth()->id();
             }
-            
+
             $data = self::$model::create($requestData);
             if (!$data) {
                 return messageResponse('Failed to add item', [], 400, 'error');

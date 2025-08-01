@@ -25,6 +25,11 @@ return new class extends Migration
 
             // Optional: work hours for future reporting
             $table->unsignedInteger('work_duration_minutes')->nullable();
+            $table->unsignedInteger('overtime_minutes')->nullable(); // Overtime minutes if any
+
+            // Optional: additional fields for attendance management
+            $table->text('notes')->nullable(); // Any notes related to attendance
+
 
             $table->bigInteger('creator')->unsigned()->nullable();
             $table->string('slug', 50)->nullable();

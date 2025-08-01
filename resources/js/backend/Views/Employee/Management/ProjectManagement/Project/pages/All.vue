@@ -55,8 +55,8 @@
                       />
                     </th>
                     <th class="w-10">ID</th>
-                    <th>Project Group</th>
                     <th>Name</th>
+                    <th>Project Group</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Project Status</th>
@@ -103,8 +103,20 @@
                               }"
                               class="border-secondary"
                             >
-                              <i class="fa fa-eye text-secondary"></i>
+                              <i class="fa fa-list text-warning"></i>
                               Tasks
+                            </router-link>
+                          </li>
+                          <li>
+                            <router-link
+                              :to="{
+                                path: `/tasks/task-board`,
+                                query: { project_id: item.id },
+                              }"
+                              class="border-secondary"
+                            >
+                              <i class="fa fa-tasks text-info"></i>
+                              Tasks Borad
                             </router-link>
                           </li>
                         </ul>
@@ -119,10 +131,12 @@
                       />
                     </td>
                     <td>{{ index + 1 }}</td>
-                    <td>{{ item.project_group_id?.name }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.start_date }}</td>
-                    <td>{{ item.end_date }}</td>
+                    <td class="text-limit">{{ item.name }}</td>
+                    <td class="text-limit">
+                      {{ item.project_group_id?.name }}
+                    </td>
+                    <td class="text-limit">{{ item.start_date }}</td>
+                    <td class="text-limit">{{ item.end_date }}</td>
                     <td
                       :class="{
                         'text-success': item.project_status === 'Completed',
@@ -141,8 +155,8 @@
                     >
                       {{ item.project_status }}
                     </td>
-                    <td>{{ item.delivery_status }}</td>
-                    <td>
+                    <td class="text-limit">{{ item.delivery_status }}</td>
+                    <td class="text-limit">
                       <a
                         class="text-info"
                         :href="item.project_link"

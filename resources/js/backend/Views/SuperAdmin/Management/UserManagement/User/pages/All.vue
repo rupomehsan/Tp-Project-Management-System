@@ -71,7 +71,7 @@
                     :key="item.id"
                     :class="`table_rows table_row_${item.id}`"
                   >
-                    <td>
+                    <td class="text-limit" :title="`Actions for ${item.name}`">
                       <span
                         class="icon"
                         @click.prevent="active_row($event)"
@@ -173,7 +173,7 @@
                         </ul>
                       </div>
                     </td>
-                    <td>
+                    <td class="text-limit" :title="`Select ${item.name}`">
                       <input
                         @change="set_item_selected(item, $event)"
                         :checked="isSelected(item)"
@@ -181,15 +181,15 @@
                         type="checkbox"
                       />
                     </td>
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.role?.name }}</td>
-                    <td>{{ item.designation }}</td>
-                    <td>{{ item.email }}</td>
-                    <td>{{ item.phone_number ?? "N/A " }}</td>
-                    <td>{{ item.can_login === 1 ? "Yes" : "No" ?? "N/A " }}</td>
+                    <td class="text-limit" :title="`ID: ${index + 1}`">{{ index + 1 }}</td>
+                    <td class="text-limit" :title="`Name: ${item.name}`">{{ item.name }}</td>
+                    <td class="text-limit" :title="`Role: ${item.role?.name || 'N/A'}`">{{ item.role?.name }}</td>
+                    <td class="text-limit" :title="`Designation: ${item.designation}`">{{ item.designation }}</td>
+                    <td class="text-limit" :title="`Email: ${item.email}`">{{ item.email }}</td>
+                    <td class="text-limit" :title="`Phone: ${item.phone_number ?? 'N/A'}`">{{ item.phone_number ?? "N/A " }}</td>
+                    <td class="text-limit" :title="`Can Login: ${item.can_login === 1 ? 'Yes' : 'No'}`">{{ item.can_login === 1 ? "Yes" : "No" ?? "N/A " }}</td>
 
-                    <td>
+                    <td class="text-limit" :title="`Image for ${item.name}`">
                       <a
                         data-lightbox="user"
                         data-title="Image preview"
@@ -205,7 +205,7 @@
                         />
                       </a>
                     </td>
-                    <td>{{ formatDateTime(item.created_at) }}</td>
+                    <td class="text-limit" :title="`Created At: ${formatDateTime(item.created_at)}`">{{ formatDateTime(item.created_at) }}</td>
                   </tr>
                 </tbody>
               </table>

@@ -27,16 +27,7 @@ const setup: setup_type = {
     "created_at",
   ],
 
-  sort_by_cols: [
-    "id",
-    "user_id",
-    "date",
-    "check_in",
-    "check_out",
-    "attendance_status",
-    "slug",
-    "created_at",
-  ],
+  sort_by_cols: ["id", "created_at"],
 
   layout_title: prefix + " Management",
   page_title: `${prefix} Management`,

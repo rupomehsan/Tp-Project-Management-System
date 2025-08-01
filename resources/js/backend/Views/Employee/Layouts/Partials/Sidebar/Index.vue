@@ -2,8 +2,16 @@
   <!--Start sidebar-wrapper-->
   <div id="sidebar-wrapper">
     <div class="brand-logo">
-      <router-link :to="{ name: `adminDashboard` }" class="d-flex align-items-center">
-        <img :src="`${get_setting_value('image') ?? 'avatar.png'} `" class="logo-icon" alt="logo icon" @error="$event.target.src = 'logo.png'" />
+      <router-link
+        :to="{ name: `adminDashboard` }"
+        class="d-flex align-items-center profile-image "
+      >
+        <img
+          :src="`${get_setting_value('image') ?? 'avatar.png'} `"
+          class="logo-icon"
+          alt="logo icon"
+          @error="$event.target.src = 'logo.png'"
+        />
         <h5 class="logo-text">Employee Panel</h5>
       </router-link>
       <div class="close-btn">
@@ -20,13 +28,17 @@
         @error="$event.target.src = 'avatar.png'"
         alt=""
       />
-      <p class="mt-2">Mr. {{ auth_info.name }}</p>
+      <p class="mt-2"> {{ auth_info.name }}</p>
     </div>
     <hr />
     <ul class="metismenu" id="menu">
       <!-- <li class="menu-label">Management</li> -->
       <li>
-        <router-link :to="{ name: `adminDashboard` }" class="border" href="javascript:void();">
+        <router-link
+          :to="{ name: `adminDashboard` }"
+          class="border"
+          href="javascript:void();"
+        >
           <div class="parent-icon">
             <i class="zmdi zmdi-view-dashboard"></i>
           </div>
@@ -34,8 +46,16 @@
         </router-link>
       </li>
 
-      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Attendance`" :route_name="`AllAttendance`" />
-      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Projects`" :route_name="`AllProject`" />
+      <side-bar-single-menu
+        :icon="`fa fa-plus`"
+        :menu_title="`Attendance`"
+        :route_name="`AllAttendance`"
+      />
+      <side-bar-single-menu
+        :icon="`fa fa-plus`"
+        :menu_title="`Projects`"
+        :route_name="`AllProject`"
+      />
       <!-- <side-bar-single-menu
         :icon="`fa fa-plus`"
         :menu_title="`Tasks`"
@@ -53,6 +73,11 @@
           {
             route_name: `AllTasks`,
             title: `Tasks`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `TaskBoard`,
+            title: `TaskBoard`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
         ]"
@@ -86,8 +111,16 @@
         ]"
       />
 
-      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Meeting Agenda`" :route_name="`AllMeetingAgenda`" />
-      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Notification`" :route_name="`AllNotification`" />
+      <side-bar-single-menu
+        :icon="`fa fa-plus`"
+        :menu_title="`Meeting Agenda`"
+        :route_name="`AllMeetingAgenda`"
+      />
+      <side-bar-single-menu
+        :icon="`fa fa-plus`"
+        :menu_title="`Notification`"
+        :route_name="`AllNotification`"
+      />
       <!-- <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Message`" :route_name="`AllMessage`" /> -->
       <!-- Management end -->
     </ul>

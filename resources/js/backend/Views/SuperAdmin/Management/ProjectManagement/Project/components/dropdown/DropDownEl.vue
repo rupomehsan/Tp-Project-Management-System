@@ -3,13 +3,13 @@
     <label> {{ setup.module_name }} Name</label>
     <div class="custom_drop_down">
       <div class="selected_list justify-content-between c-pointer" @click="show_list = !show_list">
-        <template v-if="!selected.length">
+        <template v-if="!validSelected.length">
           <div class="">Select {{ setup.module_name }} Name</div>
           <i :class="show_list ? 'fa fa-angle-up' : 'fa fa-angle-down'"></i>
         </template>
 
         <template v-else>
-          <div v-for="item in selected" :key="item.id" :id="item.id" class="selected_item">
+          <div v-for="item in validSelected" :key="item.id" :id="item.id" class="selected_item">
             <div class="label">
               {{ item.name }}
             </div>
@@ -44,7 +44,7 @@
           </li>
         </ul>
         <div class="drop_down_footer data_list">
-          <pagination :data="all" :get_data="get_all" :set_paginate="set_paginate" :set_page="set_page" />
+          <Pagination :data="all" :method="handlePagination" />
         </div>
       </div>
     </div>
@@ -56,7 +56,12 @@ import { mapActions, mapState, mapWritableState } from "pinia";
 import { store } from "../../store";
 import debounce from "../../helpers/debounce";
 import setup from "../../setup";
+import Pagination from "../../../../../../../GlobalComponents/Pagination.vue";
+
 export default {
+  components: {
+    Pagination,
+  },
   props: {
     multiple: {
       type: Boolean,
@@ -72,13 +77,21 @@ export default {
     },
   },
   created: function () {
-    if (!this.all?.data?.lenght) {
+    if (!this.all?.data?.length) {
       this.get_all();
     }
     this.$watch("value", function (v) {
-      v.forEach((i) => {
-        this.set_selected(i);
-      });
+      this.processValue(v);
+    }, { immediate: true });
+    
+    // Watch for when all.data becomes available and re-process the value
+    this.$watch("all.data", function (newData) {
+      if (newData && newData.length && this.value && Array.isArray(this.value)) {
+        console.log('Project DropDown - all.data loaded, re-processing value');
+        this.$nextTick(() => {
+          this.processValue(this.value);
+        });
+      }
     });
   },
   data: () => ({
@@ -88,6 +101,57 @@ export default {
   }),
   methods: {
     ...mapActions(store, ["get_all", "set_paginate", "set_page"]),
+    
+    processValue: function(v) {
+      console.log('Project DropDown - processValue called with:', v);
+      console.log('Project DropDown - all.data:', this.all?.data?.length ? `${this.all.data.length} items` : 'no data');
+      
+      if (Array.isArray(v)) {
+        // Clear existing selection first
+        this.selected = [];
+        
+        // Filter out null or undefined values before processing
+        const validValues = v.filter(item => item !== null && item !== undefined);
+        console.log('Project DropDown - validValues:', validValues);
+        
+        validValues.forEach((i) => {
+          if (i && typeof i === 'object' && i.id) {
+            // If it's an object with an id, add it directly to selected
+            console.log('Project DropDown - adding object to selected:', i);
+            this.selected.push(i);
+          } else if (i && this.all && Array.isArray(this.all.data)) {
+            // If it's a primitive value (ID), find the object in all.data
+            const foundItem = this.all.data.find(dataItem => dataItem.id == i);
+            if (foundItem) {
+              console.log('Project DropDown - found item by ID:', foundItem);
+              this.selected.push(foundItem);
+            } else {
+              console.log('Project DropDown - could not find item with ID:', i);
+            }
+          }
+        });
+        
+        console.log('Project DropDown - final selected:', this.selected);
+      }
+    },
+    
+    // Wrapper method for pagination
+    async handlePagination(url) {
+      try {
+        if (url) {
+          // Extract page number from URL
+          const urlParams = new URLSearchParams(url.split('?')[1]);
+          const page = urlParams.get('page');
+          if (page) {
+            this.set_page(parseInt(page));
+          }
+        }
+        await this.get_all();
+      } catch (error) {
+        console.error('Pagination error:', error);
+      }
+    },
+    
     search_item: debounce(async function (event) {
       let value = event.target.value;
       this.search_key = value;
@@ -117,8 +181,17 @@ export default {
   computed: {
     ...mapState(store, ["all"]),
     ...mapWritableState(store, ["search_key"]),
+    validSelected: function () {
+      if (!this.selected || !Array.isArray(this.selected)) {
+        return [];
+      }
+      return this.selected.filter(item => item && item.id);
+    },
     selected_ids: function () {
-      return this.selected.map((i) => i.id).join(",");
+      if (!this.validSelected || this.validSelected.length === 0) {
+        return "";
+      }
+      return this.validSelected.map((i) => i.id).join(",");
     },
   },
 };

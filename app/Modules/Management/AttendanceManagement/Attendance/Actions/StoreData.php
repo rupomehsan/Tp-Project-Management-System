@@ -11,15 +11,12 @@ class StoreData
         try {
 
             $requestData = $request->validated();
-            $date = auth()->user()->role_id != 1 ? date('Y-m-d') : $requestData['date'];
+            $date = auth()->user()->role_id != 1 ? date('Y-m-d') : ($requestData['date'] ?? date('Y-m-d'));
+
             // Check if date is Friday or Saturday (weekend/holiday)
-            if (isset($requestData['date'])) {
-
-                $dayOfWeek = date('N', strtotime($date)); // 5=Friday, 6=Saturday
-                if ($dayOfWeek == 5 || $dayOfWeek == 6) {
-
-                    return messageResponse('Attendance cannot be added on holidays (Friday or Saturday).', [], 404, 'error');
-                }
+            $dayOfWeek = date('N', strtotime($date)); // 5=Friday, 6=Saturday
+            if ($dayOfWeek == 5 || $dayOfWeek == 6) {
+                return messageResponse('Attendance cannot be added on holidays (Friday or Saturday).', [], 400, 'error');
             }
 
 
@@ -28,7 +25,7 @@ class StoreData
                 ->exists();
 
             if ($alreadyExists) {
-                return messageResponse('Attendance already submitted for today.', [], 409, 'duplicate_entry');
+                return messageResponse('Attendance already submitted for today.', [], 400, 'error');
             }
 
 
@@ -49,7 +46,19 @@ class StoreData
                     $requestData['is_late'] = false;
                     $requestData['late_minutes'] = 0;
                 }
+            } else {
+                // For admin users, ensure date is set
+                $requestData['date'] = $date;
             }
+
+            // Handle absent status - if user is absent, no checkout time is needed
+            if (isset($requestData['attendance_status']) && $requestData['attendance_status'] === 'Absent') {
+                $requestData['check_out'] = null; // Clear checkout time for absent users
+                $requestData['is_late'] = false;
+                $requestData['late_minutes'] = 0;
+            }
+
+    
 
 
 

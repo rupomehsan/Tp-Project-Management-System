@@ -56,5 +56,5 @@ class DataStoreValidation extends FormRequest
 
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];
-    } 
+    }
 }

@@ -65,7 +65,7 @@
     <div
       class="d-flex justify-content-between align-items-center pb-2 section-title"
     >
-      <h5 class="m-0">Add Project document links</h5>
+      <h5 class="m-0">Add Social links</h5>
       <button
         class="btn btn-sm btn-outline-success"
         @click.prevent="add_link_row"
@@ -168,12 +168,10 @@ export default {
       (newValue) => {
         if (newValue) {
           if (newValue.social_media) {
-            this.social_media = newValue.social_media.map(
-              (doc) => ({
-                name: doc.name,
-                link: doc.link,
-              })
-            );
+            this.social_media = newValue.social_media.map((doc) => ({
+              name: doc.name,
+              link: doc.link,
+            }));
           }
         }
       },
@@ -224,29 +222,29 @@ export default {
     },
     autoPopulateLink(index, selectedPlatform) {
       const socialMediaTemplates = {
-        'Facebook': 'https://www.facebook.com/',
-        'Instagram': 'https://www.instagram.com/',
-        'Twitter': 'https://twitter.com/',
-        'LinkedIn': 'https://www.linkedin.com/in/',
-        'YouTube': 'https://www.youtube.com/@',
-        'TikTok': 'https://www.tiktok.com/@',
-        'Snapchat': 'https://www.snapchat.com/add/',
-        'Pinterest': 'https://www.pinterest.com/',
-        'WhatsApp': 'https://wa.me/',
-        'Telegram': 'https://t.me/',
-        'Discord': 'https://discord.gg/',
-        'Reddit': 'https://www.reddit.com/u/',
-        'Tumblr': 'https://tumblr.com/',
-        'Twitch': 'https://www.twitch.tv/',
-        'GitHub': 'https://github.com/',
-        'Behance': 'https://www.behance.net/',
-        'Dribbble': 'https://dribbble.com/',
-        'Skype': 'skype:',
-        'Viber': 'viber://contact?number=',
-        'WeChat': 'weixin://',
-        'Other': ''
+        Facebook: "https://www.facebook.com/",
+        Instagram: "https://www.instagram.com/",
+        Twitter: "https://twitter.com/",
+        LinkedIn: "https://www.linkedin.com/in/",
+        YouTube: "https://www.youtube.com/@",
+        TikTok: "https://www.tiktok.com/@",
+        Snapchat: "https://www.snapchat.com/add/",
+        Pinterest: "https://www.pinterest.com/",
+        WhatsApp: "https://wa.me/",
+        Telegram: "https://t.me/",
+        Discord: "https://discord.gg/",
+        Reddit: "https://www.reddit.com/u/",
+        Tumblr: "https://tumblr.com/",
+        Twitch: "https://www.twitch.tv/",
+        GitHub: "https://github.com/",
+        Behance: "https://www.behance.net/",
+        Dribbble: "https://dribbble.com/",
+        Skype: "skype:",
+        Viber: "viber://contact?number=",
+        WeChat: "weixin://",
+        Other: "",
       };
-      
+
       if (socialMediaTemplates[selectedPlatform] !== undefined) {
         this.social_media[index].link = socialMediaTemplates[selectedPlatform];
       }

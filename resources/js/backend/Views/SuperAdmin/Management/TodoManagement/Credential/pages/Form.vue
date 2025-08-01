@@ -63,6 +63,20 @@
                 </div>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">link</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    class="form-control form-control-square mb-2"
+                    type="text"
+                    name="link"
+                    id="link"
+                    v-model="form_fields.link"
+                  />
+                </div>
+              </div>
+            </div>
             <div class="col-md-12">
               <div class="form-group">
                 <label for="">description</label>
@@ -98,6 +112,7 @@ export default {
       email: "",
       password: "",
       description: "",
+      link: "",
     },
     categoryData: [],
   }),
@@ -133,6 +148,7 @@ export default {
         this.form_fields.title = this.item.title;
         this.form_fields.email = this.item.email;
         this.form_fields.password = this.item.password;
+        this.form_fields.link = this.item.link;
         $("#description").summernote("code", this.item.description);
       }
     },

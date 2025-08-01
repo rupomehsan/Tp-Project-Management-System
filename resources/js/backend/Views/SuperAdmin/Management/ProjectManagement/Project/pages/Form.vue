@@ -52,13 +52,13 @@
             <ProjectGroupDropDownEl
               :name="'project_group_id'"
               :multiple="false"
-              :value="[item.project_group_id]"
+              :value="project_group_value"
             />
 
             <user-drop-down-el
               :name="'project_users'"
               :multiple="true"
-              :value="item.project_users"
+              :value="project_users_value"
             />
 
             <div class="col-md-6">
@@ -285,16 +285,21 @@ export default {
       project_agrement_file: null,
       project_document: null,
       authority: "client",
+      project_group_id: null, // Add project_group_id to form_fields
     },
     userProjectGroup: [],
+    selected_project_group: null, // Add separate property for selected project group
+    selected_project_users: [], // Add separate property for selected users
     // userData: [],
   }),
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
-    this.item.project_users = [];
-    this.item.project_group_id = [];
+    // Initialize local data instead of modifying store item directly
+    this.selected_project_users = [];
+    this.selected_project_group = null;
+    
     if (id) {
-      this.set_fields(id);
+      await this.set_fields(id);
     }
 
     await this.get_project_group_data();
@@ -342,6 +347,11 @@ export default {
         this.form_fields.project_agrement_file =
           this.item.project_agrement_file;
         this.form_fields.project_document = this.item.project_document;
+        
+        // Set dropdown values separately to avoid reactivity conflicts
+        this.selected_project_group = this.item.project_group_id || null;
+        this.selected_project_users = this.item.project_users || [];
+        
         $("#description").summernote("code", this.item.description);
       }
     },
@@ -375,6 +385,11 @@ export default {
               this.form_fields[key] = null;
             }
             });
+            
+            // Reset dropdown selections
+            this.selected_project_group = null;
+            this.selected_project_users = [];
+            
             $("#description").summernote("code", "");
           window.s_alert("Data Successfully Created");
         }
@@ -392,6 +407,26 @@ export default {
     ...mapState(store, {
       item: "item",
     }),
+    // Add a computed property to handle project group value
+    project_group_value() {
+      return this.selected_project_group ? [this.selected_project_group] : [];
+    },
+    // Add a computed property to handle project users value  
+    project_users_value() {
+      return this.selected_project_users || [];
+    }
+  },
+  watch: {
+    // Watch for changes to prevent accidental resets
+    'item'(newVal, oldVal) {
+      // Only update if we're not already in edit mode and item has meaningful data
+      if (newVal && newVal.id && this.param_id && newVal.id == this.param_id) {
+        // Only update if our local data is empty (to prevent overwriting user input)
+        if (!this.form_fields.name && newVal.name) {
+          this.set_fields(this.param_id);
+        }
+      }
+    }
   },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-layout">
+  <div class="chat-layout mb-3">
     <!-- Modal -->
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-content">
@@ -16,8 +16,12 @@
           </select>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="showModal = false">Cancel</button>
-          <button class="btn btn-primary" @click="createConversation">Create</button>
+          <button class="btn btn-secondary" @click="showModal = false">
+            Cancel
+          </button>
+          <button class="btn btn-primary" @click="createConversation">
+            Create
+          </button>
         </div>
       </div>
     </div>
@@ -27,18 +31,34 @@
       <div class="modal-content">
         <div class="modal-header">
           <p class="modal-title">Create Group Chat</p>
-          <button class="close-btn" @click="showGroupChatModal = false">&times;</button>
+          <button class="close-btn" @click="showGroupChatModal = false">
+            &times;
+          </button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
             <label class="form-label">Group Name</label>
-            <input v-model="groupChatName" type="text" class="form-control" placeholder="Enter group name" />
+            <input
+              v-model="groupChatName"
+              type="text"
+              class="form-control"
+              placeholder="Enter group name"
+            />
           </div>
           <div class="mb-3">
             <label class="form-label">Select Members</label>
-            <div class="user-selection-list" style="max-height: 200px; overflow-y: auto; padding-left: 15px">
+            <div
+              class="user-selection-list"
+              style="max-height: 200px; overflow-y: auto; padding-left: 15px"
+            >
               <div v-for="user in users" :key="user.id" class="form-check">
-                <input v-model="selectedUserIds" :value="user.id" type="checkbox" class="form-check-input" :id="`user-${user.id}`" />
+                <input
+                  v-model="selectedUserIds"
+                  :value="user.id"
+                  type="checkbox"
+                  class="form-check-input"
+                  :id="`user-${user.id}`"
+                />
                 <label :for="`user-${user.id}`" class="form-check-label">
                   {{ user.name }}
                 </label>
@@ -47,8 +67,16 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="showGroupChatModal = false">Cancel</button>
-          <button class="btn btn-primary" @click="createGroupChat" :disabled="!groupChatName || selectedUserIds.length === 0">Create Group</button>
+          <button class="btn btn-secondary" @click="showGroupChatModal = false">
+            Cancel
+          </button>
+          <button
+            class="btn btn-primary"
+            @click="createGroupChat"
+            :disabled="!groupChatName || selectedUserIds.length === 0"
+          >
+            Create Group
+          </button>
         </div>
       </div>
     </div>
@@ -57,11 +85,18 @@
     <div v-if="showGroupMembersModal" class="modal-overlay">
       <div class="modal-content" style="width: 450px">
         <div class="modal-header">
-          <p class="modal-title">Group Members - {{ activeGroup?.group_name }}</p>
+          <p class="modal-title">
+            Group Members - {{ activeGroup?.group_name }}
+          </p>
           <div class="d-flex align-items-center gap-2">
             <!-- 3-dot menu button -->
             <div class="dropdown" style="position: relative">
-              <button class="btn btn-sm btn-outline-secondary" type="button" @click.stop="showGroupMenu = !showGroupMenu" title="Group Actions">
+              <button
+                class="btn btn-sm btn-outline-secondary"
+                type="button"
+                @click.stop="showGroupMenu = !showGroupMenu"
+                title="Group Actions"
+              >
                 <i class="fa fa-ellipsis-v"></i>
               </button>
               <div
@@ -81,7 +116,10 @@
                 @click.stop
               >
                 <button
-                  v-if="activeGroup?.creator === auth_info.id || auth_info.role_id === 1"
+                  v-if="
+                    activeGroup?.creator === auth_info.id ||
+                    auth_info.role_id === 1
+                  "
                   class="dropdown-item"
                   @click="
                     showEditGroupSection = !showEditGroupSection;
@@ -91,7 +129,10 @@
                   <i class="fa fa-edit me-2"></i> Edit Group Name
                 </button>
                 <button
-                  v-if="activeGroup?.creator === auth_info.id || auth_info.role_id === 1"
+                  v-if="
+                    activeGroup?.creator === auth_info.id ||
+                    auth_info.role_id === 1
+                  "
                   class="dropdown-item text-danger"
                   @click="
                     deleteGroup();
@@ -102,7 +143,9 @@
                 </button>
               </div>
             </div>
-            <button class="close-btn" @click="showGroupMembersModal = false">&times;</button>
+            <button class="close-btn" @click="showGroupMembersModal = false">
+              &times;
+            </button>
           </div>
         </div>
         <div class="modal-body">
@@ -110,20 +153,41 @@
           <div v-if="showEditGroupSection" class="edit-group-section mb-3">
             <div class="mb-2">
               <label class="form-label">Edit Group Name</label>
-              <input v-model="editGroupName" type="text" class="form-control" placeholder="Enter new group name" />
+              <input
+                v-model="editGroupName"
+                type="text"
+                class="form-control"
+                placeholder="Enter new group name"
+              />
             </div>
             <div class="d-flex gap-2">
-              <button class="btn btn-sm btn-success" @click="updateGroupName" :disabled="!editGroupName || editGroupName === activeGroup?.group_name">
+              <button
+                class="btn btn-sm btn-success"
+                @click="updateGroupName"
+                :disabled="
+                  !editGroupName || editGroupName === activeGroup?.group_name
+                "
+              >
                 Update
               </button>
-              <button class="btn btn-sm btn-secondary mx-2" @click="cancelEditGroup">Cancel</button>
+              <button
+                class="btn btn-sm btn-secondary mx-2"
+                @click="cancelEditGroup"
+              >
+                Cancel
+              </button>
             </div>
           </div>
 
           <div class="mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <label class="form-label">Members ({{ groupMembers.members?.length }})</label>
-              <button class="btn btn-sm btn-primary" @click="showAddMemberSection = !showAddMemberSection">
+              <label class="form-label"
+                >Members ({{ groupMembers.members?.length }})</label
+              >
+              <button
+                class="btn btn-sm btn-primary"
+                @click="showAddMemberSection = !showAddMemberSection"
+              >
                 <i class="fa fa-plus"></i> Add Member
               </button>
             </div>
@@ -132,39 +196,84 @@
             <div v-if="showAddMemberSection" class="add-member-section mb-3">
               <div
                 class="user-selection-list"
-                style="max-height: 150px; overflow-y: auto; border: 1px solid #444; border-radius: 4px; padding-left: 15px"
+                style="
+                  max-height: 150px;
+                  overflow-y: auto;
+                  border: 1px solid #444;
+                  border-radius: 4px;
+                  padding-left: 15px;
+                "
               >
-                <div v-for="user in availableUsers" :key="user.id" class="form-check">
-                  <input v-model="newMemberIds" :value="user.id" type="checkbox" class="form-check-input" :id="`new-member-${user.id}`" />
-                  <label :for="`new-member-${user.id}`" class="form-check-label">
+                <div
+                  v-for="user in availableUsers"
+                  :key="user.id"
+                  class="form-check"
+                >
+                  <input
+                    v-model="newMemberIds"
+                    :value="user.id"
+                    type="checkbox"
+                    class="form-check-input"
+                    :id="`new-member-${user.id}`"
+                  />
+                  <label
+                    :for="`new-member-${user.id}`"
+                    class="form-check-label"
+                  >
                     {{ user.name }}
                   </label>
                 </div>
               </div>
               <div class="mt-2">
-                <button class="btn btn-sm btn-success me-2" @click="addMembersToGroup" :disabled="newMemberIds.length === 0">Add Selected</button>
-                <button class="btn btn-sm btn-secondary mx-2" @click="showAddMemberSection = false">Cancel</button>
+                <button
+                  class="btn btn-sm btn-success me-2"
+                  @click="addMembersToGroup"
+                  :disabled="newMemberIds.length === 0"
+                >
+                  Add Selected
+                </button>
+                <button
+                  class="btn btn-sm btn-secondary mx-2"
+                  @click="showAddMemberSection = false"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
 
             <!-- Current Members List -->
             <div class="member-list">
-              <div v-for="member in groupMembers?.members" :key="member.id" class="member-item">
+              <div
+                v-for="member in groupMembers?.members"
+                :key="member.id"
+                class="member-item"
+              >
                 <div class="member-info">
-                  <img v-if="member.image" :src="member.image" class="member-avatar" @error="$event.target.src = 'avatar.png'" />
+                  <img
+                    v-if="member.image"
+                    :src="member.image"
+                    class="member-avatar"
+                    @error="$event.target.src = 'avatar.png'"
+                  />
                   <div v-else class="member-avatar">
                     {{ getInitials(member.name) }}
                   </div>
                   <div class="member-details">
                     <div class="member-name">
                       {{ member.name }}
-                      <span v-if="member.is_creator" class="creator-badge">Creator</span>
+                      <span v-if="member.is_creator" class="creator-badge"
+                        >Creator</span
+                      >
                     </div>
                     <div class="member-email">{{ member.email }}</div>
                   </div>
                 </div>
                 <button
-                  v-if="!member.is_creator && (activeGroup?.creator === auth_info.id || auth_info.role_id === 1)"
+                  v-if="
+                    !member.is_creator &&
+                    (activeGroup?.creator === auth_info.id ||
+                      auth_info.role_id === 1)
+                  "
                   class="btn btn-sm btn-outline-danger"
                   @click="removeMemberFromGroup(member.id)"
                 >
@@ -175,16 +284,32 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="showGroupMembersModal = false">Close</button>
+          <button
+            class="btn btn-secondary"
+            @click="showGroupMembersModal = false"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Sidebar -->
-    <aside v-if="!isMobile || mobileView === 'list'" class="chat-sidebar dark-mode">
-      <div class="sidebar-header d-flex justify-content-between align-items-center">
+    <aside
+      v-if="!isMobile || mobileView === 'list'"
+      class="chat-sidebar dark-mode "
+    >
+      <div
+        class="sidebar-header d-flex justify-content-between align-items-center"
+      >
         <span>Conversations</span>
-        <button title="New Group Chat" class="btn btn-dark btn-sm" @click="openGroupChatModal"><i class="fa fa-users text-success"></i></button>
+        <button
+          title="New Group Chat"
+          class="btn btn-dark btn-sm"
+          @click="openGroupChatModal"
+        >
+          <i class="fa fa-users text-success"></i>
+        </button>
         <button class="btn btn-dark btn-sm" @click="openModal">
           <i class="fa fa-plus text-success"></i>
         </button>
@@ -203,26 +328,46 @@
             :src="conversation.participant?.image"
             @error="$event.target.src = 'avatar.png'"
           />
-          <div v-else class="avatar" :class="{ 'group-avatar': conversation.participant?.is_group }">
-            <i v-if="conversation.participant?.is_group" class="fa fa-users"></i>
-            <span v-else>{{ getInitials(conversation.participant?.name) }}</span>
+          <div
+            v-else
+            class="avatar"
+            :class="{ 'group-avatar': conversation.participant?.is_group }"
+          >
+            <i
+              v-if="conversation.participant?.is_group"
+              class="fa fa-users"
+            ></i>
+            <span v-else>{{
+              getInitials(conversation.participant?.name)
+            }}</span>
           </div>
           <div class="conversation-info">
             <div
               :title="conversation.participant?.name"
               class="conversation-name"
-              style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+              style="
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
               v-if="conversation.participant?.name"
             >
               {{ conversation.participant.name }}
-              <span v-if="conversation.participant?.is_group" class="group-indicator">
+              <span
+                v-if="conversation.participant?.is_group"
+                class="group-indicator"
+              >
                 ({{ conversation.participant.participants_count }} members)
               </span>
             </div>
           </div>
           <div class="conversation-meta">
-            <span class="conversation-time">{{ formatTime(conversation.last_updated) }}</span>
-            <span v-if="conversation.unread_count > 0" class="unread-badge">{{ conversation.unread_count }}</span>
+            <span class="conversation-time">{{
+              formatTime(conversation.last_updated)
+            }}</span>
+            <span v-if="conversation.unread_count > 0" class="unread-badge">{{
+              conversation.unread_count
+            }}</span>
             <button
               v-if="conversation.participant?.is_group"
               class="btn btn-sm btn-outline-light group-members-btn text-white border-white"
@@ -237,11 +382,18 @@
     </aside>
 
     <!-- Chat Container -->
-    <div v-if="!isMobile || mobileView === 'chat'" class="chat-container dark-mode">
+    <div
+      v-if="!isMobile || mobileView === 'chat'"
+      class="chat-container dark-mode"
+    >
       <div class="chat-header d-flex justify-content-between">
         <div class="d-flex align-items-center gap-3">
           <!-- Back button only in mobile -->
-          <button v-if="isMobile" class="btn btn-link text-white me-2" @click="backToList">
+          <button
+            v-if="isMobile"
+            class="btn btn-link text-white me-2"
+            @click="backToList"
+          >
             <i class="fa fa-arrow-left"></i>
           </button>
           <img
@@ -250,22 +402,53 @@
             :src="activeConversation?.participant?.image"
             @error="$event.target.src = 'avatar.png'"
           />
-          <div v-else class="avatar" :class="{ 'group-avatar': activeConversation?.participant?.is_group }">
-            <i v-if="activeConversation?.participant?.is_group" class="fa fa-users"></i>
-            <span v-else>{{ getInitials(activeConversation?.participant?.name) }}</span>
+          <div
+            v-else
+            class="avatar"
+            :class="{
+              'group-avatar': activeConversation?.participant?.is_group,
+            }"
+          >
+            <i
+              v-if="activeConversation?.participant?.is_group"
+              class="fa fa-users"
+            ></i>
+            <span v-else>{{
+              getInitials(activeConversation?.participant?.name)
+            }}</span>
           </div>
           {{ activeConversation?.participant?.name || "..." }}
         </div>
-        <button class="btn btn-dark btn-sm" @click="loadMessages(activeConversation)">
+        <button
+          class="btn btn-dark btn-sm"
+          @click="loadMessages(activeConversation)"
+        >
           <i class="fa fa-refresh"></i>
         </button>
       </div>
 
-      <div class="chat-messages" ref="chatMessages" @scroll="onChatScroll" @click="onChatClick">
-        <div v-if="messages.length === 0" class="text-center text-muted mt-4">No messages yet.</div>
-        <div v-for="message in messages" :key="message.id" :class="['chat-bubble', message.type === 'mine' ? 'mine' : 'theirs']">
+      <div
+        class="chat-messages"
+        ref="chatMessages"
+        @scroll="onChatScroll"
+        @click="onChatClick"
+      >
+        <div v-if="messages.length === 0" class="text-center text-muted mt-4">
+          No messages yet.
+        </div>
+        <div
+          v-for="message in messages"
+          :key="message.id"
+          :class="['chat-bubble', message.type === 'mine' ? 'mine' : 'theirs']"
+        >
           <!-- Show sender name for group chats (except for own messages) -->
-          <div v-if="activeConversation?.participant?.is_group && message.type === 'theirs'" class="chat-sender-name">
+          <div
+            v-if="
+              activeConversation?.participant?.is_group &&
+              message.type === 'theirs'
+            "
+            class="chat-sender-name"
+          >
             {{ message.sender?.name }}
           </div>
           <div class="chat-text">{{ message.text }}</div>
@@ -275,9 +458,24 @@
         </div>
       </div>
 
-      <form v-if="activeConversation" class="chat-input-area" @submit.prevent="sendMessage">
-        <textarea class="chat-input" placeholder="Type a message..." v-model.trim="newMessage" :disabled="!activeConversation" />
-        <button type="submit" class="btn btn-primary chat-send-btn" :disabled="!newMessage || !activeConversation">Send</button>
+      <form
+        v-if="activeConversation"
+        class="chat-input-area"
+        @submit.prevent="sendMessage"
+      >
+        <textarea
+          class="chat-input"
+          placeholder="Type a message..."
+          v-model.trim="newMessage"
+          :disabled="!activeConversation"
+        />
+        <button
+          type="submit"
+          class="btn btn-primary chat-send-btn"
+          :disabled="!newMessage || !activeConversation"
+        >
+          Send
+        </button>
       </form>
     </div>
   </div>
@@ -341,7 +539,8 @@ export default {
               this.messages.push({
                 ...e.message,
                 sender: e.sender,
-                type: e.message.sender_id === this.auth_info.id ? "mine" : "theirs",
+                type:
+                  e.message.sender_id === this.auth_info.id ? "mine" : "theirs",
               });
               this.scrollToBottom();
             } else {
@@ -424,13 +623,15 @@ export default {
     },
     async loadMessages(convo) {
       if (!convo) return;
-      
+
       // Cancel any pending mark as read for previous conversation
       this.pendingMarkAsRead = null;
-      
+
       this.activeConversation = convo;
       try {
-        const res = await axios.get(`/messages/get-conversation-messages/${convo.id}`);
+        const res = await axios.get(
+          `/messages/get-conversation-messages/${convo.id}`
+        );
         this.messages = res.data.data.map((m) => ({
           ...m,
           type: m.sender?.id === this.auth_info.id ? "mine" : "theirs",
@@ -461,12 +662,12 @@ export default {
     },
     async sendMessage() {
       if (!this.newMessage) return;
-      
+
       // Mark messages as read when user sends a message (indicates they're actively in the chat)
       if (this.pendingMarkAsRead) {
         await this.checkAndMarkAsRead();
       }
-      
+
       try {
         const payload = {
           conversation_id: this.activeConversation.id,
@@ -532,11 +733,16 @@ export default {
 
     async checkAndMarkAsRead() {
       // Only mark as read if user is still on the same conversation and it's pending
-      if (this.pendingMarkAsRead && this.activeConversation?.id === this.pendingMarkAsRead) {
+      if (
+        this.pendingMarkAsRead &&
+        this.activeConversation?.id === this.pendingMarkAsRead
+      ) {
         await this.markMessagesAsRead(this.pendingMarkAsRead);
-        
+
         // Update the conversation's unread count in the list
-        const conversationIndex = this.conversations.findIndex((c) => c.id === this.pendingMarkAsRead);
+        const conversationIndex = this.conversations.findIndex(
+          (c) => c.id === this.pendingMarkAsRead
+        );
         if (conversationIndex !== -1) {
           this.conversations[conversationIndex].unread_count = 0;
         }
@@ -583,7 +789,9 @@ export default {
 
     async loadGroupMembers(conversationId) {
       try {
-        const response = await axios.get(`/messages/group-members/${conversationId}`);
+        const response = await axios.get(
+          `/messages/group-members/${conversationId}`
+        );
         console.log("Group Members Response:", response);
 
         this.groupMembers = response.data?.data || [];
@@ -594,7 +802,9 @@ export default {
 
     async loadAvailableUsers(conversationId) {
       try {
-        const response = await axios.get(`/messages/available-users/${conversationId}`);
+        const response = await axios.get(
+          `/messages/available-users/${conversationId}`
+        );
         this.availableUsers = response.data.data || [];
       } catch (err) {
         console.error("Failed to load available users", err);
@@ -661,14 +871,20 @@ export default {
     },
 
     async updateGroupName() {
-      if (!this.editGroupName || this.editGroupName === this.activeGroup?.group_name) {
+      if (
+        !this.editGroupName ||
+        this.editGroupName === this.activeGroup?.group_name
+      ) {
         return;
       }
 
       try {
-        const response = await axios.put(`/messages/conversations/${this.activeGroup.id}/group`, {
-          group_name: this.editGroupName,
-        });
+        const response = await axios.put(
+          `/messages/conversations/${this.activeGroup.id}/group`,
+          {
+            group_name: this.editGroupName,
+          }
+        );
 
         console.log("Update Group Name Response:", response.data.status);
         if (response.data?.status == "success") {
@@ -676,9 +892,12 @@ export default {
           this.activeGroup.group_name = this.editGroupName;
 
           // Update conversations list
-          const conversationIndex = this.conversations.findIndex((c) => c.id === this.activeGroup.id);
+          const conversationIndex = this.conversations.findIndex(
+            (c) => c.id === this.activeGroup.id
+          );
           if (conversationIndex !== -1) {
-            this.conversations[conversationIndex].group_name = this.editGroupName;
+            this.conversations[conversationIndex].group_name =
+              this.editGroupName;
           }
 
           // Update active conversation if it's the same group
@@ -698,16 +917,24 @@ export default {
     },
 
     async deleteGroup() {
-      if (!confirm("Are you sure you want to delete this group? This action cannot be undone.")) {
+      if (
+        !confirm(
+          "Are you sure you want to delete this group? This action cannot be undone."
+        )
+      ) {
         return;
       }
 
       try {
-        const response = await axios.delete(`/messages/conversations/${this.activeGroup.id}/group`);
+        const response = await axios.delete(
+          `/messages/conversations/${this.activeGroup.id}/group`
+        );
 
         if (response.data.status == "success") {
           // Remove from conversations list
-          this.conversations = this.conversations.filter((c) => c.id !== this.activeGroup.id);
+          this.conversations = this.conversations.filter(
+            (c) => c.id !== this.activeGroup.id
+          );
 
           // Clear active conversation if it's the deleted group
           if (this.activeConversation?.id === this.activeGroup.id) {

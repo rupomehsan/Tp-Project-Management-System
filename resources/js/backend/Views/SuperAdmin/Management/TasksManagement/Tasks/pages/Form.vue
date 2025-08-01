@@ -24,13 +24,13 @@
             <TaskGroupDropDownEl
               :name="'task_group_id'"
               :multiple="false"
-              :value="[item.task_group_id]"
+              :value="item.task_group_id"
             />
 
             <ProjectDropDownEl
               :name="'project_id'"
               :multiple="false"
-              :value="[item.project_id]"
+              :value="item.project_id"
             />
 
             <user-drop-down-el
@@ -162,7 +162,11 @@
               <div class="form-group">
                 <label for="">description</label>
                 <div class="mt-1 mb-3">
-                  <text-editor :name="'description'" />
+                  <text-editor
+                    :name="'description'"
+                    :value="form_fields.description"
+                    @input="form_fields.description = $event"
+                  />
                   <!-- <textarea 
                     v-model="form_fields.description"
                     name="description"
@@ -219,9 +223,23 @@ export default {
   }),
   created: async function () {
     let id = (this.param_id = this.$route.params.id);
-    this.item.task_group_id = [];
-    this.item.project_id = [];
-    this.item.assigned_to = [];
+    
+    // Initialize item properties safely
+    if (!this.item) {
+      // If item doesn't exist, initialize with empty object
+      this.set_item_defaults();
+    } else {
+      // Ensure the dropdown properties are arrays
+      if (!Array.isArray(this.item.task_group_id)) {
+        this.item.task_group_id = [];
+      }
+      if (!Array.isArray(this.item.project_id)) {
+        this.item.project_id = [];
+      }
+      if (!Array.isArray(this.item.assigned_to)) {
+        this.item.assigned_to = [];
+      }
+    }
 
     if (id) {
       this.set_fields(id);
@@ -238,7 +256,20 @@ export default {
       details: "details",
       get_all: "get_all",
       set_only_latest_data: "set_only_latest_data",
+      set_item: "set_item",
     }),
+
+    set_item_defaults: function() {
+      // Initialize item with default values to prevent null access errors
+      if (!this.item || Object.keys(this.item).length === 0) {
+        // Use the store's set_item action to properly initialize
+        this.set_item({
+          task_group_id: [],
+          project_id: [],
+          assigned_to: []
+        });
+      }
+    },
 
     // async get_project_data() {
     //   try {
@@ -261,14 +292,67 @@ export default {
       this.param_id = id;
       await this.details(id);
       if (this.item) {
+        console.log('Original item data:', JSON.parse(JSON.stringify(this.item)));
+        
+        // Initialize dropdown arrays safely - handle both objects and primitive values
+        
+        // Handle task_group_id
+        if (!Array.isArray(this.item.task_group_id)) {
+          if (this.item.task_group_id && typeof this.item.task_group_id === 'object') {
+            // If it's an object, wrap it in an array
+            this.item.task_group_id = [this.item.task_group_id];
+          } else if (this.item.task_group_id) {
+            // If it's a primitive value, wrap it in an array
+            this.item.task_group_id = [this.item.task_group_id];
+          } else {
+            this.item.task_group_id = [];
+          }
+        }
+        
+        // Handle project_id  
+        if (!Array.isArray(this.item.project_id)) {
+          if (this.item.project_id && typeof this.item.project_id === 'object') {
+            // If it's an object, wrap it in an array
+            this.item.project_id = [this.item.project_id];
+          } else if (this.item.project_id) {
+            // If it's a primitive value, wrap it in an array
+            this.item.project_id = [this.item.project_id];
+          } else {
+            this.item.project_id = [];
+          }
+        }
+        
+        // Handle assigned_to
+        if (!Array.isArray(this.item.assigned_to)) {
+          if (this.item.assigned_to && typeof this.item.assigned_to === 'object') {
+            // If it's an object, wrap it in an array
+            this.item.assigned_to = [this.item.assigned_to];
+          } else if (this.item.assigned_to && this.item.user) {
+            // If assigned_to is an ID and we have the user object, use the user object
+            this.item.assigned_to = [this.item.user];
+          } else if (this.item.assigned_to) {
+            // If it's a primitive value, wrap it in an array
+            this.item.assigned_to = [this.item.assigned_to];
+          } else {
+            this.item.assigned_to = [];
+          }
+        }
+        
+        console.log('Processed item data:', {
+          task_group_id: this.item.task_group_id,
+          project_id: this.item.project_id,
+          assigned_to: this.item.assigned_to
+        });
+        
+        // Set form fields
         // this.form_fields.assigned_to = this.item.assigned_to;
         this.form_fields.title = this.item.title;
+        this.form_fields.description = this.item.description; // Set description in form_fields
         this.form_fields.start_date = this.item.start_date;
         this.form_fields.end_date = this.item.end_date;
         this.form_fields.task_status = this.item.task_status;
         this.form_fields.task_user_status = this.item.task_user_status;
         this.form_fields.priority = this.item.priority;
-        $("#description").summernote("code", this.item.description);
       }
     },
 

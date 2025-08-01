@@ -1,85 +1,124 @@
 <template>
+  <Head>
+    <title> Login</title>
+  </Head>
   <Layout>
-    <div class="row justify-content-center align-items-center gap-2 py-5">
-      <div class="col-md-5">
-        <form @submit.prevent="LoginSubmitHandler">
-          <h3>Login Here</h3>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              class="form-control"
-              type="email"
-              placeholder="  email"
-              name="email"
-            />
+    <div class="professional-login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="brand-section">
+            <div class="brand-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h2 class="brand-title">Project Management</h2>
+            <p class="brand-subtitle">Welcome back! Please sign in to your account</p>
           </div>
-          <div class="form-group password-icon">
-            <label for="password">Password</label>
-            <div class="password-icon">
+        </div>
+
+        <form @submit.prevent="LoginSubmitHandler" class="login-form">
+          <div class="form-group">
+            <label for="email" class="form-label">
+              <i class="fas fa-envelope"></i>
+              Email Address
+            </label>
+            <input id="email" class="form-control" type="email" placeholder="Enter your email" name="email" v-model="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">
+              <i class="fas fa-lock"></i>
+              Password
+            </label>
+            <div class="password-input-wrapper">
               <input
+                id="password"
                 class="form-control"
                 :type="showPassword ? 'text' : 'password'"
-                placeholder="  password"
+                placeholder="Enter your password"
                 name="password"
-                value="@12345678"
+                v-model="password"
+                required
               />
-              <i
-                class="fa-solid fa-eye-slash"
-                :class="[
-                  { 'fa-eye': showPassword },
-                  passwordError ? 'top-33' : '',
-                ]"
+              <button
+                type="button"
+                class="password-toggle"
                 @click="showPassword = !showPassword"
-              ></i>
+                :title="showPassword ? 'Hide password' : 'Show password'"
+              >
+                <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+              </button>
             </div>
           </div>
 
-          <button
-            class="my-3 btn btn-outline-success"
-            type="submit"
-            id="spiner"
-          >
-            <span v-if="!loading">Log In</span>
-            <template v-if="loading">
-              <span
-                class="spinner-border spinner-border-sm mx-2"
-                role="status"
-                aria-hidden="true"
-              ></span>
-              <span class="">Loading...</span>
-            </template>
+          <div class="form-options">
+            <div class="remember-me">
+              <input type="checkbox" id="rememberMe" v-model="rememberMe" class="checkbox-input" />
+              <label for="rememberMe" class="checkbox-label"> Remember me </label>
+            </div>
+            <Link href="/forgot-password" class="forgot-password-link"> Forgot password? </Link>
+          </div>
+
+          <button class="login-button" type="submit" :disabled="loading || !email || !password">
+            <span v-if="!loading" class="button-content">
+              <i class="fas fa-sign-in-alt"></i>
+              Sign In
+            </span>
+            <span v-if="loading" class="button-content loading">
+              <div class="spinner"></div>
+              Signing in...
+            </span>
           </button>
-          <!-- <span>Dont have an account ?</span> -->
-          <!-- <Link href="/register" class="font-size-12 text-primary">
-            Register</Link
-          > -->
-          <br />
-          <Link href="/forgot-password" class="text-info"
-            >Forgot Password ?</Link
-          >
         </form>
+
+        <div class="login-footer">
+          <p class="footer-text">
+            Don't have an account?
+            <a href="#" class="signup-link">Contact Administrator</a>
+          </p>
+        </div>
       </div>
     </div>
   </Layout>
 </template>
 <script>
 import Layout from "./Layout/Layout.vue";
+import { Link } from "@inertiajs/vue3";
+
 export default {
-  components: { Layout },
+  components: { Layout, Link },
 
   data() {
     return {
       loading: false,
       showPassword: false,
       passwordError: false,
+      email: "",
+      password: "",
+      rememberMe: false,
     };
+  },
+
+  mounted() {
+    this.loadRememberedCredentials();
   },
 
   methods: {
     LoginSubmitHandler: async function () {
       try {
         this.loading = true;
-        let formData = new FormData(event.target);
+
+        // Handle remember me functionality
+        if (this.rememberMe) {
+          this.saveCredentials();
+        } else {
+          this.clearSavedCredentials();
+        }
+
+        let formData = new FormData();
+        formData.append("email", this.email);
+        formData.append("password", this.password);
+        formData.append("remember", this.rememberMe);
+
         let response = await axios.post("/login", formData);
         if (response.data?.status === "success") {
           let data = response.data?.data;
@@ -96,20 +135,43 @@ export default {
         }
       } catch (error) {
         console.error("Login error", error);
+        window.s_alert("Login failed. Please check your credentials.", "error");
       } finally {
         this.loading = false;
       }
     },
+
+    saveCredentials() {
+      const credentials = {
+        email: this.email,
+        password: this.password,
+        rememberMe: this.rememberMe,
+      };
+      localStorage.setItem("rememberedCredentials", JSON.stringify(credentials));
+    },
+
+    clearSavedCredentials() {
+      localStorage.removeItem("rememberedCredentials");
+    },
+
+    loadRememberedCredentials() {
+      const savedCredentials = localStorage.getItem("rememberedCredentials");
+      if (savedCredentials) {
+        try {
+          const credentials = JSON.parse(savedCredentials);
+          this.email = credentials.email || "";
+          this.password = credentials.password || "";
+          this.rememberMe = credentials.rememberMe || false;
+        } catch (error) {
+          console.error("Error loading remembered credentials:", error);
+          this.clearSavedCredentials();
+        }
+      }
+    },
+
     setPassword(email) {
-      let target = document.querySelector('[name="email"]');
-      target.value = email;
+      this.email = email;
     },
   },
 };
 </script>
-
-<style scoped>
-.top-33 {
-  top: 33% !important;
-}
-</style>

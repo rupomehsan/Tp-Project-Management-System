@@ -25,6 +25,7 @@ const setup: setup_type = {
     "attendance_status",
     "slug",
     "created_at",
+    "notes", // New field for notes
   ],
 
   sort_by_cols: [

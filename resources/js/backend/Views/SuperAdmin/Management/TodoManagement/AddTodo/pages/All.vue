@@ -26,64 +26,98 @@
 
           <div class="card-body">
             <div class="table-responsive table_responsive card_body_fixed_height">
-              <div class="d-flex justify-content-between mb-3">
-                <!-- Task Status Filter -->
-                <div class="mb-3 d-flex align-items-center flex-wrap" style="gap: 0.5rem">
-                  <span class="font-weight-bold mr-2">Status</span>
-                  <button class="btn btn-outline-secondary btn-sm" :class="{ active: !taskStatusFilterValue }" @click="cleartaskStatusFilter">
-                    All
-                  </button>
-                  <button
-                    class="btn btn-outline-primary btn-sm"
-                    :class="{ active: taskStatusFilterValue === 'pending' }"
-                    @click="taskStatusFilter('pending')"
-                  >
-                    Pending
-                  </button>
+              <div class="filter-section mb-3 p-3 rounded">
+                <div class="container-fluid">
+                  <div class="row g-3">
+                    <!-- Task Status Filter -->
+                    <div class="col-12 col-lg-7">
+                      <div class="filter-group">
+                        <div class="filter-label">
+                          <i class="fa fa-tasks mr-2 text-primary"></i>
+                          <span class="font-weight-bold">Task Status</span>
+                        </div>
+                        <div class="filter-buttons">
+                          <button
+                            class="btn btn-filter btn-outline-secondary"
+                            :class="{ 'active': !taskStatusFilterValue }"
+                            @click="cleartaskStatusFilter"
+                            type="button"
+                          >
+                            <i class="fa fa-list mr-1"></i>
+                            <span class="d-none d-sm-inline">All Tasks</span>
+                            <span class="d-sm-none">All</span>
+                          </button>
+                          <button
+                            class="btn btn-filter btn-outline-primary"
+                            :class="{ 'active': taskStatusFilterValue === 'pending' }"
+                            @click="taskStatusFilter('pending')"
+                            type="button"
+                          >
+                            <i class="fa fa-clock-o mr-1"></i>
+                            Pending
+                          </button>
+                          <button
+                            class="btn btn-filter btn-outline-success"
+                            :class="{ 'active': taskStatusFilterValue === 'completed' }"
+                            @click="taskStatusFilter('completed')"
+                            type="button"
+                          >
+                            <i class="fa fa-check mr-1"></i>
+                            <span class="d-none d-sm-inline">Completed</span>
+                            <span class="d-sm-none">Done</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
 
-                  <button
-                    class="btn btn-outline-success btn-sm"
-                    :class="{ active: taskStatusFilterValue === 'completed' }"
-                    @click="taskStatusFilter('completed')"
-                  >
-                    Completed
-                  </button>
-                </div>
-                <!-- Priority Filter -->
-                <div class="mb-3 d-flex align-items-center flex-wrap" style="gap: 0.5rem">
-                  <span class="font-weight-bold mr-2">Priority</span>
-                  <button
-                    class="btn btn-outline-secondary btn-sm"
-                    :class="{ active: !priorityFilterValue }"
-                    @click="clearPriorityFilter"
-                    type="button"
-                  >
-                    All
-                  </button>
-                  <button
-                    class="btn btn-outline-danger btn-sm"
-                    :class="{ active: priorityFilterValue === 'urgent' }"
-                    @click="priorityFilter('urgent')"
-                    type="button"
-                  >
-                    Urgent
-                  </button>
-                  <button
-                    class="btn btn-outline-warning btn-sm"
-                    :class="{ active: priorityFilterValue === 'high' }"
-                    @click="priorityFilter('high')"
-                    type="button"
-                  >
-                    High
-                  </button>
-                  <button
-                    class="btn btn-outline-info btn-sm"
-                    :class="{ active: priorityFilterValue === 'normal' }"
-                    @click="priorityFilter('normal')"
-                    type="button"
-                  >
-                    Normal
-                  </button>
+                    <!-- Priority Filter -->
+                    <div class="col-12 col-lg-5">
+                      <div class="filter-group">
+                        <div class="filter-label">
+                          <i class="fa fa-flag mr-2 text-warning"></i>
+                          <span class="font-weight-bold">Priority Level</span>
+                        </div>
+                        <div class="filter-buttons">
+                          <button
+                            class="btn btn-filter btn-outline-secondary"
+                            :class="{ 'active': !priorityFilterValue }"
+                            @click="clearPriorityFilter"
+                            type="button"
+                          >
+                            <i class="fa fa-filter mr-1"></i>
+                            All
+                          </button>
+                          <button
+                            class="btn btn-filter btn-outline-danger"
+                            :class="{ 'active': priorityFilterValue === 'urgent' }"
+                            @click="priorityFilter('urgent')"
+                            type="button"
+                          >
+                            <i class="fa fa-exclamation-triangle mr-1"></i>
+                            Urgent
+                          </button>
+                          <button
+                            class="btn btn-filter btn-outline-warning"
+                            :class="{ 'active': priorityFilterValue === 'high' }"
+                            @click="priorityFilter('high')"
+                            type="button"
+                          >
+                            <i class="fa fa-arrow-up mr-1"></i>
+                            High
+                          </button>
+                          <button
+                            class="btn btn-filter btn-outline-info"
+                            :class="{ 'active': priorityFilterValue === 'normal' }"
+                            @click="priorityFilter('normal')"
+                            type="button"
+                          >
+                            <i class="fa fa-minus mr-1"></i>
+                            Normal
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <table class="table table-hover table-bordered">
@@ -110,7 +144,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in all?.data" :key="item.id" :class="`table_rows table_row_${item.id}`">
-                    <td>
+                    <td class="text-limit" :title="`Actions for ${item.category_id?.name || 'Todo'}`">
                       <span class="icon" @click.prevent="active_row($event)"></span>
                       <div class="table_action_btns">
                         <ul>
@@ -173,13 +207,13 @@
                         </ul>
                       </div>
                     </td>
-                    <td>
+                    <td class="text-limit" :title="`Select Todo`">
                       <input @change="set_item_selected(item, $event)" :checked="isSelected(item)" class="form-check-input ml-0" type="checkbox" />
                     </td>
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ item.category_id?.name }}</td>
-                    <td v-html="item.description"></td>
-                    <td>
+                    <td class="text-limit" :title="`ID: ${index + 1}`">{{ index + 1 }}</td>
+                    <td class="text-limit" :title="`Category: ${item.category_id?.name || 'N/A'}`">{{ item.category_id?.name }}</td>
+                    <td class="text-limit" :title="`Description: ${item.description?.replace(/<[^>]*>/g, '') || 'N/A'}`" v-html="item.description"></td>
+                    <td class="text-limit" :title="`Status: ${item.task_status}`">
                       <div class="d-flex align-items-center justify-content-start" style="gap: 0.5rem">
                         <span class="font-weight-bold text-capitalize" style="min-width: 100px">{{ item.task_status }}</span>
                         <label class="switch mb-0" style="margin-bottom: 0">
@@ -188,9 +222,9 @@
                         </label>
                       </div>
                     </td>
-                    <td class="text-capitalize">{{ item.priority }}</td>
+                    <td class="text-limit text-capitalize" :title="`Priority: ${item.priority}`">{{ item.priority }}</td>
 
-                    <td>{{ formatDateTime(item.created_at) }}</td>
+                    <td class="text-limit" :title="`Created At: ${formatDateTime(item.created_at)}`">{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
                       <img :src="item.image" alt="" height="50" width="50" />
@@ -692,6 +726,12 @@ export default {
     isAllSelected() {
       return this.all?.data?.length > 0 && this.all.data?.every((item) => this.selected.some((s) => s.id === item.id));
     },
+    taskStatusFilterValue() {
+      return this.$store?.state?.data_store?.filter_criteria?.task_status || null;
+    },
+    priorityFilterValue() {
+      return this.$store?.state?.data_store?.filter_criteria?.priority || null;
+    },
   },
 
   watch: {
@@ -761,4 +801,73 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(16px);
 }
+
+.filter-section {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  border: 1px solid #4a5568;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filter-group {
+  margin-bottom: 1rem;
+}
+
+.filter-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+}
+
+.filter-label i {
+  font-size: 1.1rem;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.btn-filter {
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease-in-out;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-filter:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-filter.active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-filter i {
+  font-size: 0.8rem;
+}
+
+@media (max-width: 576px) {
+  .filter-buttons {
+    justify-content: center;
+  }
+  
+  .btn-filter {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .filter-label {
+    justify-content: center;
+    text-align: center;
+  }
+}
 </style>
+

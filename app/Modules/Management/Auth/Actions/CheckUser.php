@@ -21,6 +21,8 @@ class CheckUser
                         'phone_number',
                         'image',
                         'role_id',
+                        'social_media',
+                        'designation',
                     ])
                     ->first();
                 auth()->guard('web')->login($user, 1);

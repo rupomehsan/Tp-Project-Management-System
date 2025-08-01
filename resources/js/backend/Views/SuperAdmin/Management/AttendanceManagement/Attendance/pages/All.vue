@@ -13,6 +13,7 @@
               </div>
 
               <!-- Search Input -->
+
               <div class="col-12 col-md-6 mb-2 mb-md-0">
                 <input class="form-control" @keyup="(e) => set_search_key(e)" placeholder="Search" />
               </div>
@@ -29,7 +30,7 @@
               <table class="table table-hover text-center table-bordered">
                 <thead>
                   <tr>
- <th style="padding-left: 12px">
+                    <th style="padding-left: 12px">
                       <i class="zmdi zmdi-settings zmdi-hc-2x" title="Actions"></i>
                     </th>
                     <th class="w-10 text-center">
@@ -123,20 +124,63 @@
                     <td
                       :style="{
                         backgroundColor: (() => {
+                          if (!item.check_in) return '#df0000';
+                          const time = new Date(item.check_in);
+                          let hours = time.getHours();
+                          const minutes = time.getMinutes();
+
+                          // Handle potential PM/AM data issues - if hour is > 12, treat as AM equivalent
+                          if (hours > 12) {
+                            hours = hours - 12;
+                          }
+
+                          const totalMinutes = hours * 60 + minutes;
+                          if (totalMinutes < 540) return '#28a745'; // Before 9:00 AM - On time (Green)
+                          if (totalMinutes >= 540 && totalMinutes < 555) return '#28a745'; // 9:00-9:15 AM - Still on time (Green)
+                          if (totalMinutes >= 555 && totalMinutes < 660) return '#ffc107'; // After 9:15 AM but before 11:00 AM - Warning (yellow)
+                          if (totalMinutes >= 660) return '#dc3545'; // After 11:00 AM - Late (#df0000)
+                          return '#28a745'; // Default - On time (Green)
+                        })(),
+                        color: (() => {
                           if (!item.check_in) return '';
                           const time = new Date(item.check_in);
-                          const hours = time.getHours();
+                          let hours = time.getHours();
                           const minutes = time.getMinutes();
+
+                          // Handle potential PM/AM data issues - if hour is > 12, treat as AM equivalent
+                          if (hours > 12) {
+                            hours = hours - 12;
+                          }
+
                           const totalMinutes = hours * 60 + minutes;
-                          if (totalMinutes >= 540 && totalMinutes <= 575) return 'green'; // 9:00-9:35
-                          if (totalMinutes >= 576 && totalMinutes <= 690) return 'orange'; // 9:36-11:30
-                          return 'red';
+                          if (totalMinutes >= 555) return 'white'; // White text for warning/danger backgrounds
+                          return 'white'; // White text for green background
                         })(),
                       }"
                     >
                       {{ formatDateTime(item.check_in) }}
                     </td>
-                    <td>{{ formatDateTime(item.check_out) }}</td>
+                    <td
+                      :style="{
+                        backgroundColor: (() => {
+                          if (!item.check_out) return '#df0000';
+                          const time = new Date(item.check_out);
+                          const hours = time.getHours();
+                          const minutes = time.getMinutes();
+                          const totalMinutes = hours * 60 + minutes;
+                          if (totalMinutes < 1140)
+                            // Before 7:00 PM (19:00)
+                            return '#ffc107'; // Warning (yellow)
+                          return '#28a745'; // After 7:00 PM - Green
+                        })(),
+                        color: (() => {
+                          if (!item.check_out) return '';
+                          return 'white'; // White text for better contrast
+                        })(),
+                      }"
+                    >
+                      {{ formatDateTime(item.check_out) }}
+                    </td>
                     <td>{{ item.attendance_status }}</td>
                     <td>{{ formatDateTime(item.created_at) }}</td>
 
@@ -323,7 +367,7 @@
               </select>
             </label>
           </div>
-           <div class="filter_item d-flex justify-content-between align-items-center">
+          <div class="filter_item d-flex justify-content-between align-items-center">
             <button @click.prevent="get_all()" type="button" class="btn btn-sm btn-outline-info">Submit</button>
             <button class="btn btn-outline-danger btn-sm" @click="reset_filters">Reset</button>
           </div>

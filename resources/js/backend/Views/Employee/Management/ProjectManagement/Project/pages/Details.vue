@@ -21,15 +21,16 @@
               <table class="table quick_modal_table table-bordered">
                 <tbody>
                   <tr>
-                    <th>Project Group Name</th>
-                    <th class="text-center">:</th>
-                    <th>{{ item.project_group_id?.name }}</th>
-                  </tr>
-                  <tr>
                     <th>Project Name</th>
                     <th class="text-center">:</th>
                     <th>{{ item.name }}</th>
                   </tr>
+                  <tr>
+                    <th>Project Group Name</th>
+                    <th class="text-center">:</th>
+                    <th>{{ item.project_group_id?.name }}</th>
+                  </tr>
+
                   <tr>
                     <th>Project Users</th>
                     <th class="text-center">:</th>
@@ -200,37 +201,7 @@
             </div>
           </div>
         </div>
-        <div class="card-footer">
-          <router-link
-            class="btn btn-outline-warning btn-sm"
-            :to="{
-              name: `Edit${setup.route_prefix}`,
-              params: { id: item.slug },
-            }"
-          >
-            {{ setup.edit_page_title }}
-          </router-link>
-
-          <a
-            href=""
-            v-if="item.prev_slug"
-            @click.prevent="get_data(item.prev_slug)"
-            class="btn btn-secondary btn-sm ml-2"
-          >
-            <i class="fa fa-angle-left"></i>
-            Previous {{ setup.route_prefix }} ({{ item.prev_count }})
-          </a>
-
-          <a
-            href=""
-            v-if="item.next_slug"
-            @click.prevent="get_data(item.next_slug)"
-            class="btn btn-secondary btn-sm ml-2"
-          >
-            Next {{ setup.route_prefix }} ({{ item.next_count }})
-            <i class="fa fa-angle-right"></i>
-          </a>
-        </div>
+        <div class="card-footer"></div>
       </div>
     </form>
   </div>

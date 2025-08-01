@@ -45,6 +45,21 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
+                <label for="date">Date</label>
+                <div class="mt-1 mb-3">
+                  <input
+                    type="date"
+                    class="form-control form-control-square mb-2"
+                    name="date"
+                    id="date"
+                    v-model="form_fields.date"
+                    :max="todayDate"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
                 <label for="">Attendance status</label>
                 <div class="mt-1 mb-3">
                   <select
@@ -90,6 +105,16 @@
                 </div>
               </div>
             </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="notes">Notes</label>
+                <text-editor
+                  id="notes"
+                  v-model="form_fields.notes"
+                  name="notes"
+                ></text-editor>
+              </div>
+            </div>
           </div>
         </div>
         <div class="card-footer">
@@ -114,10 +139,11 @@ export default {
     param_id: null,
     form_fields: {
       user_id: "",
-      date: "",
+      date: new Date().toLocaleDateString("en-CA"), // Default to today's date
       check_in: "",
       check_out: "",
       attendance_status: "",
+      notes: "", // New field for notes
     },
     userProject: [],
     userData: [],
@@ -171,13 +197,14 @@ export default {
         this.form_fields.check_in = this.item.check_in;
         this.form_fields.check_out = this.item.check_out;
         this.form_fields.attendance_status = this.item.attendance_status;
+        this.form_fields.notes = this.item.notes || ""; // Ensure notes is set
       }
     },
 
     submitHandler: async function ($event) {
       // this.set_only_latest_data(true);
       if (this.param_id) {
-        // this.setSummerEditor();
+        this.setSummerEditor();
         let response = await this.update($event);
         // await this.get_all();
         if ([200, 201].includes(response.status)) {
@@ -187,7 +214,7 @@ export default {
           });
         }
       } else {
-        // this.setSummerEditor();
+        this.setSummerEditor();
         let response = await this.create($event);
         // await this.get_all();
         if ([200, 201].includes(response.status)) {
@@ -199,11 +226,11 @@ export default {
       }
     },
     setSummerEditor() {
-      var markupStr = $("#description").summernote("code");
+      var markupStr = $("#notes").summernote("code");
       var target = document.createElement("input");
-      target.setAttribute("name", "description");
+      target.setAttribute("name", "notes");
       target.value = markupStr;
-      document.getElementById("description").appendChild(target);
+      document.getElementById("notes").appendChild(target);
     },
   },
   computed: {

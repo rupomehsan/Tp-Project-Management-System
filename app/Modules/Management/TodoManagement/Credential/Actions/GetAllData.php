@@ -30,9 +30,10 @@ class GetAllData
             if (request()->has('search') && request()->input('search')) {
                 $searchKey = request()->input('search');
                 $data = $data->where(function ($q) use ($searchKey) {
-                    $q->where('name', 'like', '%' . $searchKey . '%');
-
+                    $q->where('title', 'like', '%' . $searchKey . '%');
+                    $q->orWhere('link', 'like', '%' . $searchKey . '%');
                     $q->orWhere('description', 'like', '%' . $searchKey . '%');
+                    $q->orWhere('password', 'like', '%' . $searchKey . '%');
                 });
             }
 
