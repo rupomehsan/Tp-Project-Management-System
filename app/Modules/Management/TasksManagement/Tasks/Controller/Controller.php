@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Modules\Management\TasksManagement\Tasks\Controller;
+
 use App\Modules\Management\TasksManagement\Tasks\Actions\GetAllData;
 use App\Modules\Management\TasksManagement\Tasks\Actions\DestroyData;
 use App\Modules\Management\TasksManagement\Tasks\Actions\GetSingleData;
@@ -11,6 +12,8 @@ use App\Modules\Management\TasksManagement\Tasks\Actions\SoftDelete;
 use App\Modules\Management\TasksManagement\Tasks\Actions\RestoreData;
 use App\Modules\Management\TasksManagement\Tasks\Actions\ImportData;
 use App\Modules\Management\TasksManagement\Tasks\Actions\TaskOverview;
+use App\Modules\Management\TasksManagement\Tasks\Actions\ReplyToTaskReview;
+use App\Modules\Management\TasksManagement\Tasks\Actions\GetTaskReviewsByTaskId;
 use App\Modules\Management\TasksManagement\Tasks\Validations\BulkActionsValidation;
 use App\Modules\Management\TasksManagement\Tasks\Validations\DataStoreValidation;
 use App\Modules\Management\TasksManagement\Tasks\Actions\BulkActions;
@@ -20,7 +23,8 @@ use App\Http\Controllers\Controller as ControllersController;
 class Controller extends ControllersController
 {
 
-    public function index( ){
+    public function index()
+    {
 
         $data = GetAllData::execute();
         return $data;
@@ -38,12 +42,13 @@ class Controller extends ControllersController
         return $data;
     }
 
+
     public function update(DataStoreValidation $request, $slug)
     {
         $data = UpdateData::execute($request, $slug);
         return $data;
     }
-         public function updateStatus()
+    public function updateStatus()
     {
         $data = UpdateStatus::execute();
         return $data;
@@ -81,4 +86,15 @@ class Controller extends ControllersController
         return $data;
     }
 
+
+    public function GetTaskReviewsByTaskId($id)
+    {
+        $data = GetTaskReviewsByTaskId::execute($id);
+        return $data;
+    }
+    public function ReplyToTaskReview()
+    {
+        $data = ReplyToTaskReview::execute();
+        return $data;
+    }
 }

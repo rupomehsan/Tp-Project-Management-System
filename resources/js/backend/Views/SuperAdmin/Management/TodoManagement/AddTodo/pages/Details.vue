@@ -29,7 +29,7 @@
                   <tr>
                     <th>Description</th>
                     <th class="text-center">:</th>
-                    <th>{{ item.description }}</th>
+                    <th v-html="item.description"></th>
                   </tr>
                   <tr>
                     <th>Created At</th>

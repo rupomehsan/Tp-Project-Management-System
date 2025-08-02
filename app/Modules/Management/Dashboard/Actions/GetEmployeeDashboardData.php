@@ -24,6 +24,12 @@ class GetEmployeeDashboardData
 
             $todoCount = Todo::where('user_id', $userId)->count();
             $credentialCount = Credential::where('user_id', $userId)->count();
+            $total_late_days = Attendance::where('user_id', $userId)
+                ->where('is_late',  true)
+                ->count();
+            $total_late_minutes = Attendance::where('user_id', $userId)
+                ->where('is_late',  true)
+                ->sum('late_minutes');
 
             // Get attendance stats in a single query
             $attendanceStats = Attendance::where('user_id', $userId)
@@ -113,7 +119,9 @@ class GetEmployeeDashboardData
             'not_completed_tasks' => $notCompletedTasks,
             'total_evaluated_tasks' => $completedTasks + $notCompletedTasks,
             'rating_scale' => 'Task ratings (1-5) converted to user rating (1-10)',
-            'max_possible_score' => 10
+            'max_possible_score' => 10,
+            'total_late_days' => $total_late_days ?? 0,
+            'total_late_minutes' => $total_late_minutes ?? 0,
         ];
     }
 }

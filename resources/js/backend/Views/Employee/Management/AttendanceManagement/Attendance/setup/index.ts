@@ -25,9 +25,11 @@ const setup: setup_type = {
     "attendance_status",
     "slug",
     "created_at",
+    "notes",
+    "is_late",
   ],
 
-  sort_by_cols: ["id", "created_at"],
+  sort_by_cols: ["id", "date"],
 
   layout_title: prefix + " Management",
   page_title: `${prefix} Management`,

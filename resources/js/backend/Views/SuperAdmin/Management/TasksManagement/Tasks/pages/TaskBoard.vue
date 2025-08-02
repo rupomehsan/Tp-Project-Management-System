@@ -12,9 +12,14 @@
             <span v-if="selectedProject" class="project-filter-badge"> - {{ selectedProject.name }} </span>
             <span v-else-if="selectedUser" class="user-filter-badge"> - {{ selectedUser.name }}'s Projects </span>
             <span v-else class="all-filter-badge"> - All Projects </span>
+            <span v-if="selectedDevStatus" class="dev-status-filter-badge"> | Dev: {{ selectedDevStatus }} </span>
+            <span v-if="selectedTaskStatus" class="task-status-filter-badge"> | Status: {{ selectedTaskStatus }} </span>
           </h2>
           <small v-if="filteredTaskCount !== undefined" class="task-count-info">
             Showing {{ filteredTaskCount }} task{{ filteredTaskCount !== 1 ? "s" : "" }}
+            <span v-if="selectedProject || selectedUser || selectedDevStatus || selectedTaskStatus || filterStartDate || filterEndDate" class="filter-active-indicator">
+              (filtered)
+            </span>
           </small>
         </div>
       </div>
@@ -54,6 +59,15 @@
           <button class="btn btn-warning btn-refresh" @click="refreshComponent" title="Refresh Tasks and Groups">
             <i class="fa fa-refresh"></i>
             <span>Refresh</span>
+          </button>
+          <button 
+            v-if="selectedProject || selectedUser || selectedDevStatus || selectedTaskStatus || filterStartDate || filterEndDate"
+            class="btn btn-secondary btn-clear-filters" 
+            @click="clearAllFilters" 
+            title="Clear All Filters"
+          >
+            <i class="fa fa-filter"></i>
+            <span>Clear Filters</span>
           </button>
           <button class="btn btn-success btn-add-group" @click="showAddTaskGroupModal" title="Add New Task Group">
             <i class="fa fa-plus"></i>
@@ -156,6 +170,170 @@
                 <!-- Empty state -->
                 <li v-if="!projects.data && !projects.length" class="px-3 py-2 text-muted">
                   <small>No projects available</small>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Dev Status Dropdown -->
+            <div class="dropdown me-2">
+              <button
+                class="btn btn-sm btn-outline-light dropdown-toggle dev-status-dropdown-btn"
+                type="button"
+                id="devStatusDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                :title="selectedDevStatus ? `Current dev status: ${selectedDevStatus}` : 'All dev statuses'"
+              >
+                <i class="fa fa-cogs me-1"></i>
+                <span>{{ selectedDevStatus || "All Dev Status" }}</span>
+              </button>
+              <ul class="dropdown-menu dev-status-dropdown-menu" aria-labelledby="devStatusDropdown">
+                <!-- All Dev Status Option -->
+                <li>
+                  <a class="dropdown-item" href="#" @click.prevent="selectDevStatus(null, $event)" :class="{ active: !selectedDevStatus }">
+                    <i class="fa fa-list me-2"></i>
+                    All Dev Status
+                  </a>
+                </li>
+                <!-- Separator -->
+                <li><hr class="dropdown-divider" /></li>
+                <!-- Individual Dev Status Options -->
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click.prevent="selectDevStatus('Pending', $event)"
+                    :class="{ active: selectedDevStatus === 'Pending' }"
+                  >
+                    <i class="fa fa-clock me-2"></i>
+                    📝 Pending
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click.prevent="selectDevStatus('In Progress', $event)"
+                    :class="{ active: selectedDevStatus === 'In Progress' }"
+                  >
+                    <i class="fa fa-play me-2"></i>
+                    ⚡ In Progress
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click.prevent="selectDevStatus('Completed', $event)"
+                    :class="{ active: selectedDevStatus === 'Completed' }"
+                  >
+                    <i class="fa fa-check me-2"></i>
+                    ✅ Completed
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click.prevent="selectDevStatus('Not Completed', $event)"
+                    :class="{ active: selectedDevStatus === 'Not Completed' }"
+                  >
+                    <i class="fa fa-times me-2"></i>
+                    ❌ Not Completed
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Task Status Dropdown -->
+            <div class="dropdown me-2">
+              <button
+                class="btn btn-sm btn-outline-light dropdown-toggle task-status-dropdown-btn"
+                type="button"
+                id="taskStatusDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                :title="selectedTaskStatus ? `Current task status: ${selectedTaskStatus}` : 'All task statuses'"
+              >
+                <i class="fa fa-flag me-1"></i>
+                <span>{{ selectedTaskStatus || "All Task Status" }}</span>
+              </button>
+              <ul class="dropdown-menu task-status-dropdown-menu" aria-labelledby="taskStatusDropdown">
+                <!-- All Task Status Option -->
+                <li>
+                  <a class="dropdown-item" href="#" @click.prevent="selectTaskStatus(null, $event)" :class="{ active: !selectedTaskStatus }">
+                    <i class="fa fa-list me-2"></i>
+                    All Task Status
+                  </a>
+                </li>
+                <!-- Separator -->
+                <li><hr class="dropdown-divider" /></li>
+                <!-- Individual Task Status Options -->
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click.prevent="selectTaskStatus('Pending', $event)"
+                    :class="{ active: selectedTaskStatus === 'Pending' }"
+                  >
+                    <i class="fa fa-clock me-2"></i>
+                    📝 Pending
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click.prevent="selectTaskStatus('In Progress', $event)"
+                    :class="{ active: selectedTaskStatus === 'In Progress' }"
+                  >
+                    <i class="fa fa-play me-2"></i>
+                    ⚡ In Progress
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click.prevent="selectTaskStatus('Completed', $event)"
+                    :class="{ active: selectedTaskStatus === 'Completed' }"
+                  >
+                    <i class="fa fa-check me-2"></i>
+                    ✅ Completed
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click.prevent="selectTaskStatus('Not Completed', $event)"
+                    :class="{ active: selectedTaskStatus === 'Not Completed' }"
+                  >
+                    <i class="fa fa-times me-2"></i>
+                    ❌ Not Completed
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click.prevent="selectTaskStatus('On Hold', $event)"
+                    :class="{ active: selectedTaskStatus === 'On Hold' }"
+                  >
+                    <i class="fa fa-pause me-2"></i>
+                    ⏸️ On Hold
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    @click.prevent="selectTaskStatus('Cancelled', $event)"
+                    :class="{ active: selectedTaskStatus === 'Cancelled' }"
+                  >
+                    <i class="fa fa-ban me-2"></i>
+                    ❌ Cancelled
+                  </a>
                 </li>
               </ul>
             </div>
@@ -611,7 +789,7 @@
                             :title=" 'Delete task' "
                           >
                             <i class="fa fa-trash"></i>
-                            <span>Task</span>
+                            <span>Delete</span>
                            
                           </a>
                           <router-link target="_blank" class="dropdown-item text-primary" :to="`/tasks/details/${task.slug}`">
@@ -922,6 +1100,10 @@ export default {
       projects: [], // List of projects for dropdowns
       selectedProject: null, // Currently selected project for filtering
 
+      // Status filtering
+      selectedDevStatus: null, // Currently selected dev status for filtering
+      selectedTaskStatus: null, // Currently selected task status for filtering
+
       // User filtering
       assignedUsers: [], // List of users assigned to tasks in current project
       selectedUser: null, // Currently selected user for filtering
@@ -1167,6 +1349,36 @@ export default {
       console.log("Date range filters cleared");
     },
 
+    // Clear all filters method
+    clearAllFilters() {
+      this.selectedProject = null;
+      this.selectedUser = null;
+      this.selectedDevStatus = null;
+      this.selectedTaskStatus = null;
+      this.filterStartDate = "";
+      this.filterEndDate = "";
+      this.selectedDate = "";
+      console.log("All filters cleared");
+      
+      // Refresh tasks to show all tasks
+      this.get_all_tasks();
+    },
+
+    // Clear all filters method
+    clearAllFilters() {
+      this.selectedProject = null;
+      this.selectedUser = null;
+      this.selectedDevStatus = null;
+      this.selectedTaskStatus = null;
+      this.filterStartDate = "";
+      this.filterEndDate = "";
+      this.selectedDate = "";
+      console.log("All filters cleared");
+      
+      // Refresh tasks to show all tasks
+      this.get_all_tasks();
+    },
+
     // Format date for display
     formatDate(dateString) {
       if (!dateString) return "";
@@ -1277,6 +1489,34 @@ export default {
 
       // When a specific project is selected, fetch only that project's tasks
       this.get_all_tasks();
+    },
+
+    // Dev Status selection methods
+    selectDevStatus(devStatus, event) {
+      this.selectedDevStatus = devStatus;
+      console.log("Selected dev status:", devStatus);
+
+      // Add ripple effect
+      if (event && event.target) {
+        this.addRippleEffect(event.target);
+      }
+
+      // Trigger filtering when dev status changes
+      // The filtering will be handled by the computed property
+    },
+
+    // Task Status selection methods
+    selectTaskStatus(taskStatus, event) {
+      this.selectedTaskStatus = taskStatus;
+      console.log("Selected task status:", taskStatus);
+
+      // Add ripple effect
+      if (event && event.target) {
+        this.addRippleEffect(event.target);
+      }
+
+      // Trigger filtering when task status changes
+      // The filtering will be handled by the computed property
     },
 
     // User selection methods
@@ -2259,7 +2499,7 @@ export default {
       return group ? group.name : "";
     },
 
-    // Calculate actual time between start and end dates
+    // Calculate actual working time between start and end dates (9 AM to 7 PM, Monday to Friday)
     FindActualTime(startDate, endDate) {
       if (!startDate || !endDate) {
         return "Not set";
@@ -2274,39 +2514,90 @@ export default {
           return "Invalid date";
         }
 
-        // Calculate difference in milliseconds
-        const diffMs = end.getTime() - start.getTime();
-
         // If end date is before start date
-        if (diffMs < 0) {
+        if (end.getTime() < start.getTime()) {
           return "Invalid range";
         }
 
-        // Convert to different units
-        const diffMinutes = Math.floor(diffMs / (1000 * 60));
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        // Working hours: 9 AM to 7 PM (10 hours per day)
+        const WORK_START_HOUR = 9;
+        const WORK_END_HOUR = 19; // 7 PM in 24-hour format
+        const WORK_HOURS_PER_DAY = WORK_END_HOUR - WORK_START_HOUR; // 10 hours
+
+        let totalWorkingMinutes = 0;
+        
+        // Create a new date for iteration, starting from the start date
+        let currentDate = new Date(start);
+        
+        // If start time is before 9 AM, adjust to 9 AM
+        if (currentDate.getHours() < WORK_START_HOUR) {
+          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
+        }
+        
+        // If start time is after 7 PM, move to next day 9 AM
+        if (currentDate.getHours() >= WORK_END_HOUR) {
+          currentDate.setDate(currentDate.getDate() + 1);
+          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
+        }
+
+        while (currentDate < end) {
+          // Check if current date is a weekday (Monday = 1, Friday = 5)
+          const dayOfWeek = currentDate.getDay();
+          if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Monday to Friday
+            
+            // Calculate work end time for current day
+            let workEndTime = new Date(currentDate);
+            workEndTime.setHours(WORK_END_HOUR, 0, 0, 0);
+            
+            // If the task ends before the work day ends, use task end time
+            let effectiveEndTime = end < workEndTime ? end : workEndTime;
+            
+            // Calculate working minutes for this day
+            let dayWorkingMs = effectiveEndTime.getTime() - currentDate.getTime();
+            if (dayWorkingMs > 0) {
+              totalWorkingMinutes += Math.floor(dayWorkingMs / (1000 * 60));
+            }
+            
+            // If we've reached the end date, break
+            if (end <= workEndTime) {
+              break;
+            }
+          }
+          
+          // Move to next day at 9 AM
+          currentDate.setDate(currentDate.getDate() + 1);
+          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
+        }
+
+        // Convert total working minutes to readable format
+        if (totalWorkingMinutes <= 0) {
+          return "0 hours";
+        }
+
+        const totalHours = Math.floor(totalWorkingMinutes / 60);
+        const remainingMinutes = totalWorkingMinutes % 60;
+        const totalDays = Math.floor(totalHours / WORK_HOURS_PER_DAY);
 
         // Return appropriate format based on duration
-        if (diffDays > 0) {
-          const remainingHours = diffHours % 24;
+        if (totalDays > 0) {
+          const remainingHours = totalHours % WORK_HOURS_PER_DAY;
           if (remainingHours > 0) {
-            return `${diffDays}d ${remainingHours}h`;
+            if (remainingMinutes > 0) {
+              return `${totalDays}d ${remainingHours}h ${remainingMinutes}m`;
+            }
+            return `${totalDays}d ${remainingHours}h`;
           }
-          return `${diffDays} day${diffDays > 1 ? "s" : ""}`;
-        } else if (diffHours > 0) {
-          const remainingMinutes = diffMinutes % 60;
+          return `${totalDays} working day${totalDays > 1 ? "s" : ""}`;
+        } else if (totalHours > 0) {
           if (remainingMinutes > 0) {
-            return `${diffHours}h ${remainingMinutes}m`;
+            return `${totalHours}h ${remainingMinutes}m`;
           }
-          return `${diffHours} hour${diffHours > 1 ? "s" : ""}`;
-        } else if (diffMinutes > 0) {
-          return `${diffMinutes} min${diffMinutes > 1 ? "s" : ""}`;
+          return `${totalHours} hour${totalHours > 1 ? "s" : ""}`;
         } else {
-          return "0 minutes";
+          return `${remainingMinutes} min${remainingMinutes > 1 ? "s" : ""}`;
         }
       } catch (error) {
-        console.error("Error calculating actual time:", error);
+        console.error("Error calculating actual working time:", error);
         return "Error";
       }
     },
@@ -3161,6 +3452,11 @@ export default {
       });
     },
 
+    // Get filtered task count for display
+    filteredTaskCount() {
+      return this.filteredTasks ? this.filteredTasks.length : 0;
+    },
+
     // Tasks filtered by search, date, and user
     filteredTasks() {
       let tasks = this.originalAllTasks || this.all?.data || [];
@@ -3217,6 +3513,20 @@ export default {
       if (this.selectedUser) {
         tasks = tasks.filter((task) => {
           return task.user && task.user.id === this.selectedUser.id;
+        });
+      }
+
+      // Filter by selected dev status if dev status is selected
+      if (this.selectedDevStatus) {
+        tasks = tasks.filter((task) => {
+          return task.task_user_status === this.selectedDevStatus;
+        });
+      }
+
+      // Filter by selected task status if task status is selected
+      if (this.selectedTaskStatus) {
+        tasks = tasks.filter((task) => {
+          return task.task_status === this.selectedTaskStatus;
         });
       }
 
@@ -3623,6 +3933,90 @@ export default {
   box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
 }
 
+/* Dev Status Dropdown Styles */
+.section-actions .dev-status-dropdown-btn {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  transition: all 0.3s ease;
+  font-size: 13px;
+  padding: 4px 12px;
+  min-width: 140px;
+  text-align: left;
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-actions .dev-status-dropdown-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.section-actions .dev-status-dropdown-btn:hover::before {
+  left: 100%;
+}
+
+.section-actions .dev-status-dropdown-btn:hover {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(41, 128, 185, 0.2) 100%);
+  border-color: #3498db;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.section-actions .dev-status-dropdown-btn:focus {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(41, 128, 185, 0.2) 100%);
+  border-color: #3498db;
+  box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+}
+
+/* Task Status Dropdown Styles */
+.section-actions .task-status-dropdown-btn {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  transition: all 0.3s ease;
+  font-size: 13px;
+  padding: 4px 12px;
+  min-width: 140px;
+  text-align: left;
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(39, 174, 96, 0.1) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-actions .task-status-dropdown-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.section-actions .task-status-dropdown-btn:hover::before {
+  left: 100%;
+}
+
+.section-actions .task-status-dropdown-btn:hover {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(39, 174, 96, 0.2) 100%);
+  border-color: #2ecc71;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+}
+
+.section-actions .task-status-dropdown-btn:focus {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(39, 174, 96, 0.2) 100%);
+  border-color: #2ecc71;
+  box-shadow: 0 0 0 0.25rem rgba(46, 204, 113, 0.25);
+}
+
 .project-dropdown-menu {
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -3633,7 +4027,31 @@ export default {
   min-width: 200px;
 }
 
-.project-dropdown-menu .dropdown-item {
+/* Dev Status Dropdown Menu */
+.dev-status-dropdown-menu {
+  background: white;
+  border: 1px solid rgba(52, 152, 219, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(52, 152, 219, 0.15);
+  max-height: 300px;
+  overflow-y: auto;
+  min-width: 200px;
+}
+
+/* Task Status Dropdown Menu */
+.task-status-dropdown-menu {
+  background: white;
+  border: 1px solid rgba(46, 204, 113, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(46, 204, 113, 0.15);
+  max-height: 300px;
+  overflow-y: auto;
+  min-width: 200px;
+}
+
+.project-dropdown-menu .dropdown-item,
+.dev-status-dropdown-menu .dropdown-item,
+.task-status-dropdown-menu .dropdown-item {
   padding: 8px 16px;
   font-size: 14px;
   transition: all 0.2s ease;
@@ -3641,7 +4059,9 @@ export default {
   background: none;
 }
 
-.project-dropdown-menu .dropdown-item:hover {
+.project-dropdown-menu .dropdown-item:hover,
+.dev-status-dropdown-menu .dropdown-item:hover,
+.task-status-dropdown-menu .dropdown-item:hover {
   background: #f8f9fa;
   color: #1e3c72;
 }
@@ -3651,12 +4071,34 @@ export default {
   color: white;
 }
 
+.dev-status-dropdown-menu .dropdown-item.active {
+  background: #3498db;
+  color: white;
+}
+
+.task-status-dropdown-menu .dropdown-item.active {
+  background: #2ecc71;
+  color: white;
+}
+
 .project-dropdown-menu .dropdown-item.active:hover {
   background: #2a5298;
   color: white;
 }
 
-.project-dropdown-menu .dropdown-divider {
+.dev-status-dropdown-menu .dropdown-item.active:hover {
+  background: #2980b9;
+  color: white;
+}
+
+.task-status-dropdown-menu .dropdown-item.active:hover {
+  background: #27ae60;
+  color: white;
+}
+
+.project-dropdown-menu .dropdown-divider,
+.dev-status-dropdown-menu .dropdown-divider,
+.task-status-dropdown-menu .dropdown-divider {
   margin: 4px 0;
   border-color: rgba(0, 0, 0, 0.1);
 }
@@ -3966,6 +4408,20 @@ export default {
 
   .section-title-container {
     width: 100%;
+  }
+
+  .section-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .section-actions .project-dropdown-btn,
+  .section-actions .dev-status-dropdown-btn,
+  .section-actions .task-status-dropdown-btn {
+    min-width: 120px;
+    font-size: 12px;
+    padding: 6px 10px;
   }
 }
 
@@ -4555,5 +5011,67 @@ export default {
 
 .dark-mode .sort-indicator {
   background: #2c3e50;
+}
+
+/* Filter Badge Styles */
+.project-filter-badge, 
+.user-filter-badge, 
+.all-filter-badge {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.dev-status-filter-badge {
+  color: #3498db;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.task-status-filter-badge {
+  color: #2ecc71;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.filter-active-indicator {
+  color: #f39c12;
+  font-style: italic;
+  font-weight: 600;
+  background: rgba(243, 156, 18, 0.1);
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-left: 4px;
+  font-size: 0.8em;
+}
+
+/* Clear Filters Button Styling */
+.btn-clear-filters {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  border-color: #e74c3c;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-clear-filters::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btn-clear-filters:hover::before {
+  left: 100%;
+}
+
+.btn-clear-filters:hover {
+  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+  border-color: #c0392b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
 }
 </style>

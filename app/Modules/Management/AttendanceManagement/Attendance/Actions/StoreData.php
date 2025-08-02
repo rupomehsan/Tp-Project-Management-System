@@ -13,19 +13,22 @@ class StoreData
             $requestData = $request->validated();
             $date = auth()->user()->role_id != 1 ? date('Y-m-d') : ($requestData['date'] ?? date('Y-m-d'));
 
-            // Check if date is Friday or Saturday (weekend/holiday)
-            $dayOfWeek = date('N', strtotime($date)); // 5=Friday, 6=Saturday
-            if ($dayOfWeek == 5 || $dayOfWeek == 6) {
-                return messageResponse('Attendance cannot be added on holidays (Friday or Saturday).', [], 400, 'error');
-            }
+            // Only apply restrictions to non-admin users (role_id != 1)
+            if (auth()->user()->role_id != 1) {
+                // Check if date is Friday or Saturday (weekend/holiday)
+                $dayOfWeek = date('N', strtotime($date)); // 5=Friday, 6=Saturday
+                if ($dayOfWeek == 5 || $dayOfWeek == 6) {
+                    return messageResponse('Attendance cannot be added on holidays (Friday or Saturday).', [], 400, 'error');
+                }
 
+                // Check if attendance already exists for today
+                $alreadyExists = self::$model::where('user_id', auth()->id())
+                    ->where('date', $date)
+                    ->exists();
 
-            $alreadyExists = self::$model::where('user_id', auth()->id())
-                ->where('date', $date)
-                ->exists();
-
-            if ($alreadyExists) {
-                return messageResponse('Attendance already submitted for today.', [], 400, 'error');
+                if ($alreadyExists) {
+                    return messageResponse('Attendance already submitted for today.', [], 400, 'error');
+                }
             }
 
 

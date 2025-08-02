@@ -39,13 +39,14 @@
                         <div class="filter-buttons">
                           <button
                             class="btn btn-filter btn-outline-secondary"
-                            :class="{ 'active': !taskStatusFilterValue }"
+                            :class="{ 'active': taskStatusFilterValue === null || taskStatusFilterValue === undefined }"
                             @click="cleartaskStatusFilter"
                             type="button"
                           >
                             <i class="fa fa-list mr-1"></i>
                             <span class="d-none d-sm-inline">All Tasks</span>
                             <span class="d-sm-none">All</span>
+                            <small v-if="taskStatusFilterValue === null || taskStatusFilterValue === undefined" class="text-success">(Active)</small>
                           </button>
                           <button
                             class="btn btn-filter btn-outline-primary"
@@ -55,6 +56,7 @@
                           >
                             <i class="fa fa-clock-o mr-1"></i>
                             Pending
+                            <small v-if="taskStatusFilterValue === 'pending'" class="text-success">(Active)</small>
                           </button>
                           <button
                             class="btn btn-filter btn-outline-success"
@@ -65,6 +67,7 @@
                             <i class="fa fa-check mr-1"></i>
                             <span class="d-none d-sm-inline">Completed</span>
                             <span class="d-sm-none">Done</span>
+                            <small v-if="taskStatusFilterValue === 'completed'" class="text-success">(Active)</small>
                           </button>
                         </div>
                       </div>
@@ -80,12 +83,13 @@
                         <div class="filter-buttons">
                           <button
                             class="btn btn-filter btn-outline-secondary"
-                            :class="{ 'active': !priorityFilterValue }"
+                            :class="{ 'active': priorityFilterValue === null || priorityFilterValue === undefined }"
                             @click="clearPriorityFilter"
                             type="button"
                           >
                             <i class="fa fa-filter mr-1"></i>
                             All
+                            <small v-if="priorityFilterValue === null || priorityFilterValue === undefined" class="text-success">(Active)</small>
                           </button>
                           <button
                             class="btn btn-filter btn-outline-danger"
@@ -95,6 +99,7 @@
                           >
                             <i class="fa fa-exclamation-triangle mr-1"></i>
                             Urgent
+                            <small v-if="priorityFilterValue === 'urgent'" class="text-success">(Active)</small>
                           </button>
                           <button
                             class="btn btn-filter btn-outline-warning"
@@ -104,6 +109,7 @@
                           >
                             <i class="fa fa-arrow-up mr-1"></i>
                             High
+                            <small v-if="priorityFilterValue === 'high'" class="text-success">(Active)</small>
                           </button>
                           <button
                             class="btn btn-filter btn-outline-info"
@@ -113,6 +119,7 @@
                           >
                             <i class="fa fa-minus mr-1"></i>
                             Normal
+                            <small v-if="priorityFilterValue === 'normal'" class="text-success">(Active)</small>
                           </button>
                         </div>
                       </div>
@@ -212,12 +219,17 @@
                     </td>
                     <td class="text-limit" :title="`ID: ${index + 1}`">{{ index + 1 }}</td>
                     <td class="text-limit" :title="`Category: ${item.category_id?.name || 'N/A'}`">{{ item.category_id?.name }}</td>
-                    <td class="text-limit" :title="`Description: ${item.description?.replace(/<[^>]*>/g, '') || 'N/A'}`" v-html="item.description"></td>
+                    <td class="text-limit" :title="`Description: ${item.description?.replace(/<[^>]*>/g, '') || 'N/A'}`">{{ truncateDescription(item.description) }}</td>
                     <td class="text-limit" :title="`Status: ${item.task_status}`">
                       <div class="d-flex align-items-center justify-content-start" style="gap: 0.5rem">
                         <span class="font-weight-bold text-capitalize" style="min-width: 100px">{{ item.task_status }}</span>
-                        <label class="switch mb-0" style="margin-bottom: 0">
-                          <input type="checkbox" :checked="item.task_status === 'completed'" @change="toggleTodoStatus(item)" />
+                        <label class="switch mb-0" style="margin-bottom: 0" :class="{ 'opacity-50': item.updating }">
+                          <input 
+                            type="checkbox" 
+                            :checked="item.task_status === 'completed'" 
+                            @change="toggleTodoStatus(item)"
+                            :disabled="item.updating"
+                          />
                           <span class="slider round"></span>
                         </label>
                       </div>
@@ -468,23 +480,49 @@ export default {
   created: async function () {
     await this.get_all();
   },
+  mounted: function () {
+    // Initialize filter_criteria if it's not defined
+    if (!this.filter_criteria) {
+      console.log('Initializing filter_criteria');
+      this.set_filter_criteria({});
+    }
+    console.log('Component mounted, filter_criteria:', this.filter_criteria);
+  },
   methods: {
     /**
      * Toggle the status of a todo item between Completed and Pending
      */
     async toggleTodoStatus(item) {
+      // Prevent multiple simultaneous updates
+      if (item.updating) return;
+      
       const newStatus = item.task_status === "completed" ? "pending" : "completed";
+      
+      // Set loading state
+      item.updating = true;
+      
       try {
-        // You may need to adjust the API endpoint and payload as per your backend
-        const response = await axios.post(`/todo/update-status?slug=${item.slug}`, { task_status: newStatus });
+        // Use the correct API endpoint from the routes
+        const url = `${setup.api_host}/${setup.api_version}/${setup.api_end_point}/update-status`;
+        
+        const response = await axios.post(url, { 
+          slug: item.slug, 
+          task_status: newStatus 
+        });
+        
         if (response.data.status === "success") {
+          // Update the item in the local state
           item.task_status = newStatus;
-          window.s_alert("Task status updated!");
+          window.s_alert("Task status updated successfully!");
         } else {
-          window.s_warning(response.data?.message || "Update failed");
+          window.s_warning(response.data?.message || "Failed to update task status");
         }
       } catch (error) {
-        window.s_warning("Error updating task status");
+        console.error("Error updating task status:", error);
+        window.s_warning("Error updating task status. Please try again.");
+      } finally {
+        // Clear loading state
+        item.updating = false;
       }
     },
     export_all_csv,
@@ -526,6 +564,26 @@ export default {
         hour12: true,
       };
       return new Date(dateTime).toLocaleString("en-US", options);
+    },
+    
+    /**
+     * Truncate description text by stripping HTML and limiting characters
+     */
+    truncateDescription(description, maxLength = 30) {
+      if (!description) return 'N/A';
+      
+      // Strip HTML tags
+      const plainText = description.replace(/<[^>]*>/g, '');
+      
+      // Trim whitespace
+      const trimmedText = plainText.trim();
+      
+      // Truncate if longer than maxLength
+      if (trimmedText.length <= maxLength) {
+        return trimmedText;
+      }
+      
+      return trimmedText.substring(0, maxLength) + '...';
     },
     active_row(event) {
       const targetRow = event.target.closest(".table_rows");
@@ -685,22 +743,78 @@ export default {
     }, 500),
 
     taskStatusFilter(task_status) {
-      this.set_filter_criteria({ task_status }); // Update filter criteria
+      console.log('=== taskStatusFilter clicked ===');
+      console.log('Setting task status filter to:', task_status);
+      console.log('Current filter criteria BEFORE:', this.filter_criteria);
+      
+      // Update filter criteria while preserving other filters
+      const newCriteria = { 
+        ...this.filter_criteria,
+        task_status 
+      };
+      console.log('New criteria to set:', newCriteria);
+      
+      this.set_filter_criteria(newCriteria);
+      console.log('Current filter criteria AFTER:', this.filter_criteria);
+      
       this.set_only_latest_data(true); // Reset to first page
       this.get_all(); // Fetch filtered data
     },
     cleartaskStatusFilter() {
-      this.set_filter_criteria({ task_status: null }); // Clear task status filter
+      console.log('=== cleartaskStatusFilter clicked ===');
+      console.log('Clearing task status filter');
+      console.log('Current filter criteria BEFORE:', this.filter_criteria);
+      
+      // Create new criteria object without task_status
+      const updatedCriteria = { ...this.filter_criteria };
+      delete updatedCriteria.task_status;
+      
+      // Alternative: Set task_status to null explicitly
+      updatedCriteria.task_status = null;
+      
+      console.log('Updated criteria to set:', updatedCriteria);
+      
+      this.set_filter_criteria(updatedCriteria);
+      console.log('Current filter criteria AFTER:', this.filter_criteria);
+      
       this.set_only_latest_data(true); // Reset to first page
       this.get_all(); // Fetch unfiltered data
     },
     clearPriorityFilter() {
-      this.set_filter_criteria({ priority: null }); // Clear priority filter
+      console.log('=== clearPriorityFilter clicked ===');
+      console.log('Clearing priority filter');
+      console.log('Current filter criteria BEFORE:', this.filter_criteria);
+      
+      // Create new criteria object without priority
+      const updatedCriteria = { ...this.filter_criteria };
+      delete updatedCriteria.priority;
+      
+      // Alternative: Set priority to null explicitly
+      updatedCriteria.priority = null;
+      
+      console.log('Updated criteria to set:', updatedCriteria);
+      
+      this.set_filter_criteria(updatedCriteria);
+      console.log('Current filter criteria AFTER:', this.filter_criteria);
+      
       this.set_only_latest_data(true); // Reset to first page
       this.get_all(); // Fetch unfiltered data
     },
     priorityFilter(priority) {
-      this.set_filter_criteria({ priority }); // Update filter criteria
+      console.log('=== priorityFilter clicked ===');
+      console.log('Setting priority filter to:', priority);
+      console.log('Current filter criteria BEFORE:', this.filter_criteria);
+      
+      // Update filter criteria while preserving other filters
+      const newCriteria = { 
+        ...this.filter_criteria,
+        priority 
+      };
+      console.log('New criteria to set:', newCriteria);
+      
+      this.set_filter_criteria(newCriteria);
+      console.log('Current filter criteria AFTER:', this.filter_criteria);
+      
       this.set_only_latest_data(true); // Reset to first page
       this.get_all(); // Fetch filtered data
     },
@@ -722,15 +836,22 @@ export default {
       "end_date",
       "search_key",
       "page",
+      "filter_criteria",
     ]),
     isAllSelected() {
       return this.all?.data?.length > 0 && this.all.data?.every((item) => this.selected.some((s) => s.id === item.id));
     },
     taskStatusFilterValue() {
-      return this.$store?.state?.data_store?.filter_criteria?.task_status || null;
+      console.log('Computing taskStatusFilterValue:', this.filter_criteria);
+      const value = this.filter_criteria?.task_status;
+      // Return null for both undefined and null values, and empty string
+      return (value === undefined || value === null || value === '') ? null : value;
     },
     priorityFilterValue() {
-      return this.$store?.state?.data_store?.filter_criteria?.priority || null;
+      console.log('Computing priorityFilterValue:', this.filter_criteria);
+      const value = this.filter_criteria?.priority;
+      // Return null for both undefined and null values, and empty string
+      return (value === undefined || value === null || value === '') ? null : value;
     },
   },
 
@@ -739,6 +860,14 @@ export default {
       handler: function (newValue, oldValue) {
         this.is_trashed_data = newValue;
       },
+      immediate: true,
+    },
+
+    filter_criteria: {
+      handler: function (newValue, oldValue) {
+        console.log('Filter criteria changed:', newValue, 'Old:', oldValue);
+      },
+      deep: true,
       immediate: true,
     },
 

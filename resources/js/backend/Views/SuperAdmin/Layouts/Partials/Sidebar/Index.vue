@@ -116,11 +116,7 @@
             title: `Todo List`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
-          {
-            route_name: `AllCredential`,
-            title: `Credential`,
-            icon: `zmdi zmdi-dot-circle-alt`,
-          },
+         
         ]"
       />
       <!-- Team Management -->
@@ -176,6 +172,7 @@
         ]"
       />
 
+      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Credential`" :route_name="`AllCredential`" />
       <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Notification`" :route_name="`AllNotification`" />
 
       <!-- Management end -->

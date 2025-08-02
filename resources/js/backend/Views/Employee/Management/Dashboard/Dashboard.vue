@@ -10,12 +10,7 @@
             <div class="profile-bg"></div>
             <div class="profile-image-container text-center">
               <div class="profile-avatar">
-                <img
-                  class="avatar-img"
-                  :src="`${auth_info.image ?? 'avatar.png'}`"
-                  @error="$event.target.src = 'avatar.png'"
-                  alt="Profile Picture"
-                />
+                <img class="avatar-img" :src="`${auth_info.image ?? 'avatar.png'}`" @error="$event.target.src = 'avatar.png'" alt="Profile Picture" />
                 <!-- Professional Circular Rating Display -->
                 <div class="rating-badge">
                   <div class="rating-circle" :data-rating="dashboard_data.user_rating || 0">
@@ -24,7 +19,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <!-- Profile Name Section -->
               <div class="profile-name mt-3">
                 <h3 class="mb-1">{{ auth_info.name }}</h3>
@@ -71,9 +66,7 @@
           <!-- Social Media Section -->
           <div class="social-section">
             <div class="social-header">
-              <h6 class="social-title">
-                <i class="zmdi zmdi-share mr-2"></i>Professional Networks
-              </h6>
+              <h6 class="social-title"><i class="zmdi zmdi-share mr-2"></i>Professional Networks</h6>
             </div>
             <div class="social-content">
               <div class="social-links" v-if="auth_info.social_media && auth_info.social_media.length > 0">
@@ -192,7 +185,7 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Pending Tasks Card -->
           <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
             <div class="stat-card stat-card-info">
@@ -215,7 +208,7 @@
               </div>
             </div>
           </div>
-          
+
           <!-- In Progress Tasks Card -->
           <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
             <div class="stat-card stat-card-secondary">
@@ -261,7 +254,7 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Absent Attendance Card -->
           <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
             <div class="stat-card stat-card-dark">
@@ -278,6 +271,69 @@
                     <span class="trend-indicator negative">
                       <i class="zmdi zmdi-minus-circle"></i>
                       Absent
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
+            <div class="stat-card stat-card-danger">
+              <div class="stat-card-body">
+                <div class="stat-icon-container">
+                  <div class="stat-icon bg-danger">
+                    <i class="fa fa-clock-o"></i>
+                  </div>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-number">{{ dashboard_data.total_late_days || 0 }}</div>
+                  <div class="stat-label">Total Late Days</div>
+                  <div class="stat-trend">
+                    <span class="trend-indicator negative">
+                      <i class="fa fa-clock-o"></i>
+                      Late Day
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
+            <div class="stat-card stat-card-warning">
+              <div class="stat-card-body">
+                <div class="stat-icon-container">
+                  <div class="stat-icon bg-warning">
+                    <i class="zmdi zmdi-time"></i>
+                  </div>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-number">{{ dashboard_data.total_late_minutes || 0 }}</div>
+                  <div class="stat-label">Total Lates (MNT)</div>
+                  <div class="stat-trend">
+                    <span class="trend-indicator negative">
+                      <i class="zmdi zmdi-minus-circle"></i>
+                      Late Minute
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
+            <div class="stat-card stat-card-warning">
+              <div class="stat-card-body">
+                <div class="stat-icon-container">
+                  <div class="stat-icon bg-warning">
+                    <i class="zmdi zmdi-time"></i>
+                  </div>
+                </div>
+                <div class="stat-content">
+                  <div class="stat-number">{{ dashboard_data.total_late_minutes || 0 }}</div>
+                  <div class="stat-label">Total Working Hours</div>
+                  <div class="stat-trend">
+                    <span class="trend-indicator negative">
+                      <i class="zmdi zmdi-minus-circle"></i>
+                     Working Hours
                     </span>
                   </div>
                 </div>
@@ -312,10 +368,7 @@
             class="weekday-header"
             v-for="day in weekdayNames"
             :key="day"
-            :class="[
-              'weekday-header',
-              day === 'Fri' || day === 'Sat' ? 'bd-offday' : '',
-            ]"
+            :class="['weekday-header', day === 'Fri' || day === 'Sat' ? 'bd-offday' : '']"
           >
             {{ day }}
           </div>
@@ -323,24 +376,11 @@
 
         <!-- Calendar Grid -->
         <div class="calendar-grid">
-          <div
-            v-for="n in startDayOfMonth"
-            :key="'empty-' + n"
-            class="calendar-cell empty-cell"
-          ></div>
-          <div
-            v-for="(date, index) in daysInMonth"
-            :key="index"
-            :class="calendarCellClass(date)"
-            class="calendar-cell-item position-relative"
-          >
+          <div v-for="n in startDayOfMonth" :key="'empty-' + n" class="calendar-cell empty-cell"></div>
+          <div v-for="(date, index) in daysInMonth" :key="index" :class="calendarCellClass(date)" class="calendar-cell-item position-relative">
             <!-- Meeting Badge -->
             <router-link
-              :to="`/meeting/all?date=${new Date(
-                date.getTime() + 24 * 60 * 60 * 1000
-              )
-                .toISOString()
-                .substr(0, 10)}`"
+              :to="`/meeting/all?date=${new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().substr(0, 10)}`"
               v-if="countTodayMeetings(date) > 0"
               class="badge-link"
             >
@@ -349,14 +389,10 @@
                 {{ countTodayMeetings(date) }}
               </div>
             </router-link>
-            
+
             <!-- Task Badge -->
             <router-link
-              :to="`/tasks/date-wise-tasks/${new Date(
-                date.getTime() + 24 * 60 * 60 * 1000
-              )
-                .toISOString()
-                .substr(0, 10)}`"
+              :to="`/tasks/date-wise-tasks/${new Date(date.getTime() + 24 * 60 * 60 * 1000).toISOString().substr(0, 10)}`"
               v-if="countTodayTasks(date) > 0"
               class="badge-link"
             >
@@ -371,14 +407,16 @@
               <div class="date-number">{{ date.getDate() }}</div>
               <div class="day-name">{{ formatDay(date).substring(0, 3) }}</div>
             </div>
-            
+
             <!-- Date Full Name for Mobile -->
             <div class="date-full-name">
-              {{ date.toLocaleDateString('en-US', { 
-                weekday: 'short', 
-                day: 'numeric',
-                month: 'short'
-              }) }}
+              {{
+                date.toLocaleDateString("en-US", {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "short",
+                })
+              }}
             </div>
           </div>
         </div>
@@ -402,7 +440,7 @@ export default {
     task_list_dates: [],
     meeting_dates: [],
     item: {},
-    currentTheme: 'dark',
+    currentTheme: "dark",
   }),
   created: async function () {
     this.detectTheme();
@@ -413,16 +451,16 @@ export default {
   methods: {
     detectTheme() {
       // Auto-detect system theme preference
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        this.currentTheme = 'dark';
+      if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        this.currentTheme = "dark";
       } else {
-        this.currentTheme = 'light';
+        this.currentTheme = "light";
       }
-      
+
       // Listen for theme changes
       if (window.matchMedia) {
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-          this.currentTheme = e.matches ? 'dark' : 'light';
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+          this.currentTheme = e.matches ? "dark" : "light";
         });
       }
     },
@@ -490,18 +528,14 @@ export default {
       let response = await axios.get("task?get_all=1");
       if (response.status == 200) {
         // Only keep the start_date values in the array
-        this.task_list_dates = response.data.data
-          .filter((task) => task.start_date)
-          .map((task) => task.start_date);
+        this.task_list_dates = response.data.data.filter((task) => task.start_date).map((task) => task.start_date);
       }
     },
     get_all_meetings: async function () {
       let response = await axios.get("meeting?get_all=1");
       if (response.status == 200) {
         // Only keep the start_date values in the array
-        this.meeting_dates = response.data.data
-          .filter((meeting) => meeting.date)
-          .map((meeting) => meeting.date);
+        this.meeting_dates = response.data.data.filter((meeting) => meeting.date).map((meeting) => meeting.date);
       }
     },
     formatDay(date) {
@@ -513,11 +547,7 @@ export default {
     },
     isToday(date) {
       const today = new Date();
-      return (
-        date.getDate() === today.getDate() &&
-        date.getMonth() === today.getMonth() &&
-        date.getFullYear() === today.getFullYear()
-      );
+      return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
     },
     calendarCellClass(date) {
       // If today and holiday, use both classes
@@ -535,12 +565,7 @@ export default {
       // The computed will auto-update
     },
     countTodayTasks(date) {
-      const currentDate =
-        date.getFullYear() +
-        "-" +
-        String(date.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(date.getDate()).padStart(2, "0");
+      const currentDate = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
 
       return this.task_list_dates.filter((taskDate) => {
         const taskDay = taskDate.split(" ")[0]; // Get only YYYY-MM-DD
@@ -548,12 +573,7 @@ export default {
       }).length;
     },
     countTodayMeetings(date) {
-      const currentDate =
-        date.getFullYear() +
-        "-" +
-        String(date.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(date.getDate()).padStart(2, "0");
+      const currentDate = date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
 
       return this.meeting_dates.filter((meetingDate) => {
         const meetingDay = meetingDate.split(" ")[0]; // Get only YYYY-MM-DD
@@ -718,13 +738,13 @@ export default {
 }
 
 .profile-bg::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 60px;
-  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1));
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.1));
 }
 
 .profile-image-container {
@@ -777,7 +797,7 @@ export default {
 
 .rating-circle:hover {
   transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .rating-value {
@@ -982,7 +1002,7 @@ export default {
 }
 
 .social-tooltip::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -4px;
   left: 50%;
@@ -1017,85 +1037,85 @@ export default {
 }
 
 /* Social Media Background Colors - Modern Vibrant Theme */
-.bg-facebook { 
-  background: radial-gradient(circle at 30% 30%, #4267B2, #365899) !important;
+.bg-facebook {
+  background: radial-gradient(circle at 30% 30%, #4267b2, #365899) !important;
   box-shadow: 0 6px 20px rgba(66, 103, 178, 0.4) !important;
 }
-.bg-instagram { 
+.bg-instagram {
   background: radial-gradient(circle at 30% 30%, #833ab4, #fd1d1d, #fcb045) !important;
   box-shadow: 0 6px 20px rgba(131, 58, 180, 0.4) !important;
 }
-.bg-twitter { 
-  background: radial-gradient(circle at 30% 30%, #1DA1F2, #0d8bd9) !important;
+.bg-twitter {
+  background: radial-gradient(circle at 30% 30%, #1da1f2, #0d8bd9) !important;
   box-shadow: 0 6px 20px rgba(29, 161, 242, 0.4) !important;
 }
-.bg-linkedin { 
-  background: radial-gradient(circle at 30% 30%, #0077B5, #005885) !important;
+.bg-linkedin {
+  background: radial-gradient(circle at 30% 30%, #0077b5, #005885) !important;
   box-shadow: 0 6px 20px rgba(0, 119, 181, 0.4) !important;
 }
-.bg-youtube { 
-  background: radial-gradient(circle at 30% 30%, #FF0000, #cc0000) !important;
+.bg-youtube {
+  background: radial-gradient(circle at 30% 30%, #ff0000, #cc0000) !important;
   box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4) !important;
 }
-.bg-tiktok { 
+.bg-tiktok {
   background: radial-gradient(circle at 30% 30%, #000000, #ff0050) !important;
   box-shadow: 0 6px 20px rgba(255, 0, 80, 0.4) !important;
 }
-.bg-snapchat { 
-  background: radial-gradient(circle at 30% 30%, #FFFC00, #fff700) !important;
+.bg-snapchat {
+  background: radial-gradient(circle at 30% 30%, #fffc00, #fff700) !important;
   box-shadow: 0 6px 20px rgba(255, 252, 0, 0.4) !important;
-  color: #000 !important; 
+  color: #000 !important;
 }
-.bg-pinterest { 
-  background: radial-gradient(circle at 30% 30%, #E60023, #bd081c) !important;
+.bg-pinterest {
+  background: radial-gradient(circle at 30% 30%, #e60023, #bd081c) !important;
   box-shadow: 0 6px 20px rgba(230, 0, 35, 0.4) !important;
 }
-.bg-whatsapp { 
-  background: radial-gradient(circle at 30% 30%, #25D366, #128c7e) !important;
+.bg-whatsapp {
+  background: radial-gradient(circle at 30% 30%, #25d366, #128c7e) !important;
   box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4) !important;
 }
-.bg-telegram { 
-  background: radial-gradient(circle at 30% 30%, #0088CC, #005f8a) !important;
+.bg-telegram {
+  background: radial-gradient(circle at 30% 30%, #0088cc, #005f8a) !important;
   box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4) !important;
 }
-.bg-discord { 
-  background: radial-gradient(circle at 30% 30%, #7289DA, #5b6eae) !important;
+.bg-discord {
+  background: radial-gradient(circle at 30% 30%, #7289da, #5b6eae) !important;
   box-shadow: 0 6px 20px rgba(114, 137, 218, 0.4) !important;
 }
-.bg-reddit { 
-  background: radial-gradient(circle at 30% 30%, #FF4500, #cc3700) !important;
+.bg-reddit {
+  background: radial-gradient(circle at 30% 30%, #ff4500, #cc3700) !important;
   box-shadow: 0 6px 20px rgba(255, 69, 0, 0.4) !important;
 }
-.bg-tumblr { 
-  background: radial-gradient(circle at 30% 30%, #00CF35, #00a62a) !important;
+.bg-tumblr {
+  background: radial-gradient(circle at 30% 30%, #00cf35, #00a62a) !important;
   box-shadow: 0 6px 20px rgba(0, 207, 53, 0.4) !important;
 }
-.bg-twitch { 
-  background: radial-gradient(circle at 30% 30%, #9146FF, #7329cc) !important;
+.bg-twitch {
+  background: radial-gradient(circle at 30% 30%, #9146ff, #7329cc) !important;
   box-shadow: 0 6px 20px rgba(145, 70, 255, 0.4) !important;
 }
-.bg-github { 
+.bg-github {
   background: radial-gradient(circle at 30% 30%, #333333, #1a1a1a) !important;
   box-shadow: 0 6px 20px rgba(51, 51, 51, 0.4) !important;
 }
-.bg-behance { 
-  background: radial-gradient(circle at 30% 30%, #1769FF, #0d4fd1) !important;
+.bg-behance {
+  background: radial-gradient(circle at 30% 30%, #1769ff, #0d4fd1) !important;
   box-shadow: 0 6px 20px rgba(23, 105, 255, 0.4) !important;
 }
-.bg-dribbble { 
-  background: radial-gradient(circle at 30% 30%, #EA4C89, #c73670) !important;
+.bg-dribbble {
+  background: radial-gradient(circle at 30% 30%, #ea4c89, #c73670) !important;
   box-shadow: 0 6px 20px rgba(234, 76, 137, 0.4) !important;
 }
-.bg-skype { 
-  background: radial-gradient(circle at 30% 30%, #00AFF0, #0085c7) !important;
+.bg-skype {
+  background: radial-gradient(circle at 30% 30%, #00aff0, #0085c7) !important;
   box-shadow: 0 6px 20px rgba(0, 175, 240, 0.4) !important;
 }
-.bg-viber { 
-  background: radial-gradient(circle at 30% 30%, #665CAC, #4f4788) !important;
+.bg-viber {
+  background: radial-gradient(circle at 30% 30%, #665cac, #4f4788) !important;
   box-shadow: 0 6px 20px rgba(102, 92, 172, 0.4) !important;
 }
-.bg-wechat { 
-  background: radial-gradient(circle at 30% 30%, #7BB32E, #5f8f24) !important;
+.bg-wechat {
+  background: radial-gradient(circle at 30% 30%, #7bb32e, #5f8f24) !important;
   box-shadow: 0 6px 20px rgba(123, 179, 46, 0.4) !important;
 }
 
@@ -1146,7 +1166,7 @@ export default {
 }
 
 .stat-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -1195,7 +1215,7 @@ export default {
 }
 
 .stat-icon::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
@@ -1345,11 +1365,11 @@ export default {
     padding: 1.25rem;
     min-height: 110px;
   }
-  
+
   .stat-number {
     font-size: 1.5rem;
   }
-  
+
   .stat-icon {
     width: 50px;
     height: 50px;
@@ -1363,15 +1383,15 @@ export default {
     min-height: 100px;
     gap: 0.75rem;
   }
-  
+
   .stat-number {
     font-size: 1.4rem;
   }
-  
+
   .stat-label {
     font-size: 0.75rem;
   }
-  
+
   .stat-icon {
     width: 46px;
     height: 46px;
@@ -1384,33 +1404,33 @@ export default {
     margin-left: -0.5rem;
     margin-right: -0.5rem;
   }
-  
+
   .stats-row > [class*="col-"] {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
   }
-  
+
   .stat-card-body {
     padding: 1rem;
     min-height: 90px;
     gap: 0.75rem;
   }
-  
+
   .stat-number {
     font-size: 1.3rem;
   }
-  
+
   .stat-label {
     font-size: 0.7rem;
     margin-bottom: 0.4rem;
   }
-  
+
   .stat-icon {
     width: 44px;
     height: 44px;
     font-size: 1.1rem;
   }
-  
+
   .trend-indicator {
     padding: 0.15rem 0.5rem;
     font-size: 0.6rem;
@@ -1423,29 +1443,29 @@ export default {
     min-height: 85px;
     gap: 0.625rem;
   }
-  
+
   .stat-number {
     font-size: 1.2rem;
   }
-  
+
   .stat-label {
     font-size: 0.65rem;
     margin-bottom: 0.3rem;
   }
-  
+
   .stat-icon {
     width: 40px;
     height: 40px;
     font-size: 1rem;
     border-radius: 12px;
   }
-  
+
   .trend-indicator {
     padding: 0.1rem 0.4rem;
     font-size: 0.55rem;
     gap: 0.2rem;
   }
-  
+
   .trend-indicator i {
     font-size: 0.6rem;
   }
@@ -1457,15 +1477,15 @@ export default {
     min-height: 80px;
     gap: 0.5rem;
   }
-  
+
   .stat-number {
     font-size: 1.1rem;
   }
-  
+
   .stat-label {
     font-size: 0.6rem;
   }
-  
+
   .stat-icon {
     width: 36px;
     height: 36px;
@@ -1531,9 +1551,14 @@ export default {
 .container-fluid[data-theme="dark"] .text-muted,
 .container-fluid[data-theme="dark"] .fw-medium,
 .container-fluid[data-theme="dark"] .fw-semibold,
-.container-fluid[data-theme="dark"] h1, .container-fluid[data-theme="dark"] h2, .container-fluid[data-theme="dark"] h3, 
-.container-fluid[data-theme="dark"] h4, .container-fluid[data-theme="dark"] h5, .container-fluid[data-theme="dark"] h6,
-.container-fluid[data-theme="dark"] p, .container-fluid[data-theme="dark"] span {
+.container-fluid[data-theme="dark"] h1,
+.container-fluid[data-theme="dark"] h2,
+.container-fluid[data-theme="dark"] h3,
+.container-fluid[data-theme="dark"] h4,
+.container-fluid[data-theme="dark"] h5,
+.container-fluid[data-theme="dark"] h6,
+.container-fluid[data-theme="dark"] p,
+.container-fluid[data-theme="dark"] span {
   color: var(--text-primary) !important;
 }
 
@@ -1804,18 +1829,18 @@ export default {
   .calendar-container {
     padding: 1.25rem;
   }
-  
+
   .calendar-grid,
   .weekday-headers {
     gap: 0.5rem;
   }
-  
+
   .calendar-cell,
   .calendar-cell-item {
     padding: 0.6rem 0.4rem;
     min-height: 70px;
   }
-  
+
   .date-number {
     font-size: 1.3rem;
   }
@@ -1827,29 +1852,29 @@ export default {
     align-items: flex-start;
     gap: 0.75rem;
   }
-  
+
   .calendar-controls {
     align-self: flex-end;
     width: 100%;
     justify-content: flex-end;
   }
-  
+
   .calendar-grid,
   .weekday-headers {
     grid-template-columns: repeat(5, 1fr);
     gap: 0.5rem;
   }
-  
+
   .calendar-cell,
   .calendar-cell-item {
     min-height: 65px;
     padding: 0.5rem 0.3rem;
   }
-  
+
   .date-number {
     font-size: 1.2rem;
   }
-  
+
   .day-name {
     font-size: 0.65rem;
   }
@@ -1860,47 +1885,47 @@ export default {
     padding: 1rem;
     margin: 0 -0.5rem;
   }
-  
+
   .calendar-header {
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
   }
-  
+
   .calendar-header h2 {
     font-size: 1.25rem;
     text-align: center;
   }
-  
+
   .calendar-controls {
     justify-content: space-between;
     align-items: center;
     width: 100%;
   }
-  
+
   .calendar-controls input {
     min-width: 120px;
     padding: 0.4rem 0.6rem;
     font-size: 0.85rem;
   }
-  
+
   .month-label {
     font-size: 0.9rem;
   }
-  
+
   /* Make calendar horizontally scrollable on mobile */
   .calendar-wrapper {
     overflow-x: auto;
     padding-bottom: 0.5rem;
   }
-  
+
   .weekday-headers,
   .calendar-grid {
     grid-template-columns: repeat(7, minmax(80px, 1fr));
     min-width: 560px; /* 7 * 80px */
     gap: 0.4rem;
   }
-  
+
   .calendar-cell,
   .calendar-cell-item {
     min-height: 75px;
@@ -1908,27 +1933,27 @@ export default {
     border-radius: 8px;
     min-width: 75px;
   }
-  
+
   .date-number {
     font-size: 1.1rem;
     margin-bottom: 0.15rem;
   }
-  
+
   .day-name {
     font-size: 0.6rem;
   }
-  
+
   .weekday-header {
     padding: 0.6rem 0.3rem;
     font-size: 0.75rem;
     min-width: 75px;
   }
-  
+
   .date-full-name {
     display: block;
     font-size: 0.65rem;
   }
-  
+
   .date-content {
     display: none;
   }
@@ -1940,38 +1965,38 @@ export default {
     margin: 0 -0.75rem;
     border-radius: 12px;
   }
-  
+
   .calendar-header {
     gap: 0.75rem;
   }
-  
+
   .calendar-header h2 {
     font-size: 1.1rem;
   }
-  
+
   .calendar-controls {
     flex-direction: column;
     align-items: stretch;
     gap: 0.5rem;
   }
-  
+
   .calendar-controls input {
     width: 100%;
     min-width: unset;
   }
-  
+
   .month-label {
     text-align: center;
     font-size: 0.85rem;
   }
-  
+
   .weekday-headers,
   .calendar-grid {
     grid-template-columns: repeat(7, minmax(75px, 1fr));
     min-width: 525px; /* 7 * 75px */
     gap: 0.3rem;
   }
-  
+
   .calendar-cell,
   .calendar-cell-item {
     min-height: 70px;
@@ -1979,25 +2004,25 @@ export default {
     border-radius: 6px;
     min-width: 70px;
   }
-  
+
   .date-full-name {
     font-size: 0.6rem;
     padding: 0.2rem;
   }
-  
+
   .weekday-header {
     padding: 0.5rem 0.2rem;
     font-size: 0.7rem;
     min-width: 70px;
   }
-  
+
   .meeting-badge,
   .task-badge {
     font-size: 0.55rem;
     padding: 0.15rem 0.3rem;
     min-width: 20px;
   }
-  
+
   .badge i {
     font-size: 0.45rem;
   }
@@ -2008,36 +2033,36 @@ export default {
     padding: 0.5rem;
     margin: 0 -1rem;
   }
-  
+
   .calendar-header h2 {
     font-size: 1rem;
   }
-  
+
   .weekday-headers,
   .calendar-grid {
     grid-template-columns: repeat(7, minmax(65px, 1fr));
     min-width: 455px; /* 7 * 65px */
     gap: 0.25rem;
   }
-  
+
   .calendar-cell,
   .calendar-cell-item {
     min-height: 65px;
     padding: 0.3rem 0.15rem;
     min-width: 65px;
   }
-  
+
   .date-full-name {
     font-size: 0.55rem;
     padding: 0.15rem;
   }
-  
+
   .weekday-header {
     padding: 0.4rem 0.15rem;
     font-size: 0.65rem;
     min-width: 65px;
   }
-  
+
   .meeting-badge,
   .task-badge {
     font-size: 0.5rem;
@@ -2050,44 +2075,44 @@ export default {
   .calendar-container {
     padding: 0.4rem;
   }
-  
+
   .calendar-header h2 {
     font-size: 0.95rem;
   }
-  
+
   .weekday-headers,
   .calendar-grid {
     grid-template-columns: repeat(7, minmax(55px, 1fr));
     min-width: 385px; /* 7 * 55px */
     gap: 0.2rem;
   }
-  
+
   .calendar-cell,
   .calendar-cell-item {
     min-height: 60px;
     padding: 0.25rem 0.1rem;
     min-width: 55px;
   }
-  
+
   .date-full-name {
     font-size: 0.5rem;
     padding: 0.1rem;
     line-height: 1.2;
   }
-  
+
   .weekday-header {
     padding: 0.3rem 0.1rem;
     font-size: 0.6rem;
     min-width: 55px;
   }
-  
+
   .meeting-badge,
   .task-badge {
     font-size: 0.45rem;
     padding: 0.08rem 0.2rem;
     min-width: 16px;
   }
-  
+
   .badge i {
     font-size: 0.4rem;
   }
@@ -2098,17 +2123,17 @@ export default {
   .calendar-wrapper::-webkit-scrollbar {
     height: 4px;
   }
-  
+
   .calendar-wrapper::-webkit-scrollbar-track {
     background: var(--border-color);
     border-radius: 2px;
   }
-  
+
   .calendar-wrapper::-webkit-scrollbar-thumb {
     background: #3b82f6;
     border-radius: 2px;
   }
-  
+
   .calendar-wrapper::-webkit-scrollbar-thumb:hover {
     background: #1d4ed8;
   }
@@ -2155,16 +2180,16 @@ export default {
   .calendar-container {
     padding: 1.25rem;
   }
-  
+
   .calendar-grid {
     gap: 0.5rem;
   }
-  
+
   .calendar-cell {
     padding: 0.75rem 0.4rem;
     min-height: 70px;
   }
-  
+
   .date-number {
     font-size: 1.1rem;
   }
@@ -2176,27 +2201,27 @@ export default {
     align-items: flex-start;
     gap: 0.75rem;
   }
-  
+
   .calendar-controls {
     align-self: flex-end;
     width: 100%;
     justify-content: flex-end;
   }
-  
+
   .calendar-grid {
     grid-template-columns: repeat(5, 1fr);
     gap: 0.5rem;
   }
-  
+
   .calendar-cell {
     min-height: 65px;
     padding: 0.6rem 0.3rem;
   }
-  
+
   .date-number {
     font-size: 1rem;
   }
-  
+
   .day-name {
     font-size: 0.7rem;
   }
@@ -2207,59 +2232,59 @@ export default {
     padding: 1rem;
     margin: 0 -0.5rem;
   }
-  
+
   .calendar-header {
     flex-direction: column;
     align-items: stretch;
     gap: 1rem;
   }
-  
+
   .calendar-header h2 {
     font-size: 1.25rem;
     text-align: center;
   }
-  
+
   .calendar-controls {
     justify-content: space-between;
     align-items: center;
     width: 100%;
   }
-  
+
   .calendar-controls input {
     min-width: 120px;
     padding: 0.4rem 0.6rem;
     font-size: 0.85rem;
   }
-  
+
   .month-label {
     font-size: 0.9rem;
   }
-  
+
   .calendar-grid {
     grid-template-columns: repeat(4, 1fr);
     gap: 0.4rem;
   }
-  
+
   .calendar-cell {
     min-height: 60px;
     padding: 0.5rem 0.25rem;
     border-radius: 8px;
   }
-  
+
   .date-number {
     font-size: 0.95rem;
     margin-bottom: 0.15rem;
   }
-  
+
   .day-name {
     font-size: 0.65rem;
   }
-  
+
   .weekday-header {
     padding: 0.6rem 0.4rem;
     font-size: 0.8rem;
   }
-  
+
   .badge {
     font-size: 0.6rem;
     padding: 0.15rem 0.4rem;
@@ -2272,51 +2297,51 @@ export default {
     margin: 0 -0.75rem;
     border-radius: 12px;
   }
-  
+
   .calendar-header {
     gap: 0.75rem;
   }
-  
+
   .calendar-header h2 {
     font-size: 1.1rem;
   }
-  
+
   .calendar-controls {
     flex-direction: column;
     align-items: stretch;
     gap: 0.5rem;
   }
-  
+
   .calendar-controls input {
     width: 100%;
     min-width: unset;
   }
-  
+
   .month-label {
     text-align: center;
     font-size: 0.85rem;
   }
-  
+
   .calendar-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 0.3rem;
   }
-  
+
   .calendar-cell {
     min-height: 55px;
     padding: 0.4rem 0.2rem;
     border-radius: 6px;
   }
-  
+
   .date-number {
     font-size: 0.9rem;
     margin-bottom: 0.1rem;
   }
-  
+
   .day-name {
     font-size: 0.6rem;
   }
-  
+
   .weekday-header {
     padding: 0.5rem 0.3rem;
     font-size: 0.75rem;
@@ -2328,34 +2353,34 @@ export default {
     padding: 0.5rem;
     margin: 0 -1rem;
   }
-  
+
   .calendar-header h2 {
     font-size: 1rem;
   }
-  
+
   .calendar-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.25rem;
   }
-  
+
   .calendar-cell {
     min-height: 50px;
     padding: 0.3rem 0.15rem;
   }
-  
+
   .date-number {
     font-size: 0.85rem;
   }
-  
+
   .day-name {
     font-size: 0.55rem;
   }
-  
+
   .weekday-header {
     padding: 0.4rem 0.2rem;
     font-size: 0.7rem;
   }
-  
+
   .badge {
     font-size: 0.55rem;
     padding: 0.1rem 0.3rem;
@@ -2366,16 +2391,16 @@ export default {
   .calendar-container {
     padding: 0.4rem;
   }
-  
+
   .calendar-header h2 {
     font-size: 0.95rem;
   }
-  
+
   .calendar-grid {
     grid-template-columns: 1fr;
     gap: 0.2rem;
   }
-  
+
   .calendar-cell {
     min-height: 45px;
     padding: 0.25rem;
@@ -2385,18 +2410,18 @@ export default {
     justify-content: space-between;
     text-align: left;
   }
-  
+
   .date-number {
     font-size: 0.8rem;
     margin-bottom: 0;
     margin-right: 0.5rem;
   }
-  
+
   .day-name {
     font-size: 0.5rem;
     flex: 1;
   }
-  
+
   .weekday-header {
     display: none;
   }
@@ -2437,31 +2462,30 @@ export default {
   .profile-card {
     margin-bottom: 20px;
   }
-  
+
   .profile-bg {
     height: 100px;
   }
-  
+
   .avatar-img {
     width: 100px;
     height: 100px;
   }
-  
+
   .profile-image-container {
     margin-top: -50px;
   }
-  
+
   .profile-name h3 {
     font-size: 1.3rem;
   }
-  
+
   .detail-row {
     padding: 10px;
   }
-  
+
   .social-links {
     justify-content: center;
   }
 }
 </style>
-
