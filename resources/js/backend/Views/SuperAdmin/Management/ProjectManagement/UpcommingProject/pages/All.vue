@@ -54,16 +54,10 @@
                         :checked="isAllSelected"
                       />
                     </th>
-                     <th class="w-10">ID</th>
+                    <th class="w-10">ID</th>
                     <th>Project Group</th>
                     <th>Name</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Project Status</th>
-                    <th>project_link</th>
-                    <th>project_agrement_file</th>
-                    <th>project_document</th>
-                    <th>project_progress</th>
+
                     <th>Created At</th>
                   </tr>
                 </thead>
@@ -94,7 +88,7 @@
                               Show
                             </router-link>
                           </li>
-                          
+
                           <li>
                             <router-link
                               :to="{
@@ -184,16 +178,10 @@
                         type="checkbox"
                       />
                     </td>
-                     <td>{{ index + 1 }}</td>
+                    <td>{{ index + 1 }}</td>
                     <td>{{ item.project_group_id?.name }}</td>
                     <td>{{ item.name }}</td>
-                    <td>{{ item.start_date }}</td>
-                    <td>{{ item.end_date }}</td>
-                    <td>{{ item.project_status }}</td>
-                    <td>{{ item.project_link }}</td>
-                    <td>{{ item.project_agrement_file }}</td>
-                    <td>{{ item.project_document }}</td>
-                    <td>{{ item.project_progress }}</td>
+
                     <td>{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
@@ -449,9 +437,22 @@
               </select>
             </label>
           </div>
-           <div class="filter_item d-flex justify-content-between align-items-center">
-            <button @click.prevent="get_all()" type="button" class="btn btn-sm btn-outline-info">Submit</button>
-            <button class="btn btn-outline-danger btn-sm" @click="reset_filters">Reset</button>
+          <div
+            class="filter_item d-flex justify-content-between align-items-center"
+          >
+            <button
+              @click.prevent="get_all()"
+              type="button"
+              class="btn btn-sm btn-outline-info"
+            >
+              Submit
+            </button>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              @click="reset_filters"
+            >
+              Reset
+            </button>
           </div>
         </div>
       </div>

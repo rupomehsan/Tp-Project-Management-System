@@ -114,21 +114,22 @@
                     </td>
                     <td
                       :class="{
-                        'text-success': getLateStatus(item.check_in) === 'On Time',
-                        'text-warning': getLateStatus(item.check_in) === 'Late',
-                        'text-danger': getLateStatus(item.check_in) === 'Very Late',
+                        'text-success': item.attendance_status !== 'Absent' && getLateStatus(item.check_in) === 'On Time',
+                        'text-warning': item.attendance_status !== 'Absent' && getLateStatus(item.check_in) === 'Late',
+                        'text-danger': item.attendance_status !== 'Absent' && getLateStatus(item.check_in) === 'Very Late',
                       }"
                     >
-                      {{ getLateStatus(item.check_in) }}
+                      {{ item.attendance_status === 'Absent' ? 'N/A' : getLateStatus(item.check_in) }}
                     </td>
                     <td
                       :class="{
-                        'text-success': getLateMinutes(item.check_in) === 0,
-                        'text-warning': getLateMinutes(item.check_in) > 0 && getLateMinutes(item.check_in) < 105,
-                        'text-danger': getLateMinutes(item.check_in) >= 105,
+                        'text-success': item.attendance_status !== 'Absent' && getLateMinutes(item.check_in) === 0,
+                        'text-warning': item.attendance_status !== 'Absent' && getLateMinutes(item.check_in) > 0 && getLateMinutes(item.check_in) < 105,
+                        'text-danger': item.attendance_status !== 'Absent' && getLateMinutes(item.check_in) >= 105,
                       }"
                     >
-                      {{ formatLateMinutes(item.check_in) }}
+                  
+                      {{ item.attendance_status === 'Absent' ? 'N/A' : formatLateMinutes(item.check_in) }}
                     </td>
                     <td>{{ item.attendance_status }}</td>
 

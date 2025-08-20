@@ -16,11 +16,10 @@
           </small>
         </div>
       </div>
-      
+
       <!-- Middle Section - Working Hours Counter -->
       <div class="toolbar-middle">
-        <div class="working-hours-counter" 
-             :title="workingHoursTooltip">
+        <div class="working-hours-counter" :title="workingHoursTooltip">
           <div class="hours-display">
             <i class="fa fa-clock-o"></i>
             <div class="hours-content">
@@ -29,9 +28,7 @@
                 <span class="hours-value">{{ todayWorkingHours }}</span>
               </div>
               <div class="hours-breakdown" v-if="todayCompletedTasks > 0">
-                <small class="text-muted">
-                  {{ todayCompletedTasks }} task{{ todayCompletedTasks !== 1 ? 's' : '' }} completed
-                </small>
+                <small class="text-muted"> {{ todayCompletedTasks }} task{{ todayCompletedTasks !== 1 ? "s" : "" }} completed </small>
               </div>
               <div class="hours-breakdown" v-else>
                 <small class="text-muted">No completed tasks today</small>
@@ -40,7 +37,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="toolbar-right">
         <!-- Mobile Action Toggle -->
         <button class="btn-icon mobile-actions-toggle d-md-none" @click="toggleMobileActions">
@@ -52,12 +49,12 @@
           <!-- Clear Filters Button -->
           <button
             v-if="searchQuery || startDateFilter || endDateFilter || projectStatusFilter || devStatusFilter || priorityFilter"
-            class="btn btn-outline-secondary btn-clear-filters"
+            class="btn btn-outline-secondary btn-refresh"
             @click="clearAllFilters"
             title="Clear all filters"
           >
             <i class="fa fa-times"></i>
-            <span class="btn-text">Clear</span>
+            <span class="btn-text text-warning">Clear Filters</span>
           </button>
 
           <button class="btn btn-outline-info btn-refresh" @click="refreshComponent" title="Refresh Tasks and Groups">
@@ -66,7 +63,7 @@
           </button>
 
           <button class="btn btn-success btn-add-group" @click="showAddTaskGroupModal" title="Add New Task Group">
-            <i class="fa fa-layer-group"></i>
+            <i class="fa fa-plus"></i>
             <span class="btn-text d-none d-lg-inline">Add Group</span>
             <span class="btn-text d-lg-none">Group</span>
           </button>
@@ -118,165 +115,159 @@
     <div class="table-container p-2">
       <!-- Sheet Tabs -->
       <div class="sheet-tabs mb-3">
-        <!-- Mobile Filter Toggle -->
-        <div class="mobile-filter-toggle d-md-none mb-3">
-          <button class="btn btn-outline-primary w-100" @click="toggleMobileFilters">
-            <i class="fa fa-filter"></i>
-            Filters & Search
-            <i class="fa fa-chevron-down" :class="{ 'rotate-180': isMobileFiltersOpen }"></i>
-          </button>
-        </div>
+        <div class="container-fluid">
+          <div class="row align-items-end" id="filter-bar">
 
-        <div class="tab-controls" :class="{ 'mobile-filters-open': isMobileFiltersOpen }">
-          <!-- Project and Search Container -->
-          <div class="project-search-container">
-            <!-- Project Dropdown with Label -->
-            <div class="project-dropdown-section">
-              <label class="project-label">
-                <i class="fa fa-folder"></i>
-                <span class="d-none d-sm-inline">Project</span>
-              </label>
-              <select class="form-control project-dropdown" v-model="selectedProject" @change="onProjectChange" @click.stop title="Select a project">
-                <option value="">Select Project</option>
-                <option v-for="project in projects.data || projects" :key="project.id" :value="project">
-                  {{ project.name }}
-                </option>
-              </select>
-            </div>
+            <!-- Project and Search -->
+            <div class="col-md-4" id="project-and-search-section">
+              <div class="row">
+                <!-- Project Dropdown -->
+                <div class="col-sm-6 mb-2" id="project-dropdown">
+                  <div class="icon-label" id="project-label">
+                    <i class="fa fa-folder text-primary"></i> PROJECT
+                  </div>
+                  <select 
+                    v-model="selectedProject" 
+                    @change="onProjectChange"
+                    @click.stop
+                    id="project-select" 
+                    class="form-control mt-1"
+                    title="Select a project"
+                  >
+                    <option value="">Select Project</option>
+                    <option v-for="project in projects.data || projects" :key="project.id" :value="project">
+                      {{ project.name }}
+                    </option>
+                  </select>
+                </div>
 
-            <!-- Search Input -->
-            <div class="search-section">
-              <label class="search-label">
-                <i class="fa fa-search"></i>
-                <span class="d-none d-sm-inline">Search</span>
-              </label>
-              <div class="search-input-wrapper">
-                <input
-                  type="text"
-                  class="form-control search-input"
-                  v-model="searchQuery"
-                  @input="filterTasks"
-                  @focus="onSearchFocus"
-                  @blur="onSearchBlur"
-                  placeholder="Search tasks..."
-                  title="Search by task title, description, or status"
-                />
-                <div class="search-actions">
-                  <button v-if="searchQuery" class="search-clear-btn" @click="clearSearch" title="Clear search">
-                    <i class="fa fa-times"></i>
-                  </button>
-                  <div class="search-divider" v-if="searchQuery"></div>
-                  <i class="fa fa-search search-icon"></i>
+                <!-- Search -->
+                <div class="col-sm-6 mb-2" id="search-field">
+                  <div class="icon-label" id="search-label">
+                    <i class="fa fa-search text-success"></i> SEARCH
+                  </div>
+                  <div id="search-box" class="mt-1 position-relative">
+                    <input
+                      v-model="searchQuery"
+                      @input="filterTasks"
+                      @focus="onSearchFocus"
+                      @blur="onSearchBlur"
+                      type="text"
+                      id="task-search-input"
+                      class="form-control"
+                      placeholder="Search tasks..."
+                      title="Search by task title, description, or status"
+                    />
+                    <div class="search-actions position-absolute" style="right: 8px; top: 50%; transform: translateY(-50%);">
+                      <button v-if="searchQuery" class="btn btn-sm btn-link p-0" @click="clearSearch" title="Clear search">
+                        <i class="fa fa-times"></i>
+                      </button>
+                      <i v-else class="fa fa-search text-muted" id="search-icon"></i>
+                    </div>
+                  </div>
+                  <div v-if="searchResultsCount !== null" class="text-muted small mt-1">
+                    {{ searchResultsCount }} result{{ searchResultsCount !== 1 ? "s" : "" }} found
+                  </div>
                 </div>
               </div>
-              <div v-if="searchResultsCount !== null" class="search-results-info">
-                {{ searchResultsCount }} result{{ searchResultsCount !== 1 ? "s" : "" }} found
+            </div>
+
+            <!-- Date Range -->
+            <div class="col-md-3 mb-2" id="date-range-section">
+              <div class="row">
+                <div class="col-6" id="from-date">
+                  <div class="icon-label">
+                    <i class="fa fa-calendar text-info"></i> FROM
+                  </div>
+                  <input 
+                    v-model="startDateFilter" 
+                    @change="filterTasks"
+                    type="date" 
+                    class="form-control mt-1" 
+                    id="from-date-input"
+                    title="Filter by start date" 
+                  />
+                </div>
+                <div class="col-6" id="to-date">
+                  <div class="icon-label">
+                    <i class="fa fa-calendar text-info"></i> TO
+                  </div>
+                  <input 
+                    v-model="endDateFilter" 
+                    @change="filterTasks"
+                    type="date" 
+                    class="form-control mt-1" 
+                    id="to-date-input"
+                    title="Filter by end date" 
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Date Filters Container -->
-          <div class="date-filters-container">
-            <div class="date-filter-group">
-              <label class="date-label">
-                <i class="fa fa-calendar"></i>
-                <span class="d-none d-sm-inline">From</span>
-              </label>
-              <input type="date" class="form-control date-picker" v-model="startDateFilter" @change="filterTasks" title="Filter by start date" />
-            </div>
-            <div class="date-filter-group">
-              <label class="date-label">
-                <i class="fa fa-calendar"></i>
-                <span class="d-none d-sm-inline">To</span>
-              </label>
-              <input type="date" class="form-control date-picker" v-model="endDateFilter" @change="filterTasks" title="Filter by end date" />
-            </div>
-          </div>
-
-          <!-- Filter Controls -->
-          <div class="filter-controls">
-            <div class="filters-container">
-              <div class="filter-group">
-                <label class="filter-label">
-                  <i class="fa fa-flag"></i>
-                  <span class="d-none d-lg-inline">Project Status</span>
-                  <span class="d-lg-none">Status</span>
-                </label>
-                <select class="form-control filter-select" v-model="projectStatusFilter" @change="filterTasks" title="Filter by project status">
-                  <option value="">All</option>
-                  <option value="active">🟢 Active</option>
-                  <option value="pending">🟡 Pending</option>
-                  <option value="completed">✅ Completed</option>
-                  <option value="on_hold">⏸️ On Hold</option>
-                  <option value="cancelled">❌ Cancelled</option>
-                </select>
-              </div>
-
-              <div class="filter-group">
-                <label class="filter-label">
-                  <i class="fa fa-code"></i>
-                  <span class="d-none d-lg-inline">Dev Status</span>
-                  <span class="d-lg-none">Dev</span>
-                </label>
-                <select class="form-control filter-select" v-model="devStatusFilter" @change="filterTasks" title="Filter by development status">
-                  <option value="">All</option>
-                  <option value="Pending">📝 Pending</option>
-                  <option value="In Progress">⚡ In Progress</option>
-                  <option value="Completed">✅ Completed</option>
-                  <option value="Not Completed">❌ Not Completed</option>
-                </select>
-              </div>
-
-              <div class="filter-group">
-                <label class="filter-label">
-                  <i class="fa fa-exclamation-triangle"></i>
-                  <span class="d-none d-sm-inline">Priority</span>
-                </label>
-                <select class="form-control filter-select" v-model="priorityFilter" @change="filterTasks" title="Filter by priority">
-                  <option value="">All</option>
-                  <option value="low">⚫ Low</option>
-                  <option value="normal">🟢 Normal</option>
-                  <option value="high">🟡 High</option>
-                  <option value="urgent">🔴 Urgent</option>
-                </select>
+            <!-- Status and Priority -->
+            <div class="col-md-5 mb-2" id="status-priority-section">
+              <div class="row">
+                <div class="col-md-4" id="project-status">
+                  <div class="icon-label">
+                    <i class="fa fa-flag text-warning"></i> TASK STATUS
+                  </div>
+                  <select 
+                    v-model="projectStatusFilter" 
+                    @change="filterTasks"
+                    class="form-control mt-1" 
+                    id="project-status-select"
+                    title="Filter by task status"
+                  >
+                 
+                    <option value="">All</option>
+                    <option value="Pending">� Pending</option>
+                    <option value="In Progress">⚡ In Progress</option>
+                    <option value="Completed">✅ Completed</option>
+                    <option value="Not Completed">❌ Not Completed</option>
+                  </select>
+                </div>
+                <div class="col-md-4" id="dev-status">
+                  <div class="icon-label">
+                    <i class="fa fa-code text-orange"></i> DEV STATUS
+                  </div>
+                  <select 
+                    v-model="devStatusFilter" 
+                    @change="filterTasks"
+                    class="form-control mt-1" 
+                    id="dev-status-select"
+                    title="Filter by development status"
+                  >
+                    <option value="">All</option>
+                    <option value="Pending">📝 Pending</option>
+                    <option value="In Progress">⚡ In Progress</option>
+                    <option value="Completed">✅ Completed</option>
+                    <option value="Not Completed">❌ Not Completed</option>
+                  </select>
+                </div>
+                <div class="col-md-4" id="priority-status">
+                  <div class="icon-label">
+                    <i class="fa fa-exclamation-triangle text-warning"></i> PRIORITY
+                  </div>
+                  <select 
+                    v-model="priorityFilter" 
+                    @change="filterTasks"
+                    class="form-control mt-1" 
+                    id="priority-select"
+                    title="Filter by priority"
+                  >
+                    <option value="">All</option>
+                    <option value="low">⚫ Low</option>
+                    <option value="normal">🟢 Normal</option>
+                    <option value="high">🟡 High</option>
+                    <option value="urgent">🔴 Urgent</option>
+                  </select>
+                </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
-
-      <!-- Debug info for group ordering -->
-      <!-- <div
-        v-if="groupedTasks.length > 1"
-        class="debug-info mb-2 p-2 bg-light border rounded"
-      >
-        <small class="text-muted">
-          <strong>Debug:</strong>
-          Groups:
-          {{ groupedTasks.map((g) => `${g.name}(${g.id})`).join(" → ") }} |
-          Custom Order:
-          {{
-            customGroupOrder.length > 0 ? customGroupOrder.join(" → ") : "None"
-          }}
-          | Length: {{ groupedTasks.length }}
-        </small>
-        <div class="mt-2">
-          <button
-            @click="testGroupReorder"
-            class="btn btn-sm btn-outline-primary me-2"
-            title="Test moving first group to second position"
-          >
-            Test Reorder
-          </button>
-          <button
-            @click="resetGroupOrder"
-            class="btn btn-sm btn-outline-warning"
-            title="Reset group order to default alphabetical"
-          >
-            Reset Order
-          </button>
-        </div>
-      </div> -->
 
       <!-- Sorting indicator -->
       <div v-if="sortField" class="sort-indicator mb-2 p-2 bg-info text-white border rounded d-flex align-items-center justify-content-between">
@@ -299,7 +290,12 @@
                 <span class="d-md-none">Task</span>
                 <i class="fa ms-1" :class="getSortIcon('title')"></i>
               </th>
-              <th class="sortable-header d-none d-lg-table-cell" @click="sortBy('priority')" :class="{ sorted: isSorted('priority') }" title="Click to sort by Priority">
+              <th
+                class="sortable-header d-none d-lg-table-cell"
+                @click="sortBy('priority')"
+                :class="{ sorted: isSorted('priority') }"
+                title="Click to sort by Priority"
+              >
                 Priority
                 <i class="fa ms-1" :class="getSortIcon('priority')"></i>
               </th>
@@ -332,7 +328,12 @@
                 <i class="fa ms-1" :class="getSortIcon('start_date')"></i>
               </th>
 
-              <th class="sortable-header d-none d-lg-table-cell" @click="sortBy('end_date')" :class="{ sorted: isSorted('end_date') }" title="Click to sort by End Date">
+              <th
+                class="sortable-header d-none d-lg-table-cell"
+                @click="sortBy('end_date')"
+                :class="{ sorted: isSorted('end_date') }"
+                title="Click to sort by End Date"
+              >
                 End Date
                 <i class="fa ms-1" :class="getSortIcon('end_date')"></i>
               </th>
@@ -438,9 +439,13 @@
                           <!-- Show priority on mobile inline with title -->
                           <div class="d-lg-none mobile-priority">
                             <span v-if="task.priority === 'low'" class="priority-badge priority-low"> <i class="fa fa-circle"></i> Low </span>
-                            <span v-else-if="task.priority === 'normal'" class="priority-badge priority-normal"> <i class="fa fa-circle"></i> Normal </span>
+                            <span v-else-if="task.priority === 'normal'" class="priority-badge priority-normal">
+                              <i class="fa fa-circle"></i> Normal
+                            </span>
                             <span v-else-if="task.priority === 'high'" class="priority-badge priority-high"> <i class="fa fa-circle"></i> High </span>
-                            <span v-else-if="task.priority === 'urgent'" class="priority-badge priority-urgent"> <i class="fa fa-circle"></i> Urgent </span>
+                            <span v-else-if="task.priority === 'urgent'" class="priority-badge priority-urgent">
+                              <i class="fa fa-circle"></i> Urgent
+                            </span>
                             <span v-else class="priority-badge">{{ task.priority }}</span>
                           </div>
                           <div v-if="isTaskAssigned(task)" class="assignment-info" :title="getAssignmentTooltip(task)">
@@ -507,33 +512,22 @@
                       <span v-else class="status-badge">{{ task.task_user_status }}</span>
                     </span>
                   </td>
-                  
+
                   <!-- Task Status -->
                   <td class="d-none d-md-table-cell">
-                    <span class="status-badge"
+                    <span
+                      class="status-badge"
                       :class="{
                         'status-pending': task.task_status === 'Pending',
                         'status-progress': task.task_status === 'In Progress',
                         'status-completed': task.task_status === 'Completed',
-                        'status-not-completed': task.task_status === 'Not Completed'
+                        'status-not-completed': task.task_status === 'Not Completed',
                       }"
                     >
-                      <i
-                        v-if="task.task_status === 'Pending'"
-                        class="fa fa-clock-o"
-                      ></i>
-                      <i
-                        v-else-if="task.task_status === 'In Progress'"
-                        class="fa fa-spinner"
-                      ></i>
-                      <i
-                        v-else-if="task.task_status === 'Completed'"
-                        class="fa fa-check-circle"
-                      ></i>
-                      <i
-                        v-else-if="task.task_status === 'Not Completed'"
-                        class="fa fa-times-circle"
-                      ></i>
+                      <i v-if="task.task_status === 'Pending'" class="fa fa-clock-o"></i>
+                      <i v-else-if="task.task_status === 'In Progress'" class="fa fa-spinner"></i>
+                      <i v-else-if="task.task_status === 'Completed'" class="fa fa-check-circle"></i>
+                      <i v-else-if="task.task_status === 'Not Completed'" class="fa fa-times-circle"></i>
                       {{ task.task_status || task.task_user_status }}
                     </span>
                   </td>
@@ -591,11 +585,7 @@
 
                       <!-- Mobile quick actions (visible on small screens) -->
                       <div class="mobile-quick-actions d-md-none">
-                        <button
-                          class="btn btn-sm btn-outline-info me-1"
-                          @click="openDescriptionModal(task)"
-                          title="Description"
-                        >
+                        <button class="btn btn-sm btn-outline-info me-1" @click="openDescriptionModal(task)" title="Description">
                           <i class="fa fa-file-text"></i>
                         </button>
                       </div>
@@ -653,11 +643,7 @@
                             :class="{
                               disabled: !canRemoveTask(task),
                             }"
-                            :title="
-                              !canRemoveTask(task)
-                                ? getDeleteDisabledTooltip(task)
-                                : 'Delete task'
-                            "
+                            :title="!canRemoveTask(task) ? getDeleteDisabledTooltip(task) : 'Delete task'"
                           >
                             <i class="fa fa-trash"></i>
                             <span>Delete</span>
@@ -917,7 +903,6 @@
                         <span class="review-date">{{ formatReviewDate(review.created_at) }}</span>
                       </div>
                     </div>
-                   
                   </div>
 
                   <div class="review-text">
@@ -2217,7 +2202,7 @@ export default {
         } else {
           reason = `Cannot delete task. Only tasks with "Pending" status can be deleted.`;
         }
-        
+
         window.s_warning(reason);
         return;
       }
@@ -2270,7 +2255,7 @@ export default {
       return group ? group.name : "";
     },
 
-    // Calculate actual time between start and end dates
+    // Calculate time difference between start and end dates
     FindActualTime(startDate, endDate) {
       if (!startDate || !endDate) {
         return "Not set";
@@ -2285,13 +2270,13 @@ export default {
           return "Invalid date";
         }
 
-        // Calculate difference in milliseconds
-        const diffMs = end.getTime() - start.getTime();
-
         // If end date is before start date
-        if (diffMs < 0) {
+        if (end.getTime() < start.getTime()) {
           return "Invalid range";
         }
+
+        // Calculate difference in milliseconds
+        const diffMs = end.getTime() - start.getTime();
 
         // Convert to different units
         const diffMinutes = Math.floor(diffMs / (1000 * 60));
@@ -2302,6 +2287,10 @@ export default {
         if (diffDays > 0) {
           const remainingHours = diffHours % 24;
           if (remainingHours > 0) {
+            const remainingMinutes = diffMinutes % 60;
+            if (remainingMinutes > 0) {
+              return `${diffDays}d ${remainingHours}h ${remainingMinutes}m`;
+            }
             return `${diffDays}d ${remainingHours}h`;
           }
           return `${diffDays} day${diffDays > 1 ? "s" : ""}`;
@@ -2312,12 +2301,12 @@ export default {
           }
           return `${diffHours} hour${diffHours > 1 ? "s" : ""}`;
         } else if (diffMinutes > 0) {
-          return `${diffMinutes} min${diffMinutes > 1 ? "s" : ""}`;
+          return `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""}`;
         } else {
           return "0 minutes";
         }
       } catch (error) {
-        console.error("Error calculating actual time:", error);
+        console.error("Error calculating time difference:", error);
         return "Error";
       }
     },
@@ -2358,12 +2347,12 @@ export default {
       if (task.task_status && task.task_status !== "Pending") {
         return false;
       }
-      
+
       // Prevent deletion if task_user_status (dev status) is Completed or Not Completed
       if (task.task_user_status === "Completed" || task.task_user_status === "Not Completed") {
         return false;
       }
-      
+
       // Allow deletion only for Pending tasks
       return true;
     },
@@ -3270,7 +3259,7 @@ export default {
       if (this.projectStatusFilter) {
         tasks = tasks.filter((task) => {
           // Assuming project status is available in task.project.status or similar
-          return task.project_status === this.projectStatusFilter || (task.project && task.project.status === this.projectStatusFilter);
+          return task.task_status === this.projectStatusFilter || (task.task_status && task.task_status === this.projectStatusFilter);
         });
       }
 
@@ -3513,7 +3502,7 @@ export default {
     // Calculate today's working hours from completed tasks
     todayWorkingHours() {
       const totalMinutes = this.todayWorkingMinutes;
-      
+
       if (totalMinutes === 0) {
         return "0h 0m";
       }
@@ -3535,11 +3524,11 @@ export default {
       const todayTasks = this.todayCompletedTasksList;
       let totalMinutes = 0;
 
-      todayTasks.forEach(task => {
+      todayTasks.forEach((task) => {
         if (task.start_date && task.end_date) {
           const startDate = new Date(task.start_date);
           const endDate = new Date(task.end_date);
-          
+
           // Only count if dates are valid and end is after start
           if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) && endDate > startDate) {
             const diffMs = endDate.getTime() - startDate.getTime();
@@ -3560,21 +3549,21 @@ export default {
     // Get list of tasks completed today
     todayCompletedTasksList() {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0]; // YYYY-MM-DD format
-      
+      const todayStr = today.toISOString().split("T")[0]; // YYYY-MM-DD format
+
       const allTasks = this.filteredTasks || this.all?.data || [];
-      
-      return allTasks.filter(task => {
+
+      return allTasks.filter((task) => {
         // Check if task is completed
-        if (task.task_user_status !== 'Completed') {
+        if (task.task_user_status !== "Completed") {
           return false;
         }
 
         // Check if task was completed today or has today's date range
         if (task.end_date) {
           const taskEndDate = new Date(task.end_date);
-          const taskEndDateStr = taskEndDate.toISOString().split('T')[0];
-          
+          const taskEndDateStr = taskEndDate.toISOString().split("T")[0];
+
           // Include tasks that end today
           if (taskEndDateStr === todayStr) {
             return true;
@@ -3584,9 +3573,9 @@ export default {
         // Also check if task was updated today (if updated_at field exists)
         if (task.updated_at) {
           const updatedDate = new Date(task.updated_at);
-          const updatedDateStr = updatedDate.toISOString().split('T')[0];
-          
-          if (updatedDateStr === todayStr && task.task_user_status === 'Completed') {
+          const updatedDateStr = updatedDate.toISOString().split("T")[0];
+
+          if (updatedDateStr === todayStr && task.task_user_status === "Completed") {
             return true;
           }
         }
@@ -3598,15 +3587,16 @@ export default {
     // Generate tooltip text for working hours counter
     workingHoursTooltip() {
       const tasks = this.todayCompletedTasksList;
-      
+
       if (tasks.length === 0) {
         return "No tasks completed today";
       }
 
       let tooltip = `Today's completed tasks (${tasks.length}):\n\n`;
-      
+
       tasks.forEach((task, index) => {
-        if (index < 5) { // Show only first 5 tasks in tooltip
+        if (index < 5) {
+          // Show only first 5 tasks in tooltip
           const duration = this.getTaskDuration(task);
           tooltip += `• ${task.title} (${duration})\n`;
         }
@@ -3617,7 +3607,7 @@ export default {
       }
 
       tooltip += `\n\nTotal working time: ${this.todayWorkingHours}`;
-      
+
       return tooltip;
     },
 

@@ -37,17 +37,57 @@ class StoreData
                 $requestData['user_id'] = auth()->id();
                 $requestData['date'] = date('Y-m-d');
 
-                $currentTime = strtotime(date('H:i'));
-                $checkInDeadline = strtotime('09:15');
+                // Adjust server time by subtracting 6 hours to get local time
+                $adjustedTimestamp = time() - (6 * 60 * 60); // Subtract 6 hours
+                $currentTime = date('H:i:s', $adjustedTimestamp);
+                $currentHour = (int)date('H', $adjustedTimestamp);
+                $currentMinute = (int)date('i', $adjustedTimestamp);
+                
+                // Calculate total minutes from midnight
+                $currentTotalMinutes = ($currentHour * 60) + $currentMinute;
+                $deadlineMinutes = (9 * 60) + 15; // 09:15 = 555 minutes from midnight
 
-                if ($currentTime > $checkInDeadline) {
+                // Debug: Log the times for troubleshooting
+                \Illuminate\Support\Facades\Log::info('Attendance Check-in Times:', [
+                    'server_time' => date('H:i:s'),
+                    'adjusted_time' => $currentTime,
+                    'adjusted_time_12hr' => date('h:i:s A', $adjustedTimestamp),
+                    'deadline_time' => '09:15:00',
+                    'current_total_minutes' => $currentTotalMinutes,
+                    'deadline_minutes' => $deadlineMinutes,
+                    'user_id' => auth()->id()
+                ]);
+
+                if ($currentTotalMinutes > $deadlineMinutes) {
                     $requestData['attendance_status'] = 'Present';
                     $requestData['is_late'] = true;
-                    $requestData['late_minutes'] = ceil(($currentTime - $checkInDeadline) / 60); // Calculate minutes late
+                    
+                    // Calculate late minutes: current minutes - deadline minutes
+                    $lateMinutes = $currentTotalMinutes - $deadlineMinutes;
+                    $requestData['late_minutes'] = $lateMinutes;
+                    
+                    // Debug: Log the calculation
+                    \Illuminate\Support\Facades\Log::info('Late Minutes Calculation:', [
+                        'server_time' => date('H:i:s'),
+                        'adjusted_time' => $currentTime,
+                        'adjusted_time_12hr' => date('h:i:s A', $adjustedTimestamp),
+                        'deadline_time' => '09:15:00',
+                        'current_total_minutes' => $currentTotalMinutes,
+                        'deadline_minutes' => $deadlineMinutes,
+                        'late_minutes_calculated' => $lateMinutes,
+                        'final_late_minutes' => $requestData['late_minutes']
+                    ]);
                 } else {
                     $requestData['attendance_status'] = 'Present';
                     $requestData['is_late'] = false;
                     $requestData['late_minutes'] = 0;
+                    
+                    \Illuminate\Support\Facades\Log::info('On Time Check-in:', [
+                        'server_time' => date('H:i:s'),
+                        'adjusted_time' => $currentTime,
+                        'adjusted_time_12hr' => date('h:i:s A', $adjustedTimestamp),
+                        'user_id' => auth()->id()
+                    ]);
                 }
             } else {
                 // For admin users, ensure date is set

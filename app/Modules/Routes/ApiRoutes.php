@@ -82,3 +82,5 @@ include_once base_path("app/Modules/Management/SystemLossManagement/SystemLossCa
 include_once base_path("app/Modules/Management/SystemLossManagement/SystemLoss/Routes/Route.php");
 include_once base_path("app/Modules/Management/Notification/Routes/Route.php");
 include_once base_path("app/Modules/Management/Message/Routes/Route.php");
+include_once base_path("app/Modules/Management/ProjectManagement/ProjectPlan/Routes/Route.php");
+include_once base_path("app/Modules/Management/ProjectManagement/ProjectModule/Routes/Route.php");

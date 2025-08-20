@@ -31,6 +31,26 @@ class GetEmployeeDashboardData
                 ->where('is_late',  true)
                 ->sum('late_minutes');
 
+
+            // Sum of total working hours by calculating the difference between check-in and check-out times (in seconds)
+            $total_working_seconds = Attendance::where('user_id', $userId)
+                ->whereNotNull('check_in')
+                ->whereNotNull('check_out')
+                ->select(DB::raw('SUM(TIMESTAMPDIFF(SECOND, check_in, check_out)) as total_seconds'))
+                ->value('total_seconds');
+
+            // Convert total seconds to hours (with 2 decimal places)
+            // Convert total seconds to hours and minutes
+            $total_working_hours = '';
+            if ($total_working_seconds) {
+                $hours = floor($total_working_seconds / 3600);
+                $minutes = floor(($total_working_seconds % 3600) / 60);
+                $total_working_hours = sprintf('%dh %dm', $hours, $minutes);
+            } else {
+                $total_working_hours = '0h 0m';
+            }
+
+
             // Get attendance stats in a single query
             $attendanceStats = Attendance::where('user_id', $userId)
                 ->selectRaw('
@@ -71,6 +91,8 @@ class GetEmployeeDashboardData
                 'total_in_progress_tasks' => $taskStats->in_progress_tasks ?? 0,
                 'user_rating' => $rating,
                 'rating_breakdown' => $ratingBreakdown,
+                'total_working_hours' => $total_working_hours,
+                'total_late_minutes' => $total_late_minutes,
             ];
 
             return entityResponse($data);

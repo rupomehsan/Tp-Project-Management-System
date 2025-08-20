@@ -38,7 +38,7 @@
                     v-model="form_fields.check_in"
                     :min="todayStart"
                     :max="todayEnd"
-                    :disabled="param_id"
+                  
                     placeholder="Select check-in time"
                   />
                   <div class="time-display">

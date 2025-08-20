@@ -14,61 +14,35 @@
             <span v-else class="all-filter-badge"> - All Projects </span>
             <span v-if="selectedDevStatus" class="dev-status-filter-badge"> | Dev: {{ selectedDevStatus }} </span>
             <span v-if="selectedTaskStatus" class="task-status-filter-badge"> | Status: {{ selectedTaskStatus }} </span>
+            <span v-if="searchQuery" class="search-filter-badge"> | Search: "{{ searchQuery }}" </span>
           </h2>
           <small v-if="filteredTaskCount !== undefined" class="task-count-info">
             Showing {{ filteredTaskCount }} task{{ filteredTaskCount !== 1 ? "s" : "" }}
-            <span v-if="selectedProject || selectedUser || selectedDevStatus || selectedTaskStatus || filterStartDate || filterEndDate" class="filter-active-indicator">
+            <span
+              v-if="selectedProject || selectedUser || selectedDevStatus || selectedTaskStatus || filterStartDate || filterEndDate || searchQuery"
+              class="filter-active-indicator"
+            >
               (filtered)
             </span>
           </small>
         </div>
       </div>
       <div class="toolbar-right">
-        <div class="date-controls-row">
-          <div class="date-filter-group">
-            <input
-              type="date"
-              class="form-control date-picker"
-              v-model="filterStartDate"
-              @change="filterTasksByDateRange"
-              :title="filterStartDate ? `Filtering tasks from ${formatDate(filterStartDate)}` : 'Select start date to filter tasks'"
-              placeholder="Start Date"
-            />
-          </div>
-          <div class="date-filter-group">
-            <input
-              type="date"
-              class="form-control date-picker"
-              v-model="filterEndDate"
-              @change="filterTasksByDateRange"
-              :min="filterStartDate"
-              :title="filterEndDate ? `Filtering tasks until ${formatDate(filterEndDate)}` : 'Select end date to filter tasks'"
-              placeholder="End Date"
-            />
-          </div>
-          <button
-            v-if="filterStartDate || filterEndDate"
-            class="btn btn-outline-secondary border btn-clear-date"
-            @click="clearDateFilters"
-            title="Clear date filters"
-          >
-            <i class="fa fa-times"></i>
-          </button>
-        </div>
         <div class="action-buttons-row">
-          <button class="btn btn-warning btn-refresh" @click="refreshComponent" title="Refresh Tasks and Groups">
-            <i class="fa fa-refresh"></i>
-            <span>Refresh</span>
-          </button>
-          <button 
-            v-if="selectedProject || selectedUser || selectedDevStatus || selectedTaskStatus || filterStartDate || filterEndDate"
-            class="btn btn-secondary btn-clear-filters" 
-            @click="clearAllFilters" 
+          <button
+            v-if="selectedProject || selectedUser || selectedDevStatus || selectedTaskStatus || filterStartDate || filterEndDate || searchQuery"
+            class="btn btn-secondary btn-clear-filters"
+            @click="clearAllFilters"
             title="Clear All Filters"
           >
             <i class="fa fa-filter"></i>
             <span>Clear Filters</span>
           </button>
+          <button class="btn btn-warning btn-refresh" @click="refreshComponent" title="Refresh Tasks and Groups">
+            <i class="fa fa-refresh"></i>
+            <span>Refresh</span>
+          </button>
+
           <button class="btn btn-success btn-add-group" @click="showAddTaskGroupModal" title="Add New Task Group">
             <i class="fa fa-plus"></i>
             <span>Add Group</span>
@@ -131,947 +105,1003 @@
           </div>
 
           <div class="section-actions">
-            <!-- Project Dropdown -->
-            <div class="dropdown me-2">
-              <button
-                class="btn btn-sm btn-outline-light dropdown-toggle project-dropdown-btn"
-                type="button"
-                id="projectDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                :title="selectedProject ? `Current project: ${selectedProject.name}` : 'All projects selected'"
-              >
-                <i class="fa fa-folder me-1"></i>
-                <span>{{ selectedProject ? selectedProject.name : "All Projects" }}</span>
-              </button>
-              <ul class="dropdown-menu project-dropdown-menu" aria-labelledby="projectDropdown">
-                <!-- All Projects Option -->
-                <li>
-                  <a class="dropdown-item" href="#" @click.prevent="selectProject(null, $event)" :class="{ active: !selectedProject }">
-                    <i class="fa fa-globe me-2"></i>
-                    All Projects
-                  </a>
-                </li>
-                <!-- Separator -->
-                <li><hr class="dropdown-divider" /></li>
-                <!-- Individual Projects -->
-                <li v-for="project in projects.data || projects" :key="project.id">
-                  <a
-                    class="dropdown-item"
-                    href="#"
-                    @click.prevent="selectProject(project, $event)"
-                    :class="{ active: selectedProject && selectedProject.id === project.id }"
-                    :title="`Switch to ${project.name}`"
-                  >
-                    <i class="fa fa-folder me-2"></i>
-                    {{ project.name }}
-                  </a>
-                </li>
-                <!-- Empty state -->
-                <li v-if="!projects.data && !projects.length" class="px-3 py-2 text-muted">
-                  <small>No projects available</small>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Dev Status Dropdown -->
-            <div class="dropdown me-2">
-              <button
-                class="btn btn-sm btn-outline-light dropdown-toggle dev-status-dropdown-btn"
-                type="button"
-                id="devStatusDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                :title="selectedDevStatus ? `Current dev status: ${selectedDevStatus}` : 'All dev statuses'"
-              >
-                <i class="fa fa-cogs me-1"></i>
-                <span>{{ selectedDevStatus || "All Dev Status" }}</span>
-              </button>
-              <ul class="dropdown-menu dev-status-dropdown-menu" aria-labelledby="devStatusDropdown">
-                <!-- All Dev Status Option -->
-                <li>
-                  <a class="dropdown-item" href="#" @click.prevent="selectDevStatus(null, $event)" :class="{ active: !selectedDevStatus }">
-                    <i class="fa fa-list me-2"></i>
-                    All Dev Status
-                  </a>
-                </li>
-                <!-- Separator -->
-                <li><hr class="dropdown-divider" /></li>
-                <!-- Individual Dev Status Options -->
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="#"
-                    @click.prevent="selectDevStatus('Pending', $event)"
-                    :class="{ active: selectedDevStatus === 'Pending' }"
-                  >
-                    <i class="fa fa-clock me-2"></i>
-                    📝 Pending
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="#"
-                    @click.prevent="selectDevStatus('In Progress', $event)"
-                    :class="{ active: selectedDevStatus === 'In Progress' }"
-                  >
-                    <i class="fa fa-play me-2"></i>
-                    ⚡ In Progress
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="#"
-                    @click.prevent="selectDevStatus('Completed', $event)"
-                    :class="{ active: selectedDevStatus === 'Completed' }"
-                  >
-                    <i class="fa fa-check me-2"></i>
-                    ✅ Completed
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="#"
-                    @click.prevent="selectDevStatus('Not Completed', $event)"
-                    :class="{ active: selectedDevStatus === 'Not Completed' }"
-                  >
-                    <i class="fa fa-times me-2"></i>
-                    ❌ Not Completed
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Task Status Dropdown -->
-            <div class="dropdown me-2">
-              <button
-                class="btn btn-sm btn-outline-light dropdown-toggle task-status-dropdown-btn"
-                type="button"
-                id="taskStatusDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                :title="selectedTaskStatus ? `Current task status: ${selectedTaskStatus}` : 'All task statuses'"
-              >
-                <i class="fa fa-flag me-1"></i>
-                <span>{{ selectedTaskStatus || "All Task Status" }}</span>
-              </button>
-              <ul class="dropdown-menu task-status-dropdown-menu" aria-labelledby="taskStatusDropdown">
-                <!-- All Task Status Option -->
-                <li>
-                  <a class="dropdown-item" href="#" @click.prevent="selectTaskStatus(null, $event)" :class="{ active: !selectedTaskStatus }">
-                    <i class="fa fa-list me-2"></i>
-                    All Task Status
-                  </a>
-                </li>
-                <!-- Separator -->
-                <li><hr class="dropdown-divider" /></li>
-                <!-- Individual Task Status Options -->
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="#"
-                    @click.prevent="selectTaskStatus('Pending', $event)"
-                    :class="{ active: selectedTaskStatus === 'Pending' }"
-                  >
-                    <i class="fa fa-clock me-2"></i>
-                    📝 Pending
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="#"
-                    @click.prevent="selectTaskStatus('In Progress', $event)"
-                    :class="{ active: selectedTaskStatus === 'In Progress' }"
-                  >
-                    <i class="fa fa-play me-2"></i>
-                    ⚡ In Progress
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="#"
-                    @click.prevent="selectTaskStatus('Completed', $event)"
-                    :class="{ active: selectedTaskStatus === 'Completed' }"
-                  >
-                    <i class="fa fa-check me-2"></i>
-                    ✅ Completed
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="#"
-                    @click.prevent="selectTaskStatus('Not Completed', $event)"
-                    :class="{ active: selectedTaskStatus === 'Not Completed' }"
-                  >
-                    <i class="fa fa-times me-2"></i>
-                    ❌ Not Completed
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="#"
-                    @click.prevent="selectTaskStatus('On Hold', $event)"
-                    :class="{ active: selectedTaskStatus === 'On Hold' }"
-                  >
-                    <i class="fa fa-pause me-2"></i>
-                    ⏸️ On Hold
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="#"
-                    @click.prevent="selectTaskStatus('Cancelled', $event)"
-                    :class="{ active: selectedTaskStatus === 'Cancelled' }"
-                  >
-                    <i class="fa fa-ban me-2"></i>
-                    ❌ Cancelled
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Collapse/Expand Button -->
-            <button
-              @click="toggleTeamMembers()"
-              class="btn btn-sm btn-outline-secondary collapse-btn"
-              :title="isTeamMembersCollapsed ? 'Expand team members' : 'Collapse team members'"
-            >
-              <i class="fa" :class="isTeamMembersCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
-            </button>
-
-            <button
-              v-if="assignedUsers.length === 0"
-              @click="getAssignedUsers()"
-              class="btn btn-sm btn-outline-primary reload-btn"
-              title="Reload users"
-            >
-              <i class="fa fa-refresh"></i>
-              <span>Reload</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Professional User Cards -->
-        <div class="user-cards-container" v-show="!isTeamMembersCollapsed">
-          <!-- All Users Card -->
-          <div
-            class="user-card all-users-card"
-            :class="{ active: !selectedUser }"
-            @click="selectUser(null, $event)"
-            title="View all tasks from all team members"
-          >
-            <div class="user-avatar-container">
-              <div class="user-avatar all-users-avatar">
-                <i class="fa fa-users"></i>
-              </div>
-              <div class="user-status-indicator online"></div>
-              <div class="user-info">
-                <div class="user-name">All Members</div>
-                <div class="user-role">Show all tasks</div>
-              </div>
-            </div>
-            <div class="user-stats">
-              <div class="task-count">
-                <span class="count-number">{{ userTaskCounts.all || 0 }}</span>
-                <span class="count-label">tasks</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Individual User Cards -->
-          <div
-            v-for="user in assignedUsers"
-            :key="user.id"
-            class="user-card"
-            :class="{ active: selectedUser && selectedUser.id === user.id }"
-            @click="selectUser(user, $event)"
-            :title="`View tasks assigned to ${user.name}`"
-          >
-            <div class="user-avatar-container">
-              <div class="user-avatar">
-                <img
-                  v-if="user.avatar || user.profile_image"
-                  :src="user.avatar || user.profile_image || '/avatar.png'"
-                  :alt="user.name"
-                  @error="handleImageError"
-                />
-                <img v-else-if="user.image" :src="user.image" :alt="user.name" @error="handleImageError" />
-                <div v-else class="user-avatar-placeholder">
-                  <span>{{ getInitials(user.name) }}</span>
+            <div class="date-controls-row">
+              <!-- Search Input -->
+              <div class="search-filter-group">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control search-input"
+                    v-model="searchQuery"
+                    @input="filterTasksBySearch"
+                    placeholder="Search tasks..."
+                    :title="searchQuery ? `Searching for: ${searchQuery}` : 'Search by title, description, user, or project'"
+                  />
+                  <button v-if="searchQuery" class="btn btn-outline-secondary btn-clear-search" @click="clearSearch" title="Clear search">
+                    <i class="fa fa-times"></i>
+                  </button>
                 </div>
-                <div class="user-status-indicator" :class="getUserStatus(user)"></div>
               </div>
-              <div class="user-info">
-                <div class="user-name">{{ user.name }}</div>
-                <div class="user-role">{{ user.role || user.designation || "Team Member" }}</div>
+
+              <div class="date-filter-group">
+                <input
+                  type="date"
+                  class="form-control date-picker"
+                  v-model="filterStartDate"
+                  @change="filterTasksByDateRange"
+                  :title="filterStartDate ? `Filtering tasks from ${formatDate(filterStartDate)}` : 'Select start date to filter tasks'"
+                  placeholder="Start Date"
+                />
               </div>
+              <div class="date-filter-group">
+                <input
+                  type="date"
+                  class="form-control date-picker"
+                  v-model="filterEndDate"
+                  @change="filterTasksByDateRange"
+                  :min="filterStartDate"
+                  :title="filterEndDate ? `Filtering tasks until ${formatDate(filterEndDate)}` : 'Select end date to filter tasks'"
+                  placeholder="End Date"
+                />
+              </div>
+              <button
+                v-if="filterStartDate || filterEndDate"
+                class="btn btn-outline-secondary border btn-clear-date"
+                @click="clearDateFilters"
+                title="Clear date filters"
+              >
+                <i class="fa fa-times"></i>
+              </button>
             </div>
-            <div class="user-stats">
-              <div class="task-count">
-                <span class="count-number">{{ userTaskCounts[user.id] || 0 }}</span>
-                <span class="count-label">tasks</span>
+            <!-- Filter Controls Row -->
+            <div class="filter-controls-row">
+              <!-- Project Dropdown -->
+              <div class="dropdown me-1 me-md-2">
+                <button
+                  class="btn btn-sm btn-outline-light dropdown-toggle project-dropdown-btn"
+                  type="button"
+                  id="projectDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  :title="selectedProject ? `Current project: ${selectedProject.name}` : 'All projects selected'"
+                >
+                  <i class="fa fa-folder me-1 d-none d-md-inline"></i>
+                  <span class="d-none d-md-inline">{{ selectedProject ? selectedProject.name : "All Projects" }}</span>
+                  <span class="d-md-none">{{ selectedProject ? selectedProject.name.substring(0, 8) + "..." : "Projects" }}</span>
+                </button>
+                <ul class="dropdown-menu project-dropdown-menu" aria-labelledby="projectDropdown">
+                  <!-- All Projects Option -->
+                  <li>
+                    <a class="dropdown-item" href="#" @click.prevent="selectProject(null, $event)" :class="{ active: !selectedProject }">
+                      <i class="fa fa-globe me-2"></i>
+                      All Projects
+                    </a>
+                  </li>
+                  <!-- Separator -->
+                  <li><hr class="dropdown-divider" /></li>
+                  <!-- Individual Projects -->
+                  <li v-for="project in projects.data || projects" :key="project.id">
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      @click.prevent="selectProject(project, $event)"
+                      :class="{ active: selectedProject && selectedProject.id === project.id }"
+                      :title="`Switch to ${project.name}`"
+                    >
+                      <i class="fa fa-folder me-2"></i>
+                      {{ project.name }}
+                    </a>
+                  </li>
+                  <!-- Empty state -->
+                  <li v-if="!projects.data && !projects.length" class="px-3 py-2 text-muted">
+                    <small>No projects available</small>
+                  </li>
+                </ul>
               </div>
-              <div class="user-actions">
-                <button class="btn-icon user-action-btn" @click.stop="viewUserProfile(user)" title="View user profile">
-                  <i class="fa fa-eye"></i>
+
+              <!-- Dev Status Dropdown -->
+              <div class="dropdown me-1 me-md-2">
+                <button
+                  class="btn btn-sm btn-outline-light dropdown-toggle dev-status-dropdown-btn"
+                  type="button"
+                  id="devStatusDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  :title="selectedDevStatus ? `Current dev status: ${selectedDevStatus}` : 'All dev statuses'"
+                >
+                  <i class="fa fa-cogs me-1 d-none d-md-inline"></i>
+                  <span class="d-none d-md-inline">{{ selectedDevStatus || "All Dev Status" }}</span>
+                  <span class="d-md-none">{{ selectedDevStatus || "Dev" }}</span>
+                </button>
+                <ul class="dropdown-menu dev-status-dropdown-menu" aria-labelledby="devStatusDropdown">
+                  <!-- All Dev Status Option -->
+                  <li>
+                    <a class="dropdown-item" href="#" @click.prevent="selectDevStatus(null, $event)" :class="{ active: !selectedDevStatus }">
+                      <i class="fa fa-list me-2"></i>
+                      All Dev Status
+                    </a>
+                  </li>
+                  <!-- Separator -->
+                  <li><hr class="dropdown-divider" /></li>
+                  <!-- Individual Dev Status Options -->
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      @click.prevent="selectDevStatus('Pending', $event)"
+                      :class="{ active: selectedDevStatus === 'Pending' }"
+                    >
+                      <i class="fa fa-clock me-2"></i>
+                      📝 Pending
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      @click.prevent="selectDevStatus('In Progress', $event)"
+                      :class="{ active: selectedDevStatus === 'In Progress' }"
+                    >
+                      <i class="fa fa-play me-2"></i>
+                      ⚡ In Progress
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      @click.prevent="selectDevStatus('Completed', $event)"
+                      :class="{ active: selectedDevStatus === 'Completed' }"
+                    >
+                      <i class="fa fa-check me-2"></i>
+                      ✅ Completed
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      @click.prevent="selectDevStatus('Not Completed', $event)"
+                      :class="{ active: selectedDevStatus === 'Not Completed' }"
+                    >
+                      <i class="fa fa-times me-2"></i>
+                      ❌ Not Completed
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Task Status Dropdown -->
+              <div class="dropdown me-1 me-md-2">
+                <button
+                  class="btn btn-sm btn-outline-light dropdown-toggle task-status-dropdown-btn"
+                  type="button"
+                  id="taskStatusDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  :title="selectedTaskStatus ? `Current task status: ${selectedTaskStatus}` : 'All task statuses'"
+                >
+                  <i class="fa fa-flag me-1 d-none d-md-inline"></i>
+                  <span class="d-none d-md-inline">{{ selectedTaskStatus || "All Task Status" }}</span>
+                  <span class="d-md-none">{{ selectedTaskStatus || "Status" }}</span>
+                </button>
+                <ul class="dropdown-menu task-status-dropdown-menu" aria-labelledby="taskStatusDropdown">
+                  <!-- All Task Status Option -->
+                  <li>
+                    <a class="dropdown-item" href="#" @click.prevent="selectTaskStatus(null, $event)" :class="{ active: !selectedTaskStatus }">
+                      <i class="fa fa-list me-2"></i>
+                      All Task Status
+                    </a>
+                  </li>
+                  <!-- Separator -->
+                  <li><hr class="dropdown-divider" /></li>
+                  <!-- Individual Task Status Options -->
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      @click.prevent="selectTaskStatus('Pending', $event)"
+                      :class="{ active: selectedTaskStatus === 'Pending' }"
+                    >
+                      <i class="fa fa-clock me-2"></i>
+                      📝 Pending
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      @click.prevent="selectTaskStatus('In Progress', $event)"
+                      :class="{ active: selectedTaskStatus === 'In Progress' }"
+                    >
+                      <i class="fa fa-play me-2"></i>
+                      ⚡ In Progress
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      @click.prevent="selectTaskStatus('Completed', $event)"
+                      :class="{ active: selectedTaskStatus === 'Completed' }"
+                    >
+                      <i class="fa fa-check me-2"></i>
+                      ✅ Completed
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      @click.prevent="selectTaskStatus('Not Completed', $event)"
+                      :class="{ active: selectedTaskStatus === 'Not Completed' }"
+                    >
+                      <i class="fa fa-times me-2"></i>
+                      ❌ Not Completed
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      @click.prevent="selectTaskStatus('On Hold', $event)"
+                      :class="{ active: selectedTaskStatus === 'On Hold' }"
+                    >
+                      <i class="fa fa-pause me-2"></i>
+                      ⏸️ On Hold
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      @click.prevent="selectTaskStatus('Cancelled', $event)"
+                      :class="{ active: selectedTaskStatus === 'Cancelled' }"
+                    >
+                      <i class="fa fa-ban me-2"></i>
+                      ❌ Cancelled
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons-group">
+                <!-- Collapse/Expand Button -->
+                <button
+                  @click="toggleTeamMembers()"
+                  class="btn btn-sm btn-outline-secondary collapse-btn"
+                  :title="isTeamMembersCollapsed ? 'Expand team members' : 'Collapse team members'"
+                >
+                  <i class="fa" :class="isTeamMembersCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+                  <span class="d-none d-md-inline ms-1">{{ isTeamMembersCollapsed ? "Show" : "Hide" }}</span>
+                </button>
+
+                <button
+                  v-if="assignedUsers.length === 0"
+                  @click="getAssignedUsers()"
+                  class="btn btn-sm btn-outline-primary reload-btn"
+                  title="Reload users"
+                >
+                  <i class="fa fa-refresh"></i>
+                  <span class="d-none d-md-inline ms-1">Reload</span>
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Empty State -->
-          <div v-if="assignedUsers.length === 0" class="empty-users-state">
-            <div class="empty-icon">
-              <i class="fa fa-user-plus"></i>
+          <!-- Professional User Cards -->
+          <div class="user-cards-container" v-show="!isTeamMembersCollapsed">
+            <!-- All Users Card -->
+            <div
+              class="user-card all-users-card"
+              :class="{ active: !selectedUser }"
+              @click="selectUser(null, $event)"
+              title="View all tasks from all team members"
+            >
+              <div class="user-avatar-container">
+                <div class="user-avatar all-users-avatar">
+                  <i class="fa fa-users"></i>
+                </div>
+                <div class="user-status-indicator online"></div>
+                <div class="user-info">
+                  <div class="user-name">All Members</div>
+                  <div class="user-role">Show all tasks</div>
+                </div>
+              </div>
+              <div class="user-stats">
+                <div class="task-count">
+                  <span class="count-number">{{ userTaskCounts.all || 0 }}</span>
+                  <span class="count-label">tasks</span>
+                </div>
+              </div>
             </div>
-            <div class="empty-content">
-              <h6>No Team Members Found</h6>
-              <p>No users are currently assigned to tasks in this view.</p>
-              <button @click="getAssignedUsers()" class="btn btn-primary btn-sm">
-                <i class="fa fa-refresh"></i>
-                Refresh Users
-              </button>
+
+            <!-- Individual User Cards -->
+            <div
+              v-for="user in assignedUsers"
+              :key="user.id"
+              class="user-card"
+              :class="{ active: selectedUser && selectedUser.id === user.id }"
+              @click="selectUser(user, $event)"
+              :title="`View tasks assigned to ${user.name}`"
+            >
+              <div class="user-avatar-container">
+                <div class="user-avatar">
+                  <img
+                    v-if="user.avatar || user.profile_image"
+                    :src="user.avatar || user.profile_image || '/avatar.png'"
+                    :alt="user.name"
+                    @error="handleImageError"
+                  />
+                  <img v-else-if="user.image" :src="user.image" :alt="user.name" @error="handleImageError" />
+                  <div v-else class="user-avatar-placeholder">
+                    <span>{{ getInitials(user.name) }}</span>
+                  </div>
+                  <div class="user-status-indicator" :class="getUserStatus(user)"></div>
+                </div>
+                <div class="user-info">
+                  <div class="user-name">{{ user.name }}</div>
+                  <div class="user-role">{{ user.role || user.designation || "Team Member" }}</div>
+                </div>
+              </div>
+              <div class="user-stats">
+                <div class="task-count">
+                  <span class="count-number">{{ userTaskCounts[user.id] || 0 }}</span>
+                  <span class="count-label">tasks</span>
+                </div>
+                <div class="user-actions">
+                  <button class="btn-icon user-action-btn" @click.stop="viewUserProfile(user)" title="View user profile">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div v-if="assignedUsers.length === 0" class="empty-users-state">
+              <div class="empty-icon">
+                <i class="fa fa-user-plus"></i>
+              </div>
+              <div class="empty-content">
+                <h6>No Team Members Found</h6>
+                <p>No users are currently assigned to tasks in this view.</p>
+                <button @click="getAssignedUsers()" class="btn btn-primary btn-sm">
+                  <i class="fa fa-refresh"></i>
+                  Refresh Users
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Sorting indicator -->
-      <div v-if="sortField" class="sort-indicator mb-2 p-2 bg-info text-white border rounded d-flex align-items-center justify-content-between">
-        <small>
-          <i class="fa fa-sort me-1"></i>
-          <strong>Sorted by:</strong>
-          {{ getSortFieldDisplayName(sortField) }}
-          ({{ sortDirection === "asc" ? "A-Z" : "Z-A" }})
-        </small>
-        <button @click="clearSort" class="btn btn-sm btn-outline-light" title="Clear sorting"><i class="fa fa-times"></i> Clear Sort</button>
-      </div>
+        <!-- Sorting indicator -->
+        <div v-if="sortField" class="sort-indicator mb-2 p-2 bg-info text-white border rounded d-flex align-items-center justify-content-between">
+          <small>
+            <i class="fa fa-sort me-1"></i>
+            <strong>Sorted by:</strong>
+            {{ getSortFieldDisplayName(sortField) }}
+            ({{ sortDirection === "asc" ? "A-Z" : "Z-A" }})
+          </small>
+          <button @click="clearSort" class="btn btn-sm btn-outline-light" title="Clear sorting"><i class="fa fa-times"></i> Clear Sort</button>
+        </div>
 
-      <div class="table-responsive">
-        <table class="table table-hover table-bordered">
-          <thead class="table-header">
-            <tr>
-              <th class="w-10" @dblclick="toggleEditMode">ID</th>
-              <th class="sortable-header" @click="sortBy('title')" :class="{ sorted: isSorted('title') }" title="Click to sort by Task Title">
-                Task Title
-                <i class="fa ms-1" :class="getSortIcon('title')"></i>
-              </th>
-              <th class="sortable-header" @click="sortBy('user')" :class="{ sorted: isSorted('user') }" title="Click to sort by Assigned User">
-                Assigned User
-                <i class="fa ms-1" :class="getSortIcon('user')"></i>
-              </th>
-              <th class="sortable-header" @click="sortBy('project')" :class="{ sorted: isSorted('project') }" title="Click to sort by Project">
-                Project
-                <i class="fa ms-1" :class="getSortIcon('project')"></i>
-              </th>
-              <th class="sortable-header" @click="sortBy('priority')" :class="{ sorted: isSorted('priority') }" title="Click to sort by Priority">
-                Priority
-                <i class="fa ms-1" :class="getSortIcon('priority')"></i>
-              </th>
-              <th
-                class="sortable-header"
-                @click="sortBy('task_user_status')"
-                :class="{ sorted: isSorted('task_user_status') }"
-                title="Click to sort by Dev Status"
-              >
-                Dev Status
-                <i class="fa ms-1" :class="getSortIcon('task_user_status')"></i>
-              </th>
-              <th
-                class="sortable-header"
-                @click="sortBy('task_status')"
-                :class="{ sorted: isSorted('task_status') }"
-                title="Click to sort by Task Status"
-              >
-                Task Status
-                <i class="fa ms-1" :class="getSortIcon('task_status')"></i>
-              </th>
-              <th
-                class="sortable-header"
-                @click="sortBy('start_date')"
-                :class="{ sorted: isSorted('start_date') }"
-                title="Click to sort by Start Date"
-              >
-                Start Date
-                <i class="fa ms-1" :class="getSortIcon('start_date')"></i>
-              </th>
-
-              <th class="sortable-header" @click="sortBy('end_date')" :class="{ sorted: isSorted('end_date') }" title="Click to sort by End Date">
-                End Date
-                <i class="fa ms-1" :class="getSortIcon('end_date')"></i>
-              </th>
-              <th
-                class="sortable-header"
-                @click="sortBy('actual_time')"
-                :class="{ sorted: isSorted('actual_time') }"
-                title="Click to sort by Actual Time"
-              >
-                Actual Time
-                <i class="fa ms-1" :class="getSortIcon('actual_time')"></i>
-              </th>
-              <th>Rating</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-for="(group, groupIndex) in groupedTasks" :key="'group-' + groupIndex">
-              <!-- Group Header Row -->
-              <tr
-                class="group-header-row"
-                :class="{
-                  dragging: isDragging && draggedGroupIndex === groupIndex,
-                  'drag-over': dragOverGroupIndex === groupIndex,
-                }"
-                @dragover="onGroupDragOver($event, groupIndex)"
-                @dragleave="onGroupDragLeave"
-                @drop="onGroupDrop($event, groupIndex)"
-              >
-                <td class="group-toggle" @click="toggleGroup(group.id)">
-                  <i :class="group.collapsed ? 'fa fa-chevron-right' : 'fa fa-chevron-down'"></i>
-                </td>
-                <td colspan="10" class="group-name-cell">
-                  <div class="group-info">
-                    <!-- Always show drag handle when there are multiple groups -->
-                    <div
-                      v-if="groupedTasks.length > 1"
-                      class="drag-handle"
-                      title="Drag to reorder groups"
-                      draggable="true"
-                      @dragstart="onGroupDragStart($event, groupIndex)"
-                      @dragend="onGroupDragEnd"
-                      @click.stop="() => console.log('Drag handle clicked for group:', groupIndex)"
-                      @mousedown="() => console.log('Drag handle mousedown for group:', groupIndex)"
-                    >
-                      <i class="fa fa-grip-vertical"></i>
-                    </div>
-                    <h5 class="group-title">
-                      {{ group.name || "Ungrouped Tasks" }}
-                      <span class="task-count">({{ group.tasks.length }} tasks)</span>
-                      <small class="drag-instruction" v-if="groupedTasks.length > 1">
-                        <i class="fa fa-arrows-v"></i>
-                      </small>
-                    </h5>
-                  </div>
-                </td>
-                <td class="group-actions">
-                  <button
-                    class="btn btn-sm btn-success add-group-task-btn"
-                    @click="addTaskToGroup(group.id, group.name)"
-                    title="Add task to this group"
-                  >
-                    <i class="fa fa-plus"></i>
-                  </button>
-                </td>
-              </tr>
-
-              <!-- Group Tasks -->
-              <template v-if="!group.collapsed">
-                <tr
-                  v-for="(task, taskIndex) in group.tasks"
-                  :key="task.id + '-task-' + taskIndex"
-                  :class="`table_rows table_row_${task.id} ${editableRows[getTaskGlobalIndex(task)] ? 'editable-row' : ''} group-task-row`"
-                  :data-task-id="task.id"
-                  @click="handleRowClick(task)"
-                  @dblclick="enableRowEdit(task)"
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered">
+            <thead class="table-header">
+              <tr>
+                <th class="w-10" @dblclick="toggleEditMode">ID</th>
+                <th class="sortable-header" @click="sortBy('title')" :class="{ sorted: isSorted('title') }" title="Click to sort by Task Title">
+                  Task Title
+                  <i class="fa ms-1" :class="getSortIcon('title')"></i>
+                </th>
+                <th class="sortable-header" @click="sortBy('user')" :class="{ sorted: isSorted('user') }" title="Click to sort by Assigned User">
+                  Assigned User
+                  <i class="fa ms-1" :class="getSortIcon('user')"></i>
+                </th>
+                <th class="sortable-header" @click="sortBy('project')" :class="{ sorted: isSorted('project') }" title="Click to sort by Project">
+                  Project
+                  <i class="fa ms-1" :class="getSortIcon('project')"></i>
+                </th>
+                <th class="sortable-header" @click="sortBy('priority')" :class="{ sorted: isSorted('priority') }" title="Click to sort by Priority">
+                  Priority
+                  <i class="fa ms-1" :class="getSortIcon('priority')"></i>
+                </th>
+                <th
+                  class="sortable-header"
+                  @click="sortBy('task_user_status')"
+                  :class="{ sorted: isSorted('task_user_status') }"
+                  title="Click to sort by Dev Status"
                 >
-                  <!-- ID -->
-                  <td class="text-limit task-id-cell" :title="task.id">
-                    {{ taskIndex + 1 }}
-                    <i v-if="editableRows[getTaskGlobalIndex(task)]" class="fa fa-edit text-warning ml-1"></i>
-                  </td>
+                  Dev Status
+                  <i class="fa ms-1" :class="getSortIcon('task_user_status')"></i>
+                </th>
+                <th
+                  class="sortable-header"
+                  @click="sortBy('task_status')"
+                  :class="{ sorted: isSorted('task_status') }"
+                  title="Click to sort by Task Status"
+                >
+                  Task Status
+                  <i class="fa ms-1" :class="getSortIcon('task_status')"></i>
+                </th>
+                <th
+                  class="sortable-header"
+                  @click="sortBy('start_date')"
+                  :class="{ sorted: isSorted('start_date') }"
+                  title="Click to sort by Start Date"
+                >
+                  Start Date
+                  <i class="fa ms-1" :class="getSortIcon('start_date')"></i>
+                </th>
 
-                  <!-- Task Title -->
-                  <td class="text-limit" :title="task.title">
-                    <div class="task-title-container">
-                      <input
-                        v-if="editableRows[getTaskGlobalIndex(task)]"
-                        type="text"
-                        v-model="task.title"
-                        class="form-control form-control-sm"
-                        @blur="immediateSaveTask(task)"
-                        @keyup.enter="immediateSaveTask(task)"
-                        @click.stop
-                        ref="titleInput"
-                      />
-                      <div v-else class="task-title-display">
-                        <span @dblclick="enableTitleEdit(task)" class="editable-title" :class="{ 'task-assigned': isTaskAssigned(task) }">
-                          {{ task.title }}
-                        </span>
-                        <div v-if="isTaskAssigned(task)" class="assignment-info" :title="getAssignmentTooltip(task)">
-                          <i class="fa fa-user-tag assignment-icon"></i>
-                          <span class="assignment-text">
-                            {{ getAssignmentText(task) }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                <th class="sortable-header" @click="sortBy('end_date')" :class="{ sorted: isSorted('end_date') }" title="Click to sort by End Date">
+                  End Date
+                  <i class="fa ms-1" :class="getSortIcon('end_date')"></i>
+                </th>
+                <th
+                  class="sortable-header"
+                  @click="sortBy('actual_time')"
+                  :class="{ sorted: isSorted('actual_time') }"
+                  title="Click to sort by Actual Time"
+                >
+                  Actual Time
+                  <i class="fa ms-1" :class="getSortIcon('actual_time')"></i>
+                </th>
+                <th>Rating</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template v-for="(group, groupIndex) in groupedTasks" :key="'group-' + groupIndex">
+                <!-- Group Header Row -->
+                <tr
+                  class="group-header-row"
+                  :class="{
+                    dragging: isDragging && draggedGroupIndex === groupIndex,
+                    'drag-over': dragOverGroupIndex === groupIndex,
+                  }"
+                  @dragover="onGroupDragOver($event, groupIndex)"
+                  @dragleave="onGroupDragLeave"
+                  @drop="onGroupDrop($event, groupIndex)"
+                >
+                  <td class="group-toggle" @click="toggleGroup(group.id)">
+                    <i :class="group.collapsed ? 'fa fa-chevron-right' : 'fa fa-chevron-down'"></i>
                   </td>
-
-                  <!-- Assigned User -->
-                  <td class="text-limit" :title="task.user ? task.user.name : 'Not assigned'">
-                    <div class="assigned-user-cell">
-                      <span v-if="task.user && task.user.name" class="user-info text-success">
-                        <i class="fa fa-user text-primary"></i>
-                        {{ task.user.name }}
-                      </span>
-                      <span v-else class="no-user-assigned text-muted">
-                        <i class="fa fa-user-times"></i>
-                        Not assigned
-                      </span>
-                    </div>
-                  </td>
-
-                  <!-- Project -->
-                  <td class="" :title="getTaskProjectName(task)">
-                    <div class="project-cell">
-                      <span v-if="getTaskProjectName(task)" class="project-info text-white">
-                        <i class="fa fa-folder"></i>
-                        {{ getTaskProjectName(task) }}
-                      </span>
-                      <span v-else class="no-project-assigned text-muted">
-                        <i class="fa fa-folder-open"></i>
-                        No project
-                      </span>
-                    </div>
-                  </td>
-
-                  <!-- Priority -->
-                  <td class="text-limit" :title="task.priority">
-                    <select
-                      v-if="editableRows[getTaskGlobalIndex(task)]"
-                      v-model="task.priority"
-                      class="form-control form-control-sm"
-                      @change="debouncedSaveTask(task, 500)"
-                      @click.stop
-                    >
-                      <option value="low">⚫ Low</option>
-                      <option value="normal">🟢 Normal</option>
-                      <option value="high">🟡 High</option>
-                      <option value="urgent">🔴 Urgent</option>
-                    </select>
-                    <span v-else>
-                      <span v-if="task.priority === 'low'">⚫ Low</span>
-                      <span v-else-if="task.priority === 'normal'">🟢 Normal</span>
-                      <span v-else-if="task.priority === 'high'">🟡 High</span>
-                      <span v-else-if="task.priority === 'urgent'">🔴 Urgent</span>
-                      <span v-else>{{ task.priority }}</span>
-                    </span>
-                  </td>
-
-                  <!-- Task Status -->
-                  <td class="text-limit" :class="getTaskStatusClass(task.task_user_status)" :title="task.task_user_status">
-                    <select
-                      v-if="editableRows[getTaskGlobalIndex(task)]"
-                      v-model="task.task_user_status"
-                      class="form-control form-control-sm"
-                      @change="debouncedSaveTask(task, 500)"
-                      @click.stop
-                    >
-                      <option value="Pending">📝 Pending</option>
-                      <option value="In Progress">⚡ In Progress</option>
-                      <option value="Completed">✅ Completed</option>
-                      <option value="Not Completed">❌ Not Completed</option>
-                    </select>
-                    <span v-else>
-                      <span v-if="task.task_user_status === 'Pending'">📝 Pending</span>
-                      <span v-else-if="task.task_user_status === 'In Progress'">⚡ In Progress</span>
-                      <span v-else-if="task.task_user_status === 'Completed'">✅ Completed</span>
-                      <span v-else-if="task.task_user_status === 'Not Completed'">❌ Not Completed</span>
-                      <span v-else>{{ task.task_user_status }}</span>
-                    </span>
-                  </td>
-                  <td>
-                    {{ task.task_status }}
-                  </td>
-
-                  <!-- Start Date -->
-                  <td class="text-limit" :title="formatDateTime(task.start_date)">
-                    <input
-                      v-if="editableRows[getTaskGlobalIndex(task)]"
-                      type="datetime-local"
-                      v-model="task.start_date"
-                      :min="todayDate + 'T00:00'"
-                      class="form-control form-control-sm"
-                      @change="debouncedSaveTask(task, 500)"
-                      @click.stop
-                    />
-                    <span v-else>{{ formatDateTime(task.start_date) }}</span>
-                  </td>
-
-                  <!-- End Date -->
-                  <td class="text-limit" :title="formatDateTime(task.end_date)">
-                    <input
-                      v-if="editableRows[getTaskGlobalIndex(task)]"
-                      type="datetime-local"
-                      v-model="task.end_date"
-                      :min="(task.start_date || todayDate) + (task.start_date ? '' : 'T00:00')"
-                      class="form-control form-control-sm"
-                      @change="debouncedSaveTask(task, 500)"
-                      @click.stop
-                    />
-                    <span v-else>{{ formatDateTime(task.end_date) }}</span>
-                  </td>
-
-                  <td>
-                    {{ FindActualTime(task.start_date, task.end_date) }}
-                  </td>
-
-                  <!-- Rating -->
-                  <td class="text-limit" :title="`Rating: ${task.rating || 0}/5`">
-                    <div class="rating-cell">
-                      <span v-for="n in 5" :key="n" class="star readonly" :class="{ filled: n <= (task.rating || 0) }">
-                        <i class="fa fa-star" :class="n <= (task.rating || 0) ? 'text-warning' : 'text-secondary'"></i>
-                      </span>
-                      <span class="ml-2">({{ task.rating || 0 }})</span>
-                    </div>
-                  </td>
-
-                  <!-- Actions -->
-                  <td class="text-limit actions-cell">
-                    <div class="task-actions">
-                      <!-- Success indicator -->
-                      <span v-if="recentlyUpdated[task.id]" class="success-indicator" title="Task updated successfully">
-                        <i class="fa fa-check-circle text-success"></i>
-                      </span>
-
-                      <!-- 3-dot toggle button (outside dropdown) -->
-                      <button
-                        class="btn btn-sm btn-outline-secondary dropdown-toggle"
-                        type="button"
-                        @click.stop="toggleDropdown(task.id)"
-                        title="More actions"
+                  <td colspan="10" class="group-name-cell">
+                    <div class="group-info">
+                      <!-- Always show drag handle when there are multiple groups -->
+                      <div
+                        v-if="groupedTasks.length > 1"
+                        class="drag-handle"
+                        title="Drag to reorder groups"
+                        draggable="true"
+                        @dragstart="onGroupDragStart($event, groupIndex)"
+                        @dragend="onGroupDragEnd"
+                        @click.stop="() => console.log('Drag handle clicked for group:', groupIndex)"
+                        @mousedown="() => console.log('Drag handle mousedown for group:', groupIndex)"
                       >
-                        <i class="fa fa-ellipsis-v"></i>
-                      </button>
-
-                      <!-- 3-dot menu dropdown container -->
-                      <div class="custom-dropdown" :class="{ show: activeDropdown === task.id }">
-                        <div class="dropdown-menu custom-dropdown-menu" :class="{ show: activeDropdown === task.id }">
-                          <a
-                            class="dropdown-item text-info"
-                            href="#"
-                            @click.prevent="
-                              openDescriptionModal(task);
-                              closeDropdown();
-                            "
-                          >
-                            <i class="fa fa-file-text"></i>
-                            <span>Description</span>
-                          </a>
-                          <a
-                            class="dropdown-item text-warning"
-                            href="#"
-                            @click.prevent="
-                              openTaskReviewModal(task);
-                              closeDropdown();
-                            "
-                          >
-                            <i class="fa fa-star"></i>
-                            <span>Review</span>
-                          </a>
-                          
-                          <a
-                            class="dropdown-item text-danger"
-                           
-                            href="#"
-                            @click.prevent="
-                              removeTask(task);
-                              closeDropdown();
-                            "
-                            :title=" 'Delete task' "
-                          >
-                            <i class="fa fa-trash"></i>
-                            <span>Delete</span>
-                           
-                          </a>
-                          <router-link target="_blank" class="dropdown-item text-primary" :to="`/tasks/details/${task.slug}`">
-                            <i class="fa fa-pencil"></i>
-                            <span>Details</span>
-                          </router-link>
-                        </div>
+                        <i class="fa fa-grip-vertical"></i>
                       </div>
+                      <h5 class="group-title">
+                        {{ group.name || "Ungrouped Tasks" }}
+                        <span class="task-count">({{ group.tasks.length }} tasks)</span>
+                        <small class="drag-instruction" v-if="groupedTasks.length > 1">
+                          <i class="fa fa-arrows-v"></i>
+                        </small>
+                      </h5>
                     </div>
+                  </td>
+                  <td class="group-actions">
+                    <button
+                      class="btn btn-sm btn-success add-group-task-btn"
+                      @click="addTaskToGroup(group.id, group.name)"
+                      title="Add task to this group"
+                    >
+                      <i class="fa fa-plus"></i>
+                    </button>
                   </td>
                 </tr>
-              </template>
-            </template>
-          </tbody>
-          <!-- Add Rows Section -->
-        </table>
-      </div>
-    </div>
 
-    <!-- Add Task Modal -->
-    <div v-if="showAddTaskModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeAddTaskModal">
-      <div class="modal-content" :class="{ 'dark-mode': isDarkMode }" @click.stop>
-        <div class="modal-header">
-          <h3>Add New Task</h3>
-          <button class="modal-close-btn" @click="closeAddTaskModal">
-            <i class="fa fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form @submit.prevent="createNewTask">
-            <div class="form-group">
-              <label for="taskTitle">Task Title *</label>
-              <input type="text" id="taskTitle" v-model="newTask.title" class="form-control" placeholder="Enter task title" required />
-            </div>
-
-            <div class="form-group">
-              <label for="taskGroup">Task Group</label>
-              <select id="taskGroup" v-model="newTask.task_group_id" class="form-control">
-                <option value="">Select Task Group (Optional)</option>
-                <option v-for="group in task_groups" :key="group.id" :value="group.id">
-                  {{ group.name }}
-                </option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="taskPriority">Priority</label>
-              <select id="taskPriority" v-model="newTask.priority" class="form-control">
-                <option value="low">🟢 Low</option>
-                <option value="normal">🟡 Normal</option>
-                <option value="high">🔴 High</option>
-                <option value="urgent">⚫ Urgent</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="taskStatus">Status</label>
-              <select id="taskStatus" v-model="newTask.task_user_status" class="form-control">
-                <option value="Pending">📝 Pending</option>
-                <option value="In Progress">⚡ In Progress</option>
-                <option value="Completed">✅ Completed</option>
-                <option value="Not Completed">❌ Not Completed</option>
-              </select>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <input
-                  type="datetime-local"
-                  id="startDate"
-                  v-model="newTask.start_date"
-                  class="form-control text-dark"
-                  placeholder="Start Date & Time"
-                />
-              </div>
-              <div class="form-group">
-                <input
-                  type="datetime-local"
-                  id="endDate"
-                  v-model="newTask.end_date"
-                  :min="newTask.start_date"
-                  class="form-control text-dark"
-                  placeholder="End Date & Time"
-                />
-              </div>
-            </div>
-
-            <!-- Date validation error message -->
-            <div
-              v-if="isNewTaskDateInvalid"
-              class="alert alert-danger"
-              style="margin-top: 10px; padding: 8px 12px; border-radius: 4px; background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24"
-            >
-              <i class="fa fa-exclamation-triangle"></i>
-              {{ dateValidationMessage }}
-            </div>
-
-            <div class="form-group">
-              <label for="taskDescription">Description</label>
-              <textarea
-                id="taskDescription"
-                v-model="newTask.description"
-                class="form-control"
-                rows="3"
-                placeholder="Enter task description (optional)"
-              ></textarea>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeAddTaskModal">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="createNewTask" :disabled="!newTask.title || isCreatingTask || isNewTaskDateInvalid">
-            <i v-if="isCreatingTask" class="fa fa-spinner fa-spin"></i>
-            {{ isCreatingTask ? "Creating..." : "Create Task" }}
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Add Task Group Modal -->
-    <div v-if="showAddTaskGroupModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeAddTaskGroupModal">
-      <div class="modal-content" :class="{ 'dark-mode': isDarkMode }" @click.stop>
-        <div class="modal-header">
-          <h3>Add New Task Group</h3>
-          <button class="modal-close-btn" @click="closeAddTaskGroupModal">
-            <i class="fa fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form @submit.prevent="createNewTaskGroup">
-            <div class="form-group">
-              <label for="taskGroupName">Task Group Name *</label>
-              <input type="text" id="taskGroupName" v-model="newTaskGroup.name" class="form-control" placeholder="Enter task group name" required />
-            </div>
-
-            <div class="form-group">
-              <label for="taskGroupDescription">Description</label>
-              <textarea
-                id="taskGroupDescription"
-                v-model="newTaskGroup.description"
-                class="form-control"
-                rows="3"
-                placeholder="Enter task group description (optional)"
-              ></textarea>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeAddTaskGroupModal">Cancel</button>
-          <button type="button" class="btn btn-success" @click="createNewTaskGroup" :disabled="!newTaskGroup.name || isCreatingTaskGroup">
-            <i v-if="isCreatingTaskGroup" class="fa fa-spinner fa-spin"></i>
-            {{ isCreatingTaskGroup ? "Creating..." : "Create Group" }}
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Task Description Modal -->
-    <div v-if="showDescriptionModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeDescriptionModal">
-      <div class="modal-content description-modal" :class="{ 'dark-mode': isDarkMode }" @click.stop>
-        <div class="modal-header">
-          <h3>
-            <i class="fa fa-file-text me-2"></i>
-            Task Description
-          </h3>
-          <div class="task-info">
-            <span class="task-title">{{ selectedTaskForDescription?.title }}</span>
-            <span class="task-id">#{{ selectedTaskForDescription?.id }}</span>
-          </div>
-          <button class="modal-close-btn" @click="closeDescriptionModal">
-            <i class="fa fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="description-editor">
-            <label for="taskDescriptionText">Description</label>
-            <!-- <text-editor :name="'description'" :value="descriptionText" @input="descriptionText = $event" /> -->
-
-            <textarea
-              id="taskDescriptionText"
-              v-model="descriptionText"
-              class="form-control description-textarea"
-              rows="8"
-              placeholder="Enter task description... (HTML tags will be converted to plain text)"
-              :disabled="isSavingDescription"
-              style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.5; resize: vertical"
-            ></textarea>
-
-            <div class="description-info">
-              <small class="text-muted">
-                <i class="fa fa-info-circle"></i>
-                Content will be saved as plain text. Use line breaks for formatting.
-              </small>
-              <small class="character-count"> {{ descriptionText ? descriptionText.length : 0 }} characters </small>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeDescriptionModal" :disabled="isSavingDescription">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="saveTaskDescription" :disabled="!descriptionText.trim() || isSavingDescription">
-            <i v-if="isSavingDescription" class="fa fa-spinner fa-spin"></i>
-            {{ isSavingDescription ? "Saving..." : "Save Description" }}
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Task Review Modal -->
-    <div v-if="showTaskReviewModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeTaskReviewModal">
-      <div class="modal-content review-modal" :class="{ 'dark-mode': isDarkMode }" @click.stop>
-        <div class="modal-header">
-          <h3>
-            <i class="fa fa-star me-2"></i>
-            Task Review
-          </h3>
-          <div class="task-info">
-            <span class="task-title">{{ selectedTaskForReview?.title }}</span>
-            <span class="task-id">#{{ selectedTaskForReview?.id }}</span>
-          </div>
-          <button class="modal-close-btn" @click="closeTaskReviewModal">
-            <i class="fa fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="review-form">
-            <div class="form-group">
-              <label for="reviewTaskStatus">Task Status</label>
-              <select id="reviewTaskStatus" v-model="reviewData.task_status" class="form-control" :disabled="isSavingReview">
-                <option value="Pending">📝 Pending</option>
-                <option value="In Progress">⚡ In Progress</option>
-                <option value="Completed">✅ Completed</option>
-                <option value="Not Completed">❌ Not Completed</option>
-                <option value="On Hold">⏸️ On Hold</option>
-                <option value="Cancelled">❌ Cancelled</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="reviewRating">Rating</label>
-              <div class="rating-container">
-                <div class="star-rating">
-                  <span
-                    v-for="star in 5"
-                    :key="star"
-                    class="star clickable"
-                    :class="{
-                      filled: star <= reviewData.rating,
-                      hover: star <= hoveredRating,
-                    }"
-                    @click="setRating(star)"
-                    @mouseenter="hoveredRating = star"
-                    @mouseleave="hoveredRating = 0"
+                <!-- Group Tasks -->
+                <template v-if="!group.collapsed">
+                  <tr
+                    v-for="(task, taskIndex) in group.tasks"
+                    :key="task.id + '-task-' + taskIndex"
+                    :class="`table_rows table_row_${task.id} ${editableRows[getTaskGlobalIndex(task)] ? 'editable-row' : ''} group-task-row`"
+                    :data-task-id="task.id"
+                    @click="handleRowClick(task)"
+                    @dblclick="enableRowEdit(task)"
                   >
-                    <i class="fa fa-star"></i>
+                    <!-- ID -->
+                    <td class="text-limit task-id-cell" :title="task.id">
+                      {{ taskIndex + 1 }}
+                      <i v-if="editableRows[getTaskGlobalIndex(task)]" class="fa fa-edit text-warning ml-1"></i>
+                    </td>
+
+                    <!-- Task Title -->
+                    <td class="text-limit" :title="task.title">
+                      <div class="task-title-container">
+                        <input
+                          v-if="editableRows[getTaskGlobalIndex(task)]"
+                          type="text"
+                          v-model="task.title"
+                          class="form-control form-control-sm"
+                          @blur="immediateSaveTask(task)"
+                          @keyup.enter="immediateSaveTask(task)"
+                          @click.stop
+                          ref="titleInput"
+                        />
+                        <div v-else class="task-title-display">
+                          <span @dblclick="enableTitleEdit(task)" class="editable-title" :class="{ 'task-assigned': isTaskAssigned(task) }">
+                            {{ task.title }}
+                          </span>
+                          <div v-if="isTaskAssigned(task)" class="assignment-info" :title="getAssignmentTooltip(task)">
+                            <i class="fa fa-user-tag assignment-icon"></i>
+                            <span class="assignment-text">
+                              {{ getAssignmentText(task) }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <!-- Assigned User -->
+                    <td class="text-limit" :title="task.user ? task.user.name : 'Not assigned'">
+                      <div class="assigned-user-cell">
+                        <span v-if="task.user && task.user.name" class="user-info text-success">
+                          <i class="fa fa-user text-primary"></i>
+                          {{ task.user.name }}
+                        </span>
+                        <span v-else class="no-user-assigned text-muted">
+                          <i class="fa fa-user-times"></i>
+                          Not assigned
+                        </span>
+                      </div>
+                    </td>
+
+                    <!-- Project -->
+                    <td class="" :title="getTaskProjectName(task)">
+                      <div class="project-cell">
+                        <span v-if="getTaskProjectName(task)" class="project-info text-white">
+                          <i class="fa fa-folder"></i>
+                          {{ getTaskProjectName(task) }}
+                        </span>
+                        <span v-else class="no-project-assigned text-muted">
+                          <i class="fa fa-folder-open"></i>
+                          No project
+                        </span>
+                      </div>
+                    </td>
+
+                    <!-- Priority -->
+                    <td class="text-limit" :title="task.priority">
+                      <select
+                        v-if="editableRows[getTaskGlobalIndex(task)]"
+                        v-model="task.priority"
+                        class="form-control form-control-sm"
+                        @change="debouncedSaveTask(task, 500)"
+                        @click.stop
+                      >
+                        <option value="low">⚫ Low</option>
+                        <option value="normal">🟢 Normal</option>
+                        <option value="high">🟡 High</option>
+                        <option value="urgent">🔴 Urgent</option>
+                      </select>
+                      <span v-else>
+                        <span v-if="task.priority === 'low'">⚫ Low</span>
+                        <span v-else-if="task.priority === 'normal'">🟢 Normal</span>
+                        <span v-else-if="task.priority === 'high'">🟡 High</span>
+                        <span v-else-if="task.priority === 'urgent'">🔴 Urgent</span>
+                        <span v-else>{{ task.priority }}</span>
+                      </span>
+                    </td>
+
+                    <!-- Task Status -->
+                    <td class="text-limit" :class="getTaskStatusClass(task.task_user_status)" :title="task.task_user_status">
+                      <select
+                        v-if="editableRows[getTaskGlobalIndex(task)]"
+                        v-model="task.task_user_status"
+                        class="form-control form-control-sm"
+                        @change="debouncedSaveTask(task, 500)"
+                        @click.stop
+                      >
+                        <option value="Pending">📝 Pending</option>
+                        <option value="In Progress">⚡ In Progress</option>
+                        <option value="Completed">✅ Completed</option>
+                        <option value="Not Completed">❌ Not Completed</option>
+                      </select>
+                      <span v-else>
+                        <span v-if="task.task_user_status === 'Pending'">📝 Pending</span>
+                        <span v-else-if="task.task_user_status === 'In Progress'">⚡ In Progress</span>
+                        <span v-else-if="task.task_user_status === 'Completed'">✅ Completed</span>
+                        <span v-else-if="task.task_user_status === 'Not Completed'">❌ Not Completed</span>
+                        <span v-else>{{ task.task_user_status }}</span>
+                      </span>
+                    </td>
+                    <td>
+                      {{ task.task_status }}
+                    </td>
+
+                    <!-- Start Date -->
+                    <td class="text-limit" :title="formatDateTime(task.start_date)">
+                      <input
+                        v-if="editableRows[getTaskGlobalIndex(task)]"
+                        type="datetime-local"
+                        v-model="task.start_date"
+                        :min="todayDate + 'T00:00'"
+                        class="form-control form-control-sm"
+                        @change="debouncedSaveTask(task, 500)"
+                        @click.stop
+                      />
+                      <span v-else>{{ formatDateTime(task.start_date) }}</span>
+                    </td>
+
+                    <!-- End Date -->
+                    <td class="text-limit" :title="formatDateTime(task.end_date)">
+                      <input
+                        v-if="editableRows[getTaskGlobalIndex(task)]"
+                        type="datetime-local"
+                        v-model="task.end_date"
+                        :min="(task.start_date || todayDate) + (task.start_date ? '' : 'T00:00')"
+                        class="form-control form-control-sm"
+                        @change="debouncedSaveTask(task, 500)"
+                        @click.stop
+                      />
+                      <span v-else>{{ formatDateTime(task.end_date) }}</span>
+                    </td>
+
+                    <td>
+                      {{ FindActualTime(task.start_date, task.end_date) }}
+                    </td>
+
+                    <!-- Rating -->
+                    <td class="text-limit" :title="`Rating: ${task.rating || 0}/5`">
+                      <div class="rating-cell">
+                        <span v-for="n in 5" :key="n" class="star readonly" :class="{ filled: n <= (task.rating || 0) }">
+                          <i class="fa fa-star" :class="n <= (task.rating || 0) ? 'text-warning' : 'text-secondary'"></i>
+                        </span>
+                        <span class="ml-2">({{ task.rating || 0 }})</span>
+                      </div>
+                    </td>
+
+                    <!-- Actions -->
+                    <td class="text-limit actions-cell">
+                      <div class="task-actions">
+                        <!-- Success indicator -->
+                        <span v-if="recentlyUpdated[task.id]" class="success-indicator" title="Task updated successfully">
+                          <i class="fa fa-check-circle text-success"></i>
+                        </span>
+
+                        <!-- 3-dot toggle button (outside dropdown) -->
+                        <button
+                          class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                          type="button"
+                          @click.stop="toggleDropdown(task.id)"
+                          title="More actions"
+                        >
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+
+                        <!-- 3-dot menu dropdown container -->
+                        <div class="custom-dropdown" :class="{ show: activeDropdown === task.id }">
+                          <div class="dropdown-menu custom-dropdown-menu" :class="{ show: activeDropdown === task.id }">
+                            <a
+                              class="dropdown-item text-info"
+                              href="#"
+                              @click.prevent="
+                                openDescriptionModal(task);
+                                closeDropdown();
+                              "
+                            >
+                              <i class="fa fa-file-text"></i>
+                              <span>Description</span>
+                            </a>
+                            <a
+                              class="dropdown-item text-warning"
+                              href="#"
+                              @click.prevent="
+                                openTaskReviewModal(task);
+                                closeDropdown();
+                              "
+                            >
+                              <i class="fa fa-star"></i>
+                              <span>Review</span>
+                            </a>
+
+                            <a
+                              class="dropdown-item text-danger"
+                              href="#"
+                              @click.prevent="
+                                removeTask(task);
+                                closeDropdown();
+                              "
+                              :title="'Delete task'"
+                            >
+                              <i class="fa fa-trash"></i>
+                              <span>Delete</span>
+                            </a>
+                            <router-link target="_blank" class="dropdown-item text-primary" :to="`/tasks/details/${task.slug}`">
+                              <i class="fa fa-pencil"></i>
+                              <span>Details</span>
+                            </router-link>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </template>
+              </template>
+            </tbody>
+            <!-- Add Rows Section -->
+          </table>
+        </div>
+      </div>
+
+      <!-- Add Task Modal -->
+      <div v-if="showAddTaskModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeAddTaskModal">
+        <div class="modal-content" :class="{ 'dark-mode': isDarkMode }" @click.stop>
+          <div class="modal-header">
+            <h3>Add New Task</h3>
+            <button class="modal-close-btn" @click="closeAddTaskModal">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="createNewTask">
+              <div class="form-group">
+                <label for="taskTitle">Task Title *</label>
+                <input type="text" id="taskTitle" v-model="newTask.title" class="form-control" placeholder="Enter task title" required />
+              </div>
+
+              <div class="form-group">
+                <label for="taskGroup">Task Group</label>
+                <select id="taskGroup" v-model="newTask.task_group_id" class="form-control">
+                  <option value="">Select Task Group (Optional)</option>
+                  <option v-for="group in task_groups" :key="group.id" :value="group.id">
+                    {{ group.name }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="taskPriority">Priority</label>
+                <select id="taskPriority" v-model="newTask.priority" class="form-control">
+                  <option value="low">🟢 Low</option>
+                  <option value="normal">🟡 Normal</option>
+                  <option value="high">🔴 High</option>
+                  <option value="urgent">⚫ Urgent</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="taskStatus">Status</label>
+                <select id="taskStatus" v-model="newTask.task_user_status" class="form-control">
+                  <option value="Pending">📝 Pending</option>
+                  <option value="In Progress">⚡ In Progress</option>
+                  <option value="Completed">✅ Completed</option>
+                  <option value="Not Completed">❌ Not Completed</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <input
+                    type="datetime-local"
+                    id="startDate"
+                    v-model="newTask.start_date"
+                    class="form-control text-dark"
+                    placeholder="Start Date & Time"
+                  />
+                </div>
+                <div class="form-group">
+                  <input
+                    type="datetime-local"
+                    id="endDate"
+                    v-model="newTask.end_date"
+                    :min="newTask.start_date"
+                    class="form-control text-dark"
+                    placeholder="End Date & Time"
+                  />
+                </div>
+              </div>
+
+              <!-- Date validation error message -->
+              <div
+                v-if="isNewTaskDateInvalid"
+                class="alert alert-danger"
+                style="margin-top: 10px; padding: 8px 12px; border-radius: 4px; background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24"
+              >
+                <i class="fa fa-exclamation-triangle"></i>
+                {{ dateValidationMessage }}
+              </div>
+
+              <div class="form-group">
+                <label for="taskDescription">Description</label>
+                <textarea
+                  id="taskDescription"
+                  v-model="newTask.description"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Enter task description (optional)"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="closeAddTaskModal">Cancel</button>
+            <button type="button" class="btn btn-primary" @click="createNewTask" :disabled="!newTask.title || isCreatingTask || isNewTaskDateInvalid">
+              <i v-if="isCreatingTask" class="fa fa-spinner fa-spin"></i>
+              {{ isCreatingTask ? "Creating..." : "Create Task" }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Task Group Modal -->
+      <div v-if="showAddTaskGroupModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeAddTaskGroupModal">
+        <div class="modal-content" :class="{ 'dark-mode': isDarkMode }" @click.stop>
+          <div class="modal-header">
+            <h3>Add New Task Group</h3>
+            <button class="modal-close-btn" @click="closeAddTaskGroupModal">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="createNewTaskGroup">
+              <div class="form-group">
+                <label for="taskGroupName">Task Group Name *</label>
+                <input type="text" id="taskGroupName" v-model="newTaskGroup.name" class="form-control" placeholder="Enter task group name" required />
+              </div>
+
+              <div class="form-group">
+                <label for="taskGroupDescription">Description</label>
+                <textarea
+                  id="taskGroupDescription"
+                  v-model="newTaskGroup.description"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Enter task group description (optional)"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="closeAddTaskGroupModal">Cancel</button>
+            <button type="button" class="btn btn-success" @click="createNewTaskGroup" :disabled="!newTaskGroup.name || isCreatingTaskGroup">
+              <i v-if="isCreatingTaskGroup" class="fa fa-spinner fa-spin"></i>
+              {{ isCreatingTaskGroup ? "Creating..." : "Create Group" }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Description Modal -->
+      <div v-if="showDescriptionModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeDescriptionModal">
+        <div class="modal-content description-modal" :class="{ 'dark-mode': isDarkMode }" @click.stop>
+          <div class="modal-header">
+            <h3>
+              <i class="fa fa-file-text me-2"></i>
+              Task Description
+            </h3>
+            <div class="task-info">
+              <span class="task-title">{{ selectedTaskForDescription?.title }}</span>
+              <span class="task-id">#{{ selectedTaskForDescription?.id }}</span>
+            </div>
+            <button class="modal-close-btn" @click="closeDescriptionModal">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="description-editor">
+              <label for="taskDescriptionText">Description</label>
+              <!-- <text-editor :name="'description'" :value="descriptionText" @input="descriptionText = $event" /> -->
+
+              <textarea
+                id="taskDescriptionText"
+                v-model="descriptionText"
+                class="form-control description-textarea"
+                rows="8"
+                placeholder="Enter task description... (HTML tags will be converted to plain text)"
+                :disabled="isSavingDescription"
+                style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.5; resize: vertical"
+              ></textarea>
+
+              <div class="description-info">
+                <small class="text-muted">
+                  <i class="fa fa-info-circle"></i>
+                  Content will be saved as plain text. Use line breaks for formatting.
+                </small>
+                <small class="character-count"> {{ descriptionText ? descriptionText.length : 0 }} characters </small>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="closeDescriptionModal" :disabled="isSavingDescription">Cancel</button>
+            <button type="button" class="btn btn-primary" @click="saveTaskDescription" :disabled="!descriptionText.trim() || isSavingDescription">
+              <i v-if="isSavingDescription" class="fa fa-spinner fa-spin"></i>
+              {{ isSavingDescription ? "Saving..." : "Save Description" }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Review Modal -->
+      <div v-if="showTaskReviewModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeTaskReviewModal">
+        <div class="modal-content review-modal" :class="{ 'dark-mode': isDarkMode }" @click.stop>
+          <div class="modal-header">
+            <h3>
+              <i class="fa fa-star me-2"></i>
+              Task Review
+            </h3>
+            <div class="task-info">
+              <span class="task-title">{{ selectedTaskForReview?.title }}</span>
+              <span class="task-id">#{{ selectedTaskForReview?.id }}</span>
+            </div>
+            <button class="modal-close-btn" @click="closeTaskReviewModal">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="review-form">
+              <div class="form-group">
+                <label for="reviewTaskStatus">Task Status</label>
+                <select id="reviewTaskStatus" v-model="reviewData.task_status" class="form-control" :disabled="isSavingReview">
+                  <option value="Pending">📝 Pending</option>
+                  <option value="In Progress">⚡ In Progress</option>
+                  <option value="Completed">✅ Completed</option>
+                  <option value="Not Completed">❌ Not Completed</option>
+                  <option value="On Hold">⏸️ On Hold</option>
+                  <option value="Cancelled">❌ Cancelled</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="reviewRating">Rating</label>
+                <div class="rating-container">
+                  <div class="star-rating">
+                    <span
+                      v-for="star in 5"
+                      :key="star"
+                      class="star clickable"
+                      :class="{
+                        filled: star <= reviewData.rating,
+                        hover: star <= hoveredRating,
+                      }"
+                      @click="setRating(star)"
+                      @mouseenter="hoveredRating = star"
+                      @mouseleave="hoveredRating = 0"
+                    >
+                      <i class="fa fa-star"></i>
+                    </span>
+                  </div>
+                  <span class="rating-text">
+                    {{ reviewData.rating }}/5
+                    <small class="text-muted"> ({{ getRatingText(reviewData.rating) }}) </small>
                   </span>
                 </div>
-                <span class="rating-text">
-                  {{ reviewData.rating }}/5
-                  <small class="text-muted"> ({{ getRatingText(reviewData.rating) }}) </small>
-                </span>
+              </div>
+
+              <div class="form-group">
+                <label for="reviewComments">Review Comments (Optional)</label>
+                <textarea
+                  id="reviewComments"
+                  v-model="reviewData.comments"
+                  class="form-control"
+                  rows="4"
+                  placeholder="Add your review comments here..."
+                  :disabled="isSavingReview"
+                ></textarea>
               </div>
             </div>
-
-            <div class="form-group">
-              <label for="reviewComments">Review Comments (Optional)</label>
-              <textarea
-                id="reviewComments"
-                v-model="reviewData.comments"
-                class="form-control"
-                rows="4"
-                placeholder="Add your review comments here..."
-                :disabled="isSavingReview"
-              ></textarea>
-            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeTaskReviewModal" :disabled="isSavingReview">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="saveTaskReview" :disabled="isSavingReview">
-            <i v-if="isSavingReview" class="fa fa-spinner fa-spin"></i>
-            {{ isSavingReview ? "Saving..." : "Save Review" }}
-          </button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="closeTaskReviewModal" :disabled="isSavingReview">Cancel</button>
+            <button type="button" class="btn btn-primary" @click="saveTaskReview" :disabled="isSavingReview">
+              <i v-if="isSavingReview" class="fa fa-spinner fa-spin"></i>
+              {{ isSavingReview ? "Saving..." : "Save Review" }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -1183,6 +1213,7 @@ export default {
       selectedDate: "", // Selected date for filtering (empty by default to show all tasks)
       filterStartDate: "", // Start date filter
       filterEndDate: "", // End date filter
+      searchQuery: "", // Search query for filtering tasks
       originalAllTasks: [], // Store original task data before filtering
 
       // Team members section collapse state
@@ -1349,19 +1380,16 @@ export default {
       console.log("Date range filters cleared");
     },
 
-    // Clear all filters method
-    clearAllFilters() {
-      this.selectedProject = null;
-      this.selectedUser = null;
-      this.selectedDevStatus = null;
-      this.selectedTaskStatus = null;
-      this.filterStartDate = "";
-      this.filterEndDate = "";
-      this.selectedDate = "";
-      console.log("All filters cleared");
-      
-      // Refresh tasks to show all tasks
-      this.get_all_tasks();
+    // Search filtering methods
+    filterTasksBySearch() {
+      console.log("Filtering tasks by search query:", this.searchQuery);
+      // The filtering logic is handled by the computed property
+      // This method can be used for additional actions when search changes
+    },
+
+    clearSearch() {
+      this.searchQuery = "";
+      console.log("Search filter cleared");
     },
 
     // Clear all filters method
@@ -1372,9 +1400,10 @@ export default {
       this.selectedTaskStatus = null;
       this.filterStartDate = "";
       this.filterEndDate = "";
+      this.searchQuery = "";
       this.selectedDate = "";
       console.log("All filters cleared");
-      
+
       // Refresh tasks to show all tasks
       this.get_all_tasks();
     },
@@ -2499,7 +2528,7 @@ export default {
       return group ? group.name : "";
     },
 
-    // Calculate actual working time between start and end dates (9 AM to 7 PM, Monday to Friday)
+    // Calculate time difference between start and end dates
     FindActualTime(startDate, endDate) {
       if (!startDate || !endDate) {
         return "Not set";
@@ -2519,85 +2548,38 @@ export default {
           return "Invalid range";
         }
 
-        // Working hours: 9 AM to 7 PM (10 hours per day)
-        const WORK_START_HOUR = 9;
-        const WORK_END_HOUR = 19; // 7 PM in 24-hour format
-        const WORK_HOURS_PER_DAY = WORK_END_HOUR - WORK_START_HOUR; // 10 hours
+        // Calculate difference in milliseconds
+        const diffMs = end.getTime() - start.getTime();
 
-        let totalWorkingMinutes = 0;
-        
-        // Create a new date for iteration, starting from the start date
-        let currentDate = new Date(start);
-        
-        // If start time is before 9 AM, adjust to 9 AM
-        if (currentDate.getHours() < WORK_START_HOUR) {
-          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
-        }
-        
-        // If start time is after 7 PM, move to next day 9 AM
-        if (currentDate.getHours() >= WORK_END_HOUR) {
-          currentDate.setDate(currentDate.getDate() + 1);
-          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
-        }
-
-        while (currentDate < end) {
-          // Check if current date is a weekday (Monday = 1, Friday = 5)
-          const dayOfWeek = currentDate.getDay();
-          if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Monday to Friday
-            
-            // Calculate work end time for current day
-            let workEndTime = new Date(currentDate);
-            workEndTime.setHours(WORK_END_HOUR, 0, 0, 0);
-            
-            // If the task ends before the work day ends, use task end time
-            let effectiveEndTime = end < workEndTime ? end : workEndTime;
-            
-            // Calculate working minutes for this day
-            let dayWorkingMs = effectiveEndTime.getTime() - currentDate.getTime();
-            if (dayWorkingMs > 0) {
-              totalWorkingMinutes += Math.floor(dayWorkingMs / (1000 * 60));
-            }
-            
-            // If we've reached the end date, break
-            if (end <= workEndTime) {
-              break;
-            }
-          }
-          
-          // Move to next day at 9 AM
-          currentDate.setDate(currentDate.getDate() + 1);
-          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
-        }
-
-        // Convert total working minutes to readable format
-        if (totalWorkingMinutes <= 0) {
-          return "0 hours";
-        }
-
-        const totalHours = Math.floor(totalWorkingMinutes / 60);
-        const remainingMinutes = totalWorkingMinutes % 60;
-        const totalDays = Math.floor(totalHours / WORK_HOURS_PER_DAY);
+        // Convert to different units
+        const diffMinutes = Math.floor(diffMs / (1000 * 60));
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
         // Return appropriate format based on duration
-        if (totalDays > 0) {
-          const remainingHours = totalHours % WORK_HOURS_PER_DAY;
+        if (diffDays > 0) {
+          const remainingHours = diffHours % 24;
           if (remainingHours > 0) {
+            const remainingMinutes = diffMinutes % 60;
             if (remainingMinutes > 0) {
-              return `${totalDays}d ${remainingHours}h ${remainingMinutes}m`;
+              return `${diffDays}d ${remainingHours}h ${remainingMinutes}m`;
             }
-            return `${totalDays}d ${remainingHours}h`;
+            return `${diffDays}d ${remainingHours}h`;
           }
-          return `${totalDays} working day${totalDays > 1 ? "s" : ""}`;
-        } else if (totalHours > 0) {
+          return `${diffDays} day${diffDays > 1 ? "s" : ""}`;
+        } else if (diffHours > 0) {
+          const remainingMinutes = diffMinutes % 60;
           if (remainingMinutes > 0) {
-            return `${totalHours}h ${remainingMinutes}m`;
+            return `${diffHours}h ${remainingMinutes}m`;
           }
-          return `${totalHours} hour${totalHours > 1 ? "s" : ""}`;
+          return `${diffHours} hour${diffHours > 1 ? "s" : ""}`;
+        } else if (diffMinutes > 0) {
+          return `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""}`;
         } else {
-          return `${remainingMinutes} min${remainingMinutes > 1 ? "s" : ""}`;
+          return "0 minutes";
         }
       } catch (error) {
-        console.error("Error calculating actual working time:", error);
+        console.error("Error calculating time difference:", error);
         return "Error";
       }
     },
@@ -3530,18 +3512,35 @@ export default {
         });
       }
 
-      // Filter by search query if needed (keeping existing search functionality)
+      // Filter by search query if needed
       if (this.searchQuery) {
         const query = this.searchQuery.toLowerCase();
         tasks = tasks.filter((task) => {
-          return (
-            task.title.toLowerCase().includes(query) ||
-            task.description.toLowerCase().includes(query) ||
-            task.priority.toLowerCase().includes(query) ||
-            task.task_status.toLowerCase().includes(query) ||
-            task.task_user_status.toLowerCase().includes(query) ||
-            (task.assigned_users && task.assigned_users.some((user) => user.name.toLowerCase().includes(query)))
-          );
+          // Search in task title
+          const titleMatch = task.title && task.title.toLowerCase().includes(query);
+
+          // Search in task description
+          const descriptionMatch = task.description && task.description.toLowerCase().includes(query);
+
+          // Search in priority
+          const priorityMatch = task.priority && task.priority.toLowerCase().includes(query);
+
+          // Search in task status
+          const taskStatusMatch = task.task_status && task.task_status.toLowerCase().includes(query);
+
+          // Search in dev status
+          const devStatusMatch = task.task_user_status && task.task_user_status.toLowerCase().includes(query);
+
+          // Search in assigned user name
+          const userMatch = task.user && task.user.name && task.user.name.toLowerCase().includes(query);
+
+          // Search in project name
+          const projectMatch = task.project && task.project.name && task.project.name.toLowerCase().includes(query);
+
+          // Search in task ID
+          const idMatch = task.id && task.id.toString().includes(query);
+
+          return titleMatch || descriptionMatch || priorityMatch || taskStatusMatch || devStatusMatch || userMatch || projectMatch || idMatch;
         });
       }
 
@@ -3791,7 +3790,23 @@ export default {
 .date-controls-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.filter-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.action-buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -3799,7 +3814,100 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  min-width: 140px;
+  min-width: 120px;
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .date-controls-row {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .filter-controls-row {
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .date-filter-group {
+    min-width: 100px;
+    flex: 1;
+  }
+
+  .search-filter-group {
+    min-width: 150px;
+    flex: 2;
+  }
+
+  .action-buttons-group {
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .date-controls-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filter-controls-row {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .date-filter-group {
+    min-width: 80px;
+  }
+
+  .search-filter-group {
+    width: 100%;
+    order: -1;
+    margin-bottom: 8px;
+  }
+}
+
+.search-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 200px;
+}
+
+.search-filter-group .input-group {
+  position: relative;
+}
+
+.search-filter-group .input-group-text {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-right: none;
+  padding: 0.375rem 0.75rem;
+  color: #6c757d;
+}
+
+.search-filter-group .search-input {
+  border-left: none;
+  flex: 1;
+}
+
+.search-filter-group .search-input:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.search-filter-group .btn-clear-search {
+  border-left: none;
+  background-color: transparent;
+  border-color: #ced4da;
+  color: #6c757d;
+  padding: 0.375rem 0.75rem;
+}
+
+.search-filter-group .btn-clear-search:hover {
+  background-color: #f8f9fa;
+  color: #dc3545;
 }
 
 .date-picker {
@@ -3840,10 +3948,35 @@ export default {
 .user-section-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .user-section-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .section-actions {
+    width: 100%;
+  }
+
+  .section-title-container {
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .user-section-header {
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
 }
 
 .section-title-container {
@@ -3917,7 +4050,7 @@ export default {
   color: white;
   transition: all 0.3s ease;
   font-size: 13px;
-  padding: 4px 12px;
+  padding: 10px 12px;
   min-width: 140px;
   text-align: left;
 }
@@ -3939,7 +4072,7 @@ export default {
   color: white;
   transition: all 0.3s ease;
   font-size: 13px;
-  padding: 4px 12px;
+  padding: 10px 12px;
   min-width: 140px;
   text-align: left;
   background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
@@ -3948,7 +4081,7 @@ export default {
 }
 
 .section-actions .dev-status-dropdown-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -3981,7 +4114,7 @@ export default {
   color: white;
   transition: all 0.3s ease;
   font-size: 13px;
-  padding: 4px 12px;
+  padding: 10px 12px;
   min-width: 140px;
   text-align: left;
   background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(39, 174, 96, 0.1) 100%);
@@ -3990,7 +4123,7 @@ export default {
 }
 
 .section-actions .task-status-dropdown-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -4115,6 +4248,25 @@ export default {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .user-cards-container {
+    gap: 8px;
+    max-height: 250px;
+    padding: 8px 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .user-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+    max-height: none;
+    overflow-y: visible;
+    padding: 8px 0;
+  }
+}
+
 /* Individual User Card */
 .user-card {
   background: rgba(255, 255, 255, 0.95);
@@ -4131,6 +4283,24 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .user-card {
+    min-width: 180px;
+    max-width: 220px;
+    padding: 10px;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 576px) {
+  .user-card {
+    min-width: 100%;
+    max-width: 100%;
+    padding: 12px;
+    gap: 8px;
+  }
 }
 
 .user-card:hover {
@@ -4368,6 +4538,62 @@ export default {
   text-align: center;
   color: rgba(255, 255, 255, 0.8);
   width: 100%;
+}
+
+/* Responsive Dropdown Styles */
+@media (max-width: 768px) {
+  .project-dropdown-btn,
+  .dev-status-dropdown-btn,
+  .task-status-dropdown-btn {
+    font-size: 12px;
+    padding: 4px 8px;
+    min-width: 80px;
+  }
+
+  .dropdown-menu {
+    font-size: 13px;
+  }
+
+  .professional-user-tabs {
+    padding: 12px;
+    margin: 0 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .project-dropdown-btn,
+  .dev-status-dropdown-btn,
+  .task-status-dropdown-btn {
+    font-size: 11px;
+    padding: 3px 6px;
+    min-width: 70px;
+    flex: 1;
+    text-align: center;
+  }
+
+  .professional-user-tabs {
+    padding: 8px;
+    margin: 0 4px;
+    border-radius: 8px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .section-subtitle {
+    font-size: 12px;
+  }
+}
+
+/* Utility class for mobile text truncation */
+@media (max-width: 576px) {
+  .mobile-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 80px;
+  }
 }
 
 .empty-icon {
@@ -5014,8 +5240,8 @@ export default {
 }
 
 /* Filter Badge Styles */
-.project-filter-badge, 
-.user-filter-badge, 
+.project-filter-badge,
+.user-filter-badge,
 .all-filter-badge {
   color: #ffffff;
   font-weight: 500;
@@ -5031,6 +5257,13 @@ export default {
   color: #2ecc71;
   font-weight: 500;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.search-filter-badge {
+  color: #e74c3c;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-style: italic;
 }
 
 .filter-active-indicator {
@@ -5054,7 +5287,7 @@ export default {
 }
 
 .btn-clear-filters::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;

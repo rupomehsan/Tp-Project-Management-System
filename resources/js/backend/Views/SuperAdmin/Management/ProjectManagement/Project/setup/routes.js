@@ -9,36 +9,35 @@ let route_prefix = setup.route_prefix;
 let route_path = setup.route_path;
 
 const routes = {
-    path: route_path,
-    component: Layout,
-    children: [
-        {
-            path: "all",
-            name: "All" + route_prefix,
-            component: All,
-        },
-        {
-            path: "create",
-            name: "Create" + route_prefix,
-            component: Form,
-        },
-        {
-            path: "details/:id",
-            name: "Details" + route_prefix,
-            component: Details,
-        },
-         {
-            path: "Tasks/:id",
-            name: "Tasks" + route_prefix,
-            component: Tasks,
-        },
-        {
-            path: "edit/:id",
-            name: "Edit" + route_prefix,
-            component: Form,
-        },
-    ],
+  path: route_path,
+  component: Layout,
+  children: [
+    {
+      path: "all",
+      name: "All" + route_prefix,
+      component: All,
+    },
+    {
+      path: "create",
+      name: "Create" + route_prefix,
+      component: Form,
+    },
+    {
+      path: "details/:id",
+      name: "Details" + route_prefix,
+      component: Details,
+    },
+    {
+      path: "Tasks/:id",
+      name: "Tasks" + route_prefix,
+      component: Tasks,
+    },
+    {
+      path: "edit/:id",
+      name: "Edit" + route_prefix,
+      component: Form,
+    },
+  ],
 };
 
 export default routes;
-
