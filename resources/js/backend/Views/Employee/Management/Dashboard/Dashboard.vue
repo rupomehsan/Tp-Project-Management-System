@@ -320,19 +320,19 @@
             </div>
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-3">
-            <div class="stat-card stat-card-warning">
+            <div class="stat-card stat-card-info">
               <div class="stat-card-body">
                 <div class="stat-icon-container">
-                  <div class="stat-icon bg-warning">
+                  <div class="stat-icon bg-info">
                     <i class="zmdi zmdi-time"></i>
                   </div>
                 </div>
                 <div class="stat-content">
-                  <div class="stat-number">{{ dashboard_data.total_late_minutes || 0 }}</div>
+                  <div class="stat-number">{{ dashboard_data.total_working_hours || 0 }}</div>
                   <div class="stat-label">Total Working Hours</div>
                   <div class="stat-trend">
                     <span class="trend-indicator negative">
-                      <i class="zmdi zmdi-minus-circle"></i>
+                        <i class="zmdi zmdi-time"></i>
                      Working Hours
                     </span>
                   </div>

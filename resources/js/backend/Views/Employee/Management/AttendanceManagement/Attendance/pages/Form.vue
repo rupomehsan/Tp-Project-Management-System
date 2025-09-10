@@ -4,18 +4,23 @@
       <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h5 class="text-capitalize">
-            {{ param_id ? `${setup.edit_page_title}` : `${setup.create_page_title}` }}
+            {{
+              param_id
+                ? `${setup.edit_page_title}`
+                : `${setup.create_page_title}`
+            }}
           </h5>
           <div>
-            <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${setup.route_prefix}` }">
+            <router-link
+              class="btn btn-outline-warning btn-sm"
+              :to="{ name: `All${setup.route_prefix}` }"
+            >
               {{ setup.all_page_title }}
             </router-link>
           </div>
         </div>
         <div class="card-body">
           <div class="attendance-form-container">
-            
-
             <!-- Time Input Grid -->
             <div class="time-grid">
               <!-- Check In Card -->
@@ -36,27 +41,32 @@
                     name="check_in"
                     id="check_in"
                     v-model="form_fields.check_in"
-                    :min="todayStart"
-                    :max="todayEnd"
-                    :disabled="param_id"
                     placeholder="Select check-in time"
                   />
                   <div class="time-display">
                     <span v-if="form_fields.check_in" class="time-value">
                       {{ formatDisplayTime(form_fields.check_in) }}
                     </span>
-                    <span v-else class="time-placeholder"> No time selected </span>
+                    <span v-else class="time-placeholder">
+                      No time selected
+                    </span>
                   </div>
                 </div>
               </div>
 
               <!-- Arrow Connector -->
-              <div class="time-connector" v-if="form_fields.check_in && param_id">
+              <div
+                class="time-connector"
+                v-if="form_fields.check_in && param_id"
+              >
                 <i class="fa fa-arrow-right"></i>
               </div>
 
               <!-- Check Out Card -->
-              <div class="time-card check-out-card" v-if="form_fields.check_in && param_id">
+              <div
+                class="time-card check-out-card"
+                v-if="form_fields.check_in && param_id"
+              >
                 <div class="time-card-header">
                   <div class="time-icon check-out-icon">
                     <i class="fa fa-stop"></i>
@@ -74,8 +84,6 @@
                     name="check_out"
                     id="check_out"
                     v-model="form_fields.check_out"
-                    :min="form_fields.check_in || todayStart"
-                    :max="todayEnd"
                     :disabled="!form_fields.check_in"
                     placeholder="Select check-out time"
                   />
@@ -83,7 +91,9 @@
                     <span v-if="form_fields.check_out" class="time-value">
                       {{ formatDisplayTime(form_fields.check_out) }}
                     </span>
-                    <span v-else class="time-placeholder"> No time selected </span>
+                    <span v-else class="time-placeholder">
+                      No time selected
+                    </span>
                   </div>
                   <div class="early-warning" v-if="isCheckoutBefore7PM">
                     <i class="fa fa-exclamation-circle"></i>
@@ -102,7 +112,10 @@
                   </div>
                   <div class="notice-content">
                     <h6>Early Checkout Detected</h6>
-                    <p>You're checking out before 7:00 PM. Please provide a reason.</p>
+                    <p>
+                      You're checking out before 7:00 PM. Please provide a
+                      reason.
+                    </p>
                   </div>
                 </div>
                 <div class="notes-input-section">
@@ -122,14 +135,23 @@
                       required
                     ></textarea>
                     <div class="input-footer">
-                      <span class="char-count" :class="{ 'char-limit': form_fields.notes.length > 450 }"> {{ form_fields.notes.length }}/500 </span>
+                      <span
+                        class="char-count"
+                        :class="{
+                          'char-limit': form_fields.notes.length > 450,
+                        }"
+                      >
+                        {{ form_fields.notes.length }}/500
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="form-actions d-flex justify-content-center mt-4">
-              <button type="submit" class="btn btn-light btn-square px-5"><i class="icon-lock"></i> Submit</button>
+              <button type="submit" class="btn btn-light btn-square px-5">
+                <i class="icon-lock"></i> Submit
+              </button>
             </div>
           </div>
         </div>
@@ -292,7 +314,9 @@ export default {
       // Set to start of day in local timezone
       today.setHours(0, 0, 0, 0);
       // Convert to ISO format but keep local time
-      const localISO = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString();
+      const localISO = new Date(
+        today.getTime() - today.getTimezoneOffset() * 60000
+      ).toISOString();
       return localISO.slice(0, 16);
     },
 
@@ -301,7 +325,9 @@ export default {
       // Set to end of day in local timezone
       today.setHours(23, 59, 59, 999);
       // Convert to ISO format but keep local time
-      const localISO = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString();
+      const localISO = new Date(
+        today.getTime() - today.getTimezoneOffset() * 60000
+      ).toISOString();
       return localISO.slice(0, 16);
     },
 

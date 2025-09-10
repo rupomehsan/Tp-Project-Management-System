@@ -58,7 +58,7 @@
               </div>
             </div>
 
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <div class="form-group">
                 <label for="start_date">Start Date</label>
                 <div class="mt-1 mb-3">
@@ -85,7 +85,7 @@
                   />
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <div class="col-md-6">
               <div class="form-group">
@@ -101,7 +101,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <div class="form-group">
                 <label for="project_progress">Project Progress (%)</label>
                 <div class="mt-1 mb-3">
@@ -116,7 +116,7 @@
                   />
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <div class="col-md-6">
               <div class="form-group">
@@ -141,29 +141,6 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="project_agrement_file">Project Agrement File</label>
-                <span>
-                  <a
-                    class="btn btn-info btn-sm mx-2"
-                    :href="form_fields.project_agrement_file"
-                    target="_blank"
-                  >
-                    Click here
-                  </a>
-                </span>
-                <div class="mt-1 mb-3">
-                  <input
-                    type="file"
-                    class="form-control form-control-square mb-2"
-                    name="project_agrement_file"
-                    id="project_agrement_file"
-                    @change="handleFileUpload($event, 'project_agrement_file')"
-                  />
-                </div>
-              </div>
-            </div>
 
             <div class="col-md-6">
               <div class="form-group">
@@ -181,47 +158,6 @@
                     <option value="Completed">Completed</option>
                     <option value="On Hold">On Hold</option>
                   </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">Delivery Status</label>
-                <div class="mt-1 mb-3">
-                  <select
-                    v-model="form_fields.delivery_status"
-                    class="form-control form-control-square mb-2"
-                    name="delivery_status"
-                    id="delivery_status"
-                  >
-                    <option value="">Select--- Delivery Status</option>
-                    <option value="Yet to meeting">Yet to meeting</option>
-                    <option value="Testing Phase">Testing Phase</option>
-                    <option value="Successfully Delivered">
-                      Successfully Delivered
-                    </option>
-                    <option value="Delivery process not started">
-                      Delivery process not started
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="client_rating">Client Rating (out of 10)</label>
-                <div class="mt-1 mb-3">
-                  <input
-                    type="number"
-                    class="form-control form-control-square mb-2"
-                    id="client_rating"
-                    name="client_rating"
-                    v-model="form_fields.client_rating"
-                    min="0"
-                    max="10"
-                    placeholder="Enter client rating out of 10"
-                  />
                 </div>
               </div>
             </div>
@@ -294,7 +230,7 @@ export default {
 
     async get_project_group_data() {
       try {
-        let res = await axios.get("/project-group");
+        let res = await axios.get("/project-group?page=1&limit=1000");
         this.userProjectGroup = res.data.data; // ✅ Assign data properly
       } catch (error) {
         console.error("Error fetching project group", error);

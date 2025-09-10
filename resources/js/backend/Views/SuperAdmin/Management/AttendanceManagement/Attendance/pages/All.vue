@@ -46,6 +46,8 @@
                     <th>Date</th>
                     <th>Check_in</th>
                     <th>Check_out</th>
+                    <th>Late Status</th>
+                    <th>Late Minutes</th>
                     <th>Attendance Status</th>
                     <th>Created At</th>
                   </tr>
@@ -121,41 +123,32 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.user?.name }}</td>
                     <td>{{ item.date }}</td>
+
                     <td
                       :style="{
                         backgroundColor: (() => {
-                          if (!item.check_in) return '#df0000';
-                          const time = new Date(item.check_in);
-                          let hours = time.getHours();
-                          const minutes = time.getMinutes();
-
-                          // Handle potential PM/AM data issues - if hour is > 12, treat as AM equivalent
-                          if (hours > 12) {
-                            hours = hours - 12;
-                          }
-
-                          const totalMinutes = hours * 60 + minutes;
-                          if (totalMinutes < 540) return '#28a745'; // Before 9:00 AM - On time (Green)
-                          if (totalMinutes >= 540 && totalMinutes < 555) return '#28a745'; // 9:00-9:15 AM - Still on time (Green)
-                          if (totalMinutes >= 555 && totalMinutes < 660) return '#ffc107'; // After 9:15 AM but before 11:00 AM - Warning (yellow)
-                          if (totalMinutes >= 660) return '#dc3545'; // After 11:00 AM - Late (#df0000)
-                          return '#28a745'; // Default - On time (Green)
-                        })(),
-                        color: (() => {
+                          // Red background for absent employees
+                          if (item.attendance_status === 'Absent') return '#dc3545';
+                          
                           if (!item.check_in) return '';
                           const time = new Date(item.check_in);
-                          let hours = time.getHours();
+                          const hours = time.getHours();
                           const minutes = time.getMinutes();
-
-                          // Handle potential PM/AM data issues - if hour is > 12, treat as AM equivalent
-                          if (hours > 12) {
-                            hours = hours - 12;
-                          }
-
                           const totalMinutes = hours * 60 + minutes;
-                          if (totalMinutes >= 555) return 'white'; // White text for warning/danger backgrounds
-                          return 'white'; // White text for green background
+
+                          // Office timing: 9:00 AM to 7:00 PM
+                          const nineFifteenAM = 9 * 60 + 15; // 555 minutes (9:15 AM)
+                          const elevenAM = 11 * 60; // 660 minutes (11:00 AM)
+
+                          if (totalMinutes <= nineFifteenAM) {
+                            return '#28a745'; // On Time - Green
+                          } else if (totalMinutes > nineFifteenAM && totalMinutes < elevenAM) {
+                            return '#ffc107'; // Late - Warning (yellow)
+                          } else {
+                            return '#dc3545'; // Very Late - Danger (red)
+                          }
                         })(),
+                        color: 'white',
                       }"
                     >
                       {{ formatDateTime(item.check_in) }}
@@ -163,7 +156,10 @@
                     <td
                       :style="{
                         backgroundColor: (() => {
-                          if (!item.check_out) return '#df0000';
+                          // Red background for absent employees
+                          if (item.attendance_status === 'Absent') return '#dc3545';
+                          
+                          if (!item.check_out) return '';
                           const time = new Date(item.check_out);
                           const hours = time.getHours();
                           const minutes = time.getMinutes();
@@ -181,7 +177,29 @@
                     >
                       {{ formatDateTime(item.check_out) }}
                     </td>
-                    <td>{{ item.attendance_status }}</td>
+                    <td
+                      :class="getAttendanceData(item).lateStatusClass"
+                    >
+                      {{ getAttendanceData(item).lateStatus }}
+                    </td>
+                    <td
+                      :class="getAttendanceData(item).lateMinutesClass"
+                    >
+                      {{ getAttendanceData(item).formattedLateMinutes }}
+                    </td>
+                    <td
+                      :style="{
+                        backgroundColor: item.attendance_status === 'Absent' ? '#dc3545' : '',
+                        color: item.attendance_status === 'Absent' ? 'white' : ''
+                      }"
+                      :class="{
+                        'fw-bold': item.attendance_status === 'Absent',
+                        'text-success': item.attendance_status === 'Present',
+                        'text-warning': item.attendance_status === 'Late'
+                      }"
+                    >
+                      {{ item.attendance_status }}
+                    </td>
                     <td>{{ formatDateTime(item.created_at) }}</td>
 
                     <!-- <td>
@@ -609,6 +627,172 @@ export default {
       this.get_all(); // Fetch filtered data
     },
 
+    // Optimized attendance data calculation with caching
+    getAttendanceData(item) {
+      // Create cache key for this item
+      const cacheKey = `${item.id}_${item.check_in}_${item.attendance_status}`;
+      
+      // Return cached result if available
+      if (this._attendanceCache && this._attendanceCache[cacheKey]) {
+        return this._attendanceCache[cacheKey];
+      }
+
+      // Initialize cache if not exists
+      if (!this._attendanceCache) {
+        this._attendanceCache = {};
+      }
+
+      // Default values for absent or invalid data
+      const defaultResult = {
+        lateStatus: 'N/A',
+        lateMinutes: 0,
+        formattedLateMinutes: 'N/A',
+        lateStatusClass: '',
+        lateMinutesClass: ''
+      };
+
+      // Handle absent employees or missing check-in
+      if (item.attendance_status === 'Absent' || !item.check_in) {
+        this._attendanceCache[cacheKey] = defaultResult;
+        return defaultResult;
+      }
+
+      try {
+        // Parse check-in time once
+        const time = new Date(item.check_in);
+        const totalMinutes = time.getHours() * 60 + time.getMinutes();
+        
+        // Define time constants (cached in memory)
+        const GRACE_PERIOD_END = 9 * 60 + 15; // 9:15 AM
+        const LATE_THRESHOLD = 11 * 60; // 11:00 AM
+        const SEVERE_LATE_THRESHOLD = 105; // 105 minutes
+        
+        // Calculate late minutes
+        const lateMinutes = Math.max(0, totalMinutes - GRACE_PERIOD_END);
+        
+        // Determine status and classes efficiently
+        let lateStatus, lateStatusClass, lateMinutesClass, formattedLateMinutes;
+        
+        if (totalMinutes <= GRACE_PERIOD_END) {
+          lateStatus = 'On Time';
+          lateStatusClass = 'text-success';
+          lateMinutesClass = 'text-success';
+          formattedLateMinutes = 'On Time';
+        } else if (totalMinutes < LATE_THRESHOLD) {
+          lateStatus = 'Late';
+          lateStatusClass = 'text-warning';
+          lateMinutesClass = lateMinutes < SEVERE_LATE_THRESHOLD ? 'text-warning' : 'text-danger';
+          formattedLateMinutes = this.formatMinutesToText(lateMinutes);
+        } else {
+          lateStatus = 'Very Late';
+          lateStatusClass = 'text-danger';
+          lateMinutesClass = 'text-danger';
+          formattedLateMinutes = this.formatMinutesToText(lateMinutes);
+        }
+
+        const result = {
+          lateStatus,
+          lateMinutes,
+          formattedLateMinutes,
+          lateStatusClass,
+          lateMinutesClass
+        };
+
+        // Cache the result
+        this._attendanceCache[cacheKey] = result;
+        return result;
+
+      } catch (error) {
+        console.warn('Error calculating attendance data:', error);
+        this._attendanceCache[cacheKey] = defaultResult;
+        return defaultResult;
+      }
+    },
+
+    // Helper method to format minutes to readable text
+    formatMinutesToText(minutes) {
+      if (minutes === 0) return 'On Time';
+      if (minutes < 60) return `${minutes} min late`;
+      
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      
+      return remainingMinutes === 0 
+        ? `${hours}h late` 
+        : `${hours}h ${remainingMinutes}m late`;
+    },
+
+    // Clear cache when data changes
+    clearAttendanceCache() {
+      this._attendanceCache = {};
+    },
+
+    getLateStatus(checkInTime) {
+      if (!checkInTime) return "N/A";
+
+      try {
+        const time = new Date(checkInTime);
+        const hours = time.getHours();
+        const minutes = time.getMinutes();
+        const totalMinutes = hours * 60 + minutes;
+
+        // Office timing: 9:00 AM to 7:00 PM
+        const nineAM = 9 * 60; // 540 minutes (9:00 AM)
+        const nineFifteenAM = 9 * 60 + 15; // 555 minutes (9:15 AM)
+        const elevenAM = 11 * 60; // 660 minutes (11:00 AM)
+
+        if (totalMinutes <= nineFifteenAM) {
+          return "On Time"; // 9:00 AM to 9:15 AM
+        } else if (totalMinutes > nineFifteenAM && totalMinutes < elevenAM) {
+          return "Late"; // After 9:15 AM but before 11:00 AM
+        } else {
+          return "Very Late"; // After 11:00 AM
+        }
+      } catch (error) {
+        return "N/A";
+      }
+    },
+
+    getLateMinutes(checkInTime) {
+      if (!checkInTime) return 0;
+
+      try {
+        const time = new Date(checkInTime);
+        const hours = time.getHours();
+        const minutes = time.getMinutes();
+        const totalMinutes = hours * 60 + minutes;
+
+        // Office start time: 9:15 AM (grace period)
+        const nineFifteenAM = 9 * 60 + 15; // 555 minutes (9:15 AM)
+
+        if (totalMinutes <= nineFifteenAM) {
+          return 0; // On time or early
+        } else {
+          return totalMinutes - nineFifteenAM; // Minutes late
+        }
+      } catch (error) {
+        return 0;
+      }
+    },
+
+    formatLateMinutes(checkInTime) {
+      const lateMinutes = this.getLateMinutes(checkInTime);
+
+      if (lateMinutes === 0) {
+        return "On Time";
+      } else if (lateMinutes < 60) {
+        return `${lateMinutes} min late`;
+      } else {
+        const hours = Math.floor(lateMinutes / 60);
+        const remainingMinutes = lateMinutes % 60;
+        if (remainingMinutes === 0) {
+          return `${hours}h late`;
+        } else {
+          return `${hours}h ${remainingMinutes}m late`;
+        }
+      }
+    },
+
     FileUploadHandler: async function ($event) {
       let response = await this.import_data($event);
       if (response.data.status === "success") {
@@ -652,6 +836,15 @@ export default {
     isAllSelected() {
       return this.all?.data?.length > 0 && this.all.data?.every((item) => this.selected.some((s) => s.id === item.id));
     },
+    // Reactive cache invalidation when attendance data changes
+    attendanceDataVersion() {
+      if (!this.all?.data || !Array.isArray(this.all.data)) return 0;
+      
+      // Create a simple hash of the attendance data for cache invalidation
+      return this.all.data.length + 
+             this.all.data.reduce((sum, item, index) => 
+               sum + (item.id || 0) + index, 0);
+    }
   },
 
   watch: {
@@ -660,6 +853,11 @@ export default {
         this.is_trashed_data = newValue;
       },
       immediate: true,
+    },
+
+    // Clear cache when attendance data changes
+    attendanceDataVersion() {
+      this.clearAttendanceCache();
     },
 
     start_date: {
@@ -680,6 +878,16 @@ export default {
       },
       deep: true,
     },
+  },
+
+  mounted() {
+    // Initialize cache on component mount
+    this._attendanceCache = {};
+  },
+
+  beforeUnmount() {
+    // Clean up cache on component unmount
+    this._attendanceCache = null;
   },
 };
 </script>

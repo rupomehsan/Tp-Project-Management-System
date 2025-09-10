@@ -26,64 +26,105 @@
 
           <div class="card-body">
             <div class="table-responsive table_responsive card_body_fixed_height">
-              <div class="d-flex justify-content-between mb-3">
-                <!-- Task Status Filter -->
-                <div class="mb-3 d-flex align-items-center flex-wrap" style="gap: 0.5rem">
-                  <span class="font-weight-bold mr-2">Status</span>
-                  <button class="btn btn-outline-secondary btn-sm" :class="{ active: !taskStatusFilterValue }" @click="cleartaskStatusFilter">
-                    All
-                  </button>
-                  <button
-                    class="btn btn-outline-primary btn-sm"
-                    :class="{ active: taskStatusFilterValue === 'pending' }"
-                    @click="taskStatusFilter('pending')"
-                  >
-                    Pending
-                  </button>
+              <!-- Modern Professional Filter Section -->
+              <div class="filter-dashboard-container">
+                <div class="filter-card">
+                  <div class="filter-header">
+                    <div class="filter-header-content">
+                      <div class="filter-icon-wrapper">
+                        <i class="zmdi zmdi-filter-list"></i>
+                      </div>
+                      <div class="filter-header-text">
+                        <h3 class="filter-main-title">Todo Filters</h3>
+                        <p class="filter-subtitle">Filter your todos by status and priority</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="filter-content">
+                    <div class="row">
+                      <!-- Status Filter -->
+                      <div class="col-lg-6 col-md-12">
+                        <div class="filter-group-modern">
+                          <div class="filter-label-container">
+                            <div class="filter-label-icon">
+                              <i class="zmdi zmdi-assignment"></i>
+                            </div>
+                            <div class="filter-label-text">
+                              <span class="filter-label-modern">Task Status</span>
+                              <span class="filter-label-description">Filter by completion status</span>
+                            </div>
+                          </div>
+                          <div class="filter-buttons-container">
+                            <div class="btn-group-modern btn-group-flex-status">
+                              <input type="radio" class="btn-check-modern" name="statusFilter" id="status-all" autocomplete="off" :checked="!taskStatusFilterValue">
+                              <label class="btn-modern btn-modern-secondary btn-modern-sm" for="status-all" @click="cleartaskStatusFilter">
+                                <span class="btn-icon"><i class="zmdi zmdi-view-list"></i></span>
+                                <span class="btn-text">All Todos</span>
+                                <span class="btn-badge">{{ (all?.data || []).length }}</span>
+                              </label>
+                              
+                              <input type="radio" class="btn-check-modern" name="statusFilter" id="status-pending" autocomplete="off" :checked="taskStatusFilterValue === 'pending'">
+                              <label class="btn-modern btn-modern-warning btn-modern-sm" for="status-pending" @click="taskStatusFilter('pending')">
+                                <span class="btn-icon"><i class="zmdi zmdi-time"></i></span>
+                                <span class="btn-text">Pending</span>
+                              </label>
+                              
+                              <input type="radio" class="btn-check-modern" name="statusFilter" id="status-completed" autocomplete="off" :checked="taskStatusFilterValue === 'completed'">
+                              <label class="btn-modern btn-modern-success btn-modern-sm" for="status-completed" @click="taskStatusFilter('completed')">
+                                <span class="btn-icon"><i class="zmdi zmdi-check"></i></span>
+                                <span class="btn-text">Completed</span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                  <button
-                    class="btn btn-outline-success btn-sm"
-                    :class="{ active: taskStatusFilterValue === 'completed' }"
-                    @click="taskStatusFilter('completed')"
-                  >
-                    Completed
-                  </button>
-                </div>
-                <!-- Priority Filter -->
-                <div class="mb-3 d-flex align-items-center flex-wrap" style="gap: 0.5rem">
-                  <span class="font-weight-bold mr-2">Priority</span>
-                  <button
-                    class="btn btn-outline-secondary btn-sm"
-                    :class="{ active: !priorityFilterValue }"
-                    @click="clearPriorityFilter"
-                    type="button"
-                  >
-                    All
-                  </button>
-                  <button
-                    class="btn btn-outline-danger btn-sm"
-                    :class="{ active: priorityFilterValue === 'urgent' }"
-                    @click="priorityFilter('urgent')"
-                    type="button"
-                  >
-                    Urgent
-                  </button>
-                  <button
-                    class="btn btn-outline-warning btn-sm"
-                    :class="{ active: priorityFilterValue === 'high' }"
-                    @click="priorityFilter('high')"
-                    type="button"
-                  >
-                    High
-                  </button>
-                  <button
-                    class="btn btn-outline-info btn-sm"
-                    :class="{ active: priorityFilterValue === 'normal' }"
-                    @click="priorityFilter('normal')"
-                    type="button"
-                  >
-                    Normal
-                  </button>
+                      <!-- Priority Filter -->
+                      <div class="col-lg-6 col-md-12">
+                        <div class="filter-group-modern">
+                          <div class="filter-label-container">
+                            <div class="filter-label-icon">
+                              <i class="zmdi zmdi-flag"></i>
+                            </div>
+                            <div class="filter-label-text">
+                              <span class="filter-label-modern">Priority Level</span>
+                              <span class="filter-label-description">Filter by task priority</span>
+                            </div>
+                          </div>
+                          <div class="filter-buttons-container">
+                            <div class="btn-group-modern btn-group-flex-priority">
+                              <input type="radio" class="btn-check-modern" name="priorityFilter" id="priority-all" autocomplete="off" :checked="!priorityFilterValue">
+                              <label class="btn-modern btn-modern-secondary btn-modern-sm" for="priority-all" @click="clearPriorityFilter">
+                                <span class="btn-icon"><i class="zmdi zmdi-view-list"></i></span>
+                                <span class="btn-text">All</span>
+                              </label>
+                              
+                              <input type="radio" class="btn-check-modern" name="priorityFilter" id="priority-urgent" autocomplete="off" :checked="priorityFilterValue === 'urgent'">
+                              <label class="btn-modern btn-modern-danger btn-modern-sm" for="priority-urgent" @click="priorityFilter('urgent')">
+                                <span class="btn-icon"><i class="zmdi zmdi-alert-circle"></i></span>
+                                <span class="btn-text">Urgent</span>
+                                <span class="priority-indicator urgent"></span>
+                              </label>
+                              
+                              <input type="radio" class="btn-check-modern" name="priorityFilter" id="priority-high" autocomplete="off" :checked="priorityFilterValue === 'high'">
+                              <label class="btn-modern btn-modern-warning btn-modern-sm" for="priority-high" @click="priorityFilter('high')">
+                                <span class="btn-icon"><i class="zmdi zmdi-triangle-up"></i></span>
+                                <span class="btn-text">High</span>
+                                <span class="priority-indicator high"></span>
+                              </label>
+                              
+                              <input type="radio" class="btn-check-modern" name="priorityFilter" id="priority-normal" autocomplete="off" :checked="priorityFilterValue === 'normal'">
+                              <label class="btn-modern btn-modern-info btn-modern-sm" for="priority-normal" @click="priorityFilter('normal')">
+                                <span class="btn-icon"><i class="zmdi zmdi-minus"></i></span>
+                                <span class="btn-text">Normal</span>
+                                <span class="priority-indicator normal"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <table class="table table-hover table-bordered">
@@ -692,6 +733,12 @@ export default {
     isAllSelected() {
       return this.all?.data?.length > 0 && this.all.data?.every((item) => this.selected.some((s) => s.id === item.id));
     },
+    taskStatusFilterValue() {
+      return this.$store?.state?.filter_criteria?.task_status || null;
+    },
+    priorityFilterValue() {
+      return this.$store?.state?.filter_criteria?.priority || null;
+    },
   },
 
   watch: {
@@ -724,6 +771,414 @@ export default {
 };
 </script>
 <style scoped>
+/* Compact Professional Filter Dashboard Styles */
+.filter-dashboard-container {
+  margin-bottom: 1.5rem;
+  padding: 0;
+}
+
+.filter-card {
+   background: linear-gradient(145deg, #23272f 0%, #2d3748 100%);
+  border-radius: 12px;
+  box-shadow: 
+    0 2px 4px -1px rgba(0, 0, 0, 0.08),
+    0 1px 2px -1px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+}
+
+.filter-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filter-header-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filter-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.filter-icon-wrapper i {
+  color: white;
+  font-size: 1rem;
+}
+
+.filter-header-text {
+  flex: 1;
+}
+
+.filter-main-title {
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.filter-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+  margin: 0.125rem 0 0 0;
+  font-weight: 400;
+}
+
+.filter-content {
+  padding: 0.25rem;
+}
+
+.filter-group-modern {
+  margin-bottom: 1rem;
+}
+
+.filter-label-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.filter-label-icon {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.filter-label-icon i {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.filter-label-text {
+  flex: 1;
+}
+
+.filter-label-modern {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.filter-label-description {
+  display: block;
+  font-size: 0.7rem;
+  color: #64748b;
+  margin-top: 0.125rem;
+  font-weight: 400;
+}
+
+.filter-buttons-container {
+  margin-left: 2rem;
+}
+
+.btn-group-modern {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.btn-group-vertical-modern {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.btn-group-flex-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  justify-content: flex-start;
+}
+
+.btn-group-flex-status .btn-modern {
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: flex-start;
+}
+
+.btn-group-flex-status .btn-text {
+  text-align: left;
+  flex: 1;
+}
+
+.btn-group-flex-priority {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  justify-content: flex-start;
+}
+
+.btn-group-flex-priority .btn-modern {
+  flex: 1;
+  min-width: 0;
+  justify-content: center;
+  text-align: center;
+}
+
+.btn-group-flex-priority .btn-text {
+  text-align: center;
+  flex: none;
+}
+
+.btn-check-modern {
+  display: none;
+}
+
+.btn-modern {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.25;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  min-height: 36px;
+}
+
+.btn-modern-sm {
+  padding: 0.375rem 0.5rem;
+  font-size: 0.75rem;
+  min-height: 32px;
+}
+
+.btn-modern:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.btn-text {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.btn-badge {
+  background: rgba(255, 255, 255, 0.9);
+  color: #374151;
+  padding: 0.125rem 0.25rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  min-width: 18px;
+  text-align: center;
+}
+
+.priority-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.priority-indicator.urgent {
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+.priority-indicator.high {
+  background: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+
+.priority-indicator.normal {
+  background: #06b6d4;
+  box-shadow: 0 0 6px rgba(6, 182, 212, 0.4);
+}
+
+/* Button Variants */
+.btn-modern-secondary {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+.btn-modern-primary {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border-color: #93c5fd;
+  color: #1d4ed8;
+}
+
+.btn-modern-info {
+  background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%);
+  border-color: #67e8f9;
+  color: #0e7490;
+}
+
+.btn-modern-success {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  border-color: #86efac;
+  color: #15803d;
+}
+
+.btn-modern-danger {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+.btn-modern-warning {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-color: #fcd34d;
+  color: #d97706;
+}
+
+/* Active/Checked States */
+.btn-check-modern:checked + .btn-modern-secondary {
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  border-color: #334155;
+  color: white;
+  box-shadow: 0 2px 8px rgba(100, 116, 139, 0.3);
+}
+
+.btn-check-modern:checked + .btn-modern-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-color: #1e40af;
+  color: white;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.btn-check-modern:checked + .btn-modern-info {
+  background: linear-gradient(135deg, #06b6d4 0%, #0e7490 100%);
+  border-color: #0c4a6e;
+  color: white;
+  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);
+}
+
+.btn-check-modern:checked + .btn-modern-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-color: #047857;
+  color: white;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.btn-check-modern:checked + .btn-modern-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-color: #b91c1c;
+  color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.btn-check-modern:checked + .btn-modern-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-color: #b45309;
+  color: white;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.btn-check-modern:checked + .btn-modern .btn-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .filter-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .filter-content {
+    padding: 1rem;
+  }
+  
+  .filter-buttons-container {
+    margin-left: 0;
+  }
+  
+  .btn-group-modern {
+    flex-direction: column;
+  }
+  
+  .btn-group-vertical-modern {
+    flex-direction: column;
+  }
+  
+  .btn-group-flex-priority {
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+  
+  .btn-group-flex-priority .btn-modern {
+    flex: none;
+    justify-content: flex-start;
+  }
+  
+  .btn-group-flex-priority .btn-text {
+    text-align: left;
+    flex: 1;
+  }
+  
+  .btn-modern {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .btn-group-flex-priority {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  
+  .btn-group-flex-priority .btn-modern {
+    flex: 0 1 calc(50% - 0.125rem);
+    min-width: 0;
+  }
+}
+
+/* Animation for countdown icon */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.zmdi-time-countdown {
+  animation: spin 2s linear infinite;
+}
+
+/* Switch Styles */
 .switch {
   position: relative;
   display: inline-block;

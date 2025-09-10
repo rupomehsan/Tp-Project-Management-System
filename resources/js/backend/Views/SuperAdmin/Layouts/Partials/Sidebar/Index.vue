@@ -2,8 +2,16 @@
   <!--Start sidebar-wrapper-->
   <div id="sidebar-wrapper">
     <div class="brand-logo">
-      <router-link :to="{ name: `adminDashboard` }" class="d-flex align-items-center">
-        <img :src="`${get_setting_value('image') ?? 'avatar.png'} `" @error="$event.target.src = 'logo.png'" class="logo-icon" alt="logo icon" />
+      <router-link
+        :to="{ name: `adminDashboard` }"
+        class="d-flex align-items-center"
+      >
+        <img
+          :src="`${get_setting_value('image') ?? 'avatar.png'} `"
+          @error="$event.target.src = 'logo.png'"
+          class="logo-icon"
+          alt="logo icon"
+        />
         <h5 class="logo-text">Super Admin Panel</h5>
       </router-link>
       <div class="close-btn">
@@ -72,11 +80,26 @@
             title: `Projects`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
-          // {
-          //   route_name: `AllUpcommingProject`,
-          //   title: `Upcomming Projects`,
-          //   icon: `zmdi zmdi-dot-circle-alt`,
-          // },
+          {
+            route_name: `AllUpcommingProject`,
+            title: `Upcomming Projects`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `AllProjectModule`,
+            title: `Project Module`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `ProjectPlanning`,
+            title: `Project Planning`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
+          {
+            route_name: `ProposalProject`,
+            title: `Project Proposal`,
+            icon: `zmdi zmdi-dot-circle-alt`,
+          },
         ]"
       />
       <!-- Task Management -->
@@ -116,7 +139,6 @@
             title: `Todo List`,
             icon: `zmdi zmdi-dot-circle-alt`,
           },
-         
         ]"
       />
       <!-- Team Management -->
@@ -172,8 +194,16 @@
         ]"
       />
 
-      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Credential`" :route_name="`AllCredential`" />
-      <side-bar-single-menu :icon="`fa fa-plus`" :menu_title="`Notification`" :route_name="`AllNotification`" />
+      <side-bar-single-menu
+        :icon="`fa fa-plus`"
+        :menu_title="`Credential`"
+        :route_name="`AllCredential`"
+      />
+      <side-bar-single-menu
+        :icon="`fa fa-plus`"
+        :menu_title="`Notification`"
+        :route_name="`AllNotification`"
+      />
 
       <!-- Management end -->
     </ul>
@@ -217,12 +247,12 @@ export default {
     },
   },
   watch: {
-    '$route'(to, from) {
+    $route(to, from) {
       // Auto-hide sidebar when navigating to task board
-      if (to.name === 'TaskBoard') {
+      if (to.name === "TaskBoard") {
         this.hide_menu();
       }
-    }
+    },
   },
   computed: {
     ...mapState(auth_store, {

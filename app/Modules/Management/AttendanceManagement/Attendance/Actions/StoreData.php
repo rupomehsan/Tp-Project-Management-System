@@ -9,45 +9,44 @@ class StoreData
     public static function execute($request)
     {
         try {
+            
 
             $requestData = $request->validated();
             $date = auth()->user()->role_id != 1 ? date('Y-m-d') : ($requestData['date'] ?? date('Y-m-d'));
 
-            // Only apply restrictions to non-admin users (role_id != 1)
+     
             if (auth()->user()->role_id != 1) {
-                // Check if date is Friday or Saturday (weekend/holiday)
-                $dayOfWeek = date('N', strtotime($date)); // 5=Friday, 6=Saturday
-                if ($dayOfWeek == 5 || $dayOfWeek == 6) {
-                    return messageResponse('Attendance cannot be added on holidays (Friday or Saturday).', [], 400, 'error');
-                }
-
-                // Check if attendance already exists for today
-                $alreadyExists = self::$model::where('user_id', auth()->id())
-                    ->where('date', $date)
-                    ->exists();
-
-                if ($alreadyExists) {
-                    return messageResponse('Attendance already submitted for today.', [], 400, 'error');
-                }
-            }
-
-
-
-            if (auth()->user()->role_id != 1) {
+                
                 $requestData['user_id'] = auth()->id();
-                $requestData['date'] = date('Y-m-d');
+                $requestData['date'] = \Carbon\Carbon::parse($requestData['check_in'])->toDateString();
 
-                $currentTime = strtotime(date('H:i'));
-                $checkInDeadline = strtotime('09:15');
+                // Adjust server time by subtracting 6 hours to get local time
+                $adjustedTimestamp = time() - (6 * 60 * 60); // Subtract 6 hours
+                $currentTime = date('H:i:s', $adjustedTimestamp);
+                $currentHour = (int)date('H', $adjustedTimestamp);
+                $currentMinute = (int)date('i', $adjustedTimestamp);
+                
+                // Calculate total minutes from midnight
+                $currentTotalMinutes = ($currentHour * 60) + $currentMinute;
+                $deadlineMinutes = (9 * 60) + 15; // 09:15 = 555 minutes from midnight
 
-                if ($currentTime > $checkInDeadline) {
+          
+
+                if ($currentTotalMinutes > $deadlineMinutes) {
                     $requestData['attendance_status'] = 'Present';
                     $requestData['is_late'] = true;
-                    $requestData['late_minutes'] = ceil(($currentTime - $checkInDeadline) / 60); // Calculate minutes late
+                    
+                    // Calculate late minutes: current minutes - deadline minutes
+                    $lateMinutes = $currentTotalMinutes - $deadlineMinutes;
+                    $requestData['late_minutes'] = $lateMinutes;
+                    
+                  
                 } else {
                     $requestData['attendance_status'] = 'Present';
                     $requestData['is_late'] = false;
                     $requestData['late_minutes'] = 0;
+                    
+               
                 }
             } else {
                 // For admin users, ensure date is set
@@ -69,6 +68,9 @@ class StoreData
             if ($data = self::$model::query()->create($requestData)) {
                 return messageResponse('Item added successfully', $data, 201);
             }
+            
+            
+            
         } catch (\Exception $e) {
             return messageResponse($e->getMessage(), [], 500, 'server_error');
         }

@@ -1,5 +1,8 @@
 <template>
-  <div class="google-sheets-container mb-5" :class="{ 'dark-mode': isDarkMode }">
+  <div
+    class="google-sheets-container mb-5"
+    :class="{ 'dark-mode': isDarkMode }"
+  >
     <!-- Header Toolbar -->
     <div class="sheets-toolbar">
       <div class="toolbar-left">
@@ -9,18 +12,21 @@
         <div class="file-info">
           <h2 class="sheet-title">
             Task Board
-            <span v-if="selectedProject" class="project-filter-badge"> - {{ selectedProject.name }} </span>
+            <span v-if="selectedProject" class="project-filter-badge">
+              - {{ selectedProject.name }}
+            </span>
           </h2>
           <small v-if="filteredTaskCount !== undefined" class="task-count-info">
-            Showing {{ filteredTaskCount }} task{{ filteredTaskCount !== 1 ? "s" : "" }}
+            Showing {{ filteredTaskCount }} task{{
+              filteredTaskCount !== 1 ? "s" : ""
+            }}
           </small>
         </div>
       </div>
-      
+
       <!-- Middle Section - Working Hours Counter -->
       <div class="toolbar-middle">
-        <div class="working-hours-counter" 
-             :title="workingHoursTooltip">
+        <div class="working-hours-counter" :title="workingHoursTooltip">
           <div class="hours-display">
             <i class="fa fa-clock-o"></i>
             <div class="hours-content">
@@ -30,7 +36,10 @@
               </div>
               <div class="hours-breakdown" v-if="todayCompletedTasks > 0">
                 <small class="text-muted">
-                  {{ todayCompletedTasks }} task{{ todayCompletedTasks !== 1 ? 's' : '' }} completed
+                  {{ todayCompletedTasks }} task{{
+                    todayCompletedTasks !== 1 ? "s" : ""
+                  }}
+                  completed
                 </small>
               </div>
               <div class="hours-breakdown" v-else>
@@ -40,38 +49,63 @@
           </div>
         </div>
       </div>
-      
+
       <div class="toolbar-right">
         <!-- Mobile Action Toggle -->
-        <button class="btn-icon mobile-actions-toggle d-md-none" @click="toggleMobileActions">
+        <button
+          class="btn-icon mobile-actions-toggle d-md-none"
+          @click="toggleMobileActions"
+        >
           <i class="fa fa-ellipsis-v"></i>
         </button>
 
         <!-- Action Buttons Container -->
-        <div class="action-buttons-container" :class="{ 'mobile-actions-open': isMobileActionsOpen }">
+        <div
+          class="action-buttons-container"
+          :class="{ 'mobile-actions-open': isMobileActionsOpen }"
+        >
           <!-- Clear Filters Button -->
           <button
-            v-if="searchQuery || startDateFilter || endDateFilter || projectStatusFilter || devStatusFilter || priorityFilter"
-            class="btn btn-outline-secondary btn-clear-filters"
+            v-if="
+              searchQuery ||
+              startDateFilter ||
+              endDateFilter ||
+              projectStatusFilter ||
+              devStatusFilter ||
+              priorityFilter
+            "
+            class="btn btn-outline-secondary btn-refresh"
             @click="clearAllFilters"
             title="Clear all filters"
           >
             <i class="fa fa-times"></i>
-            <span class="btn-text">Clear</span>
+            <span class="btn-text text-warning">Clear Filters</span>
           </button>
 
-          <button class="btn btn-outline-info btn-refresh" @click="refreshComponent" title="Refresh Tasks and Groups">
+          <button
+            class="btn btn-outline-info btn-refresh"
+            @click="refreshComponent"
+            title="Refresh Tasks and Groups"
+          >
             <i class="fa fa-refresh"></i>
             <span class="btn-text">Refresh</span>
           </button>
 
-          <button class="btn btn-success btn-add-group" @click="showAddTaskGroupModal" title="Add New Task Group">
-            <i class="fa fa-layer-group"></i>
+          <button
+            class="btn btn-success btn-add-group"
+            @click="showAddTaskGroupModal"
+            title="Add New Task Group"
+          >
+            <i class="fa fa-plus"></i>
             <span class="btn-text d-none d-lg-inline">Add Group</span>
             <span class="btn-text d-lg-none">Group</span>
           </button>
 
-          <button class="btn btn-primary btn-add-task" @click="showAddTaskModal" title="Add New Task">
+          <button
+            class="btn btn-primary btn-add-task"
+            @click="showAddTaskModal"
+            title="Add New Task"
+          >
             <i class="fa fa-plus"></i>
             <span class="btn-text d-none d-lg-inline">Add Task</span>
             <span class="btn-text d-lg-none">Task</span>
@@ -118,188 +152,226 @@
     <div class="table-container p-2">
       <!-- Sheet Tabs -->
       <div class="sheet-tabs mb-3">
-        <!-- Mobile Filter Toggle -->
-        <div class="mobile-filter-toggle d-md-none mb-3">
-          <button class="btn btn-outline-primary w-100" @click="toggleMobileFilters">
-            <i class="fa fa-filter"></i>
-            Filters & Search
-            <i class="fa fa-chevron-down" :class="{ 'rotate-180': isMobileFiltersOpen }"></i>
-          </button>
-        </div>
+        <div class="container-fluid">
+          <div class="row align-items-end" id="filter-bar">
+            <!-- Project and Search -->
+            <div class="col-md-4" id="project-and-search-section">
+              <div class="row">
+                <!-- Project Dropdown -->
+                <div class="col-sm-6 mb-2" id="project-dropdown">
+                  <div class="icon-label" id="project-label">
+                    <i class="fa fa-folder text-primary"></i> PROJECT
+                  </div>
+                  <select
+                    v-model="selectedProject"
+                    @change="onProjectChange"
+                    @click.stop
+                    id="project-select"
+                    class="form-control mt-1"
+                    title="Select a project"
+                  >
+                    <option value="">Select Project</option>
+                    <option
+                      v-for="project in projects.data || projects"
+                      :key="project.id"
+                      :value="project"
+                    >
+                      {{ project.name }}
+                    </option>
+                  </select>
+                </div>
 
-        <div class="tab-controls" :class="{ 'mobile-filters-open': isMobileFiltersOpen }">
-          <!-- Project and Search Container -->
-          <div class="project-search-container">
-            <!-- Project Dropdown with Label -->
-            <div class="project-dropdown-section">
-              <label class="project-label">
-                <i class="fa fa-folder"></i>
-                <span class="d-none d-sm-inline">Project</span>
-              </label>
-              <select class="form-control project-dropdown" v-model="selectedProject" @change="onProjectChange" @click.stop title="Select a project">
-                <option value="">Select Project</option>
-                <option v-for="project in projects.data || projects" :key="project.id" :value="project">
-                  {{ project.name }}
-                </option>
-              </select>
-            </div>
-
-            <!-- Search Input -->
-            <div class="search-section">
-              <label class="search-label">
-                <i class="fa fa-search"></i>
-                <span class="d-none d-sm-inline">Search</span>
-              </label>
-              <div class="search-input-wrapper">
-                <input
-                  type="text"
-                  class="form-control search-input"
-                  v-model="searchQuery"
-                  @input="filterTasks"
-                  @focus="onSearchFocus"
-                  @blur="onSearchBlur"
-                  placeholder="Search tasks..."
-                  title="Search by task title, description, or status"
-                />
-                <div class="search-actions">
-                  <button v-if="searchQuery" class="search-clear-btn" @click="clearSearch" title="Clear search">
-                    <i class="fa fa-times"></i>
-                  </button>
-                  <div class="search-divider" v-if="searchQuery"></div>
-                  <i class="fa fa-search search-icon"></i>
+                <!-- Search -->
+                <div class="col-sm-6 mb-2" id="search-field">
+                  <div class="icon-label" id="search-label">
+                    <i class="fa fa-search text-success"></i> SEARCH
+                  </div>
+                  <div id="search-box" class="mt-1 position-relative">
+                    <input
+                      v-model="searchQuery"
+                      @input="filterTasks"
+                      @focus="onSearchFocus"
+                      @blur="onSearchBlur"
+                      type="text"
+                      id="task-search-input"
+                      class="form-control"
+                      placeholder="Search tasks..."
+                      title="Search by task title, description, or status"
+                    />
+                    <div
+                      class="search-actions position-absolute"
+                      style="right: 8px; top: 50%; transform: translateY(-50%)"
+                    >
+                      <button
+                        v-if="searchQuery"
+                        class="btn btn-sm btn-link p-0"
+                        @click="clearSearch"
+                        title="Clear search"
+                      >
+                        <i class="fa fa-times"></i>
+                      </button>
+                      <i
+                        v-else
+                        class="fa fa-search text-muted"
+                        id="search-icon"
+                      ></i>
+                    </div>
+                  </div>
+                  <div
+                    v-if="searchResultsCount !== null"
+                    class="text-muted small mt-1"
+                  >
+                    {{ searchResultsCount }} result{{
+                      searchResultsCount !== 1 ? "s" : ""
+                    }}
+                    found
+                  </div>
                 </div>
               </div>
-              <div v-if="searchResultsCount !== null" class="search-results-info">
-                {{ searchResultsCount }} result{{ searchResultsCount !== 1 ? "s" : "" }} found
+            </div>
+
+            <!-- Date Range -->
+            <div class="col-md-3 mb-2" id="date-range-section">
+              <div class="row">
+                <div class="col-6" id="from-date">
+                  <div class="icon-label">
+                    <i class="fa fa-calendar text-info"></i> FROM
+                  </div>
+                  <input
+                    v-model="startDateFilter"
+                    @change="filterTasks"
+                    type="date"
+                    class="form-control mt-1"
+                    id="from-date-input"
+                    title="Filter by start date"
+                  />
+                </div>
+                <div class="col-6" id="to-date">
+                  <div class="icon-label">
+                    <i class="fa fa-calendar text-info"></i> TO
+                  </div>
+                  <input
+                    v-model="endDateFilter"
+                    @change="filterTasks"
+                    type="date"
+                    class="form-control mt-1"
+                    id="to-date-input"
+                    title="Filter by end date"
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Date Filters Container -->
-          <div class="date-filters-container">
-            <div class="date-filter-group">
-              <label class="date-label">
-                <i class="fa fa-calendar"></i>
-                <span class="d-none d-sm-inline">From</span>
-              </label>
-              <input type="date" class="form-control date-picker" v-model="startDateFilter" @change="filterTasks" title="Filter by start date" />
-            </div>
-            <div class="date-filter-group">
-              <label class="date-label">
-                <i class="fa fa-calendar"></i>
-                <span class="d-none d-sm-inline">To</span>
-              </label>
-              <input type="date" class="form-control date-picker" v-model="endDateFilter" @change="filterTasks" title="Filter by end date" />
-            </div>
-          </div>
-
-          <!-- Filter Controls -->
-          <div class="filter-controls">
-            <div class="filters-container">
-              <div class="filter-group">
-                <label class="filter-label">
-                  <i class="fa fa-flag"></i>
-                  <span class="d-none d-lg-inline">Project Status</span>
-                  <span class="d-lg-none">Status</span>
-                </label>
-                <select class="form-control filter-select" v-model="projectStatusFilter" @change="filterTasks" title="Filter by project status">
-                  <option value="">All</option>
-                  <option value="active">🟢 Active</option>
-                  <option value="pending">🟡 Pending</option>
-                  <option value="completed">✅ Completed</option>
-                  <option value="on_hold">⏸️ On Hold</option>
-                  <option value="cancelled">❌ Cancelled</option>
-                </select>
-              </div>
-
-              <div class="filter-group">
-                <label class="filter-label">
-                  <i class="fa fa-code"></i>
-                  <span class="d-none d-lg-inline">Dev Status</span>
-                  <span class="d-lg-none">Dev</span>
-                </label>
-                <select class="form-control filter-select" v-model="devStatusFilter" @change="filterTasks" title="Filter by development status">
-                  <option value="">All</option>
-                  <option value="Pending">📝 Pending</option>
-                  <option value="In Progress">⚡ In Progress</option>
-                  <option value="Completed">✅ Completed</option>
-                  <option value="Not Completed">❌ Not Completed</option>
-                </select>
-              </div>
-
-              <div class="filter-group">
-                <label class="filter-label">
-                  <i class="fa fa-exclamation-triangle"></i>
-                  <span class="d-none d-sm-inline">Priority</span>
-                </label>
-                <select class="form-control filter-select" v-model="priorityFilter" @change="filterTasks" title="Filter by priority">
-                  <option value="">All</option>
-                  <option value="low">⚫ Low</option>
-                  <option value="normal">🟢 Normal</option>
-                  <option value="high">🟡 High</option>
-                  <option value="urgent">🔴 Urgent</option>
-                </select>
+            <!-- Status and Priority -->
+            <div class="col-md-5 mb-2" id="status-priority-section">
+              <div class="row">
+                <div class="col-md-4" id="project-status">
+                  <div class="icon-label">
+                    <i class="fa fa-flag text-warning"></i> TASK STATUS
+                  </div>
+                  <select
+                    v-model="projectStatusFilter"
+                    @change="filterTasks"
+                    class="form-control mt-1"
+                    id="project-status-select"
+                    title="Filter by task status"
+                  >
+                    <option value="">All</option>
+                    <option value="Pending">� Pending</option>
+                    <option value="In Progress">⚡ In Progress</option>
+                    <option value="Completed">✅ Completed</option>
+                    <option value="Not Completed">❌ Not Completed</option>
+                  </select>
+                </div>
+                <div class="col-md-4" id="dev-status">
+                  <div class="icon-label">
+                    <i class="fa fa-code text-orange"></i> DEV STATUS
+                  </div>
+                  <select
+                    v-model="devStatusFilter"
+                    @change="filterTasks"
+                    class="form-control mt-1"
+                    id="dev-status-select"
+                    title="Filter by development status"
+                  >
+                    <option value="">All</option>
+                    <option value="Pending">📝 Pending</option>
+                    <option value="In Progress">⚡ In Progress</option>
+                    <option value="Completed">✅ Completed</option>
+                    <option value="Not Completed">❌ Not Completed</option>
+                  </select>
+                </div>
+                <div class="col-md-4" id="priority-status">
+                  <div class="icon-label">
+                    <i class="fa fa-exclamation-triangle text-warning"></i>
+                    PRIORITY
+                  </div>
+                  <select
+                    v-model="priorityFilter"
+                    @change="filterTasks"
+                    class="form-control mt-1"
+                    id="priority-select"
+                    title="Filter by priority"
+                  >
+                    <option value="">All</option>
+                    <option value="low">⚫ Low</option>
+                    <option value="normal">🟢 Normal</option>
+                    <option value="high">🟡 High</option>
+                    <option value="urgent">🔴 Urgent</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Debug info for group ordering -->
-      <!-- <div
-        v-if="groupedTasks.length > 1"
-        class="debug-info mb-2 p-2 bg-light border rounded"
-      >
-        <small class="text-muted">
-          <strong>Debug:</strong>
-          Groups:
-          {{ groupedTasks.map((g) => `${g.name}(${g.id})`).join(" → ") }} |
-          Custom Order:
-          {{
-            customGroupOrder.length > 0 ? customGroupOrder.join(" → ") : "None"
-          }}
-          | Length: {{ groupedTasks.length }}
-        </small>
-        <div class="mt-2">
-          <button
-            @click="testGroupReorder"
-            class="btn btn-sm btn-outline-primary me-2"
-            title="Test moving first group to second position"
-          >
-            Test Reorder
-          </button>
-          <button
-            @click="resetGroupOrder"
-            class="btn btn-sm btn-outline-warning"
-            title="Reset group order to default alphabetical"
-          >
-            Reset Order
-          </button>
-        </div>
-      </div> -->
-
       <!-- Sorting indicator -->
-      <div v-if="sortField" class="sort-indicator mb-2 p-2 bg-info text-white border rounded d-flex align-items-center justify-content-between">
+      <div
+        v-if="sortField"
+        class="sort-indicator mb-2 p-2 bg-info text-white border rounded d-flex align-items-center justify-content-between"
+      >
         <small>
           <i class="fa fa-sort me-1"></i>
           <strong>Sorted by:</strong>
           {{ getSortFieldDisplayName(sortField) }}
           ({{ sortDirection === "asc" ? "A-Z" : "Z-A" }})
         </small>
-        <button @click="clearSort" class="btn btn-sm btn-outline-light" title="Clear sorting"><i class="fa fa-times"></i> Clear Sort</button>
+        <button
+          @click="clearSort"
+          class="btn btn-sm btn-outline-light"
+          title="Clear sorting"
+        >
+          <i class="fa fa-times"></i> Clear Sort
+        </button>
       </div>
 
       <div class="table-responsive">
         <table class="table table-hover table-bordered task-board-table">
           <thead class="table-header">
             <tr>
-              <th class="w-10 d-none d-sm-table-cell" @dblclick="toggleEditMode">ID</th>
-              <th class="sortable-header" @click="sortBy('title')" :class="{ sorted: isSorted('title') }" title="Click to sort by Task Title">
+              <th
+                class="w-10 d-none d-sm-table-cell"
+                @dblclick="toggleEditMode"
+              >
+                ID
+              </th>
+              <th
+                class="sortable-header"
+                @click="sortBy('title')"
+                :class="{ sorted: isSorted('title') }"
+                title="Click to sort by Task Title"
+              >
                 <span class="d-none d-md-inline">Task Title</span>
                 <span class="d-md-none">Task</span>
                 <i class="fa ms-1" :class="getSortIcon('title')"></i>
               </th>
-              <th class="sortable-header d-none d-lg-table-cell" @click="sortBy('priority')" :class="{ sorted: isSorted('priority') }" title="Click to sort by Priority">
+              <th
+                class="sortable-header d-none d-lg-table-cell"
+                @click="sortBy('priority')"
+                :class="{ sorted: isSorted('priority') }"
+                title="Click to sort by Priority"
+              >
                 Priority
                 <i class="fa ms-1" :class="getSortIcon('priority')"></i>
               </th>
@@ -332,7 +404,12 @@
                 <i class="fa ms-1" :class="getSortIcon('start_date')"></i>
               </th>
 
-              <th class="sortable-header d-none d-lg-table-cell" @click="sortBy('end_date')" :class="{ sorted: isSorted('end_date') }" title="Click to sort by End Date">
+              <th
+                class="sortable-header d-none d-lg-table-cell"
+                @click="sortBy('end_date')"
+                :class="{ sorted: isSorted('end_date') }"
+                title="Click to sort by End Date"
+              >
                 End Date
                 <i class="fa ms-1" :class="getSortIcon('end_date')"></i>
               </th>
@@ -350,7 +427,10 @@
             </tr>
           </thead>
           <tbody>
-            <template v-for="(group, groupIndex) in groupedTasks" :key="'group-' + groupIndex">
+            <template
+              v-for="(group, groupIndex) in groupedTasks"
+              :key="'group-' + groupIndex"
+            >
               <!-- Group Header Row -->
               <tr
                 class="group-header-row"
@@ -363,7 +443,13 @@
                 @drop="onGroupDrop($event, groupIndex)"
               >
                 <td class="group-toggle" @click="toggleGroup(group.id)">
-                  <i :class="group.collapsed ? 'fa fa-chevron-right' : 'fa fa-chevron-down'"></i>
+                  <i
+                    :class="
+                      group.collapsed
+                        ? 'fa fa-chevron-right'
+                        : 'fa fa-chevron-down'
+                    "
+                  ></i>
                 </td>
                 <td colspan="8" class="group-name-cell">
                   <div class="group-info">
@@ -375,15 +461,32 @@
                       draggable="true"
                       @dragstart="onGroupDragStart($event, groupIndex)"
                       @dragend="onGroupDragEnd"
-                      @click.stop="() => console.log('Drag handle clicked for group:', groupIndex)"
-                      @mousedown="() => console.log('Drag handle mousedown for group:', groupIndex)"
+                      @click.stop="
+                        () =>
+                          console.log(
+                            'Drag handle clicked for group:',
+                            groupIndex
+                          )
+                      "
+                      @mousedown="
+                        () =>
+                          console.log(
+                            'Drag handle mousedown for group:',
+                            groupIndex
+                          )
+                      "
                     >
                       <i class="fa fa-grip-vertical"></i>
                     </div>
                     <h5 class="group-title">
                       {{ group.name || "Ungrouped Tasks" }}
-                      <span class="task-count">({{ group.tasks.length }} tasks)</span>
-                      <small class="drag-instruction" v-if="groupedTasks.length > 1">
+                      <span class="task-count"
+                        >({{ group.tasks.length }} tasks)</span
+                      >
+                      <small
+                        class="drag-instruction"
+                        v-if="groupedTasks.length > 1"
+                      >
                         <i class="fa fa-arrows-v"></i>
                       </small>
                     </h5>
@@ -405,14 +508,22 @@
                 <tr
                   v-for="task in group.tasks"
                   :key="task.id"
-                  :class="`table_rows table_row_${task.id} ${editableRows[getTaskGlobalIndex(task)] ? 'editable-row' : ''} group-task-row`"
+                  :class="`table_rows table_row_${task.id} ${
+                    editableRows[getTaskGlobalIndex(task)] ? 'editable-row' : ''
+                  } group-task-row`"
                   @click="handleRowClick(task)"
                   @dblclick="enableRowEdit(task)"
                 >
                   <!-- ID -->
-                  <td class="text-limit task-id-cell d-none d-sm-table-cell" :title="task.id">
+                  <td
+                    class="text-limit task-id-cell d-none d-sm-table-cell"
+                    :title="task.id"
+                  >
                     {{ task.id }}
-                    <i v-if="editableRows[getTaskGlobalIndex(task)]" class="fa fa-edit text-warning ml-1"></i>
+                    <i
+                      v-if="editableRows[getTaskGlobalIndex(task)]"
+                      class="fa fa-edit text-warning ml-1"
+                    ></i>
                   </td>
 
                   <!-- Task Title -->
@@ -430,20 +541,52 @@
                       />
                       <div v-else class="task-title-display">
                         <div class="task-title-wrapper">
-                          <span @dblclick="enableTitleEdit(task)" class="editable-title" :class="{ 'task-assigned': isTaskAssigned(task) }">
+                          <span
+                            @dblclick="enableTitleEdit(task)"
+                            class="editable-title"
+                            :class="{ 'task-assigned': isTaskAssigned(task) }"
+                          >
                             {{ task.title }}
                           </span>
                           <!-- Show task ID on mobile inline with title -->
-                          <span class="d-sm-none task-id-mobile">#{{ task.id }}</span>
+                          <span class="d-sm-none task-id-mobile"
+                            >#{{ task.id }}</span
+                          >
                           <!-- Show priority on mobile inline with title -->
                           <div class="d-lg-none mobile-priority">
-                            <span v-if="task.priority === 'low'" class="priority-badge priority-low"> <i class="fa fa-circle"></i> Low </span>
-                            <span v-else-if="task.priority === 'normal'" class="priority-badge priority-normal"> <i class="fa fa-circle"></i> Normal </span>
-                            <span v-else-if="task.priority === 'high'" class="priority-badge priority-high"> <i class="fa fa-circle"></i> High </span>
-                            <span v-else-if="task.priority === 'urgent'" class="priority-badge priority-urgent"> <i class="fa fa-circle"></i> Urgent </span>
-                            <span v-else class="priority-badge">{{ task.priority }}</span>
+                            <span
+                              v-if="task.priority === 'low'"
+                              class="priority-badge priority-low"
+                            >
+                              <i class="fa fa-circle"></i> Low
+                            </span>
+                            <span
+                              v-else-if="task.priority === 'normal'"
+                              class="priority-badge priority-normal"
+                            >
+                              <i class="fa fa-circle"></i> Normal
+                            </span>
+                            <span
+                              v-else-if="task.priority === 'high'"
+                              class="priority-badge priority-high"
+                            >
+                              <i class="fa fa-circle"></i> High
+                            </span>
+                            <span
+                              v-else-if="task.priority === 'urgent'"
+                              class="priority-badge priority-urgent"
+                            >
+                              <i class="fa fa-circle"></i> Urgent
+                            </span>
+                            <span v-else class="priority-badge">{{
+                              task.priority
+                            }}</span>
                           </div>
-                          <div v-if="isTaskAssigned(task)" class="assignment-info" :title="getAssignmentTooltip(task)">
+                          <div
+                            v-if="isTaskAssigned(task)"
+                            class="assignment-info"
+                            :title="getAssignmentTooltip(task)"
+                          >
                             <i class="fa fa-user-tag assignment-icon"></i>
                             <span class="assignment-text">
                               {{ getAssignmentText(task) }}
@@ -455,7 +598,10 @@
                   </td>
 
                   <!-- Priority -->
-                  <td class="text-limit d-none d-lg-table-cell" :title="task.priority">
+                  <td
+                    class="text-limit d-none d-lg-table-cell"
+                    :title="task.priority"
+                  >
                     <select
                       v-if="editableRows[getTaskGlobalIndex(task)]"
                       v-model="task.priority"
@@ -469,16 +615,42 @@
                       <option value="urgent">🔴 Urgent</option>
                     </select>
                     <span v-else>
-                      <span v-if="task.priority === 'low'" class="priority-badge priority-low"> <i class="fa fa-circle"></i> Low </span>
-                      <span v-else-if="task.priority === 'normal'" class="priority-badge priority-normal"> <i class="fa fa-circle"></i> Normal </span>
-                      <span v-else-if="task.priority === 'high'" class="priority-badge priority-high"> <i class="fa fa-circle"></i> High </span>
-                      <span v-else-if="task.priority === 'urgent'" class="priority-badge priority-urgent"> <i class="fa fa-circle"></i> Urgent </span>
-                      <span v-else class="priority-badge">{{ task.priority }}</span>
+                      <span
+                        v-if="task.priority === 'low'"
+                        class="priority-badge priority-low"
+                      >
+                        <i class="fa fa-circle"></i> Low
+                      </span>
+                      <span
+                        v-else-if="task.priority === 'normal'"
+                        class="priority-badge priority-normal"
+                      >
+                        <i class="fa fa-circle"></i> Normal
+                      </span>
+                      <span
+                        v-else-if="task.priority === 'high'"
+                        class="priority-badge priority-high"
+                      >
+                        <i class="fa fa-circle"></i> High
+                      </span>
+                      <span
+                        v-else-if="task.priority === 'urgent'"
+                        class="priority-badge priority-urgent"
+                      >
+                        <i class="fa fa-circle"></i> Urgent
+                      </span>
+                      <span v-else class="priority-badge">{{
+                        task.priority
+                      }}</span>
                     </span>
                   </td>
 
                   <!-- Dev Status -->
-                  <td class="text-limit dev-status-cell" :class="getTaskStatusClass(task.task_user_status)" :title="task.task_user_status">
+                  <td
+                    class="text-limit dev-status-cell"
+                    :class="getTaskStatusClass(task.task_user_status)"
+                    :title="task.task_user_status"
+                  >
                     <select
                       v-if="editableRows[getTaskGlobalIndex(task)]"
                       v-model="task.task_user_status"
@@ -492,30 +664,50 @@
                       <option value="Not Completed">❌ Not Completed</option>
                     </select>
                     <span v-else>
-                      <span v-if="task.task_user_status === 'Pending'" class="status-badge status-pending">
-                        <i class="fa fa-clock-o"></i> <span class="d-none d-md-inline">Pending</span>
+                      <span
+                        v-if="task.task_user_status === 'Pending'"
+                        class="status-badge status-pending"
+                      >
+                        <i class="fa fa-clock-o"></i>
+                        <span class="d-none d-md-inline">Pending</span>
                       </span>
-                      <span v-else-if="task.task_user_status === 'In Progress'" class="status-badge status-progress">
-                        <i class="fa fa-spinner"></i> <span class="d-none d-md-inline">In Progress</span>
+                      <span
+                        v-else-if="task.task_user_status === 'In Progress'"
+                        class="status-badge status-progress"
+                      >
+                        <i class="fa fa-spinner"></i>
+                        <span class="d-none d-md-inline">In Progress</span>
                       </span>
-                      <span v-else-if="task.task_user_status === 'Completed'" class="status-badge status-completed">
-                        <i class="fa fa-check-circle"></i> <span class="d-none d-md-inline">Completed</span>
+                      <span
+                        v-else-if="task.task_user_status === 'Completed'"
+                        class="status-badge status-completed"
+                      >
+                        <i class="fa fa-check-circle"></i>
+                        <span class="d-none d-md-inline">Completed</span>
                       </span>
-                      <span v-else-if="task.task_user_status === 'Not Completed'" class="status-badge status-not-completed">
-                        <i class="fa fa-times-circle"></i> <span class="d-none d-md-inline">Not Completed</span>
+                      <span
+                        v-else-if="task.task_user_status === 'Not Completed'"
+                        class="status-badge status-not-completed"
+                      >
+                        <i class="fa fa-times-circle"></i>
+                        <span class="d-none d-md-inline">Not Completed</span>
                       </span>
-                      <span v-else class="status-badge">{{ task.task_user_status }}</span>
+                      <span v-else class="status-badge">{{
+                        task.task_user_status
+                      }}</span>
                     </span>
                   </td>
-                  
+
                   <!-- Task Status -->
                   <td class="d-none d-md-table-cell">
-                    <span class="status-badge"
+                    <span
+                      class="status-badge"
                       :class="{
                         'status-pending': task.task_status === 'Pending',
                         'status-progress': task.task_status === 'In Progress',
                         'status-completed': task.task_status === 'Completed',
-                        'status-not-completed': task.task_status === 'Not Completed'
+                        'status-not-completed':
+                          task.task_status === 'Not Completed',
                       }"
                     >
                       <i
@@ -539,7 +731,10 @@
                   </td>
 
                   <!-- Start Date -->
-                  <td class="text-limit d-none d-lg-table-cell" :title="formatDateTime(task.start_date)">
+                  <td
+                    class="text-limit d-none d-lg-table-cell"
+                    :title="formatDateTime(task.start_date)"
+                  >
                     <input
                       v-if="editableRows[getTaskGlobalIndex(task)]"
                       type="datetime-local"
@@ -553,12 +748,18 @@
                   </td>
 
                   <!-- End Date -->
-                  <td class="text-limit d-none d-lg-table-cell" :title="formatDateTime(task.end_date)">
+                  <td
+                    class="text-limit d-none d-lg-table-cell"
+                    :title="formatDateTime(task.end_date)"
+                  >
                     <input
                       v-if="editableRows[getTaskGlobalIndex(task)]"
                       type="datetime-local"
                       v-model="task.end_date"
-                      :min="(task.start_date || todayDate) + (task.start_date ? '' : 'T00:00')"
+                      :min="
+                        (task.start_date || todayDate) +
+                        (task.start_date ? '' : 'T00:00')
+                      "
                       class="form-control form-control-sm"
                       @change="debouncedSaveTask(task, 500)"
                       @click.stop
@@ -572,10 +773,25 @@
                   </td>
 
                   <!-- Rating -->
-                  <td class="text-limit d-none d-lg-table-cell" :title="`Rating: ${task.rating || 0}/5`">
+                  <td
+                    class="text-limit d-none d-lg-table-cell"
+                    :title="`Rating: ${task.rating || 0}/5`"
+                  >
                     <div class="rating-cell">
-                      <span v-for="n in 5" :key="n" class="star readonly" :class="{ filled: n <= (task.rating || 0) }">
-                        <i class="fa fa-star" :class="n <= (task.rating || 0) ? 'text-warning' : 'text-secondary'"></i>
+                      <span
+                        v-for="n in 5"
+                        :key="n"
+                        class="star readonly"
+                        :class="{ filled: n <= (task.rating || 0) }"
+                      >
+                        <i
+                          class="fa fa-star"
+                          :class="
+                            n <= (task.rating || 0)
+                              ? 'text-warning'
+                              : 'text-secondary'
+                          "
+                        ></i>
                       </span>
                       <span class="ml-2">({{ task.rating || 0 }})</span>
                     </div>
@@ -585,7 +801,11 @@
                   <td class="text-limit actions-cell">
                     <div class="task-actions">
                       <!-- Success indicator -->
-                      <span v-if="recentlyUpdated[task.id]" class="success-indicator" title="Task updated successfully">
+                      <span
+                        v-if="recentlyUpdated[task.id]"
+                        class="success-indicator"
+                        title="Task updated successfully"
+                      >
                         <i class="fa fa-check-circle text-success"></i>
                       </span>
 
@@ -611,8 +831,14 @@
                       </button>
 
                       <!-- 3-dot menu dropdown container -->
-                      <div class="custom-dropdown" :class="{ show: activeDropdown === task.id }">
-                        <div class="dropdown-menu custom-dropdown-menu" :class="{ show: activeDropdown === task.id }">
+                      <div
+                        class="custom-dropdown"
+                        :class="{ show: activeDropdown === task.id }"
+                      >
+                        <div
+                          class="dropdown-menu custom-dropdown-menu"
+                          :class="{ show: activeDropdown === task.id }"
+                        >
                           <a
                             class="dropdown-item text-info"
                             href="#"
@@ -622,8 +848,13 @@
                             "
                             :title="
                               task.description
-                                ? `Description: ${convertHtmlToPlainText(task.description).substring(0, 100)}${
-                                    convertHtmlToPlainText(task.description).length > 100 ? '...' : ''
+                                ? `Description: ${convertHtmlToPlainText(
+                                    task.description
+                                  ).substring(0, 100)}${
+                                    convertHtmlToPlainText(task.description)
+                                      .length > 100
+                                      ? '...'
+                                      : ''
                                   }`
                                 : 'Add Description'
                             "
@@ -662,7 +893,11 @@
                             <i class="fa fa-trash"></i>
                             <span>Delete</span>
                           </a>
-                          <router-link target="_blank" class="dropdown-item text-primary" :to="`/tasks/details/${task.slug}`">
+                          <router-link
+                            target="_blank"
+                            class="dropdown-item text-primary"
+                            :to="`/tasks/details/${task.slug}`"
+                          >
                             <i class="fa fa-pencil"></i>
                             <span>Details</span>
                           </router-link>
@@ -680,8 +915,17 @@
     </div>
 
     <!-- Add Task Modal -->
-    <div v-if="showAddTaskModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeAddTaskModal">
-      <div class="modal-content responsive-modal" :class="{ 'dark-mode': isDarkMode }" @click.stop>
+    <div
+      v-if="showAddTaskModalFlag"
+      class="modal-overlay"
+      :class="{ 'dark-mode': isDarkMode }"
+      @click="closeAddTaskModal"
+    >
+      <div
+        class="modal-content responsive-modal"
+        :class="{ 'dark-mode': isDarkMode }"
+        @click.stop
+      >
         <div class="modal-header">
           <h3>Add New Task</h3>
           <button class="modal-close-btn" @click="closeAddTaskModal">
@@ -692,14 +936,29 @@
           <form @submit.prevent="createNewTask">
             <div class="form-group">
               <label for="taskTitle">Task Title *</label>
-              <input type="text" id="taskTitle" v-model="newTask.title" class="form-control" placeholder="Enter task title" required />
+              <input
+                type="text"
+                id="taskTitle"
+                v-model="newTask.title"
+                class="form-control"
+                placeholder="Enter task title"
+                required
+              />
             </div>
 
             <div class="form-group">
               <label for="taskGroup">Task Group</label>
-              <select id="taskGroup" v-model="newTask.task_group_id" class="form-control">
+              <select
+                id="taskGroup"
+                v-model="newTask.task_group_id"
+                class="form-control"
+              >
                 <option value="">Select Task Group (Optional)</option>
-                <option v-for="group in task_groups" :key="group.id" :value="group.id">
+                <option
+                  v-for="group in task_groups"
+                  :key="group.id"
+                  :value="group.id"
+                >
                   {{ group.name }}
                 </option>
               </select>
@@ -708,7 +967,11 @@
             <div class="form-row responsive-form-row">
               <div class="form-group">
                 <label for="taskPriority">Priority</label>
-                <select id="taskPriority" v-model="newTask.priority" class="form-control">
+                <select
+                  id="taskPriority"
+                  v-model="newTask.priority"
+                  class="form-control"
+                >
                   <option value="low">🟢 Low</option>
                   <option value="normal">🟡 Normal</option>
                   <option value="high">🔴 High</option>
@@ -718,7 +981,11 @@
 
               <div class="form-group">
                 <label for="taskStatus">Status</label>
-                <select id="taskStatus" v-model="newTask.task_user_status" class="form-control">
+                <select
+                  id="taskStatus"
+                  v-model="newTask.task_user_status"
+                  class="form-control"
+                >
                   <option value="Pending">📝 Pending</option>
                   <option value="In Progress">⚡ In Progress</option>
                   <option value="Completed">✅ Completed</option>
@@ -730,23 +997,26 @@
             <div class="form-row responsive-form-row">
               <div class="form-group">
                 <label for="startDate">Start Date & Time</label>
-                <input type="datetime-local" id="startDate" v-model="newTask.start_date" class="form-control text-dark" />
+                <input
+                  type="datetime-local"
+                  id="startDate"
+                  v-model="newTask.start_date"
+                  class="form-control text-dark"
+                />
               </div>
               <div class="form-group">
                 <label for="endDate">End Date & Time</label>
-                <input type="datetime-local" id="endDate" v-model="newTask.end_date" :min="newTask.start_date" class="form-control text-dark" />
+                <input
+                  type="datetime-local"
+                  id="endDate"
+                  v-model="newTask.end_date"
+                  :min="newTask.start_date"
+                  class="form-control text-dark"
+                />
               </div>
             </div>
 
             <!-- Date validation error message -->
-            <div
-              v-if="isNewTaskDateInvalid"
-              class="alert alert-danger"
-              style="margin-top: 10px; padding: 8px 12px; border-radius: 4px; background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24"
-            >
-              <i class="fa fa-exclamation-triangle"></i>
-              {{ dateValidationMessage }}
-            </div>
 
             <div class="form-group">
               <label for="taskDescription">Description</label>
@@ -761,8 +1031,19 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeAddTaskModal">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="createNewTask" :disabled="!newTask.title || isCreatingTask || isNewTaskDateInvalid">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            @click="closeAddTaskModal"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="createNewTask"
+            :disabled="!newTask.title || isCreatingTask"
+          >
             <i v-if="isCreatingTask" class="fa fa-spinner fa-spin"></i>
             {{ isCreatingTask ? "Creating..." : "Create Task" }}
           </button>
@@ -771,8 +1052,17 @@
     </div>
 
     <!-- Add Task Group Modal -->
-    <div v-if="showAddTaskGroupModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeAddTaskGroupModal">
-      <div class="modal-content" :class="{ 'dark-mode': isDarkMode }" @click.stop>
+    <div
+      v-if="showAddTaskGroupModalFlag"
+      class="modal-overlay"
+      :class="{ 'dark-mode': isDarkMode }"
+      @click="closeAddTaskGroupModal"
+    >
+      <div
+        class="modal-content"
+        :class="{ 'dark-mode': isDarkMode }"
+        @click.stop
+      >
         <div class="modal-header">
           <h3>Add New Task Group</h3>
           <button class="modal-close-btn" @click="closeAddTaskGroupModal">
@@ -783,7 +1073,14 @@
           <form @submit.prevent="createNewTaskGroup">
             <div class="form-group">
               <label for="taskGroupName">Task Group Name *</label>
-              <input type="text" id="taskGroupName" v-model="newTaskGroup.name" class="form-control" placeholder="Enter task group name" required />
+              <input
+                type="text"
+                id="taskGroupName"
+                v-model="newTaskGroup.name"
+                class="form-control"
+                placeholder="Enter task group name"
+                required
+              />
             </div>
 
             <div class="form-group">
@@ -799,8 +1096,19 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeAddTaskGroupModal">Cancel</button>
-          <button type="button" class="btn btn-success" @click="createNewTaskGroup" :disabled="!newTaskGroup.name || isCreatingTaskGroup">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            @click="closeAddTaskGroupModal"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-success"
+            @click="createNewTaskGroup"
+            :disabled="!newTaskGroup.name || isCreatingTaskGroup"
+          >
             <i v-if="isCreatingTaskGroup" class="fa fa-spinner fa-spin"></i>
             {{ isCreatingTaskGroup ? "Creating..." : "Create Group" }}
           </button>
@@ -809,15 +1117,26 @@
     </div>
 
     <!-- Task Description Modal -->
-    <div v-if="showDescriptionModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeDescriptionModal">
-      <div class="modal-content description-modal" :class="{ 'dark-mode': isDarkMode }" @click.stop>
+    <div
+      v-if="showDescriptionModalFlag"
+      class="modal-overlay"
+      :class="{ 'dark-mode': isDarkMode }"
+      @click="closeDescriptionModal"
+    >
+      <div
+        class="modal-content description-modal"
+        :class="{ 'dark-mode': isDarkMode }"
+        @click.stop
+      >
         <div class="modal-header">
           <h3>
             <i class="fa fa-file-text me-2"></i>
             Task Description
           </h3>
           <div class="task-info">
-            <span class="task-title">{{ selectedTaskForDescription?.title }}</span>
+            <span class="task-title">{{
+              selectedTaskForDescription?.title
+            }}</span>
             <span class="task-id">#{{ selectedTaskForDescription?.id }}</span>
           </div>
           <button class="modal-close-btn" @click="closeDescriptionModal">
@@ -840,13 +1159,27 @@
                 <i class="fa fa-info-circle"></i>
                 You can use line breaks to format your description
               </small>
-              <small class="character-count"> {{ descriptionText ? descriptionText.length : 0 }} characters </small>
+              <small class="character-count">
+                {{ descriptionText ? descriptionText.length : 0 }} characters
+              </small>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeDescriptionModal" :disabled="isSavingDescription">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="saveTaskDescription" :disabled="!descriptionText.trim() || isSavingDescription">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            @click="closeDescriptionModal"
+            :disabled="isSavingDescription"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="saveTaskDescription"
+            :disabled="!descriptionText.trim() || isSavingDescription"
+          >
             <i v-if="isSavingDescription" class="fa fa-spinner fa-spin"></i>
             {{ isSavingDescription ? "Saving..." : "Save Description" }}
           </button>
@@ -855,8 +1188,17 @@
     </div>
 
     <!-- Task Review Modal -->
-    <div v-if="showReviewModalFlag" class="modal-overlay" :class="{ 'dark-mode': isDarkMode }" @click="closeReviewModal">
-      <div class="modal-content review-modal" :class="{ 'dark-mode': isDarkMode }" @click.stop>
+    <div
+      v-if="showReviewModalFlag"
+      class="modal-overlay"
+      :class="{ 'dark-mode': isDarkMode }"
+      @click="closeReviewModal"
+    >
+      <div
+        class="modal-content review-modal"
+        :class="{ 'dark-mode': isDarkMode }"
+        @click.stop
+      >
         <div class="modal-header">
           <h3>
             <i class="fa fa-star me-2"></i>
@@ -904,7 +1246,11 @@
 
             <!-- Reviews List -->
             <div v-else class="reviews-list">
-              <div v-for="review in taskReviews" :key="review.id" class="review-item">
+              <div
+                v-for="review in taskReviews"
+                :key="review.id"
+                class="review-item"
+              >
                 <!-- Review Content -->
                 <div class="review-content">
                   <div class="review-header">
@@ -913,11 +1259,14 @@
                         <i class="fa fa-user-circle"></i>
                       </div>
                       <div class="reviewer-details">
-                        <h6 class="reviewer-name">{{ getReviewerDisplayName(review) }}</h6>
-                        <span class="review-date">{{ formatReviewDate(review.created_at) }}</span>
+                        <h6 class="reviewer-name">
+                          {{ getReviewerDisplayName(review) }}
+                        </h6>
+                        <span class="review-date">{{
+                          formatReviewDate(review.created_at)
+                        }}</span>
                       </div>
                     </div>
-                   
                   </div>
 
                   <div class="review-text">
@@ -952,7 +1301,9 @@
                     :disabled="isSavingReview"
                   ></textarea>
                   <div class="character-count">
-                    <small class="text-muted">{{ newReviewComment.length }} characters</small>
+                    <small class="text-muted"
+                      >{{ newReviewComment.length }} characters</small
+                    >
                   </div>
                 </div>
 
@@ -974,9 +1325,23 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="closeReviewModal">Close</button>
-          <button type="button" class="btn btn-outline-primary" @click="loadTaskReviews" :disabled="isLoadingReviews">
-            <i class="fa fa-refresh" :class="{ 'fa-spin': isLoadingReviews }"></i>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            @click="closeReviewModal"
+          >
+            Close
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            @click="loadTaskReviews"
+            :disabled="isLoadingReviews"
+          >
+            <i
+              class="fa fa-refresh"
+              :class="{ 'fa-spin': isLoadingReviews }"
+            ></i>
             Refresh Reviews
           </button>
         </div>
@@ -1146,7 +1511,8 @@ export default {
         { id: 4, name: "Research" },
       ],
 
-      filePath: "resources/js/backend/Views/SuperAdmin/Management/TestModule/helpers/demo.csv",
+      filePath:
+        "resources/js/backend/Views/SuperAdmin/Management/TestModule/helpers/demo.csv",
     };
   },
   created: async function () {
@@ -1164,7 +1530,9 @@ export default {
 
     if (projectId) {
       // If project_id is provided in query params, find and select that project
-      const foundProject = projectsList.find((p) => p.id == projectId || p.slug == projectId);
+      const foundProject = projectsList.find(
+        (p) => p.id == projectId || p.slug == projectId
+      );
       if (foundProject) {
         this.selectedProject = foundProject;
         this.saveSelectedProjectToLocalStorage(foundProject);
@@ -1214,7 +1582,9 @@ export default {
     window.removeEventListener("resize", this.handleResize);
 
     // Clean up save timeouts
-    Object.values(this.saveTimeouts).forEach((timeout) => clearTimeout(timeout));
+    Object.values(this.saveTimeouts).forEach((timeout) =>
+      clearTimeout(timeout)
+    );
     this.saveTimeouts = {};
 
     // Clean up search timeout
@@ -1266,14 +1636,21 @@ export default {
 
         if (savedProject && projectsList && projectsList.length > 0) {
           const parsedProject = JSON.parse(savedProject);
-          const foundProject = projectsList.find((p) => p.id === parsedProject.id);
+          const foundProject = projectsList.find(
+            (p) => p.id === parsedProject.id
+          );
 
           if (foundProject) {
             this.selectedProject = foundProject;
-            console.log("Selected project from localStorage:", foundProject.name);
+            console.log(
+              "Selected project from localStorage:",
+              foundProject.name
+            );
             return;
           } else {
-            console.warn("Saved project no longer exists, selecting first available project");
+            console.warn(
+              "Saved project no longer exists, selecting first available project"
+            );
           }
         }
 
@@ -1281,7 +1658,10 @@ export default {
         if (projectsList && projectsList.length > 0) {
           this.selectedProject = projectsList[0];
           this.saveSelectedProjectToLocalStorage(projectsList[0]);
-          console.log("Selected first available project:", projectsList[0].name);
+          console.log(
+            "Selected first available project:",
+            projectsList[0].name
+          );
         }
       } catch (error) {
         console.error("Failed to load project from localStorage:", error);
@@ -1377,7 +1757,10 @@ export default {
       // Store original tasks for date filtering
       if (response.data?.data) {
         this.originalAllTasks = [...response.data.data];
-        console.log("Original tasks stored for filtering:", this.originalAllTasks.length);
+        console.log(
+          "Original tasks stored for filtering:",
+          this.originalAllTasks.length
+        );
       }
 
       console.log("Tasks response:", response.data);
@@ -1513,7 +1896,9 @@ export default {
           // Enhance the returned task with group name for better display
           const createdTask = response.data.data;
           if (createdTask.task_group_id && !createdTask.task_group_name) {
-            const group = this.task_groups.find((g) => g.id == createdTask.task_group_id);
+            const group = this.task_groups.find(
+              (g) => g.id == createdTask.task_group_id
+            );
             if (group) {
               createdTask.task_group_name = group.name;
             }
@@ -1548,13 +1933,23 @@ export default {
         console.error("Error creating task:", error);
 
         // Handle Laravel validation errors
-        if (error.response && error.response.data && error.response.data.errors) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
           const errorMessages = [];
-          for (const [field, messages] of Object.entries(error.response.data.errors)) {
+          for (const [field, messages] of Object.entries(
+            error.response.data.errors
+          )) {
             errorMessages.push(`${field}: ${messages.join(", ")}`);
           }
           window.s_warning(`Validation errors: ${errorMessages.join("; ")}`);
-        } else if (error.response && error.response.data && error.response.data.message) {
+        } else if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
           window.s_warning(error.response.data.message);
         } else {
           window.s_warning("Error creating task");
@@ -1613,19 +2008,31 @@ export default {
           // Refresh task groups to update dropdowns
           await this.get_all_task_groups();
         } else {
-          window.s_warning(response.data?.message || "Failed to create task group");
+          window.s_warning(
+            response.data?.message || "Failed to create task group"
+          );
         }
       } catch (error) {
         console.error("Error creating task group:", error);
 
         // Handle Laravel validation errors
-        if (error.response && error.response.data && error.response.data.errors) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
           const errorMessages = [];
-          for (const [field, messages] of Object.entries(error.response.data.errors)) {
+          for (const [field, messages] of Object.entries(
+            error.response.data.errors
+          )) {
             errorMessages.push(`${field}: ${messages.join(", ")}`);
           }
           window.s_warning(`Validation errors: ${errorMessages.join("; ")}`);
-        } else if (error.response && error.response.data && error.response.data.message) {
+        } else if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
           window.s_warning(error.response.data.message);
         } else {
           window.s_warning("Error creating task group");
@@ -1651,7 +2058,9 @@ export default {
     openDescriptionModal(task) {
       this.selectedTaskForDescription = task;
       // Convert HTML to plain text for editing
-      this.descriptionText = task.description ? this.convertHtmlToPlainText(task.description) : "";
+      this.descriptionText = task.description
+        ? this.convertHtmlToPlainText(task.description)
+        : "";
       this.showDescriptionModalFlag = true;
     },
 
@@ -1663,7 +2072,10 @@ export default {
     },
 
     async saveTaskDescription() {
-      if (!this.selectedTaskForDescription || !this.selectedTaskForDescription.slug) {
+      if (
+        !this.selectedTaskForDescription ||
+        !this.selectedTaskForDescription.slug
+      ) {
         window.s_warning("Cannot save description. Task not found.");
         return;
       }
@@ -1682,34 +2094,52 @@ export default {
           description: this.descriptionText.trim(),
         };
 
-        const response = await axios.post(`/task/update/${this.selectedTaskForDescription.slug}`, payload);
+        const response = await axios.post(
+          `/task/update/${this.selectedTaskForDescription.slug}`,
+          payload
+        );
 
         if (response.data.status === "success") {
           // Update the task in local data
-          const taskIndex = this.all.data.findIndex((t) => t.id === this.selectedTaskForDescription.id);
+          const taskIndex = this.all.data.findIndex(
+            (t) => t.id === this.selectedTaskForDescription.id
+          );
           if (taskIndex !== -1) {
             this.all.data[taskIndex].description = this.descriptionText.trim();
           }
 
           // Update the selected task object
-          this.selectedTaskForDescription.description = this.descriptionText.trim();
+          this.selectedTaskForDescription.description =
+            this.descriptionText.trim();
 
           window.s_alert("Description saved successfully!");
           this.closeDescriptionModal();
         } else {
-          window.s_warning(response.data?.message || "Failed to save description");
+          window.s_warning(
+            response.data?.message || "Failed to save description"
+          );
         }
       } catch (error) {
         console.error("Error saving description:", error);
 
         // Handle Laravel validation errors
-        if (error.response && error.response.data && error.response.data.errors) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
           const errorMessages = [];
-          for (const [field, messages] of Object.entries(error.response.data.errors)) {
+          for (const [field, messages] of Object.entries(
+            error.response.data.errors
+          )) {
             errorMessages.push(`${field}: ${messages.join(", ")}`);
           }
           window.s_warning(`Validation errors: ${errorMessages.join("; ")}`);
-        } else if (error.response && error.response.data && error.response.data.message) {
+        } else if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
           window.s_warning(error.response.data.message);
         } else {
           window.s_warning("Error saving description");
@@ -1804,13 +2234,16 @@ export default {
 
       try {
         // Load reviews
-        const reviewsResponse = await axios.get(`/task/task-reviews-by-task-id/${this.selectedTaskForReview.id}`);
+        const reviewsResponse = await axios.get(
+          `/task/task-reviews-by-task-id/${this.selectedTaskForReview.id}`
+        );
 
         if (reviewsResponse.data.status === "success") {
           this.taskReviews = reviewsResponse.data.data;
           console.log("Reviews loaded:", this.taskReviews);
         } else {
-          this.reviewError = reviewsResponse.data.message || "Failed to load reviews";
+          this.reviewError =
+            reviewsResponse.data.message || "Failed to load reviews";
         }
       } catch (error) {
         console.error("Error loading task reviews:", error);
@@ -1818,7 +2251,11 @@ export default {
         if (error.response && error.response.status === 404) {
           // No reviews found - this is normal, show empty state
           this.taskReviews = [];
-        } else if (error.response && error.response.data && error.response.data.message) {
+        } else if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
           this.reviewError = error.response.data.message;
         } else {
           this.reviewError = "Failed to load reviews. Please try again.";
@@ -1859,7 +2296,11 @@ export default {
       } catch (error) {
         console.error("Error submitting comment:", error);
 
-        if (error.response && error.response.data && error.response.data.message) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
           window.s_warning(error.response.data.message);
         } else {
           window.s_warning("Failed to submit comment. Please try again.");
@@ -1891,7 +2332,11 @@ export default {
       if (!review) return "Anonymous";
 
       // If we have the current user ID and it matches the reviewer
-      if (this.auth_info?.id && review.user_id && review.user_id == this.auth_info.id) {
+      if (
+        this.auth_info?.id &&
+        review.user_id &&
+        review.user_id == this.auth_info.id
+      ) {
         return "Me";
       }
 
@@ -1906,13 +2351,19 @@ export default {
         window.s_alert("Refreshing data...", "info");
 
         // Refresh all data
-        await Promise.all([this.get_all_tasks(), this.get_all_task_groups(), this.get_all_projects()]);
+        await Promise.all([
+          this.get_all_tasks(),
+          this.get_all_task_groups(),
+          this.get_all_projects(),
+        ]);
 
         // Clear any edit modes
         this.editableRows = {};
 
         // Clear any pending save timeouts
-        Object.values(this.saveTimeouts).forEach((timeout) => clearTimeout(timeout));
+        Object.values(this.saveTimeouts).forEach((timeout) =>
+          clearTimeout(timeout)
+        );
         this.saveTimeouts = {};
 
         // Reset recently updated indicators
@@ -1965,7 +2416,9 @@ export default {
       this.resizeType = "row";
       this.resizeIndex = rowIndex;
       this.startY = event.clientY;
-      this.startHeight = parseInt(this.rowHeights[rowIndex] || this.defaultRowHeight);
+      this.startHeight = parseInt(
+        this.rowHeights[rowIndex] || this.defaultRowHeight
+      );
       event.preventDefault();
     },
 
@@ -1974,7 +2427,10 @@ export default {
 
       if (this.resizeType === "column") {
         const deltaX = event.clientX - this.startX;
-        const newWidth = Math.max(parseInt(this.columns[this.resizeIndex].minWidth) || 50, this.startWidth + deltaX);
+        const newWidth = Math.max(
+          parseInt(this.columns[this.resizeIndex].minWidth) || 50,
+          this.startWidth + deltaX
+        );
         this.columns[this.resizeIndex].width = newWidth + "px";
       } else if (this.resizeType === "row") {
         const deltaY = event.clientY - this.startY;
@@ -2011,7 +2467,11 @@ export default {
       }
 
       // Ctrl/Cmd + Shift + C to clear all filters
-      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "C") {
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.shiftKey &&
+        event.key === "C"
+      ) {
         event.preventDefault();
         this.clearAllFilters();
       }
@@ -2164,7 +2624,9 @@ export default {
 
           // Enhance the task with group name for better display
           if (createdTask.task_group_id && !createdTask.task_group_name) {
-            const group = this.task_groups.find((g) => g.id == createdTask.task_group_id);
+            const group = this.task_groups.find(
+              (g) => g.id == createdTask.task_group_id
+            );
             if (group) {
               createdTask.task_group_name = group.name;
             }
@@ -2217,7 +2679,7 @@ export default {
         } else {
           reason = `Cannot delete task. Only tasks with "Pending" status can be deleted.`;
         }
-        
+
         window.s_warning(reason);
         return;
       }
@@ -2245,7 +2707,9 @@ export default {
 
         // Also remove from originalAllTasks for filtering consistency
         if (this.originalAllTasks) {
-          const originalIndex = this.originalAllTasks.findIndex((t) => t.id === task.id);
+          const originalIndex = this.originalAllTasks.findIndex(
+            (t) => t.id === task.id
+          );
           if (originalIndex !== -1) {
             this.originalAllTasks.splice(originalIndex, 1);
           }
@@ -2270,7 +2734,7 @@ export default {
       return group ? group.name : "";
     },
 
-    // Calculate actual time between start and end dates
+    // Calculate time difference between start and end dates
     FindActualTime(startDate, endDate) {
       if (!startDate || !endDate) {
         return "Not set";
@@ -2285,13 +2749,13 @@ export default {
           return "Invalid date";
         }
 
-        // Calculate difference in milliseconds
-        const diffMs = end.getTime() - start.getTime();
-
         // If end date is before start date
-        if (diffMs < 0) {
+        if (end.getTime() < start.getTime()) {
           return "Invalid range";
         }
+
+        // Calculate difference in milliseconds
+        const diffMs = end.getTime() - start.getTime();
 
         // Convert to different units
         const diffMinutes = Math.floor(diffMs / (1000 * 60));
@@ -2302,6 +2766,10 @@ export default {
         if (diffDays > 0) {
           const remainingHours = diffHours % 24;
           if (remainingHours > 0) {
+            const remainingMinutes = diffMinutes % 60;
+            if (remainingMinutes > 0) {
+              return `${diffDays}d ${remainingHours}h ${remainingMinutes}m`;
+            }
             return `${diffDays}d ${remainingHours}h`;
           }
           return `${diffDays} day${diffDays > 1 ? "s" : ""}`;
@@ -2312,12 +2780,12 @@ export default {
           }
           return `${diffHours} hour${diffHours > 1 ? "s" : ""}`;
         } else if (diffMinutes > 0) {
-          return `${diffMinutes} min${diffMinutes > 1 ? "s" : ""}`;
+          return `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""}`;
         } else {
           return "0 minutes";
         }
       } catch (error) {
-        console.error("Error calculating actual time:", error);
+        console.error("Error calculating time difference:", error);
         return "Error";
       }
     },
@@ -2346,8 +2814,12 @@ export default {
     getAssignmentTooltip(task) {
       if (!this.isTaskAssigned(task)) return "";
 
-      const assigneeInfo = task.assignee_name ? task.assignee_name : `User ID: ${task.assigned_to}`;
-      const creatorInfo = task.creator_name ? task.creator_name : `Creator ID: ${task.creator}`;
+      const assigneeInfo = task.assignee_name
+        ? task.assignee_name
+        : `User ID: ${task.assigned_to}`;
+      const creatorInfo = task.creator_name
+        ? task.creator_name
+        : `Creator ID: ${task.creator}`;
 
       return `Assigned to: ${assigneeInfo}\nCreated by: ${creatorInfo}`;
     },
@@ -2358,12 +2830,15 @@ export default {
       if (task.task_status && task.task_status !== "Pending") {
         return false;
       }
-      
+
       // Prevent deletion if task_user_status (dev status) is Completed or Not Completed
-      if (task.task_user_status === "Completed" || task.task_user_status === "Not Completed") {
+      if (
+        task.task_user_status === "Completed" ||
+        task.task_user_status === "Not Completed"
+      ) {
         return false;
       }
-      
+
       // Allow deletion only for Pending tasks
       return true;
     },
@@ -2394,7 +2869,9 @@ export default {
 
     // Auto-save any currently edited row
     autoSaveCurrentEditedRow() {
-      const editedIndices = Object.keys(this.editableRows).filter((index) => this.editableRows[index]);
+      const editedIndices = Object.keys(this.editableRows).filter(
+        (index) => this.editableRows[index]
+      );
 
       if (editedIndices.length > 0) {
         const allTasks = this.all?.data || [];
@@ -2419,7 +2896,9 @@ export default {
       const clickedIndex = this.getTaskGlobalIndex(task);
 
       // Check if any row is currently in edit mode
-      const hasEditableRows = Object.values(this.editableRows).some((editable) => editable);
+      const hasEditableRows = Object.values(this.editableRows).some(
+        (editable) => editable
+      );
 
       if (hasEditableRows) {
         // Check if the clicked row is already editable
@@ -2495,7 +2974,11 @@ export default {
       if (this.editableRows[index]) {
         // Focus on the first input when entering edit mode
         this.$nextTick(() => {
-          const firstInput = document.querySelector(`tr:nth-child(${index + 1}) input, tr:nth-child(${index + 1}) select`);
+          const firstInput = document.querySelector(
+            `tr:nth-child(${index + 1}) input, tr:nth-child(${
+              index + 1
+            }) select`
+          );
           if (firstInput) {
             firstInput.focus();
           }
@@ -2547,7 +3030,9 @@ export default {
 
           // Update in originalAllTasks for filtering consistency
           if (this.originalAllTasks) {
-            const originalIndex = this.originalAllTasks.findIndex((t) => t.id === task.id);
+            const originalIndex = this.originalAllTasks.findIndex(
+              (t) => t.id === task.id
+            );
             if (originalIndex !== -1) {
               this.originalAllTasks[originalIndex] = {
                 ...this.originalAllTasks[originalIndex],
@@ -2693,7 +3178,9 @@ export default {
           // Handle validation errors
           if (response.data.errors) {
             const errorMessages = [];
-            for (const [field, messages] of Object.entries(response.data.errors)) {
+            for (const [field, messages] of Object.entries(
+              response.data.errors
+            )) {
               errorMessages.push(`${field}: ${messages.join(", ")}`);
             }
             window.s_warning(`Validation errors: ${errorMessages.join("; ")}`);
@@ -2705,13 +3192,23 @@ export default {
         console.error("Error saving task:", error);
 
         // Handle Laravel validation errors
-        if (error.response && error.response.data && error.response.data.errors) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
           const errorMessages = [];
-          for (const [field, messages] of Object.entries(error.response.data.errors)) {
+          for (const [field, messages] of Object.entries(
+            error.response.data.errors
+          )) {
             errorMessages.push(`${field}: ${messages.join(", ")}`);
           }
           window.s_warning(`Validation errors: ${errorMessages.join("; ")}`);
-        } else if (error.response && error.response.data && error.response.data.message) {
+        } else if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
           window.s_warning(error.response.data.message);
         } else {
           window.s_warning("Error saving task changes");
@@ -2767,7 +3264,9 @@ export default {
           // Handle validation errors
           if (response.data.errors) {
             const errorMessages = [];
-            for (const [field, messages] of Object.entries(response.data.errors)) {
+            for (const [field, messages] of Object.entries(
+              response.data.errors
+            )) {
               errorMessages.push(`${field}: ${messages.join(", ")}`);
             }
             window.s_warning(`Validation errors: ${errorMessages.join("; ")}`);
@@ -2779,13 +3278,23 @@ export default {
         console.error("Error updating task status:", error);
 
         // Handle Laravel validation errors
-        if (error.response && error.response.data && error.response.data.errors) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
           const errorMessages = [];
-          for (const [field, messages] of Object.entries(error.response.data.errors)) {
+          for (const [field, messages] of Object.entries(
+            error.response.data.errors
+          )) {
             errorMessages.push(`${field}: ${messages.join(", ")}`);
           }
           window.s_warning(`Validation errors: ${errorMessages.join("; ")}`);
-        } else if (error.response && error.response.data && error.response.data.message) {
+        } else if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
           window.s_warning(error.response.data.message);
         } else {
           window.s_warning("Error updating task status");
@@ -2858,7 +3367,12 @@ export default {
 
     // Drag and Drop Methods for Group Ordering
     onGroupDragStart(event, groupIndex) {
-      console.log("🚀 DRAG START - Group index:", groupIndex, "Group:", this.groupedTasks[groupIndex]?.name);
+      console.log(
+        "🚀 DRAG START - Group index:",
+        groupIndex,
+        "Group:",
+        this.groupedTasks[groupIndex]?.name
+      );
 
       this.isDragging = true;
       this.draggedGroupIndex = groupIndex;
@@ -2896,9 +3410,11 @@ export default {
       document.body.classList.remove("dragging-active");
 
       // Remove any drag-over classes
-      document.querySelectorAll(".group-header-row.drag-over").forEach((row) => {
-        row.classList.remove("drag-over");
-      });
+      document
+        .querySelectorAll(".group-header-row.drag-over")
+        .forEach((row) => {
+          row.classList.remove("drag-over");
+        });
 
       console.log("✅ Drag ended successfully");
     },
@@ -2907,11 +3423,19 @@ export default {
       // Allow dropping by preventing default
       event.preventDefault();
 
-      if (this.draggedGroupIndex === null || this.draggedGroupIndex === groupIndex) {
+      if (
+        this.draggedGroupIndex === null ||
+        this.draggedGroupIndex === groupIndex
+      ) {
         return;
       }
 
-      console.log("📍 DRAG OVER - From:", this.draggedGroupIndex, "To:", groupIndex);
+      console.log(
+        "📍 DRAG OVER - From:",
+        this.draggedGroupIndex,
+        "To:",
+        groupIndex
+      );
 
       event.dataTransfer.dropEffect = "move";
       this.dragOverGroupIndex = groupIndex;
@@ -2935,14 +3459,24 @@ export default {
       event.preventDefault();
       event.stopPropagation();
 
-      console.log("🎯 DROP EVENT - From:", this.draggedGroupIndex, "To:", dropIndex);
+      console.log(
+        "🎯 DROP EVENT - From:",
+        this.draggedGroupIndex,
+        "To:",
+        dropIndex
+      );
 
-      if (this.draggedGroupIndex === null || this.draggedGroupIndex === dropIndex) {
+      if (
+        this.draggedGroupIndex === null ||
+        this.draggedGroupIndex === dropIndex
+      ) {
         console.log("❌ Drop cancelled - same position or no drag source");
         return;
       }
 
-      console.log(`✅ Moving group from index ${this.draggedGroupIndex} to ${dropIndex}`);
+      console.log(
+        `✅ Moving group from index ${this.draggedGroupIndex} to ${dropIndex}`
+      );
 
       // Reorder the groups in the customGroupOrder array
       this.reorderGroups(this.draggedGroupIndex, dropIndex);
@@ -2953,9 +3487,11 @@ export default {
       this.dragOverGroupIndex = null;
 
       // Remove visual feedback classes
-      document.querySelectorAll(".group-header-row.drag-over").forEach((row) => {
-        row.classList.remove("drag-over");
-      });
+      document
+        .querySelectorAll(".group-header-row.drag-over")
+        .forEach((row) => {
+          row.classList.remove("drag-over");
+        });
 
       // Remove global body class
       document.body.classList.remove("dragging-active");
@@ -2969,7 +3505,12 @@ export default {
       // Get the current grouped tasks
       const groups = [...this.groupedTasks];
 
-      if (fromIndex < 0 || fromIndex >= groups.length || toIndex < 0 || toIndex >= groups.length) {
+      if (
+        fromIndex < 0 ||
+        fromIndex >= groups.length ||
+        toIndex < 0 ||
+        toIndex >= groups.length
+      ) {
         console.error("❌ Invalid indices for reordering");
         return;
       }
@@ -3004,7 +3545,10 @@ export default {
 
       // Store in localStorage for persistence
       if (this.selectedProject?.id) {
-        localStorage.setItem(`groupOrder_${this.selectedProject.id}`, JSON.stringify(this.customGroupOrder));
+        localStorage.setItem(
+          `groupOrder_${this.selectedProject.id}`,
+          JSON.stringify(this.customGroupOrder)
+        );
         console.log("💾 Saved group order to localStorage");
       }
 
@@ -3108,7 +3652,9 @@ export default {
     loadGroupOrder() {
       // Load custom group order from localStorage
       if (this.selectedProject?.id) {
-        const saved = localStorage.getItem(`groupOrder_${this.selectedProject.id}`);
+        const saved = localStorage.getItem(
+          `groupOrder_${this.selectedProject.id}`
+        );
         if (saved) {
           try {
             this.customGroupOrder = JSON.parse(saved);
@@ -3196,7 +3742,12 @@ export default {
       auth_info: "auth_info",
     }),
     isAllSelected() {
-      return this.all?.data?.length > 0 && this.all.data?.every((item) => this.selected.some((s) => s.id === item.id));
+      return (
+        this.all?.data?.length > 0 &&
+        this.all.data?.every((item) =>
+          this.selected.some((s) => s.id === item.id)
+        )
+      );
     },
 
     // Format selected date for display in tooltip
@@ -3230,12 +3781,19 @@ export default {
         tasks = tasks.filter((task) => {
           return (
             task.title.toLowerCase().includes(query) ||
-            (task.description && this.convertHtmlToPlainText(task.description).toLowerCase().includes(query)) ||
+            (task.description &&
+              this.convertHtmlToPlainText(task.description)
+                .toLowerCase()
+                .includes(query)) ||
             task.priority.toLowerCase().includes(query) ||
             task.task_status.toLowerCase().includes(query) ||
             task.task_user_status.toLowerCase().includes(query) ||
-            (task.task_group_name && task.task_group_name.toLowerCase().includes(query)) ||
-            (task.assigned_users && task.assigned_users.some((user) => user.name.toLowerCase().includes(query)))
+            (task.task_group_name &&
+              task.task_group_name.toLowerCase().includes(query)) ||
+            (task.assigned_users &&
+              task.assigned_users.some((user) =>
+                user.name.toLowerCase().includes(query)
+              ))
           );
         });
       }
@@ -3270,7 +3828,10 @@ export default {
       if (this.projectStatusFilter) {
         tasks = tasks.filter((task) => {
           // Assuming project status is available in task.project.status or similar
-          return task.project_status === this.projectStatusFilter || (task.project && task.project.status === this.projectStatusFilter);
+          return (
+            task.task_status === this.projectStatusFilter ||
+            (task.task_status && task.task_status === this.projectStatusFilter)
+          );
         });
       }
 
@@ -3320,12 +3881,17 @@ export default {
         // Only group if task_group_id exists AND the group actually exists
         if (task.task_group_id) {
           // Check if the group actually exists in task_groups array
-          const existingGroup = this.task_groups.find((g) => g.id == task.task_group_id);
+          const existingGroup = this.task_groups.find(
+            (g) => g.id == task.task_group_id
+          );
 
           if (existingGroup) {
             groupId = task.task_group_id;
             // First try to use task_group_name from the task object
-            groupName = task.task_group_name || task.task_group?.name || existingGroup.name;
+            groupName =
+              task.task_group_name ||
+              task.task_group?.name ||
+              existingGroup.name;
           }
           // If group doesn't exist, it will remain as "ungrouped"
         }
@@ -3350,7 +3916,9 @@ export default {
 
       // Clean up customGroupOrder - remove any group IDs that no longer exist
       const existingGroupIds = allGroups.map((group) => group.id);
-      const cleanedCustomOrder = this.customGroupOrder.filter((groupId) => existingGroupIds.includes(groupId));
+      const cleanedCustomOrder = this.customGroupOrder.filter((groupId) =>
+        existingGroupIds.includes(groupId)
+      );
 
       // If the custom order was cleaned up, update it
       if (cleanedCustomOrder.length !== this.customGroupOrder.length) {
@@ -3364,7 +3932,10 @@ export default {
 
         // Save to localStorage
         if (this.selectedProject?.id) {
-          localStorage.setItem(`groupOrder_${this.selectedProject.id}`, JSON.stringify(this.customGroupOrder));
+          localStorage.setItem(
+            `groupOrder_${this.selectedProject.id}`,
+            JSON.stringify(this.customGroupOrder)
+          );
         }
       }
 
@@ -3374,23 +3945,31 @@ export default {
           const aIndex = this.customGroupOrder.indexOf(a.id);
           const bIndex = this.customGroupOrder.indexOf(b.id);
 
-          console.log(`Sorting: ${a.name}(${a.id}) (index: ${aIndex}) vs ${b.name}(${b.id}) (index: ${bIndex})`);
+          console.log(
+            `Sorting: ${a.name}(${a.id}) (index: ${aIndex}) vs ${b.name}(${b.id}) (index: ${bIndex})`
+          );
 
           // If both groups are in custom order, sort by their custom position
           if (aIndex !== -1 && bIndex !== -1) {
-            console.log(`Both in custom order: ${a.name} at ${aIndex}, ${b.name} at ${bIndex}`);
+            console.log(
+              `Both in custom order: ${a.name} at ${aIndex}, ${b.name} at ${bIndex}`
+            );
             return aIndex - bIndex;
           }
 
           // If only a is in custom order, it comes first
           if (aIndex !== -1 && bIndex === -1) {
-            console.log(`${a.name} in custom order, ${b.name} not - ${a.name} first`);
+            console.log(
+              `${a.name} in custom order, ${b.name} not - ${a.name} first`
+            );
             return -1;
           }
 
           // If only b is in custom order, it comes first
           if (aIndex === -1 && bIndex !== -1) {
-            console.log(`${b.name} in custom order, ${a.name} not - ${b.name} first`);
+            console.log(
+              `${b.name} in custom order, ${a.name} not - ${b.name} first`
+            );
             return 1;
           }
         }
@@ -3411,7 +3990,10 @@ export default {
             // Handle different data types
             let comparison = 0;
 
-            if (this.sortField === "task_user_status" || this.sortField === "task_status") {
+            if (
+              this.sortField === "task_user_status" ||
+              this.sortField === "task_status"
+            ) {
               // Status sorting with custom priority order
               const statusOrder = {
                 Pending: 1,
@@ -3435,7 +4017,10 @@ export default {
               const aOrder = priorityOrder[aValue.toLowerCase()] || 999;
               const bOrder = priorityOrder[bValue.toLowerCase()] || 999;
               comparison = aOrder - bOrder;
-            } else if (this.sortField === "start_date" || this.sortField === "end_date") {
+            } else if (
+              this.sortField === "start_date" ||
+              this.sortField === "end_date"
+            ) {
               // Date sorting
               const aDate = aValue ? new Date(aValue) : new Date(0);
               const bDate = bValue ? new Date(bValue) : new Date(0);
@@ -3450,7 +4035,9 @@ export default {
           });
         });
 
-        console.log(`📊 Tasks sorted by ${this.sortField} (${this.sortDirection})`);
+        console.log(
+          `📊 Tasks sorted by ${this.sortField} (${this.sortDirection})`
+        );
       }
 
       return result;
@@ -3463,27 +4050,6 @@ export default {
     },
 
     // Check if new task dates are invalid
-    isNewTaskDateInvalid() {
-      // Check if start date is in the past
-      if (this.newTask.start_date) {
-        const startDate = new Date(this.newTask.start_date);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        if (startDate < today) {
-          return true;
-        }
-      }
-
-      // Check if start date is after end date
-      if (this.newTask.start_date && this.newTask.end_date) {
-        const startDate = new Date(this.newTask.start_date);
-        const endDate = new Date(this.newTask.end_date);
-        return startDate > endDate;
-      }
-
-      return false;
-    },
 
     // Get today's date in YYYY-MM-DD format for min date validation
     todayDate() {
@@ -3513,7 +4079,7 @@ export default {
     // Calculate today's working hours from completed tasks
     todayWorkingHours() {
       const totalMinutes = this.todayWorkingMinutes;
-      
+
       if (totalMinutes === 0) {
         return "0h 0m";
       }
@@ -3535,13 +4101,17 @@ export default {
       const todayTasks = this.todayCompletedTasksList;
       let totalMinutes = 0;
 
-      todayTasks.forEach(task => {
+      todayTasks.forEach((task) => {
         if (task.start_date && task.end_date) {
           const startDate = new Date(task.start_date);
           const endDate = new Date(task.end_date);
-          
+
           // Only count if dates are valid and end is after start
-          if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime()) && endDate > startDate) {
+          if (
+            !isNaN(startDate.getTime()) &&
+            !isNaN(endDate.getTime()) &&
+            endDate > startDate
+          ) {
             const diffMs = endDate.getTime() - startDate.getTime();
             const diffMinutes = Math.floor(diffMs / (1000 * 60));
             totalMinutes += diffMinutes;
@@ -3560,21 +4130,21 @@ export default {
     // Get list of tasks completed today
     todayCompletedTasksList() {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0]; // YYYY-MM-DD format
-      
+      const todayStr = today.toISOString().split("T")[0]; // YYYY-MM-DD format
+
       const allTasks = this.filteredTasks || this.all?.data || [];
-      
-      return allTasks.filter(task => {
+
+      return allTasks.filter((task) => {
         // Check if task is completed
-        if (task.task_user_status !== 'Completed') {
+        if (task.task_user_status !== "Completed") {
           return false;
         }
 
         // Check if task was completed today or has today's date range
         if (task.end_date) {
           const taskEndDate = new Date(task.end_date);
-          const taskEndDateStr = taskEndDate.toISOString().split('T')[0];
-          
+          const taskEndDateStr = taskEndDate.toISOString().split("T")[0];
+
           // Include tasks that end today
           if (taskEndDateStr === todayStr) {
             return true;
@@ -3584,9 +4154,12 @@ export default {
         // Also check if task was updated today (if updated_at field exists)
         if (task.updated_at) {
           const updatedDate = new Date(task.updated_at);
-          const updatedDateStr = updatedDate.toISOString().split('T')[0];
-          
-          if (updatedDateStr === todayStr && task.task_user_status === 'Completed') {
+          const updatedDateStr = updatedDate.toISOString().split("T")[0];
+
+          if (
+            updatedDateStr === todayStr &&
+            task.task_user_status === "Completed"
+          ) {
             return true;
           }
         }
@@ -3598,15 +4171,16 @@ export default {
     // Generate tooltip text for working hours counter
     workingHoursTooltip() {
       const tasks = this.todayCompletedTasksList;
-      
+
       if (tasks.length === 0) {
         return "No tasks completed today";
       }
 
       let tooltip = `Today's completed tasks (${tasks.length}):\n\n`;
-      
+
       tasks.forEach((task, index) => {
-        if (index < 5) { // Show only first 5 tasks in tooltip
+        if (index < 5) {
+          // Show only first 5 tasks in tooltip
           const duration = this.getTaskDuration(task);
           tooltip += `• ${task.title} (${duration})\n`;
         }
@@ -3617,7 +4191,7 @@ export default {
       }
 
       tooltip += `\n\nTotal working time: ${this.todayWorkingHours}`;
-      
+
       return tooltip;
     },
 
@@ -3655,11 +4229,16 @@ export default {
       handler(newProjectId) {
         if (newProjectId) {
           const projectsList = this.projects.data || this.projects;
-          const foundProject = projectsList.find((p) => p.id == newProjectId || p.slug == newProjectId);
+          const foundProject = projectsList.find(
+            (p) => p.id == newProjectId || p.slug == newProjectId
+          );
           if (foundProject && foundProject.id !== this.selectedProject?.id) {
             this.selectedProject = foundProject;
             this.saveSelectedProjectToLocalStorage(foundProject);
-            console.log("Project changed via route query:", this.selectedProject);
+            console.log(
+              "Project changed via route query:",
+              this.selectedProject
+            );
             // Reload tasks for the new project
             this.get_all_tasks();
           }

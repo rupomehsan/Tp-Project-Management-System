@@ -119,6 +119,18 @@
                               Tasks Borad
                             </router-link>
                           </li>
+                          <li>
+                            <router-link
+                              :to="{
+                                name: `ProjectPlanning${setup.route_prefix}`,
+                                params: { id: item.id },
+                              }"
+                              class="border-secondary"
+                            >
+                              <i class="fa fa-tasks text-info"></i>
+                              Project Planning
+                            </router-link>
+                          </li>
                         </ul>
                       </div>
                     </td>

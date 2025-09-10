@@ -1,6 +1,6 @@
 <template>
   <Head>
-    <title> Login</title>
+    <title>Login</title>
   </Head>
   <Layout>
     <div class="professional-login-container">
@@ -11,7 +11,9 @@
               <i class="fas fa-shield-alt"></i>
             </div>
             <h2 class="brand-title">Project Management</h2>
-            <p class="brand-subtitle">Welcome back! Please sign in to your account</p>
+            <p class="brand-subtitle">
+              Welcome back! Please sign in to your account
+            </p>
           </div>
         </div>
 
@@ -21,7 +23,15 @@
               <i class="fas fa-envelope"></i>
               Email Address
             </label>
-            <input id="email" class="form-control" type="email" placeholder="Enter your email" name="email" v-model="email" required />
+            <input
+              id="email"
+              class="form-control"
+              type="email"
+              placeholder="Enter your email"
+              name="email"
+              v-model="email"
+              required
+            />
           </div>
 
           <div class="form-group">
@@ -45,20 +55,35 @@
                 @click="showPassword = !showPassword"
                 :title="showPassword ? 'Hide password' : 'Show password'"
               >
-                <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                <i
+                  :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                ></i>
               </button>
             </div>
           </div>
 
           <div class="form-options">
             <div class="remember-me">
-              <input type="checkbox" id="rememberMe" v-model="rememberMe" class="checkbox-input" />
-              <label for="rememberMe" class="checkbox-label"> Remember me </label>
+              <input
+                type="checkbox"
+                id="rememberMe"
+                v-model="rememberMe"
+                class="checkbox-input"
+              />
+              <label for="rememberMe" class="checkbox-label">
+                Remember me
+              </label>
             </div>
-            <Link href="/forgot-password" class="forgot-password-link"> Forgot password? </Link>
+            <Link href="/forgot-password" class="forgot-password-link">
+              Forgot password?
+            </Link>
           </div>
 
-          <button class="login-button" type="submit" :disabled="loading || !email || !password">
+          <button
+            class="login-button"
+            type="submit"
+            :disabled="loading || !email || !password"
+          >
             <span v-if="!loading" class="button-content">
               <i class="fas fa-sign-in-alt"></i>
               Sign In
@@ -127,9 +152,9 @@ export default {
             localStorage.setItem("admin_token", data.access_token);
             localStorage.setItem("admin_role", data.user?.role_id);
             if (data.user?.role_id == 1) {
-              window.location.href = "super-admin#/dashboard";
+              window.location.href = "/super-admin#/dashboard";
             } else if (data.user?.role_id == 2) {
-              window.location.href = "employee#/dashboard";
+              window.location.href = "/employee#/dashboard";
             }
           }
         }
@@ -147,7 +172,10 @@ export default {
         password: this.password,
         rememberMe: this.rememberMe,
       };
-      localStorage.setItem("rememberedCredentials", JSON.stringify(credentials));
+      localStorage.setItem(
+        "rememberedCredentials",
+        JSON.stringify(credentials)
+      );
     },
 
     clearSavedCredentials() {
