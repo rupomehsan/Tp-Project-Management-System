@@ -1,0 +1,319 @@
+/* Shared Dark Mode Theme Styles for Project Proposal Components */
+
+/* CSS Custom Properties for Theme Support */
+:root {
+  /* Light theme variables (default) */
+  --proposal-bg-primary: #ffffff;
+  --proposal-bg-secondary: #f8f9fa;
+  --proposal-bg-tertiary: #e9ecef;
+  --proposal-text-primary: #212529;
+  --proposal-text-secondary: #6c757d;
+  --proposal-text-muted: #868e96;
+  --proposal-border-color: #dee2e6;
+  --proposal-shadow: rgba(0, 0, 0, 0.1);
+  --proposal-card-bg: #ffffff;
+  --proposal-card-border: #dee2e6;
+  --proposal-form-control-bg: #ffffff;
+  --proposal-form-control-border: #ced4da;
+  --proposal-form-control-focus: #007bff;
+  --proposal-table-bg: #ffffff;
+  --proposal-table-stripe: #f8f9fa;
+  --proposal-section-title-bg: #007bff;
+  --proposal-section-title-text: #ffffff;
+  --proposal-preview-bg: #ffffff;
+  --proposal-preview-text: #212529;
+}
+
+/* Dark theme variables */
+[data-theme="dark"] {
+  --proposal-bg-primary: #1a1a1a;
+  --proposal-bg-secondary: #2d2d2d;
+  --proposal-bg-tertiary: #3a3a3a;
+  --proposal-text-primary: #ffffff;
+  --proposal-text-secondary: #b3b3b3;
+  --proposal-text-muted: #999999;
+  --proposal-border-color: #404040;
+  --proposal-shadow: rgba(0, 0, 0, 0.3);
+  --proposal-card-bg: #2d2d2d;
+  --proposal-card-border: #404040;
+  --proposal-form-control-bg: #3a3a3a;
+  --proposal-form-control-border: #555555;
+  --proposal-form-control-focus: #66b3ff;
+  --proposal-table-bg: #2d2d2d;
+  --proposal-table-stripe: #3a3a3a;
+  --proposal-section-title-bg: #0056b3;
+  --proposal-section-title-text: #ffffff;
+  --proposal-preview-bg: #2d2d2d;
+  --proposal-preview-text: #ffffff;
+}
+
+/* Card styling */
+.card {
+  background-color: var(--proposal-card-bg) !important;
+  border-color: var(--proposal-card-border) !important;
+  transition: all 0.3s ease;
+}
+
+.card-header {
+  background-color: var(--proposal-bg-secondary) !important;
+  border-bottom-color: var(--proposal-card-border) !important;
+  color: var(--proposal-text-primary) !important;
+}
+
+.card-body {
+  background-color: var(--proposal-card-bg) !important;
+  color: var(--proposal-text-primary) !important;
+}
+
+/* Form controls styling */
+.form-control {
+  background-color: var(--proposal-form-control-bg) !important;
+  border-color: var(--proposal-form-control-border) !important;
+  color: var(--proposal-text-primary) !important;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  background-color: var(--proposal-form-control-bg) !important;
+  border-color: var(--proposal-form-control-focus) !important;
+  color: var(--proposal-text-primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-control::placeholder {
+  color: var(--proposal-text-muted) !important;
+}
+
+.form-control option {
+  background-color: var(--proposal-form-control-bg) !important;
+  color: var(--proposal-text-primary) !important;
+}
+
+/* Labels and text */
+label {
+  color: var(--proposal-text-primary) !important;
+  font-weight: 500;
+}
+
+
+.text-muted {
+  color: var(--proposal-text-muted) !important;
+}
+
+/* Tables */
+.table {
+  background-color: var(--proposal-table-bg) !important;
+  color: var(--proposal-text-primary) !important;
+}
+
+.table th {
+  background-color: var(--proposal-bg-secondary) !important;
+  color: var(--proposal-text-primary) !important;
+  border-color: var(--proposal-border-color) !important;
+}
+
+.table td {
+  border-color: var(--proposal-border-color) !important;
+  color: var(--proposal-text-primary) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--proposal-table-stripe) !important;
+}
+
+/* Section titles */
+.section-title {
+  background-color: var(--proposal-section-title-bg) !important;
+  color: var(--proposal-section-title-text) !important;
+  padding: 0.75rem 1rem;
+  margin: 0;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid var(--proposal-border-color);
+}
+
+/* Main content areas */
+.main-wrapper {
+  background-color: var(--proposal-preview-bg) !important;
+  color: var(--proposal-preview-text) !important;
+  transition: all 0.3s ease;
+}
+
+.cover-letter-text {
+  background-color: var(--proposal-preview-bg) !important;
+  color: var(--proposal-preview-text) !important;
+  border: 1px solid var(--proposal-border-color);
+  border-radius: 0.375rem;
+}
+
+/* Buttons - Dark mode specific overrides */
+[data-theme="dark"] .btn-primary {
+  background-color: #0056b3 !important;
+  border-color: #004085 !important;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+  background-color: #004085 !important;
+  border-color: #003d82 !important;
+}
+
+[data-theme="dark"] .btn-secondary {
+  background-color: #5a6268 !important;
+  border-color: #545b62 !important;
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+  background-color: #545b62 !important;
+  border-color: #4e555b !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+  color: var(--proposal-text-secondary) !important;
+  border-color: var(--proposal-border-color) !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+  background-color: var(--proposal-bg-tertiary) !important;
+  color: var(--proposal-text-primary) !important;
+  border-color: var(--proposal-text-primary) !important;
+}
+
+/* Text areas and rich text editors */
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Custom scrollbar for dark mode */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--proposal-bg-tertiary);
+  border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--proposal-border-color);
+  border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--proposal-text-secondary);
+}
+
+/* Alert and status messages */
+.alert {
+  border-color: var(--proposal-border-color) !important;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .alert-info {
+  background-color: rgba(23, 162, 184, 0.2) !important;
+  color: #bee5eb !important;
+  border-color: rgba(23, 162, 184, 0.3) !important;
+}
+
+[data-theme="dark"] .alert-success {
+  background-color: rgba(40, 167, 69, 0.2) !important;
+  color: #d4edda !important;
+  border-color: rgba(40, 167, 69, 0.3) !important;
+}
+
+[data-theme="dark"] .alert-warning {
+  background-color: rgba(255, 193, 7, 0.2) !important;
+  color: #fff3cd !important;
+  border-color: rgba(255, 193, 7, 0.3) !important;
+}
+
+[data-theme="dark"] .alert-danger {
+  background-color: rgba(220, 53, 69, 0.2) !important;
+  color: #f8d7da !important;
+  border-color: rgba(220, 53, 69, 0.3) !important;
+}
+
+/* Form validation */
+.form-control.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.form-control.is-valid {
+  border-color: #28a745 !important;
+}
+
+.invalid-feedback {
+  color: #dc3545 !important;
+}
+
+.valid-feedback {
+  color: #28a745 !important;
+}
+
+/* Progress bars */
+.progress {
+  background-color: var(--proposal-bg-tertiary) !important;
+}
+
+.progress-bar {
+  background-color: var(--proposal-form-control-focus) !important;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1rem 0.75rem;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .cover-letter-text {
+    padding: 1rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-body {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .section-title {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.5rem;
+  }
+  
+  .cover-letter-text {
+    padding: 0.75rem !important;
+    font-size: 0.9rem;
+  }
+}
+
+/* Animation for theme transition */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Print styles - force light theme */
+@media print {
+  * {
+    background-color: white !important;
+    color: black !important;
+    border-color: #dee2e6 !important;
+    box-shadow: none !important;
+  }
+  
+  .card {
+    border: 1px solid #dee2e6 !important;
+  }
+  
+  .section-title {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    border: 1px solid #dee2e6 !important;
+  }
+}

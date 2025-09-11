@@ -42,7 +42,11 @@
             @click="resetUnreadMessageCount"
           >
             <i class="zmdi zmdi-comment-outline align-middle"></i>
-            <span v-if="unreadMessageCount > 0" class="bg-danger text-white badge-up">{{ unreadMessageCount }}</span>
+            <span
+              v-if="unreadMessageCount > 0"
+              class="bg-danger text-white badge-up"
+              >{{ unreadMessageCount }}</span
+            >
           </router-link>
           <!-- <div class="dropdown-menu dropdown-menu-right" :class="{ show: show_message }">
             <ul class="list-group list-group-flush">
@@ -223,13 +227,19 @@
             <li class="dropdown-divider"></li>
 
             <li class="dropdown-divider"></li>
-            <li >
-              <router-link class="dropdown-item" :to="{ name: 'AdminProfileSettings' }">
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'AdminProfileSettings' }"
+              >
                 <i class="zmdi zmdi-accounts mr-3"></i>Profile
               </router-link>
             </li>
-            <li >
-              <router-link class="dropdown-item" :to="{ name: 'AdminSiteSettings' }">
+            <li>
+              <router-link
+                class="dropdown-item"
+                :to="{ name: 'AdminSiteSettings' }"
+              >
                 <i class="zmdi zmdi-settings mr-3"></i>Settings
               </router-link>
             </li>
@@ -273,6 +283,7 @@ export default {
       let con = await window.s_confirm("Are you sure want to logout?");
       if (con) {
         localStorage.removeItem("admin_token");
+        localStorage.removeItem("admin_role");
         window.location.href = "/";
       }
     },
@@ -330,9 +341,12 @@ export default {
         const response = await axios.get("/messages/get-all-conversations");
         if (response.status === 200) {
           const conversations = response.data.data;
-          this.unreadMessageCount = conversations.reduce((total, conversation) => {
-            return total + (conversation.unread_count || 0);
-          }, 0);
+          this.unreadMessageCount = conversations.reduce(
+            (total, conversation) => {
+              return total + (conversation.unread_count || 0);
+            },
+            0
+          );
         }
       } catch (error) {
         console.error("Failed to get unread message count:", error);
@@ -355,12 +369,12 @@ export default {
       }
 
       // Listen for global events when messages are marked as read
-      window.addEventListener('messagesMarkedAsRead', (event) => {
+      window.addEventListener("messagesMarkedAsRead", (event) => {
         this.getUnreadMessageCount(); // Refresh the count from server
       });
 
       // Listen for conversation opened event to refresh count
-      window.addEventListener('conversationOpened', (event) => {
+      window.addEventListener("conversationOpened", (event) => {
         this.getUnreadMessageCount(); // Refresh the count from server
       });
     },
@@ -421,8 +435,14 @@ export default {
   },
   beforeUnmount() {
     // Clean up event listeners
-    window.removeEventListener('messagesMarkedAsRead', this.getUnreadMessageCount);
-    window.removeEventListener('conversationOpened', this.getUnreadMessageCount);
+    window.removeEventListener(
+      "messagesMarkedAsRead",
+      this.getUnreadMessageCount
+    );
+    window.removeEventListener(
+      "conversationOpened",
+      this.getUnreadMessageCount
+    );
   },
   computed: {
     ...mapState(auth_store, {

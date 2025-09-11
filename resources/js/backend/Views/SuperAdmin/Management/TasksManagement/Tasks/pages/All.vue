@@ -11,7 +11,6 @@
                   {{ setup.all_page_title }}
                 </h5>
               </div>
-
               <!-- Search Input -->
               <div class="col-12 col-md-6 mb-2 mb-md-0">
                 <input
@@ -51,7 +50,7 @@
                         <div class="filter-buttons">
                           <button
                             class="btn btn-filter btn-outline-secondary"
-                            :class="{ 'active': !taskStatusFilterValue }"
+                            :class="{ active: !taskStatusFilterValue }"
                             @click="cleartaskStatusFilter"
                             type="button"
                           >
@@ -61,7 +60,9 @@
                           </button>
                           <button
                             class="btn btn-filter btn-outline-primary"
-                            :class="{ 'active': taskStatusFilterValue === 'Pending' }"
+                            :class="{
+                              active: taskStatusFilterValue === 'Pending',
+                            }"
                             @click="taskStatusFilter('Pending')"
                             type="button"
                           >
@@ -70,7 +71,9 @@
                           </button>
                           <button
                             class="btn btn-filter btn-outline-info"
-                            :class="{ 'active': taskStatusFilterValue === 'In Progress' }"
+                            :class="{
+                              active: taskStatusFilterValue === 'In Progress',
+                            }"
                             @click="taskStatusFilter('In Progress')"
                             type="button"
                           >
@@ -80,7 +83,9 @@
                           </button>
                           <button
                             class="btn btn-filter btn-outline-success"
-                            :class="{ 'active': taskStatusFilterValue === 'Completed' }"
+                            :class="{
+                              active: taskStatusFilterValue === 'Completed',
+                            }"
                             @click="taskStatusFilter('Completed')"
                             type="button"
                           >
@@ -90,12 +95,16 @@
                           </button>
                           <button
                             class="btn btn-filter btn-outline-danger"
-                            :class="{ 'active': taskStatusFilterValue === 'Not Completed' }"
+                            :class="{
+                              active: taskStatusFilterValue === 'Not Completed',
+                            }"
                             @click="taskStatusFilter('Not Completed')"
                             type="button"
                           >
                             <i class="fa fa-times mr-1"></i>
-                            <span class="d-none d-md-inline">Not Completed</span>
+                            <span class="d-none d-md-inline"
+                              >Not Completed</span
+                            >
                             <span class="d-md-none">Failed</span>
                           </button>
                         </div>
@@ -112,7 +121,7 @@
                         <div class="filter-buttons">
                           <button
                             class="btn btn-filter btn-outline-secondary"
-                            :class="{ 'active': !priorityFilterValue }"
+                            :class="{ active: !priorityFilterValue }"
                             @click="clearPriorityFilter"
                             type="button"
                           >
@@ -121,7 +130,9 @@
                           </button>
                           <button
                             class="btn btn-filter btn-outline-danger"
-                            :class="{ 'active': priorityFilterValue === 'urgent' }"
+                            :class="{
+                              active: priorityFilterValue === 'urgent',
+                            }"
                             @click="priorityFilter('urgent')"
                             type="button"
                           >
@@ -130,7 +141,7 @@
                           </button>
                           <button
                             class="btn btn-filter btn-outline-warning"
-                            :class="{ 'active': priorityFilterValue === 'high' }"
+                            :class="{ active: priorityFilterValue === 'high' }"
                             @click="priorityFilter('high')"
                             type="button"
                           >
@@ -139,7 +150,9 @@
                           </button>
                           <button
                             class="btn btn-filter btn-outline-info"
-                            :class="{ 'active': priorityFilterValue === 'normal' }"
+                            :class="{
+                              active: priorityFilterValue === 'normal',
+                            }"
                             @click="priorityFilter('normal')"
                             type="button"
                           >
@@ -442,14 +455,36 @@
                         type="checkbox"
                       />
                     </td>
-                    <td class="text-limit" :title="`ID: ${index + 1}`">{{ index + 1 }}</td>
-                    <td class="text-limit" :title="`Title: ${item.title}`">{{ item.title }}</td>
-                    <td class="text-limit" :title="`Project: ${item.project_id?.name || 'N/A'}`">{{ item.project_id?.name }}</td>
-                    <td class="text-limit" :title="`Assigned To: ${item.user?.name || 'Not Assigned'}`">
+                    <td class="text-limit" :title="`ID: ${index + 1}`">
+                      {{ index + 1 }}
+                    </td>
+                    <td class="text-limit" :title="`Title: ${item.title}`">
+                      {{ item.title }}
+                    </td>
+                    <td
+                      class="text-limit"
+                      :title="`Project: ${item.project_id?.name || 'N/A'}`"
+                    >
+                      {{ item.project_id?.name }}
+                    </td>
+                    <td
+                      class="text-limit"
+                      :title="`Assigned To: ${
+                        item.user?.name || 'Not Assigned'
+                      }`"
+                    >
                       {{ item.user?.name || "Not Assigned" }}
                     </td>
-                    <td class="text-limit" :title="`Priority: ${item.priority}`">{{ item.priority }}</td>
-                    <td class="text-limit" :title="`User Status: ${item.task_user_status ?? 'N/A'}`">
+                    <td
+                      class="text-limit"
+                      :title="`Priority: ${item.priority}`"
+                    >
+                      {{ item.priority }}
+                    </td>
+                    <td
+                      class="text-limit"
+                      :title="`User Status: ${item.task_user_status ?? 'N/A'}`"
+                    >
                       {{ item.task_user_status ?? "N/A" }}
                     </td>
                     <td
@@ -459,7 +494,10 @@
                     >
                       {{ item.task_status }}
                     </td>
-                    <td class="text-limit" :title="`Rating: ${item.rating || 0}/5`">
+                    <td
+                      class="text-limit"
+                      :title="`Rating: ${item.rating || 0}/5`"
+                    >
                       <span>
                         <span
                           v-for="n in 5"
@@ -478,16 +516,31 @@
                         >
                       </span>
                     </td>
-                    <td class="text-limit" :title="`Actual Time: ${FindActualTime(item.start_date, item.end_date)}`">
+                    <td
+                      class="text-limit"
+                      :title="`Actual Time: ${FindActualTime(
+                        item.start_date,
+                        item.end_date
+                      )}`"
+                    >
                       {{ FindActualTime(item.start_date, item.end_date) }}
                     </td>
-                    <td class="text-limit" :title="`Start Date: ${formatDateTime(item.start_date)}`">
+                    <td
+                      class="text-limit"
+                      :title="`Start Date: ${formatDateTime(item.start_date)}`"
+                    >
                       {{ formatDateTime(item.start_date) }}
                     </td>
-                    <td class="text-limit" :title="`End Date: ${formatDateTime(item.end_date)}`">
+                    <td
+                      class="text-limit"
+                      :title="`End Date: ${formatDateTime(item.end_date)}`"
+                    >
                       {{ formatDateTime(item.end_date) }}
                     </td>
-                    <td class="text-limit" :title="`Created At: ${formatDateTime(item.created_at)}`">
+                    <td
+                      class="text-limit"
+                      :title="`Created At: ${formatDateTime(item.created_at)}`"
+                    >
                       {{ formatDateTime(item.created_at) }}
                     </td>
 
@@ -1142,83 +1195,38 @@ export default {
     // Calculate actual working time between start and end dates (9 AM to 7 PM, Monday to Friday)
     FindActualTime(start_date, end_date) {
       if (!start_date || !end_date) return "N/A";
-      
+
       try {
         const start = new Date(start_date);
         const end = new Date(end_date);
 
-        // Validate dates
-        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-          return "Invalid date";
+        // Calculate the difference in milliseconds
+        const diffInMs = end - start;
+
+        // If end date is before start date, return 0
+        if (diffInMs < 0) return "0 hours";
+
+        // Convert milliseconds to days, hours, and minutes
+        const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+        const diffInHours = Math.floor(
+          (diffInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const diffInMinutes = Math.floor(
+          (diffInMs % (1000 * 60 * 60)) / (1000 * 60)
+        );
+
+        // Format the result
+        if (diffInDays > 0) {
+          return `${diffInDays} days, ${diffInHours} hours`;
+        } else if (diffInHours > 0) {
+          return `${diffInHours} hours, ${diffInMinutes} minutes`;
+        } else if (diffInMinutes > 0) {
+          return `${diffInMinutes} minutes`;
+        } else {
+          return "0 minute";
         }
-
-        // If end date is before start date
-        if (end.getTime() < start.getTime()) {
-          return "Invalid range";
-        }
-
-        // Working hours: 9 AM to 7 PM (10 hours per day)
-        const WORK_START_HOUR = 9;
-        const WORK_END_HOUR = 19; // 7 PM in 24-hour format
-        const WORK_HOURS_PER_DAY = WORK_END_HOUR - WORK_START_HOUR; // 10 hours
-
-        let totalWorkingMinutes = 0;
-        
-        // Create a new date for iteration, starting from the start date
-        let currentDate = new Date(start);
-        
-        // If start time is before 9 AM, adjust to 9 AM
-        if (currentDate.getHours() < WORK_START_HOUR) {
-          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
-        }
-        
-        // If start time is after 7 PM, move to next day 9 AM
-        if (currentDate.getHours() >= WORK_END_HOUR) {
-          currentDate.setDate(currentDate.getDate() + 1);
-          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
-        }
-
-        while (currentDate < end) {
-          // Check if current date is a weekday (Monday = 1, Friday = 5)
-          const dayOfWeek = currentDate.getDay();
-          if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Monday to Friday
-            
-            // Calculate work end time for current day
-            let workEndTime = new Date(currentDate);
-            workEndTime.setHours(WORK_END_HOUR, 0, 0, 0);
-            
-            // If the task ends before the work day ends, use task end time
-            let effectiveEndTime = end < workEndTime ? end : workEndTime;
-            
-            // Calculate working minutes for this day
-            let dayWorkingMs = effectiveEndTime.getTime() - currentDate.getTime();
-            if (dayWorkingMs > 0) {
-              totalWorkingMinutes += Math.floor(dayWorkingMs / (1000 * 60));
-            }
-            
-            // If we've reached the end date, break
-            if (end <= workEndTime) {
-              break;
-            }
-          }
-          
-          // Move to next day at 9 AM
-          currentDate.setDate(currentDate.getDate() + 1);
-          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
-        }
-
-        // Convert total working minutes to readable format
-        if (totalWorkingMinutes <= 0) {
-          return "0h 0m";
-        }
-
-        const totalHours = Math.floor(totalWorkingMinutes / 60);
-        const remainingMinutes = totalWorkingMinutes % 60;
-
-        return `${totalHours}(h) ${remainingMinutes}(m)`;
       } catch (error) {
-        console.error("Error calculating actual working time:", error);
-        return "Error";
+        return "Invalid date";
       }
     },
   },
@@ -1479,26 +1487,26 @@ export default {
     margin-bottom: 1rem;
     background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
   }
-  
+
   .filter-group {
     gap: 0.5rem;
   }
-  
+
   .filter-label {
     font-size: 0.9rem;
     margin-bottom: 0.25rem;
   }
-  
+
   .filter-buttons {
     gap: 0.25rem;
   }
-  
+
   .btn-filter {
     padding: 0.4rem 0.75rem;
     font-size: 0.8rem;
     border-radius: 6px;
   }
-  
+
   .btn-filter i {
     font-size: 0.8rem;
   }
@@ -1509,21 +1517,21 @@ export default {
     padding: 0.75rem;
     background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   }
-  
+
   .filter-buttons {
     gap: 0.2rem;
   }
-  
+
   .btn-filter {
     padding: 0.35rem 0.6rem;
     font-size: 0.75rem;
     min-height: 32px;
   }
-  
+
   .filter-label {
     font-size: 0.85rem;
   }
-  
+
   .filter-label i {
     font-size: 1rem;
   }
@@ -1531,9 +1539,15 @@ export default {
 
 /* Animation for smooth transitions */
 @keyframes filterButtonPress {
-  0% { transform: translateY(-2px) scale(1); }
-  50% { transform: translateY(0) scale(0.98); }
-  100% { transform: translateY(-2px) scale(1); }
+  0% {
+    transform: translateY(-2px) scale(1);
+  }
+  50% {
+    transform: translateY(0) scale(0.98);
+  }
+  100% {
+    transform: translateY(-2px) scale(1);
+  }
 }
 
 .btn-filter:active {
@@ -1575,21 +1589,30 @@ export default {
 
 /* Dark theme glow effects */
 .btn-filter.active::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -2px;
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
   border-radius: 10px;
   z-index: -1;
   animation: glow 2s ease-in-out infinite alternate;
 }
 
 @keyframes glow {
-  0% { opacity: 0.5; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* Enhanced text contrast for dark background */

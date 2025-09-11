@@ -52,11 +52,13 @@
                       </div>
                       <div class="filter-header-text">
                         <h6 class="filter-main-title">Task Filters</h6>
-                        <small class="filter-subtitle">Filter tasks by status and priority level</small>
+                        <small class="filter-subtitle"
+                          >Filter tasks by status and priority level</small
+                        >
                       </div>
                     </div>
                   </div>
-                  
+
                   <div class="filter-content">
                     <div class="row g-3">
                       <!-- Task Status Filter Section -->
@@ -67,48 +69,123 @@
                               <i class="zmdi zmdi-assignment"></i>
                             </div>
                             <div class="filter-label-text">
-                              <label class="filter-label-modern">Task Status</label>
-                              <span class="filter-label-description">Filter by current task progress</span>
+                              <label class="filter-label-modern"
+                                >Task Status</label
+                              >
+                              <span class="filter-label-description"
+                                >Filter by current task progress</span
+                              >
                             </div>
                           </div>
-                          
+
                           <div class="filter-buttons-container">
                             <div class="btn-group-modern" role="group">
-                              <input type="radio" class="btn-check-modern" name="statusFilter" id="status-all" autocomplete="off" :checked="!taskStatusFilterValue">
-                              <label class="btn-modern btn-modern-secondary" for="status-all" @click="cleartaskStatusFilter">
-                                <span class="btn-icon"><i class="zmdi zmdi-view-list"></i></span>
+                              <input
+                                type="radio"
+                                class="btn-check-modern"
+                                name="statusFilter"
+                                id="status-all"
+                                autocomplete="off"
+                                :checked="!taskStatusFilterValue"
+                              />
+                              <label
+                                class="btn-modern btn-modern-secondary"
+                                for="status-all"
+                                @click="cleartaskStatusFilter"
+                              >
+                                <span class="btn-icon"
+                                  ><i class="zmdi zmdi-view-list"></i
+                                ></span>
                                 <span class="btn-text">All Tasks</span>
-                                <span class="btn-badge" v-if="all?.total">{{ all.total }}</span>
+                                <span class="btn-badge" v-if="all?.total">{{
+                                  all.total
+                                }}</span>
                               </label>
-                              
-                              <input type="radio" class="btn-check-modern" name="statusFilter" id="status-pending" autocomplete="off" :checked="taskStatusFilterValue === 'Pending'">
-                              <label class="btn-modern btn-modern-primary" for="status-pending" @click="taskStatusFilter('Pending')">
-                                <span class="btn-icon"><i class="zmdi zmdi-time"></i></span>
+
+                              <input
+                                type="radio"
+                                class="btn-check-modern"
+                                name="statusFilter"
+                                id="status-pending"
+                                autocomplete="off"
+                                :checked="taskStatusFilterValue === 'Pending'"
+                              />
+                              <label
+                                class="btn-modern btn-modern-primary"
+                                for="status-pending"
+                                @click="taskStatusFilter('Pending')"
+                              >
+                                <span class="btn-icon"
+                                  ><i class="zmdi zmdi-time"></i
+                                ></span>
                                 <span class="btn-text">Pending</span>
                               </label>
-                              
-                              <input type="radio" class="btn-check-modern" name="statusFilter" id="status-progress" autocomplete="off" :checked="taskStatusFilterValue === 'In Progress'">
-                              <label class="btn-modern btn-modern-info" for="status-progress" @click="taskStatusFilter('In Progress')">
-                                <span class="btn-icon"><i class="zmdi zmdi-time-countdown"></i></span>
+
+                              <input
+                                type="radio"
+                                class="btn-check-modern"
+                                name="statusFilter"
+                                id="status-progress"
+                                autocomplete="off"
+                                :checked="
+                                  taskStatusFilterValue === 'In Progress'
+                                "
+                              />
+                              <label
+                                class="btn-modern btn-modern-info"
+                                for="status-progress"
+                                @click="taskStatusFilter('In Progress')"
+                              >
+                                <span class="btn-icon"
+                                  ><i class="zmdi zmdi-time-countdown"></i
+                                ></span>
                                 <span class="btn-text">In Progress</span>
                               </label>
-                              
-                              <input type="radio" class="btn-check-modern" name="statusFilter" id="status-completed" autocomplete="off" :checked="taskStatusFilterValue === 'Completed'">
-                              <label class="btn-modern btn-modern-success" for="status-completed" @click="taskStatusFilter('Completed')">
-                                <span class="btn-icon"><i class="zmdi zmdi-check-circle"></i></span>
+
+                              <input
+                                type="radio"
+                                class="btn-check-modern"
+                                name="statusFilter"
+                                id="status-completed"
+                                autocomplete="off"
+                                :checked="taskStatusFilterValue === 'Completed'"
+                              />
+                              <label
+                                class="btn-modern btn-modern-success"
+                                for="status-completed"
+                                @click="taskStatusFilter('Completed')"
+                              >
+                                <span class="btn-icon"
+                                  ><i class="zmdi zmdi-check-circle"></i
+                                ></span>
                                 <span class="btn-text">Completed</span>
                               </label>
-                              
-                              <input type="radio" class="btn-check-modern" name="statusFilter" id="status-not-completed" autocomplete="off" :checked="taskStatusFilterValue === 'Not Completed'">
-                              <label class="btn-modern btn-modern-danger" for="status-not-completed" @click="taskStatusFilter('Not Completed')">
-                                <span class="btn-icon"><i class="zmdi zmdi-close-circle"></i></span>
+
+                              <input
+                                type="radio"
+                                class="btn-check-modern"
+                                name="statusFilter"
+                                id="status-not-completed"
+                                autocomplete="off"
+                                :checked="
+                                  taskStatusFilterValue === 'Not Completed'
+                                "
+                              />
+                              <label
+                                class="btn-modern btn-modern-danger"
+                                for="status-not-completed"
+                                @click="taskStatusFilter('Not Completed')"
+                              >
+                                <span class="btn-icon"
+                                  ><i class="zmdi zmdi-close-circle"></i
+                                ></span>
                                 <span class="btn-text">Not Completed</span>
                               </label>
                             </div>
                           </div>
                         </div>
                       </div>
-                      
+
                       <!-- Priority Filter Section -->
                       <div class="col-lg-4 col-md-12">
                         <div class="filter-group-modern">
@@ -117,36 +194,95 @@
                               <i class="zmdi zmdi-flag"></i>
                             </div>
                             <div class="filter-label-text">
-                              <label class="filter-label-modern">Priority Level</label>
-                              <span class="filter-label-description">Filter by task urgency</span>
+                              <label class="filter-label-modern"
+                                >Priority Level</label
+                              >
+                              <span class="filter-label-description"
+                                >Filter by task urgency</span
+                              >
                             </div>
                           </div>
-                          
+
                           <div class="filter-buttons-container">
-                            <div class="btn-group-modern btn-group-flex-priority" role="group">
-                              <input type="radio" class="btn-check-modern" name="priorityFilter" id="priority-all" autocomplete="off" :checked="!priorityFilterValue">
-                              <label class="btn-modern btn-modern-secondary btn-modern-sm" for="priority-all" @click="clearPriorityFilter">
-                                <span class="btn-icon"><i class="zmdi zmdi-view-list"></i></span>
+                            <div
+                              class="btn-group-modern btn-group-flex-priority"
+                              role="group"
+                            >
+                              <input
+                                type="radio"
+                                class="btn-check-modern"
+                                name="priorityFilter"
+                                id="priority-all"
+                                autocomplete="off"
+                                :checked="!priorityFilterValue"
+                              />
+                              <label
+                                class="btn-modern btn-modern-secondary btn-modern-sm"
+                                for="priority-all"
+                                @click="clearPriorityFilter"
+                              >
+                                <span class="btn-icon"
+                                  ><i class="zmdi zmdi-view-list"></i
+                                ></span>
                                 <span class="btn-text">All Priority</span>
                               </label>
-                              
-                              <input type="radio" class="btn-check-modern" name="priorityFilter" id="priority-urgent" autocomplete="off" :checked="priorityFilterValue === 'urgent'">
-                              <label class="btn-modern btn-modern-danger btn-modern-sm" for="priority-urgent" @click="priorityFilter('urgent')">
-                                <span class="btn-icon"><i class="zmdi zmdi-alert-triangle"></i></span>
+
+                              <input
+                                type="radio"
+                                class="btn-check-modern"
+                                name="priorityFilter"
+                                id="priority-urgent"
+                                autocomplete="off"
+                                :checked="priorityFilterValue === 'urgent'"
+                              />
+                              <label
+                                class="btn-modern btn-modern-danger btn-modern-sm"
+                                for="priority-urgent"
+                                @click="priorityFilter('urgent')"
+                              >
+                                <span class="btn-icon"
+                                  ><i class="zmdi zmdi-alert-triangle"></i
+                                ></span>
                                 <span class="btn-text">Urgent</span>
                                 <span class="priority-indicator urgent"></span>
                               </label>
-                              
-                              <input type="radio" class="btn-check-modern" name="priorityFilter" id="priority-high" autocomplete="off" :checked="priorityFilterValue === 'high'">
-                              <label class="btn-modern btn-modern-warning btn-modern-sm" for="priority-high" @click="priorityFilter('high')">
-                                <span class="btn-icon"><i class="zmdi zmdi-triangle-up"></i></span>
+
+                              <input
+                                type="radio"
+                                class="btn-check-modern"
+                                name="priorityFilter"
+                                id="priority-high"
+                                autocomplete="off"
+                                :checked="priorityFilterValue === 'high'"
+                              />
+                              <label
+                                class="btn-modern btn-modern-warning btn-modern-sm"
+                                for="priority-high"
+                                @click="priorityFilter('high')"
+                              >
+                                <span class="btn-icon"
+                                  ><i class="zmdi zmdi-triangle-up"></i
+                                ></span>
                                 <span class="btn-text">High</span>
                                 <span class="priority-indicator high"></span>
                               </label>
-                              
-                              <input type="radio" class="btn-check-modern" name="priorityFilter" id="priority-normal" autocomplete="off" :checked="priorityFilterValue === 'normal'">
-                              <label class="btn-modern btn-modern-info btn-modern-sm" for="priority-normal" @click="priorityFilter('normal')">
-                                <span class="btn-icon"><i class="zmdi zmdi-minus"></i></span>
+
+                              <input
+                                type="radio"
+                                class="btn-check-modern"
+                                name="priorityFilter"
+                                id="priority-normal"
+                                autocomplete="off"
+                                :checked="priorityFilterValue === 'normal'"
+                              />
+                              <label
+                                class="btn-modern btn-modern-info btn-modern-sm"
+                                for="priority-normal"
+                                @click="priorityFilter('normal')"
+                              >
+                                <span class="btn-icon"
+                                  ><i class="zmdi zmdi-minus"></i
+                                ></span>
                                 <span class="btn-text">Normal</span>
                                 <span class="priority-indicator normal"></span>
                               </label>
@@ -1100,83 +1236,38 @@ export default {
     // Calculate actual working time between start and end dates (9 AM to 7 PM, Monday to Friday)
     FindActualTime(start_date, end_date) {
       if (!start_date || !end_date) return "N/A";
-      
+
       try {
         const start = new Date(start_date);
         const end = new Date(end_date);
 
-        // Validate dates
-        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-          return "Invalid date";
+        // Calculate the difference in milliseconds
+        const diffInMs = end - start;
+
+        // If end date is before start date, return 0
+        if (diffInMs < 0) return "0 hours";
+
+        // Convert milliseconds to days, hours, and minutes
+        const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+        const diffInHours = Math.floor(
+          (diffInMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const diffInMinutes = Math.floor(
+          (diffInMs % (1000 * 60 * 60)) / (1000 * 60)
+        );
+
+        // Format the result
+        if (diffInDays > 0) {
+          return `${diffInDays} days, ${diffInHours} hours`;
+        } else if (diffInHours > 0) {
+          return `${diffInHours} hours, ${diffInMinutes} minutes`;
+        } else if (diffInMinutes > 0) {
+          return `${diffInMinutes} minutes`;
+        } else {
+          return "0 minute";
         }
-
-        // If end date is before start date
-        if (end.getTime() < start.getTime()) {
-          return "Invalid range";
-        }
-
-        // Working hours: 9 AM to 7 PM (10 hours per day)
-        const WORK_START_HOUR = 9;
-        const WORK_END_HOUR = 19; // 7 PM in 24-hour format
-        const WORK_HOURS_PER_DAY = WORK_END_HOUR - WORK_START_HOUR; // 10 hours
-
-        let totalWorkingMinutes = 0;
-        
-        // Create a new date for iteration, starting from the start date
-        let currentDate = new Date(start);
-        
-        // If start time is before 9 AM, adjust to 9 AM
-        if (currentDate.getHours() < WORK_START_HOUR) {
-          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
-        }
-        
-        // If start time is after 7 PM, move to next day 9 AM
-        if (currentDate.getHours() >= WORK_END_HOUR) {
-          currentDate.setDate(currentDate.getDate() + 1);
-          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
-        }
-
-        while (currentDate < end) {
-          // Check if current date is a weekday (Monday = 1, Friday = 5)
-          const dayOfWeek = currentDate.getDay();
-          if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Monday to Friday
-            
-            // Calculate work end time for current day
-            let workEndTime = new Date(currentDate);
-            workEndTime.setHours(WORK_END_HOUR, 0, 0, 0);
-            
-            // If the task ends before the work day ends, use task end time
-            let effectiveEndTime = end < workEndTime ? end : workEndTime;
-            
-            // Calculate working minutes for this day
-            let dayWorkingMs = effectiveEndTime.getTime() - currentDate.getTime();
-            if (dayWorkingMs > 0) {
-              totalWorkingMinutes += Math.floor(dayWorkingMs / (1000 * 60));
-            }
-            
-            // If we've reached the end date, break
-            if (end <= workEndTime) {
-              break;
-            }
-          }
-          
-          // Move to next day at 9 AM
-          currentDate.setDate(currentDate.getDate() + 1);
-          currentDate.setHours(WORK_START_HOUR, 0, 0, 0);
-        }
-
-        // Convert total working minutes to readable format
-        if (totalWorkingMinutes <= 0) {
-          return "0h 0m";
-        }
-
-        const totalHours = Math.floor(totalWorkingMinutes / 60);
-        const remainingMinutes = totalWorkingMinutes % 60;
-
-        return `${totalHours}(h) ${remainingMinutes}(m)`;
       } catch (error) {
-        console.error("Error calculating actual working time:", error);
-        return "Error";
+        return "Invalid date";
       }
     },
   },
@@ -1268,10 +1359,8 @@ export default {
   background: linear-gradient(145deg, #23272f 0%, #2d3748 100%);
   color: #e2e8f0;
   border-radius: 12px;
-  box-shadow: 
-    0 2px 4px -1px rgba(0, 0, 0, 0.08),
-    0 1px 2px -1px rgba(0, 0, 0, 0.04),
-    0 0 0 1px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.08),
+    0 1px 2px -1px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(226, 232, 240, 0.6);
   overflow: hidden;
   backdrop-filter: blur(4px);
@@ -1585,38 +1674,38 @@ export default {
   .filter-header {
     padding: 0.75rem 1rem;
   }
-  
+
   .filter-content {
     padding: 1rem;
   }
-  
+
   .filter-buttons-container {
     margin-left: 0;
   }
-  
+
   .btn-group-modern {
     flex-direction: column;
   }
-  
+
   .btn-group-vertical-modern {
     flex-direction: column;
   }
-  
+
   .btn-group-flex-priority {
     flex-direction: column;
     gap: 0.375rem;
   }
-  
+
   .btn-group-flex-priority .btn-modern {
     flex: none;
     justify-content: flex-start;
   }
-  
+
   .btn-group-flex-priority .btn-text {
     text-align: left;
     flex: 1;
   }
-  
+
   .btn-modern {
     justify-content: flex-start;
   }
@@ -1627,7 +1716,7 @@ export default {
     flex-wrap: wrap;
     gap: 0.25rem;
   }
-  
+
   .btn-group-flex-priority .btn-modern {
     flex: 0 1 calc(50% - 0.125rem);
     min-width: 0;

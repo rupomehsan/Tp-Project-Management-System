@@ -86,27 +86,27 @@
 
     <!-- Bottom Section: Prepared For/By Layout -->
     <div
-      class="contact-section bg-warning text-dark py-5"
-      style="min-height: 30vh"
+      class="contact-section bg-warning text-dark py-3"
+      style="max-height: 30vh; overflow: hidden"
     >
       <div class="container">
         <div class="row g-4">
           <!-- Left Side: Prepared For -->
           <div class="col-md-6">
             <div
-              class="prepared-for bg-white rounded p-5 h-100 border shadow-sm"
+              class="prepared-for bg-white rounded p-4 h-100 border shadow-sm"
             >
               <div class="client-details">
                 <h4
-                  class="fw-bold text-dark mb-4 pb-2 border-bottom border-primary"
+                  class="fw-bold text-dark mb-3 pb-2 border-bottom border-primary"
                 >
                   Prepared For
                 </h4>
                 <div class="text-muted lh-base">
-                  <h5 class="text-dark fw-semibold mb-3">Client Name</h5>
-                  <p class="mb-2 fs-6">1584 Melody Lane</p>
-                  <p class="mb-3 fs-6">Whitestone, NY 11357</p>
-                  <p class="mb-2 fs-6">
+                  <h5 class="text-dark fw-semibold mb-2">Client Name</h5>
+                  <p class="mb-1 fs-6">1584 Melody Lane</p>
+                  <p class="mb-2 fs-6">Whitestone, NY 11357</p>
+                  <p class="mb-1 fs-6">
                     <strong>Phone:</strong> (804) 440-1946
                   </p>
                   <p class="mb-0 fs-6"><strong>Mobile:</strong> 757-976-0395</p>
@@ -118,24 +118,24 @@
           <!-- Right Side: Prepared By -->
           <div class="col-md-6">
             <div
-              class="prepared-by bg-white rounded p-5 h-100 border shadow-sm"
+              class="prepared-by bg-white rounded p-4 h-100 border shadow-sm"
             >
               <div class="company-details">
                 <h4
-                  class="fw-bold text-dark mb-4 pb-2 border-bottom border-success"
+                  class="fw-bold text-dark mb-3 pb-2 border-bottom border-success"
                 >
                   Prepared By
                 </h4>
                 <div class="text-muted lh-base">
-                  <h5 class="text-dark fw-semibold mb-3">
+                  <h5 class="text-dark fw-semibold mb-2">
                     TechPark IT Solutions
                   </h5>
-                  <p class="mb-2 fs-6">123 Innovation Drive</p>
-                  <p class="mb-3 fs-6">Tech City, TC 12345</p>
-                  <p class="mb-2 fs-6">
+                  <p class="mb-1 fs-6">123 Innovation Drive</p>
+                  <p class="mb-2 fs-6">Tech City, TC 12345</p>
+                  <p class="mb-1 fs-6">
                     <strong>Phone:</strong> +1 (555) 123-4567
                   </p>
-                  <p class="mb-2 fs-6">
+                  <p class="mb-1 fs-6">
                     <strong>Email:</strong> info@techpark.com
                   </p>
                   <p class="mb-0 fs-6">
@@ -247,10 +247,12 @@ export default {
 /* Contact Section - Fill remaining space */
 .contact-section {
   position: relative;
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  background: linear-gradient(135deg, #1f1e1b 0%, #252422 100%);
   flex: 1;
   display: flex;
   align-items: center;
+  max-height: 30vh;
+  overflow: hidden;
 }
 
 /* Card Styling */

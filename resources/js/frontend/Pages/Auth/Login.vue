@@ -3,7 +3,15 @@
     <title>Login</title>
   </Head>
   <Layout>
-    <div class="professional-login-container">
+    <!-- Loading overlay for authentication check -->
+    <div v-if="checkingAuth" class="auth-check-loading">
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Checking authentication...</p>
+      </div>
+    </div>
+
+    <div v-else class="professional-login-container">
       <div class="login-card">
         <div class="login-header">
           <div class="brand-section">
@@ -106,15 +114,18 @@
   </Layout>
 </template>
 <script>
+import { mapActions, mapState } from "pinia";
 import Layout from "./Layout/Layout.vue";
 import { Link } from "@inertiajs/vue3";
-
+//auth_store
+import { auth_store } from "../../GlobalStore/auth_store";
 export default {
   components: { Layout, Link },
 
   data() {
     return {
       loading: false,
+      checkingAuth: true, // Add loading state for auth check
       showPassword: false,
       passwordError: false,
       email: "",
@@ -123,11 +134,44 @@ export default {
     };
   },
 
+  created: async function () {
+    const role = localStorage.getItem("admin_role");
+    const prevUrl = window.sessionStorage.getItem("prevurl");
+
+    console.log(role, prevUrl, "super-admin" + prevUrl);
+
+    if (role) {
+      // Convert role to number for comparison or compare as string
+      const userRole = parseInt(role);
+
+      if (userRole === 1 || role === "1") {
+        if (prevUrl) {
+          window.location.href = "/super-admin" + prevUrl;
+        } else {
+          window.location.href = "/super-admin#/dashboard";
+        }
+      } else if (userRole === 2 || role === "2") {
+        if (prevUrl) {
+          window.location.href = "/employee" + prevUrl;
+        } else {
+          window.location.href = "/employee#/dashboard";
+        }
+      }
+    }
+
+    // If no token or token is invalid, user stays on login page
+    this.checkingAuth = false; // End loading state
+  },
+
   mounted() {
     this.loadRememberedCredentials();
   },
 
   methods: {
+    ...mapActions(auth_store, {
+      check_is_auth: "check_is_auth",
+    }),
+
     LoginSubmitHandler: async function () {
       try {
         this.loading = true;
@@ -145,22 +189,75 @@ export default {
         formData.append("remember", this.rememberMe);
 
         let response = await axios.post("/login", formData);
+
         if (response.data?.status === "success") {
           let data = response.data?.data;
-          if (data.access_token) {
-            window.s_alert("Login Successfully");
+
+          if (data.access_token && data.user) {
+            // Store authentication data
             localStorage.setItem("admin_token", data.access_token);
-            localStorage.setItem("admin_role", data.user?.role_id);
-            if (data.user?.role_id == 1) {
-              window.location.href = "/super-admin#/dashboard";
-            } else if (data.user?.role_id == 2) {
-              window.location.href = "/employee#/dashboard";
+            localStorage.setItem("admin_role", data.user.role_id);
+
+            // Clear any previous URL after successful login
+            const prevUrl = window.sessionStorage.getItem("prevurl");
+            window.sessionStorage.removeItem("prevurl");
+
+            // Show success message
+            window.s_alert("Login Successfully");
+
+            // Redirect based on role
+            let redirectUrl = "";
+            if (data.user.role_id === 1) {
+              redirectUrl =
+                prevUrl && prevUrl.startsWith("/super-admin")
+                  ? prevUrl
+                  : "/super-admin#/dashboard";
+            } else if (data.user.role_id === 2) {
+              redirectUrl =
+                prevUrl && prevUrl.startsWith("/employee")
+                  ? prevUrl
+                  : "/employee#/dashboard";
             }
+
+            if (redirectUrl) {
+              // Small delay to ensure token is saved before redirect
+              setTimeout(() => {
+                window.location.href = redirectUrl;
+              }, 100);
+            }
+          } else {
+            window.s_alert(
+              "Login failed. Invalid response from server.",
+              "error"
+            );
           }
+        } else {
+          window.s_alert(
+            response.data?.message || "Login failed. Please try again.",
+            "error"
+          );
         }
       } catch (error) {
         console.error("Login error", error);
-        window.s_alert("Login failed. Please check your credentials.", "error");
+
+        // Handle specific error responses
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          window.s_alert(error.response.data.message, "error");
+        } else if (error.response && error.response.status === 401) {
+          window.s_alert(
+            "Invalid credentials. Please check your email and password.",
+            "error"
+          );
+        } else {
+          window.s_alert(
+            "Login failed. Please check your connection and try again.",
+            "error"
+          );
+        }
       } finally {
         this.loading = false;
       }
@@ -182,6 +279,12 @@ export default {
       localStorage.removeItem("rememberedCredentials");
     },
 
+    clearAuthData() {
+      localStorage.removeItem("admin_token");
+      localStorage.removeItem("admin_role");
+      window.sessionStorage.removeItem("prevurl");
+    },
+
     loadRememberedCredentials() {
       const savedCredentials = localStorage.getItem("rememberedCredentials");
       if (savedCredentials) {
@@ -201,5 +304,42 @@ export default {
       this.email = email;
     },
   },
+  computed: {
+    ...mapState(auth_store, {
+      auth_info: "auth_info",
+      is_auth: "is_auth",
+    }),
+  },
 };
 </script>
+
+<style scoped>
+.auth-check-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  text-align: center;
+  color: #667eea;
+}
+
+.loading-spinner i {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.loading-spinner p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+</style>

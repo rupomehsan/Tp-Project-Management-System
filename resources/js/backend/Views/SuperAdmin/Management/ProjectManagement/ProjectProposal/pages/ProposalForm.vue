@@ -69,11 +69,9 @@
 
 <script>
 import { mapActions, mapState } from "pinia";
-import { store } from "../store";
+// import { projectProposalStore } from "../store";
 
-import TextEditor from "../../../../../../GlobalComponents/FormComponents/TextEditor.vue";
 export default {
-  components: { TextEditor },
   data: () => ({
     param_id: null,
     form_fields: {
@@ -85,3 +83,47 @@ export default {
   }),
 };
 </script>
+
+<style>
+@import "../styles/theme.css";
+
+/* Additional ProposalForm specific styles */
+.card_body_fixed_height {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  display: block;
+  font-weight: 500;
+}
+
+/* Enhanced form styling for better UX */
+.form-control {
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.form-control:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+/* Better spacing for mobile */
+@media (max-width: 768px) {
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .card_body_fixed_height {
+    max-height: 70vh;
+  }
+}
+</style>

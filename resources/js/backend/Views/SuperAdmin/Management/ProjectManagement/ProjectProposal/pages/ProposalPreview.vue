@@ -1,6 +1,8 @@
 <template>
-  <FrontPageOne />
-  <FrontPageTwo />
+  <section id="coverPageSection">
+    <FrontPageOne v-if="template == 'one'" />
+    <FrontPageTwo v-if="template == 'two'" />
+  </section>
   <section class="main-wrapper" id="coverLetterSection">
     <div>
       <h2 class="section-title">COVER LETTER</h2>
@@ -18,7 +20,31 @@
         <br /><br />
         Our proposal includes a detailed timeline, budget breakdown, and an
         overview of the project's scope. We are committed to delivering a
-        high-quality
+        high-quality <br /><br />
+        At Tech Park IT, we understand that developing client-focused software
+        requires both technical expertise and clear communication. Every client
+        is unique, and we strive to provide innovative, customized, and
+        cost-effective solutions—delivered on time and within budget.\
+        <br /><br />
+        Our proposal includes a detailed timeline, budget breakdown, and an
+        overview of the project's scope. We are committed to delivering a
+        high-quality <br /><br />
+        At Tech Park IT, we understand that developing client-focused software
+        requires both technical expertise and clear communication. Every client
+        is unique, and we strive to provide innovative, customized, and
+        cost-effective solutions—delivered on time and within budget.
+        <br /><br />
+        Our proposal includes a detailed timeline, budget breakdown, and an
+        overview of the project's scope. We are committed to delivering a
+        high-quality <br /><br />
+        At Tech Park IT, we understand that developing client-focused software
+        requires both technical expertise and clear communication. Every client
+        is unique, and we strive to provide innovative, customized, and
+        cost-effective solutions—delivered on time and within budget.
+        <br /><br />
+        Yours faithfully,<br />
+        Engr. Nayeem Hossain <br />Head of Marketing & Assistant Director<br />
+        Tech Park IT
       </div>
     </main>
   </section>
@@ -53,29 +79,66 @@
         Source Types ● Product Purchase & Stock Updates 1.4 Accounts Management
         ● Payment Type Setup ● Expense Categories ● Account Creation &
         Management ● Expense & Deposit Tracking ● Financial Reports & Analytics
+        <br />
+        Introduction We propose the development of a comprehensive E-Commerce
+        Management System designed to streamline business operations, improve
+        customer engagement, and ensure smooth management of products, sales,
+        accounts, and customer relationships. The system will be web-based,
+        scalable, and secure, with role-based access and user-friendly
+        dashboards for different departments. A. Plan One - Ready Software 1.
+        Core Features 1.1 Dashboards ● E-Commerce Dashboard – Monitor sales,
+        orders, products, and revenue. ● CRM Dashboard – Customer relationship
+        insights and communication tracking. ● Accounts Dashboard – Expense,
+        deposit, and profit overview. 1.2 E-Commerce Module ● Configuration
+        Settings (business preferences & system settings) ● Category,
+        Subcategory & Child Category Management ● Product Management – Add,
+        update, and manage product listings. ● Order Management – Track, update,
+        and process orders. ● Promo Code Management – Discounts and special
+        offers. ● Push Notifications – Customer updates and promotions. ●
+        Wishlist Feature – Save products for later purchase. ● Delivery Charges
+        Setup – Based on Upazila & Thana locations. ● Payment History Tracking ●
+        Reports Generation – Sales, orders, and customer activity. 1.3 Inventory
+        Management ● Product Warehouse Management ● Warehouse Room & Cartoon
+        Allocation ● Supplier Management (source types & details) ● Customer
+        Source Types ● Product Purchase & Stock Updates 1.4 Accounts Management
+        ● Payment Type Setup ● Expense Categories ● Account Creation &
+        Management ● Expense & Deposit Tracking ● Financial Reports & Analytics
+        <br />
+        Introduction We propose the development of a comprehensive E-Commerce
+        Management System designed to streamline business operations, improve
+        customer engagement, and ensure smooth management of products, sales,
+        accounts, and customer relationships. The system will be web-based,
+        scalable, and secure, with role-based access and user-friendly
+        dashboards for different departments. A. Plan One - Ready Software 1.
+        Core Features 1.1 Dashboards ● E-Commerce Dashboard – Monitor sales,
+        orders, products, and revenue. ● CRM Dashboard – Customer relationship
+        insights and communication tracking. ● Accounts Dashboard – Expense,
+        deposit, and profit overview. 1.2 E-Commerce Module ● Configuration
+        Settings (business preferences & system settings) ● Category,
+        Subcategory & Child Category Management ● Product Management – Add,
+        update, and manage product listings. ● Order Management – Track, update,
+        and process orders. ● Promo Code Management – Discounts and special
+        offers. ● Push Notifications – Customer updates and promotions. ●
+        Wishlist Feature – Save products for later purchase. ● Delivery Charges
+        Setup – Based on Upazila & Thana locations. ● Payment History Tracking ●
+        Reports Generation – Sales, orders, and customer activity. 1.3 Inventory
+        Management ● Product Warehouse Management ● Warehouse Room & Cartoon
+        Allocation ● Supplier Management (source types & details) ● Customer
+        Source Types ● Product Purchase & Stock Updates 1.4 Accounts Management
+        ● Payment Type Setup ● Expense Categories ● Account Creation &
+        Management ● Expense & Deposit Tracking ● Financial Reports & Analytics
       </div>
     </main>
   </section>
 
-  <section class="document-wrapper" id="timelineSection">
+  <section class="main-wrapper" id="timelineSection">
     <div>
       <h2 class="section-title">TIMELINE</h2>
     </div>
-    <header class="page-header-strip">
-      <div class="header-text">
-        <p class="header-main-text">
-          In ut vehicula lectus, vitae tempor nulla. Nunc bibendum dapibus quam,
-          eleifend semper libero feugiat et. Etiam porta suscipit sapien ac
-          tincidunt. Mauris a tempor urna. Nam molestie risus vitae fringilla
-          porta. Aliquam in bibendum felis. Aliquam erat volutpat. Vivamus
-          vehicula odio eu facilisis bibendum.
-        </p>
-      </div>
-    </header>
 
     <main class="main-content-area">
       <div class="timeline-section">
-        <div class="timeline-item">
+        <div class="timeline-item text-white">
           <div class="timeline-left-side">
             <h4 class="step-title">Step 1</h4>
             <p class="step-date">March 2021</p>
@@ -96,7 +159,7 @@
           </div>
         </div>
 
-        <div class="timeline-item">
+        <div class="timeline-item text-white">
           <div class="timeline-left-side">
             <h4 class="step-title">Step 2</h4>
             <p class="step-date">March 2021</p>
@@ -162,7 +225,7 @@
     </main>
   </section>
 
-  <section class="main-document" id="paymentInvoiceSection">
+  <section class="main-wrapper" id="paymentInvoiceSection">
     <div>
       <h2 class="section-title">Payment Invoice</h2>
     </div>
@@ -355,6 +418,92 @@
         </div>
       </section>
 
+      <section class="budget-category">
+        <div class="category-header">
+          <h2 class="category-title">Testing and Implementation</h2>
+          <div class="category-table-header">
+            <span class="header-col">Hours</span>
+            <span class="header-col">Rate</span>
+            <span class="header-col">Total</span>
+          </div>
+        </div>
+        <div class="category-content">
+          <div class="item-list-container">
+            <ul class="item-list">
+              <li>Quality Assurance Testing</li>
+              <li>User Acceptance Testing</li>
+              <li>Performance Testing and Optimization</li>
+              <li>Deployment and Go-Live Support</li>
+            </ul>
+          </div>
+          <div class="item-pricing">
+            <div class="pricing-row">
+              <span class="price-col">50</span>
+              <span class="price-col">$110</span>
+              <span class="price-col">$5,500</span>
+            </div>
+            <div class="pricing-row">
+              <span class="price-col">40</span>
+              <span class="price-col">$120</span>
+              <span class="price-col">$4,800</span>
+            </div>
+            <div class="pricing-row">
+              <span class="price-col">30</span>
+              <span class="price-col">$135</span>
+              <span class="price-col">$4,050</span>
+            </div>
+            <div class="pricing-row">
+              <span class="price-col">25</span>
+              <span class="price-col">$140</span>
+              <span class="price-col">$3,500</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="budget-category">
+        <div class="category-header">
+          <h2 class="category-title">Evaluation and Support</h2>
+          <div class="category-table-header">
+            <span class="header-col">Hours</span>
+            <span class="header-col">Rate</span>
+            <span class="header-col">Total</span>
+          </div>
+        </div>
+        <div class="category-content">
+          <div class="item-list-container">
+            <ul class="item-list">
+              <li>Post-Launch Monitoring and Evaluation</li>
+              <li>User Training and Documentation</li>
+              <li>3-Month Technical Support</li>
+              <li>Performance Analysis and Reporting</li>
+            </ul>
+          </div>
+          <div class="item-pricing">
+            <div class="pricing-row">
+              <span class="price-col">20</span>
+              <span class="price-col">$125</span>
+              <span class="price-col">$2,500</span>
+            </div>
+            <div class="pricing-row">
+              <span class="price-col">35</span>
+              <span class="price-col">$100</span>
+              <span class="price-col">$3,500</span>
+            </div>
+            <div class="pricing-row">
+              <span class="price-col">60</span>
+              <span class="price-col">$95</span>
+              <span class="price-col">$5,700</span>
+            </div>
+            <div class="pricing-row">
+              <span class="price-col">15</span>
+              <span class="price-col">$130</span>
+              <span class="price-col">$1,950</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="total-section">
         <div class="total-label">Total:</div>
         <div class="total-pricing">
@@ -366,8 +515,8 @@
     </div>
   </section>
 
-  <section class="terms-conditions-page" id="termsConditionsSection">
-    <div class="container">
+  <section class="main-wrapper" id="termsConditionsSection">
+    <div>
       <h2 class="section-title">TERMS & CONDITIONS</h2>
     </div>
 
@@ -448,13 +597,13 @@
       </ul>
     </div>
   </section>
-  <section class="terms-conditions-page" id="agreementSection">
-    <div class="container">
+  <section class="main-wrapper" id="agreementSection">
+    <div>
       <h2 class="section-title">Agreement</h2>
     </div>
 
-    <div class="terms-content-container">
-      <div class="p-5 text-dark">
+    <div class="main-wrapper">
+      <div class="p-5">
         <strong>
           We, TechPark IT Solutions, hereby confirm our commitment to deliver
           the project as outlined in this proposal. Upon your acceptance of the
@@ -505,14 +654,16 @@
 </template>
 <script>
 import { mapActions, mapWritableState, mapState } from "pinia";
-import { store } from "../store";
+import { projectProposalStore } from "../store";
 import FrontPageOne from "../components/FrontPageOne.vue";
 import FrontPageTwo from "../components/FrontPageTwo.vue";
+
 export default {
   components: {
     FrontPageOne,
     FrontPageTwo,
   },
+
   data: () => ({
     showCover: true,
     headerSolid: false,
@@ -524,261 +675,9 @@ export default {
   }),
 
   computed: {
-    ...mapState(store, [
-      "currentProposal",
-      "proposalPreviewData",
-      "budgetTotal",
-    ]),
-
-    displayFeatures() {
-      if (this.currentProposal.key_features) {
-        // If key_features is a string, split by newlines
-        const features =
-          typeof this.currentProposal.key_features === "string"
-            ? this.currentProposal.key_features
-                .split("\n")
-                .filter((f) => f.trim())
-            : this.currentProposal.key_features;
-
-        return features.slice(0, 3).map((feature, index) => {
-          const icons = ["fas fa-rocket", "fas fa-cogs", "fas fa-users"];
-          return {
-            icon: icons[index] || "fas fa-check",
-            text: feature.trim(),
-          };
-        });
-      }
-
-      // Default features
-      return [
-        {
-          icon: "fas fa-rocket",
-          title: "Digital Transformation",
-          description: "Complete modernization of educational workflows",
-        },
-        {
-          icon: "fas fa-cogs",
-          title: "Process Automation",
-          description: "Reduce manual work by 70% with smart automation",
-        },
-        {
-          icon: "fas fa-users",
-          title: "Enhanced Experience",
-          description: "Improved engagement for students and staff",
-        },
-      ];
-    },
-
-    displayObjectives() {
-      if (
-        this.currentProposal.objectives &&
-        this.currentProposal.objectives.length > 0
-      ) {
-        return this.currentProposal.objectives;
-      }
-
-      // Default objectives
-      return [
-        {
-          icon: "fas fa-database",
-          title: "Centralize Student Data",
-          description:
-            "Provide a single source of truth for student records, attendance and performance tracking with real-time updates.",
-        },
-        {
-          icon: "fas fa-calendar-alt",
-          title: "Automate Scheduling & Attendance",
-          description:
-            "Reduce manual work and errors with calendar syncing and automated attendance capture systems.",
-        },
-        {
-          icon: "fas fa-credit-card",
-          title: "Simplify Payments & Billing",
-          description:
-            "Streamline invoicing and online payment processing to improve cash flow and reduce administrative overhead.",
-        },
-        {
-          icon: "fas fa-chart-bar",
-          title: "Enable Reporting & Insights",
-          description:
-            "Provide comprehensive dashboards and exportable reports for data-driven management decisions.",
-        },
-        {
-          icon: "fas fa-comments",
-          title: "Improve Communication",
-          description:
-            "Reliable notifications (email/SMS/in-app) to keep all stakeholders informed and engaged.",
-        },
-        {
-          icon: "fas fa-shield-alt",
-          title: "Ensure Data Security",
-          description:
-            "Implement robust security measures to protect sensitive student and institutional data.",
-        },
-      ];
-    },
-
-    displayTimeline() {
-      if (
-        this.currentProposal.timeline &&
-        this.currentProposal.timeline.length > 0
-      ) {
-        return this.currentProposal.timeline;
-      }
-
-      // Default timeline
-      return [
-        {
-          title: "Discovery",
-          duration: "1 week",
-          description: "requirements, kickoff & research",
-        },
-        {
-          title: "Design",
-          duration: "2 weeks",
-          description: "wireframes, UI/UX & review",
-        },
-        {
-          title: "Development",
-          duration: "4–6 weeks",
-          description: "implementation & integrations",
-        },
-        {
-          title: "Testing",
-          duration: "1–2 weeks",
-          description: "QA, bug fixes & acceptance",
-        },
-        {
-          title: "Deployment",
-          duration: "1 week",
-          description: "launch & monitoring",
-        },
-        {
-          title: "Support",
-          duration: "Ongoing",
-          description: "maintenance & updates",
-        },
-      ];
-    },
-
-    displayBudget() {
-      if (
-        this.currentProposal.budget_items &&
-        this.currentProposal.budget_items.length > 0
-      ) {
-        return this.currentProposal.budget_items;
-      }
-
-      // Default budget items
-      return [
-        {
-          description: "Discovery & Requirements",
-          quantity: 1,
-          unit_price: 1200,
-        },
-        { description: "Design (UI/UX)", quantity: 1, unit_price: 2400 },
-        { description: "Development", quantity: 1, unit_price: 9000 },
-        { description: "Integrations & API", quantity: 1, unit_price: 1800 },
-        { description: "Testing & QA", quantity: 1, unit_price: 1200 },
-        {
-          description: "Deployment & Support (first month)",
-          quantity: 1,
-          unit_price: 1400,
-        },
-      ];
-    },
-
-    displayMilestones() {
-      if (
-        this.currentProposal.milestones &&
-        this.currentProposal.milestones.length > 0
-      ) {
-        return this.currentProposal.milestones;
-      }
-
-      // Default milestones
-      return [
-        {
-          title: "Student Management",
-          due_date: "2025-08-25",
-          description: "CRUD, enrollment workflow, profile import/export",
-          status: "Pending",
-        },
-        {
-          title: "Attendance & Scheduling",
-          due_date: "2025-09-01",
-          description: "Attendance tracking, timetable, calendar sync",
-          status: "Pending",
-        },
-        {
-          title: "Payments & Billing",
-          due_date: "2025-09-15",
-          description: "Invoicing, payment gateway integration, receipts",
-          status: "Pending",
-        },
-        {
-          title: "Reporting Dashboard",
-          due_date: "2025-10-13",
-          description: "Analytics panels, exportable reports, filters",
-          status: "Pending",
-        },
-        {
-          title: "Communication & Notifications",
-          due_date: "2025-10-27",
-          description: "Email/SMS triggers, in-app messaging, templates",
-          status: "Pending",
-        },
-        {
-          title: "Admin & Settings",
-          due_date: "2025-11-03",
-          description: "Roles, permissions, system configuration",
-          status: "Pending",
-        },
-      ];
-    },
-
-    // Hero background image source: prefer proposal-specific image
-    heroImageSrc() {
-      const defaultUrl =
-        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80";
-      return (
-        (this.currentProposal && this.currentProposal.background_image) ||
-        defaultUrl
-      );
-    },
-
-    // Gradient overlay style — uses project colors when provided
-    gradientStyle() {
-      const primary =
-        (this.currentProposal && this.currentProposal.primary_color) ||
-        "rgba(37, 99, 235, 0.85)";
-      const secondary =
-        (this.currentProposal && this.currentProposal.secondary_color) ||
-        "rgba(59, 130, 246, 0.75)";
-      const tertiary =
-        (this.currentProposal && this.currentProposal.tertiary_color) ||
-        "rgba(147, 197, 253, 0.65)";
-
-      return {
-        background: `linear-gradient(135deg, ${primary} 0%, ${secondary} 30%, ${tertiary} 70%, ${primary} 100%)`,
-      };
-    },
-  },
-
-  methods: {
-    toggleCover() {
-      this.showCover = !this.showCover;
-    },
-
-    formatDate(dateString) {
-      if (!dateString) return "TBD";
-      const date = new Date(dateString);
-      return date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
-    },
+    ...mapState(projectProposalStore, {
+      template: "template",
+    }),
   },
 
   mounted() {
@@ -809,7 +708,14 @@ export default {
 };
 </script>
 <style scoped>
+@import "../styles/theme.css";
+
+/* ProposalPreview enhanced dark mode support */
 /* Common Shared Styles */
+.section-border {
+  border: 1px solid #38242e3f;
+}
+
 .section-title {
   margin: 0 0 37px 0;
   padding: 10px;
@@ -942,7 +848,7 @@ export default {
 .main-content-area {
   position: absolute;
   top: 150px;
-  left: 140px;
+  left: 50px;
   right: 40px;
   bottom: 40px;
   color: #333;
@@ -999,14 +905,14 @@ export default {
 .item-title {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #555;
+  color: white;
   margin: 0;
 }
 
 .item-subtitle {
   font-size: 1rem;
   font-weight: 700;
-  color: #555;
+  color: white;
   margin: 5px 0 10px 0;
 }
 
@@ -1022,7 +928,7 @@ export default {
 .item-description {
   font-size: 0.8rem;
   line-height: 1.6;
-  color: #555;
+  color: white;
   margin-top: 10px;
 }
 
@@ -1035,12 +941,13 @@ export default {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: #1a1a1a;
 }
 
 .right-section {
   flex: 1;
   padding: 20px;
+  background: #1a1a1a;
 }
 
 .document-header {
@@ -1050,7 +957,7 @@ export default {
 .header-text-top {
   font-size: 0.9rem;
   line-height: 1.6;
-  color: #555;
+  color: white;
   margin: 0;
 }
 
@@ -1102,7 +1009,7 @@ export default {
 .item-list-container {
   flex: 1;
   padding: 15px 20px;
-  background: #fff;
+  background: #1a1a1a;
 }
 
 .item-list {
@@ -1113,7 +1020,7 @@ export default {
 
 .item-list li {
   font-size: 0.9rem;
-  color: #555;
+  color: white;
   margin-bottom: 8px;
   padding-left: 15px;
   position: relative;
@@ -1130,7 +1037,7 @@ export default {
 
 .item-pricing {
   width: 300px;
-  background: #f9f9f9;
+  background: #1f120a;
   border-left: 1px solid #eee;
 }
 
@@ -1147,7 +1054,7 @@ export default {
 
 .price-col {
   font-size: 0.85rem;
-  color: #555;
+  color: white;
   text-align: center;
   width: 100px;
   font-weight: 500;
@@ -1157,7 +1064,7 @@ export default {
   margin-top: 20px;
   padding: 15px 20px;
   border-top: 2px solid #772c2c;
-  background: #f5f5f5;
+  background: #1f120a;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1241,7 +1148,7 @@ export default {
 
 .term-description {
   font-size: 0.9rem;
-  color: #555;
+  color: white;
   line-height: 1.6;
   margin: 0;
 }

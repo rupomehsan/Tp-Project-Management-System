@@ -1,7 +1,9 @@
 import { defineStore } from "pinia";
 
-export const store = defineStore("project-proposal", {
+export const projectProposalStore = defineStore("project-proposal", {
   state: () => ({
+    template: "one",
+
     currentProposal: {
       // Basic Information
       title: "",
@@ -10,6 +12,10 @@ export const store = defineStore("project-proposal", {
       priority: "",
     },
   }),
+  actions: {
+    setTemplate(template) {
+      this.template = template;
+      console.log("Template set to:", template);
+    },
+  },
 });
-
-export default store;

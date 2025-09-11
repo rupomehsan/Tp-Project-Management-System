@@ -1,31 +1,24 @@
 <template>
-  <div class="proposal-background">
+  <div class="proposal-background" style="overflow: hidden">
     <header
       class="proposal-header d-flex justify-content-center align-items-center mb-5"
     >
-      <div class="header-logo d-flex align-items-center gap-2">
+      <div class="text-center">
+        <div class="company-name text-white d-block mb-2">Tech Park IT</div>
         <img
           src="/backend/assets/images/tplogo.png"
           height="100"
           width="100"
           alt="TechPark IT Logo"
+          class="header-logo mx-auto d-block"
         />
-        <div class="company-name text-white">Techpark IT</div>
       </div>
     </header>
 
     <main class="proposal-content mt-5">
-      <div class="title-block">
-        <div class="creative-text">PROPOSAL</div>
-        <h1 class="proposal-title">Project Proposal</h1>
-      </div>
-
-      <div class="lorem-block">
-        <h2>LOREM IPSUM</h2>
-        <p>
-          Adis lorem nonsectetur adipiscing cursus, est sed malis morbi curae.
-          voluptat insum quae ipiet dolectis acculliu, ptatian torestrom
-        </p>
+      <div class="title-block w-50">
+        <div class="creative-text">PROPOSAL FOR</div>
+        <h1 class="proposal-title">E-Commerce System Development Proposal</h1>
       </div>
 
       <div class="contact-block">
@@ -62,7 +55,7 @@ export default {
 
 .proposal-header {
   position: absolute;
-  top: 20mm;
+  top: 5mm;
   left: 0;
   right: 0;
   width: 100%;
@@ -84,7 +77,7 @@ export default {
 }
 
 .company-name {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
   color: #444;
   letter-spacing: 0.5px;
