@@ -11,6 +11,7 @@ import { createApp } from "vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 import { createPinia } from "pinia";
 import App from "./Layouts/App.vue";
+import TextEditor from "../../GlobalComponents/FormComponents/TextEditor.vue";
 // common components
 // common components
 import CommonInput from "../../GlobalComponents/FormComponents/CommonInput.vue";
@@ -46,7 +47,7 @@ const app = createApp({});
 app.component("app", App);
 app.component("common-input", CommonInput);
 app.component("pagination", Pagination);
-
+app.component("text-editor", TextEditor);
 
 app.use(pinia);
 app.use(router);

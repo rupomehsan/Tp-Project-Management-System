@@ -71,12 +71,16 @@
           <div class="col-lg-10">
             <div class="project-content text-center">
               <!-- Project Title -->
-              <h2 class="h3 fw-bold mb-2">Project title</h2>
+              <h2 class="h3 fw-bold mb-2">
+                {{ proposal.proposal_title || "Project title" }}
+              </h2>
 
               <!-- Project Description -->
               <p class="mb-3" style="opacity: 0.9">
-                Professional digital transformation solutions with cutting-edge
-                technology
+                {{
+                  proposal.project_overview ||
+                  "Professional digital transformation solutions with cutting-edge technology"
+                }}
               </p>
             </div>
           </div>
@@ -103,13 +107,23 @@
                   Prepared For
                 </h4>
                 <div class="text-muted lh-base">
-                  <h5 class="text-dark fw-semibold mb-2">Client Name</h5>
-                  <p class="mb-1 fs-6">1584 Melody Lane</p>
-                  <p class="mb-2 fs-6">Whitestone, NY 11357</p>
+                  <h5 class="text-dark fw-semibold mb-2">
+                    {{ proposal.prepare_for_name || "Client Name" }}
+                  </h5>
                   <p class="mb-1 fs-6">
-                    <strong>Phone:</strong> (804) 440-1946
+                    {{ proposal.prepare_for_address || "1584 Melody Lane" }}
                   </p>
-                  <p class="mb-0 fs-6"><strong>Mobile:</strong> 757-976-0395</p>
+                  <p class="mb-2 fs-6">
+                    {{ proposal.prepare_for_city || "Whitestone, NY 11357" }}
+                  </p>
+                  <p class="mb-1 fs-6">
+                    <strong>Phone:</strong>
+                    {{ proposal.prepare_for_phone || "(804) 440-1946" }}
+                  </p>
+                  <p class="mb-0 fs-6">
+                    <strong>Mobile:</strong>
+                    {{ proposal.prepare_for_mobile || "757-976-0395" }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -128,18 +142,28 @@
                 </h4>
                 <div class="text-muted lh-base">
                   <h5 class="text-dark fw-semibold mb-2">
-                    TechPark IT Solutions
+                    {{
+                      proposal.prepare_by_company_name ||
+                      "TechPark IT Solutions"
+                    }}
                   </h5>
-                  <p class="mb-1 fs-6">123 Innovation Drive</p>
-                  <p class="mb-2 fs-6">Tech City, TC 12345</p>
                   <p class="mb-1 fs-6">
-                    <strong>Phone:</strong> +1 (555) 123-4567
+                    {{ proposal.prepare_by_address || "123 Innovation Drive" }}
+                  </p>
+                  <p class="mb-2 fs-6">
+                    {{ proposal.prepare_by_city || "Tech City, TC 12345" }}
                   </p>
                   <p class="mb-1 fs-6">
-                    <strong>Email:</strong> info@techpark.com
+                    <strong>Phone:</strong>
+                    {{ proposal.prepare_by_phone || "+1 (555) 123-4567" }}
+                  </p>
+                  <p class="mb-1 fs-6">
+                    <strong>Email:</strong>
+                    {{ proposal.prepare_by_email || "info@techpark.com" }}
                   </p>
                   <p class="mb-0 fs-6">
-                    <strong>Website:</strong> www.techpark.com
+                    <strong>Website:</strong>
+                    {{ proposal.prepare_by_website || "www.techpark.com" }}
                   </p>
                 </div>
               </div>
@@ -156,6 +180,12 @@
 <script>
 export default {
   name: "FrontPageTwo",
+  props: {
+    proposal: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
   mounted() {
     // Initialize professional animations
     this.initScrollAnimations();

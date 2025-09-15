@@ -18,21 +18,25 @@
     <main class="proposal-content mt-5">
       <div class="title-block w-50">
         <div class="creative-text">PROPOSAL FOR</div>
-        <h1 class="proposal-title">E-Commerce System Development Proposal</h1>
+        <h1 class="proposal-title">
+          {{
+            proposal.proposal_title || "E-Commerce System Development Proposal"
+          }}
+        </h1>
       </div>
 
       <div class="contact-block">
         <div class="text-muted lh-base">
           <h5 class="text-dark fw-semibold mb-3">Prepared for</h5>
-          <p>name</p>
-          <p>designation</p>
-          <p>Company name</p>
+          <p>{{ proposal.prepare_for_name || "name" }}</p>
+          <p>{{ proposal.prepare_for_designation || "designation" }}</p>
+          <p>{{ proposal.prepare_for_company_name || "Company name" }}</p>
         </div>
         <div class="text-muted lh-base">
           <h5 class="text-dark fw-semibold mt-3">Prepared By</h5>
-          <p>Md. Abu Ehsan</p>
-          <p>Software Engineer</p>
-          <p>Tech Park IT</p>
+          <p>{{ proposal.prepare_by_name || "Md. Abu Ehsan" }}</p>
+          <p>{{ proposal.prepare_by_designation || "Software Engineer" }}</p>
+          <p>{{ proposal.prepare_by_company_name || "Tech Park IT" }}</p>
         </div>
       </div>
     </main>
@@ -41,6 +45,12 @@
 <script>
 export default {
   name: "FrontPageOne",
+  props: {
+    proposal: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
 };
 </script>
 <style scoped>

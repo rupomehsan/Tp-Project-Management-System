@@ -96,8 +96,20 @@
         </div>
       </div>
     </section>
-    <section class="row">
-      <div class="col-md-4">
+    <section class="row align-items-start">
+      <div :class="previewExpanded ? 'col-md-12' : 'col-md-4'">
+        <div class="d-flex justify-content-end mb-2">
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm"
+            @click="togglePreview"
+          >
+            <i
+              :class="previewExpanded ? 'fas fa-compress' : 'fas fa-expand'"
+            ></i>
+            {{ previewExpanded ? "Collapse Preview" : "Expand Preview" }}
+          </button>
+        </div>
         <ProposalForm />
       </div>
       <div class="col-md-8 preview-section">
@@ -122,8 +134,10 @@ export default {
     return {
       currentTheme: "light",
       selectedTemplate: "one",
+      previewExpanded: false,
     };
   },
+
   computed: {
     ...mapState(projectProposalStore, {
       currentTemplate: "template",
@@ -159,6 +173,10 @@ export default {
     ...mapActions(projectProposalStore, {
       setTemplate: "setTemplate",
     }),
+
+    togglePreview() {
+      this.previewExpanded = !this.previewExpanded;
+    },
 
     detectTheme() {
       // Check for saved theme preference first
@@ -1820,7 +1838,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 /* CSS Custom Properties for Theme Support */
 .proposal-page-wrapper {
   /* Light theme variables (default) */
@@ -1846,6 +1864,8 @@ export default {
   padding: 20px;
   border-radius: 10px;
   transition: background-color 0.3s ease, color 0.3s ease;
+  height: 90vh;
+  overflow-y: auto;
 }
 
 /* Dark theme variables */

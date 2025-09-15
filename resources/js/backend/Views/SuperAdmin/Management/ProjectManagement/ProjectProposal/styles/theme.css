@@ -133,12 +133,7 @@ label {
   border: 1px solid var(--proposal-border-color);
 }
 
-/* Main content areas */
-.main-wrapper {
-  background-color: var(--proposal-preview-bg) !important;
-  color: var(--proposal-preview-text) !important;
-  transition: all 0.3s ease;
-}
+
 
 .cover-letter-text {
   background-color: var(--proposal-preview-bg) !important;

@@ -1,609 +1,199 @@
 <template>
-  <section id="coverPageSection">
-    <FrontPageOne v-if="template == 'one'" />
-    <FrontPageTwo v-if="template == 'two'" />
-  </section>
-  <section class="main-wrapper" id="coverLetterSection">
-    <div>
-      <h2 class="section-title">COVER LETTER</h2>
-    </div>
+  <div class="proposal-preview-wrapper">
+    <!-- DYNAMIC FRONT PAGES - Show based on selected template -->
+    <FrontPageOne v-if="template === 'one'" :proposal="proposal" />
+    <FrontPageTwo v-if="template === 'two'" :proposal="proposal" />
 
-    <main class="text-dark">
-      <div class="cover-letter-text p-5">
-        Dear [Client's Name],
-        <br /><br />
-        We are excited to present our proposal for [Project Name]. At [Your
-        Company Name], we believe that [Project Name] will be a game-changer in
-        the [Industry Name] industry. Our team of experts has carefully crafted
-        a proposal that outlines the key features and benefits of [Project
-        Name].
-        <br /><br />
-        Our proposal includes a detailed timeline, budget breakdown, and an
-        overview of the project's scope. We are committed to delivering a
-        high-quality <br /><br />
-        At Tech Park IT, we understand that developing client-focused software
-        requires both technical expertise and clear communication. Every client
-        is unique, and we strive to provide innovative, customized, and
-        cost-effective solutions—delivered on time and within budget.\
-        <br /><br />
-        Our proposal includes a detailed timeline, budget breakdown, and an
-        overview of the project's scope. We are committed to delivering a
-        high-quality <br /><br />
-        At Tech Park IT, we understand that developing client-focused software
-        requires both technical expertise and clear communication. Every client
-        is unique, and we strive to provide innovative, customized, and
-        cost-effective solutions—delivered on time and within budget.
-        <br /><br />
-        Our proposal includes a detailed timeline, budget breakdown, and an
-        overview of the project's scope. We are committed to delivering a
-        high-quality <br /><br />
-        At Tech Park IT, we understand that developing client-focused software
-        requires both technical expertise and clear communication. Every client
-        is unique, and we strive to provide innovative, customized, and
-        cost-effective solutions—delivered on time and within budget.
-        <br /><br />
-        Yours faithfully,<br />
-        Engr. Nayeem Hossain <br />Head of Marketing & Assistant Director<br />
-        Tech Park IT
+    <!-- COVER LETTER -->
+    <section
+      v-if="proposal.cover_letter && proposal.cover_letter.trim()"
+      class="main-wrapper"
+      id="coverLetterSection"
+    >
+      <div>
+        <h2 class="section-title">COVER LETTER</h2>
       </div>
-    </main>
-  </section>
+      <main class="text-dark">
+        <div class="cover-letter-text p-5" v-html="proposal.cover_letter"></div>
+      </main>
+    </section>
 
-  <section class="main-wrapper" id="projectOverviewSection">
-    <div>
-      <h2 class="section-title">Project Overview</h2>
-    </div>
-
-    <main class="text-dark">
-      <div class="cover-letter-text p-5">
-        Introduction We propose the development of a comprehensive E-Commerce
-        Management System designed to streamline business operations, improve
-        customer engagement, and ensure smooth management of products, sales,
-        accounts, and customer relationships. The system will be web-based,
-        scalable, and secure, with role-based access and user-friendly
-        dashboards for different departments. A. Plan One - Ready Software 1.
-        Core Features 1.1 Dashboards ● E-Commerce Dashboard – Monitor sales,
-        orders, products, and revenue. ● CRM Dashboard – Customer relationship
-        insights and communication tracking. ● Accounts Dashboard – Expense,
-        deposit, and profit overview. 1.2 E-Commerce Module ● Configuration
-        Settings (business preferences & system settings) ● Category,
-        Subcategory & Child Category Management ● Product Management – Add,
-        update, and manage product listings. ● Order Management – Track, update,
-        and process orders. ● Promo Code Management – Discounts and special
-        offers. ● Push Notifications – Customer updates and promotions. ●
-        Wishlist Feature – Save products for later purchase. ● Delivery Charges
-        Setup – Based on Upazila & Thana locations. ● Payment History Tracking ●
-        Reports Generation – Sales, orders, and customer activity. 1.3 Inventory
-        Management ● Product Warehouse Management ● Warehouse Room & Cartoon
-        Allocation ● Supplier Management (source types & details) ● Customer
-        Source Types ● Product Purchase & Stock Updates 1.4 Accounts Management
-        ● Payment Type Setup ● Expense Categories ● Account Creation &
-        Management ● Expense & Deposit Tracking ● Financial Reports & Analytics
-        <br />
-        Introduction We propose the development of a comprehensive E-Commerce
-        Management System designed to streamline business operations, improve
-        customer engagement, and ensure smooth management of products, sales,
-        accounts, and customer relationships. The system will be web-based,
-        scalable, and secure, with role-based access and user-friendly
-        dashboards for different departments. A. Plan One - Ready Software 1.
-        Core Features 1.1 Dashboards ● E-Commerce Dashboard – Monitor sales,
-        orders, products, and revenue. ● CRM Dashboard – Customer relationship
-        insights and communication tracking. ● Accounts Dashboard – Expense,
-        deposit, and profit overview. 1.2 E-Commerce Module ● Configuration
-        Settings (business preferences & system settings) ● Category,
-        Subcategory & Child Category Management ● Product Management – Add,
-        update, and manage product listings. ● Order Management – Track, update,
-        and process orders. ● Promo Code Management – Discounts and special
-        offers. ● Push Notifications – Customer updates and promotions. ●
-        Wishlist Feature – Save products for later purchase. ● Delivery Charges
-        Setup – Based on Upazila & Thana locations. ● Payment History Tracking ●
-        Reports Generation – Sales, orders, and customer activity. 1.3 Inventory
-        Management ● Product Warehouse Management ● Warehouse Room & Cartoon
-        Allocation ● Supplier Management (source types & details) ● Customer
-        Source Types ● Product Purchase & Stock Updates 1.4 Accounts Management
-        ● Payment Type Setup ● Expense Categories ● Account Creation &
-        Management ● Expense & Deposit Tracking ● Financial Reports & Analytics
-        <br />
-        Introduction We propose the development of a comprehensive E-Commerce
-        Management System designed to streamline business operations, improve
-        customer engagement, and ensure smooth management of products, sales,
-        accounts, and customer relationships. The system will be web-based,
-        scalable, and secure, with role-based access and user-friendly
-        dashboards for different departments. A. Plan One - Ready Software 1.
-        Core Features 1.1 Dashboards ● E-Commerce Dashboard – Monitor sales,
-        orders, products, and revenue. ● CRM Dashboard – Customer relationship
-        insights and communication tracking. ● Accounts Dashboard – Expense,
-        deposit, and profit overview. 1.2 E-Commerce Module ● Configuration
-        Settings (business preferences & system settings) ● Category,
-        Subcategory & Child Category Management ● Product Management – Add,
-        update, and manage product listings. ● Order Management – Track, update,
-        and process orders. ● Promo Code Management – Discounts and special
-        offers. ● Push Notifications – Customer updates and promotions. ●
-        Wishlist Feature – Save products for later purchase. ● Delivery Charges
-        Setup – Based on Upazila & Thana locations. ● Payment History Tracking ●
-        Reports Generation – Sales, orders, and customer activity. 1.3 Inventory
-        Management ● Product Warehouse Management ● Warehouse Room & Cartoon
-        Allocation ● Supplier Management (source types & details) ● Customer
-        Source Types ● Product Purchase & Stock Updates 1.4 Accounts Management
-        ● Payment Type Setup ● Expense Categories ● Account Creation &
-        Management ● Expense & Deposit Tracking ● Financial Reports & Analytics
+    <!-- EXECUTIVE SUMMARY -->
+    <section
+      v-if="proposal.executive_summary && proposal.executive_summary.trim()"
+      class="main-wrapper"
+      id="executiveSummarySection"
+    >
+      <div>
+        <h2 class="section-title">EXECUTIVE SUMMARY</h2>
       </div>
-    </main>
-  </section>
+      <main class="text-dark">
+        <div
+          class="cover-letter-text p-5"
+          v-html="proposal.executive_summary"
+        ></div>
+      </main>
+    </section>
 
-  <section class="main-wrapper" id="timelineSection">
-    <div>
-      <h2 class="section-title">TIMELINE</h2>
-    </div>
-
-    <main class="main-content-area">
-      <div class="timeline-section">
-        <div class="timeline-item text-white">
-          <div class="timeline-left-side">
-            <h4 class="step-title">Step 1</h4>
-            <p class="step-date">March 2021</p>
-            <p class="step-duration">1-2 weeks</p>
-          </div>
-          <div class="timeline-right-side">
-            <div class="timeline-marker"></div>
-            <div class="timeline-details">
-              <p class="item-subtitle">Subtitle Goes Here</p>
-              <p class="item-description">
-                Vivamus vel urna vitae arcu dictum molestie. Fusce mollis du sit
-                amet quam vulputate, et sodales nisl porta. Nunc a liquet lectus
-                ultricies. Donec cursus dui vitae duceicula, in congue felis
-                viverra. Vestibulum pulvinar turpis id porta lacinia. Aenean
-                efficitur mollis aliquam.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="timeline-item text-white">
-          <div class="timeline-left-side">
-            <h4 class="step-title">Step 2</h4>
-            <p class="step-date">March 2021</p>
-            <p class="step-duration">1-2 weeks</p>
-          </div>
-          <div class="timeline-right-side">
-            <div class="timeline-marker"></div>
-            <div class="timeline-details">
-              <p class="item-subtitle">Subtitle Goes Here</p>
-              <p class="item-description">
-                Vivamus vel urna vitae arcu dictum molestie. Fusce mollis du sit
-                amet quam vulputate, et sodales nisl porta. Nunc a liquet lectus
-                ultricies. Donec cursus dui vitae duceicula, in congue felis
-                viverra. Vestibulum pulvinar turpis id porta lacinia. Aenean
-                efficitur mollis aliquam.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="timeline-left-side">
-            <h4 class="step-title">Step 3</h4>
-            <p class="step-date">March 2021</p>
-            <p class="step-duration">1-2 weeks</p>
-          </div>
-          <div class="timeline-right-side">
-            <div class="timeline-marker"></div>
-            <div class="timeline-details">
-              <p class="item-subtitle">Subtitle Goes Here</p>
-              <p class="item-description">
-                Vivamus vel urna vitae arcu dictum molestie. Fusce mollis du sit
-                amet quam vulputate, et sodales nisl porta. Nunc a liquet lectus
-                ultricies. Donec cursus dui vitae duceicula, in congue felis
-                viverra. Vestibulum pulvinar turpis id porta lacinia. Aenean
-                efficitur mollis aliquam.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="timeline-left-side">
-            <h4 class="step-title">Step 4</h4>
-            <p class="step-date">March 2021</p>
-            <p class="step-duration">1-2 weeks</p>
-          </div>
-          <div class="timeline-right-side">
-            <div class="timeline-marker"></div>
-            <div class="timeline-details">
-              <p class="item-subtitle">Subtitle Goes Here</p>
-              <p class="item-description">
-                Vivamus vel urna vitae arcu dictum molestie. Fusce mollis du sit
-                amet quam vulputate, et sodales nisl porta. Nunc a liquet lectus
-                ultricies. Donec cursus dui vitae duceicula, in congue felis
-                viverra. Vestibulum pulvinar turpis id porta lacinia. Aenean
-                efficitur mollis aliquam.
-              </p>
-            </div>
-          </div>
-        </div>
+    <!-- TECHNOLOGIES USED -->
+    <section
+      v-if="proposal.technology_stack && proposal.technology_stack.trim()"
+      class="main-wrapper"
+      id="technologiesSection"
+    >
+      <div>
+        <h2 class="section-title">Technology Stack</h2>
       </div>
-    </main>
-  </section>
+      <main class="text-dark">
+        <div
+          class="cover-letter-text p-5"
+          v-html="proposal.technology_stack"
+        ></div>
+      </main>
+    </section>
 
-  <section class="main-wrapper" id="paymentInvoiceSection">
-    <div>
-      <h2 class="section-title">Payment Invoice</h2>
-    </div>
-    <div class="right-section">
-      <header class="document-header">
-        <p class="header-text-top">
-          Donec varius rhoncus lacus. Nunc bibendum lacus sit amet placerat
-          imperdiet. Cras id mi lacus. Ut blandit dolor viverra, pharetra erat
-          id, consequat quam. Fusce hendrerit finibus neque vitae semper.
-        </p>
-      </header>
+    <!-- PROJECT OVERVIEW -->
+    <section
+      v-if="proposal.project_overview && proposal.project_overview.trim()"
+      class="main-wrapper"
+      id="projectOverviewSection"
+    >
+      <div>
+        <h2 class="section-title">Project Overview</h2>
+      </div>
+      <main class="text-dark">
+        <div
+          class="cover-letter-text p-5"
+          v-html="proposal.project_overview"
+        ></div>
+      </main>
+    </section>
 
-      <section class="budget-category">
-        <div class="category-header">
-          <h2 class="category-title">Marketing and Research</h2>
-          <div class="category-table-header">
-            <span class="header-col">Hours</span>
-            <span class="header-col">Rate</span>
-            <span class="header-col">Total</span>
-          </div>
-        </div>
-        <div class="category-content">
-          <div class="item-list-container">
-            <ul class="item-list">
-              <li>Get started fiscal analysis</li>
-              <li>
-                Nunc bibendum dapibus quam, eleifend semper libero feugiat et
-              </li>
-              <li>
-                Vestibulum pulvinar turpis id porta lacinia. Aenean efficitur
-                mollis aliquam.
-              </li>
-              <li>
-                Ut blandit dolor viverra, pharetra erat id, consequat quam.
-                Fusce hendrerit finibus neque vitae semper.
-              </li>
-            </ul>
-          </div>
-          <div class="item-pricing">
-            <div class="pricing-row">
-              <span class="price-col">40</span>
-              <span class="price-col">$125</span>
-              <span class="price-col">$5,000</span>
+    <!-- TIMELINE -->
+    <section
+      v-if="proposal.timeline && proposal.timeline.length > 0"
+      class="main-wrapper"
+      id="timelineSection"
+    >
+      <div>
+        <h2 class="section-title">TIMELINE</h2>
+      </div>
+      <main class="main-content-area">
+        <div class="timeline-section">
+          <div
+            v-for="(item, idx) in proposal.timeline"
+            :key="idx"
+            class="timeline-item text-white"
+          >
+            <div class="timeline-left-side">
+              <h4 class="step-title">{{ item.title }}</h4>
+              <p class="step-date">{{ item.date }}</p>
+              <p class="step-duration">{{ item.weeks }} weeks</p>
             </div>
-            <div class="pricing-row">
-              <span class="price-col">32</span>
-              <span class="price-col">$150</span>
-              <span class="price-col">$4,800</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">28</span>
-              <span class="price-col">$110</span>
-              <span class="price-col">$3,080</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">36</span>
-              <span class="price-col">$135</span>
-              <span class="price-col">$4,860</span>
+            <div class="timeline-right-side">
+              <div class="timeline-marker"></div>
+              <div class="timeline-details">
+                <p class="item-subtitle">{{ item.subtitle }}</p>
+                <p class="item-description">{{ item.description }}</p>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </main>
+    </section>
 
-      <section class="budget-category">
-        <div class="category-header">
-          <h2 class="category-title">Design and Development</h2>
-          <div class="category-table-header">
-            <span class="header-col">Hours</span>
-            <span class="header-col">Rate</span>
-            <span class="header-col">Total</span>
-          </div>
-        </div>
-        <div class="category-content">
-          <div class="item-list-container">
-            <ul class="item-list">
-              <li>UI/UX Design and Prototyping</li>
-              <li>Frontend Development (React/Vue.js)</li>
-              <li>Backend API Development</li>
-              <li>Database Design and Implementation</li>
-            </ul>
-          </div>
-          <div class="item-pricing">
-            <div class="pricing-row">
-              <span class="price-col">80</span>
-              <span class="price-col">$140</span>
-              <span class="price-col">$11,200</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">120</span>
-              <span class="price-col">$130</span>
-              <span class="price-col">$15,600</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">100</span>
-              <span class="price-col">$145</span>
-              <span class="price-col">$14,500</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">60</span>
-              <span class="price-col">$120</span>
-              <span class="price-col">$7,200</span>
+    <!-- PAYMENT INVOICE -->
+    <section
+      v-if="proposal.payment_invoice && proposal.payment_invoice.length > 0"
+      class="main-wrapper"
+      id="paymentInvoiceSection"
+    >
+      <div>
+        <h2 class="section-title">Payment Invoice</h2>
+      </div>
+      <div class="right-section">
+        <header class="document-header">
+          <p class="header-text-top">
+            <!-- Optionally add summary or notes here -->
+          </p>
+        </header>
+        <section
+          v-for="(invoice, iidx) in proposal.payment_invoice"
+          :key="iidx"
+          class="budget-category"
+        >
+          <div class="category-header">
+            <h2 class="category-title">{{ invoice.heading }}</h2>
+            <div class="category-table-header">
+              <span class="header-col">Date</span>
+              <span class="header-col">Total</span>
             </div>
           </div>
-        </div>
-      </section>
+          <div class="category-content">
+            <div class="item-list-container">
+              <ul class="item-list">
+                <li v-for="(row, ridx) in invoice.rows" :key="ridx">
+                  {{ row.title }}
+                </li>
+              </ul>
+            </div>
+            <div class="item-pricing">
+              <div
+                v-for="(row, ridx) in invoice.rows"
+                :key="ridx"
+                class="pricing-row"
+              >
+                <span class="price-col">{{ row.date }}</span>
+                <span class="price-col">{{ row.total }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="total-section">
+          <div class="total-label text-capitalize">
+            Total: ({{ totalAmountInWords }})
+          </div>
+          <div class="total-pricing">
+            <span class="total-col">{{ formatCurrency(totalAmount) }}</span>
+          </div>
+        </section>
+      </div>
+    </section>
 
-      <section class="budget-category">
-        <div class="category-header">
-          <h2 class="category-title">Testing and Implementation</h2>
-          <div class="category-table-header">
-            <span class="header-col">Hours</span>
-            <span class="header-col">Rate</span>
-            <span class="header-col">Total</span>
-          </div>
-        </div>
-        <div class="category-content">
-          <div class="item-list-container">
-            <ul class="item-list">
-              <li>Quality Assurance Testing</li>
-              <li>User Acceptance Testing</li>
-              <li>Performance Testing and Optimization</li>
-              <li>Deployment and Go-Live Support</li>
-            </ul>
-          </div>
-          <div class="item-pricing">
-            <div class="pricing-row">
-              <span class="price-col">50</span>
-              <span class="price-col">$110</span>
-              <span class="price-col">$5,500</span>
+    <!-- TERMS & CONDITIONS -->
+    <section
+      v-if="proposal.terms_conditions && proposal.terms_conditions.length > 0"
+      class="main-wrapper"
+      id="termsConditionsSection"
+    >
+      <div>
+        <h2 class="section-title">TERMS & CONDITIONS</h2>
+      </div>
+      <div class="terms-content-container">
+        <ul class="terms-list">
+          <li
+            v-for="(term, tidx) in proposal.terms_conditions"
+            :key="tidx"
+            class="term-item"
+          >
+            <div class="term-number-circle">{{ tidx + 1 }}</div>
+            <div class="term-details">
+              <h2 class="term-heading">{{ term.title }}</h2>
+              <p class="term-description">{{ term.description }}</p>
             </div>
-            <div class="pricing-row">
-              <span class="price-col">40</span>
-              <span class="price-col">$120</span>
-              <span class="price-col">$4,800</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">30</span>
-              <span class="price-col">$135</span>
-              <span class="price-col">$4,050</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">25</span>
-              <span class="price-col">$140</span>
-              <span class="price-col">$3,500</span>
-            </div>
-          </div>
-        </div>
-      </section>
+          </li>
+        </ul>
+      </div>
+    </section>
 
-      <section class="budget-category">
-        <div class="category-header">
-          <h2 class="category-title">Evaluation and Support</h2>
-          <div class="category-table-header">
-            <span class="header-col">Hours</span>
-            <span class="header-col">Rate</span>
-            <span class="header-col">Total</span>
-          </div>
-        </div>
-        <div class="category-content">
-          <div class="item-list-container">
-            <ul class="item-list">
-              <li>Post-Launch Monitoring and Evaluation</li>
-              <li>User Training and Documentation</li>
-              <li>3-Month Technical Support</li>
-              <li>Performance Analysis and Reporting</li>
-            </ul>
-          </div>
-          <div class="item-pricing">
-            <div class="pricing-row">
-              <span class="price-col">20</span>
-              <span class="price-col">$125</span>
-              <span class="price-col">$2,500</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">35</span>
-              <span class="price-col">$100</span>
-              <span class="price-col">$3,500</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">60</span>
-              <span class="price-col">$95</span>
-              <span class="price-col">$5,700</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">15</span>
-              <span class="price-col">$130</span>
-              <span class="price-col">$1,950</span>
-            </div>
-          </div>
-        </div>
-      </section>
+    <!-- Agreement Section -->
 
-      <section class="budget-category">
-        <div class="category-header">
-          <h2 class="category-title">Testing and Implementation</h2>
-          <div class="category-table-header">
-            <span class="header-col">Hours</span>
-            <span class="header-col">Rate</span>
-            <span class="header-col">Total</span>
-          </div>
-        </div>
-        <div class="category-content">
-          <div class="item-list-container">
-            <ul class="item-list">
-              <li>Quality Assurance Testing</li>
-              <li>User Acceptance Testing</li>
-              <li>Performance Testing and Optimization</li>
-              <li>Deployment and Go-Live Support</li>
-            </ul>
-          </div>
-          <div class="item-pricing">
-            <div class="pricing-row">
-              <span class="price-col">50</span>
-              <span class="price-col">$110</span>
-              <span class="price-col">$5,500</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">40</span>
-              <span class="price-col">$120</span>
-              <span class="price-col">$4,800</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">30</span>
-              <span class="price-col">$135</span>
-              <span class="price-col">$4,050</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">25</span>
-              <span class="price-col">$140</span>
-              <span class="price-col">$3,500</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="budget-category">
-        <div class="category-header">
-          <h2 class="category-title">Evaluation and Support</h2>
-          <div class="category-table-header">
-            <span class="header-col">Hours</span>
-            <span class="header-col">Rate</span>
-            <span class="header-col">Total</span>
-          </div>
-        </div>
-        <div class="category-content">
-          <div class="item-list-container">
-            <ul class="item-list">
-              <li>Post-Launch Monitoring and Evaluation</li>
-              <li>User Training and Documentation</li>
-              <li>3-Month Technical Support</li>
-              <li>Performance Analysis and Reporting</li>
-            </ul>
-          </div>
-          <div class="item-pricing">
-            <div class="pricing-row">
-              <span class="price-col">20</span>
-              <span class="price-col">$125</span>
-              <span class="price-col">$2,500</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">35</span>
-              <span class="price-col">$100</span>
-              <span class="price-col">$3,500</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">60</span>
-              <span class="price-col">$95</span>
-              <span class="price-col">$5,700</span>
-            </div>
-            <div class="pricing-row">
-              <span class="price-col">15</span>
-              <span class="price-col">$130</span>
-              <span class="price-col">$1,950</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="total-section">
-        <div class="total-label">Total:</div>
-        <div class="total-pricing">
-          <span class="total-col">726</span>
-          <span class="total-col">-</span>
-          <span class="total-col">$106,540</span>
-        </div>
-      </section>
-    </div>
-  </section>
-
-  <section class="main-wrapper" id="termsConditionsSection">
-    <div>
-      <h2 class="section-title">TERMS & CONDITIONS</h2>
-    </div>
-
-    <div class="terms-content-container">
-      <ul class="terms-list">
-        <li class="term-item">
-          <div class="term-number-circle">1</div>
-          <div class="term-details">
-            <h2 class="term-heading">Terms & Conditions</h2>
-            <p class="term-description">
-              Quisque imperdiet, urna eget imperdiet pretium, justo orci rutrum
-              libero, sed congue arcu mauris non. Vivamus tempus nunc at nunc
-              hendrerit dapibus. Donec vitae sem malesuada, auctor ipsum et,
-              porta odio.
-            </p>
-          </div>
-        </li>
-        <li class="term-item">
-          <div class="term-number-circle">2</div>
-          <div class="term-details">
-            <h2 class="term-heading">Payment System</h2>
-            <p class="term-description">
-              In ac dui eu diam egestas sit amet vel est maximus. Nulla sagittis
-              luctus nisl, quis tincidunt sollicitudin. Praesent accumsan
-              feugiat diam ut eleifend. Vestibulum donec malesada arcu sed
-              elementum accumsan, leo enim faucibus metus, a tincidunt lacus.
-              Nam rhoncus.
-            </p>
-          </div>
-        </li>
-        <li class="term-item">
-          <div class="term-number-circle">3</div>
-          <div class="term-details">
-            <h2 class="term-heading">Support & Warranty</h2>
-            <p class="term-description">
-              Aliquam et est in du tincidunt lacinia et at nibh. Quisque
-              sagittis faucibus elit, rutrum elementum. Phasellus at erat
-              pulvinar, lectus ut laoreet odio, sed pulvinar scelerisque risus.
-              Nam feugiat efficitur placerat.
-            </p>
-          </div>
-        </li>
-        <li class="term-item">
-          <div class="term-number-circle">4</div>
-          <div class="term-details">
-            <h2 class="term-heading">Design & Revision</h2>
-            <p class="term-description">
-              Nam et nunc vitae dolor. Pellentesque ac scelerisque est, ac
-              commodo nulla. Donec et ligula sed. Donec ornare luctus bibendum
-              eu ac mi, id tempus imperdiet neque. Pellentesque finibus
-              fermentum tristique. Nam porttitor cursus ligula nec.
-            </p>
-          </div>
-        </li>
-        <li class="term-item">
-          <div class="term-number-circle">5</div>
-          <div class="term-details">
-            <h2 class="term-heading">Maintenance</h2>
-            <p class="term-description">
-              Fusce condimentum augue velit, sed viverra justo auctor non.
-              Vestibulum scelerisque et nunc a lacinia. Vestibulum et lectus
-              hendrerit, interdum libero.
-            </p>
-          </div>
-        </li>
-        <li class="term-item">
-          <div class="term-number-circle">6</div>
-          <div class="term-details">
-            <h2 class="term-heading">Evaluation</h2>
-            <p class="term-description">
-              Diam cursus lacus gravida. Phasellus efficitur volutpat mollis.
-              Etiam rhoncus porttitor finibus. Nam ac rhoncus dui tellus aliquam
-              est, sit amet laoreet leo. Pellentesque non sagittis nulla, et
-              pretium nulla. Curabitur fermentum ultrices erat et molestie.
-            </p>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </section>
-  <section class="main-wrapper" id="agreementSection">
-    <div>
-      <h2 class="section-title">Agreement</h2>
-    </div>
-
-    <div class="main-wrapper">
-      <div class="p-5">
+    <!-- Agreement Section -->
+    <section class="main-wrapper" id="agreementSection">
+      <div>
+        <h2 class="section-title">Agreement</h2>
+      </div>
+      <div class="p-5 text-dark">
         <strong>
           We, TechPark IT Solutions, hereby confirm our commitment to deliver
           the project as outlined in this proposal. Upon your acceptance of the
@@ -632,38 +222,39 @@
           we confirm our acceptance of the project scope, timeline, budget, and
           terms & conditions as presented. We authorize TechPark IT Solutions to
           proceed with the project implementation as outlined. be glad to
-          implement this project with your company’s assistance. Signature and
-          Date
+          implement this project with your company's assistance.
         </strong>
 
         <br /><br />
         <br /><br />
         <strong>Client Signature:</strong> _________________________________
         <br /><br />
-        <strong>Client name</strong><br />
-        Designation<br />
-        Company Name<br />
+        <strong>{{ proposal.prepare_for_name || "name" }}</strong
+        ><br />
+        {{ proposal.prepare_for_designation || "designation" }}<br />
+        {{ proposal.prepare_for_company_name || "Company name" }}<br />
         <br />
         <br />
+
         <strong>Date:</strong> _______________________
         <br />
       </div>
-    </div>
-  </section>
-  <!-- footer -->
+    </section>
+  </div>
 </template>
 <script>
-import { mapActions, mapWritableState, mapState } from "pinia";
+import { mapState } from "pinia";
 import { projectProposalStore } from "../store";
 import FrontPageOne from "../components/FrontPageOne.vue";
 import FrontPageTwo from "../components/FrontPageTwo.vue";
+// Import the number to text plugin to ensure it's loaded
+import "../../../../../../plugins/number_to_text.js";
 
 export default {
   components: {
     FrontPageOne,
     FrontPageTwo,
   },
-
   data: () => ({
     showCover: true,
     headerSolid: false,
@@ -673,14 +264,49 @@ export default {
       day: "numeric",
     }),
   }),
-
   computed: {
     ...mapState(projectProposalStore, {
       template: "template",
+      proposal: "currentProposal",
+      totalAmount: "totalAmount",
+      totalAmountInWords: "totalAmountInWords",
     }),
   },
-
+  methods: {
+    // Format currency with commas
+    formatCurrency(amount) {
+      return new Intl.NumberFormat("en-BD", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      }).format(amount);
+    },
+  },
+  watch: {
+    // Watch for changes in the proposal data and automatically reload from localStorage
+    proposal: {
+      handler() {
+        // This will trigger when the store data changes
+        this.$nextTick(() => {
+          // Force a reactive update if needed
+          this.$forceUpdate();
+        });
+      },
+      deep: true,
+    },
+  },
   mounted() {
+    // Load proposal data from localStorage on mount
+    projectProposalStore().loadFromLocalStorage();
+
+    // Set up a listener for localStorage changes from other components
+    window.addEventListener("storage", (e) => {
+      if (e.key === "projectProposal") {
+        projectProposalStore().loadFromLocalStorage();
+      }
+    });
+
+    // Remove the aggressive interval that was causing form input conflicts
+    // The store reactivity and localStorage events are sufficient for updates
     // Listen to scroll and toggle header background when hero is passed
     this._onScroll = () => {
       const headerHeight = 72; // matches --header-height
@@ -691,7 +317,6 @@ export default {
       this.headerSolid = scrolled > threshold;
     };
     window.addEventListener("scroll", this._onScroll, { passive: true });
-
     // Add FontAwesome CSS if not already loaded
     if (!document.querySelector('link[href*="font-awesome"]')) {
       const link = document.createElement("link");
@@ -701,14 +326,19 @@ export default {
       document.head.appendChild(link);
     }
   },
-
   beforeUnmount() {
     if (this._onScroll) window.removeEventListener("scroll", this._onScroll);
+    // Remove intervalId cleanup since we're no longer using the interval
   },
 };
 </script>
 <style scoped>
 @import "../styles/theme.css";
+
+.proposal-preview-wrapper {
+  height: 90vh;
+  overflow-y: auto;
+}
 
 /* ProposalPreview enhanced dark mode support */
 /* Common Shared Styles */
@@ -719,7 +349,7 @@ export default {
 .section-title {
   margin: 0 0 37px 0;
   padding: 10px;
-  background: #772c2c;
+  background: #772c2c !important;
   font-size: 1.5rem;
   font-weight: 700;
   color: #ffffff;
@@ -738,7 +368,6 @@ export default {
 .main-wrapper {
   width: 100%;
   height: 297mm;
-
   position: relative;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -905,14 +534,14 @@ export default {
 .item-title {
   font-size: 1.2rem;
   font-weight: 700;
-  color: white;
+  color: rgb(0, 0, 0);
   margin: 0;
 }
 
 .item-subtitle {
   font-size: 1rem;
   font-weight: 700;
-  color: white;
+  color: rgb(0, 0, 0);
   margin: 5px 0 10px 0;
 }
 
@@ -928,7 +557,7 @@ export default {
 .item-description {
   font-size: 0.8rem;
   line-height: 1.6;
-  color: white;
+  color: rgb(0, 0, 0);
   margin-top: 10px;
 }
 
@@ -947,7 +576,7 @@ export default {
 .right-section {
   flex: 1;
   padding: 20px;
-  background: #1a1a1a;
+  background: #ffffff;
 }
 
 .document-header {
@@ -957,7 +586,7 @@ export default {
 .header-text-top {
   font-size: 0.9rem;
   line-height: 1.6;
-  color: white;
+  color: rgb(0, 0, 0);
   margin: 0;
 }
 
@@ -996,7 +625,7 @@ export default {
   font-size: 0.9rem;
   font-weight: 600;
   text-align: center;
-  width: 100px;
+  width: 140px;
   color: #fff;
 }
 
@@ -1009,7 +638,7 @@ export default {
 .item-list-container {
   flex: 1;
   padding: 15px 20px;
-  background: #1a1a1a;
+  background: #ffffff;
 }
 
 .item-list {
@@ -1020,7 +649,7 @@ export default {
 
 .item-list li {
   font-size: 0.9rem;
-  color: white;
+  color: rgb(0, 0, 0);
   margin-bottom: 8px;
   padding-left: 15px;
   position: relative;
@@ -1037,7 +666,7 @@ export default {
 
 .item-pricing {
   width: 300px;
-  background: #1f120a;
+  background: #ffffff;
   border-left: 1px solid #eee;
 }
 
@@ -1054,9 +683,9 @@ export default {
 
 .price-col {
   font-size: 0.85rem;
-  color: white;
+  color: rgb(0, 0, 0);
   text-align: center;
-  width: 100px;
+  width: 130px;
   font-weight: 500;
 }
 
@@ -1064,7 +693,7 @@ export default {
   margin-top: 20px;
   padding: 15px 20px;
   border-top: 2px solid #772c2c;
-  background: #1f120a;
+  background: #d1d1d1;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1085,10 +714,34 @@ export default {
 
 .total-col {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: bolder;
   color: #772c2c;
   text-align: center;
-  width: 100px;
+  width: 100%;
+}
+
+/* Amount in Words Section */
+.amount-words-section {
+  margin-top: 15px;
+  padding: 15px 20px;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.amount-words-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #772c2c;
+  margin-bottom: 8px;
+}
+
+.amount-words-text {
+  font-size: 0.95rem;
+  color: #333;
+  font-style: italic;
+  line-height: 1.4;
+  padding: 5px 0;
 }
 
 /* Terms & Conditions Page */
@@ -1148,7 +801,7 @@ export default {
 
 .term-description {
   font-size: 0.9rem;
-  color: white;
+  color: rgb(0, 0, 0);
   line-height: 1.6;
   margin: 0;
 }
@@ -1275,6 +928,19 @@ export default {
   .total-section {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .amount-words-section {
+    margin-top: 10px;
+    padding: 10px 15px;
+  }
+
+  .amount-words-label {
+    font-size: 0.9rem;
+  }
+
+  .amount-words-text {
+    font-size: 0.85rem;
   }
 
   .total-table {
